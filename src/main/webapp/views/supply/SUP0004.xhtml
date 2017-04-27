@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:f="http://xmlns.jcp.org/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:pe="http://primefaces.org/ui/extensions" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!--采购计划一览-->
+    <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Responsive100">
+        <!--标题-->
+        <h1 class="CardBigTopic Purple">
+            <h:outputText value="#{ctrlMaster.createPageTitle('SUP', 'SUP0004')}"/>
+        </h1>
+        <!--无敌分割线-->
+        <div class="SeparatorFull"></div>
+        <p:outputPanel id="editpanel" styleClass="editpanel">
+            <p:outputPanel styleClass="Container50 Responsive100">
+                <p:dataTable value="#{ctrlSUP0004.vm.caiGouYuanList}"
+                             var="caiGouYuan"
+                             rowKey="#{caiGouYuan.yuanGongId}"
+                             selection="#{ctrlSUP0004.vm.selectedYuanGong}"
+                             styleClass="tct">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="选择" styleClass="wd-p-10"/>
+                            <p:column headerText="采购员" styleClass="wd-p-20"/>
+                            <p:column headerText="负责分类" styleClass="wd-p-70"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:ajax event="rowSelectRadio" listener="#{ctrlSUP0004.onSelectCaiGouYuan}" process="@this" update="@(.editpanel)" />
+                    <p:column selectionMode="single">
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{caiGouYuan.nameZ}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{ctrlSUP0004.getCaiGouFanWei(caiGouYuan)}"/>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="保存"
+                                 rendered="#{not empty ctrlSUP0004.vm.selectedYuanGong}"
+                                 icon="fa fa-check"
+                                 actionListener="#{ctrlSUP0004.tiJiao}"
+                                 process="editpanel"
+                                 oncomplete="showErrorMsg();"
+                                 update="editpanel frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+            </p:outputPanel>
+            
+            <p:outputPanel styleClass="Container50 Responsive100">
+                <p:treeTable id="treePinLeiGuanXi" value="#{ctrlSUP0004.guanXiTree}"
+                             rendered="#{not empty ctrlSUP0004.vm.selectedYuanGong}"
+                             skipChildren="true" scrollable="true" scrollHeight="42W4"
+                             var="pinGX" nodeVar="node" styleClass="">
+                    <!--品类别名-->
+                    <p:column headerText="分类名" styleClass="md-p-30">
+                        <h:outputText value="#{pinGX.pinLei.pinLeiMing}"/>
+                    </p:column>
+                    <p:column headerText="负责采购员" styleClass="md-p-50">
+                        <h:outputText value="#{ctrlSUP0004.displayPinLeiFuZeRen(pinGX.pinLei)}"/>
+                    </p:column>
+                    <p:column headerText="选择" styleClass="tct md-p-20">
+                        <p:selectBooleanCheckbox value="#{pinGX.selected}">
+                            <p:ajax listener="#{ctrlSUP0004.onSelectPinLei(pinGX.pinLei, pinGX.selected)}"
+                                    process="@this" update="@none"/>
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+                </p:treeTable>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <!--确认画面-->
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

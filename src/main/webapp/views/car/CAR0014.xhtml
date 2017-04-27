@@ -1,0 +1,180 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0014')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <!--工具条-->
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--申请维保按钮-->
+                            <p:commandButton value="申请" process="@this" actionListener="#{ctrlCAR0014.addWeiBaoShenQing}"
+                                             resetValues="true"
+                                             update="cheWeiBaoShenQing,toolbar" disabled="#{not empty ctrlCAR0014.vm.cheWeiBaoShenQing}"/>
+                            <!--提交申请按钮-->
+                            <p:commandButton value="提交" actionListener="#{ctrlCAR0014.tiJiaoShenQing()}"
+                                                 process="cheWeiBaoShenQing, @this"
+                                                 oncomplete="showErrorMsg();"
+                                                 disabled="#{ctrlCAR0014.vm.cheWeiBaoShenQing.cheWeiBaoShenQingMingXiList.size() eq 0}"
+                                                 rendered="#{not empty ctrlCAR0014.vm.cheWeiBaoShenQing}"
+                                                 update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, cheWeiBaoShenQing, toolbar"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="cheWeiBaoShenQing" styleClass="Container100 Responsive100">
+
+                    <p:outputPanel id="xuanZhe" styleClass="Container100 Responsive100 NoIndent xuanZhe ui-fluid" rendered="#{not empty ctrlCAR0014.vm.cheWeiBaoShenQing}">
+                        <!--归集项-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoGuiJiXiang" value="归集项"/>
+                            <p:selectOneMenu id="WeiBaoGuiJiXiang" value="#{ctrlCAR0014.vm.cheWeiBaoShenQing.xiangMuId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0014.isRequiredMessage('归集项')}"
+                                             disabled="#{ctrlCAR0005.vm.flag}">
+                                <f:selectItem itemLabel="请选择归集项" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0014.vm.projectList}" var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.xiangMuId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--车辆-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoceLiang" value="车辆"/>
+                            <p:selectOneMenu id="WeiBaoceLiang" value="#{ctrlCAR0014.vm.cheWeiBaoShenQing.cheLiangId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0014.isRequiredMessage('车辆')}"
+                                             >
+                                <f:selectItem itemLabel="请选择车辆" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0014.vm.cheLiangList}" var="cheLiang" itemLabel="#{cheLiang.chePaiZhaoHaoMa}" itemValue="#{cheLiang.cheLiangId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--内部外部-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoDiDian" value="维保方式"/>
+                            <p:selectOneMenu id="WeiBaoDiDian" value="#{ctrlCAR0014.vm.cheWeiBaoShenQing.weiBaoDiDian}" 
+                                             required="true" requiredMessage="#{ctrlCAR0014.isRequiredMessage('维保方式')}">
+                                <f:selectItems value="#{bizConfig.cheLiangWeiBaoFangShi}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--司机-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoSiJi" value="司机"/>
+                            <p:selectOneMenu id="WeiBaoSiJi" value="#{ctrlCAR0014.vm.cheWeiBaoShenQing.siJiId}" 
+                                             >
+                                <f:selectItem itemLabel="请选择司机" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0014.vm.siJiList}" 
+                                               var="siJi" itemLabel="#{siJi.xingMing}" itemValue="#{siJi.siJiId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--日期-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="selectedRiQi" styleClass="NoPadding" value="日期"/>
+                            <p:calendar id="selectedRiQi" value="#{ctrlCAR0014.vm.cheWeiBaoShenQing.weiBaoRiQi}"
+                                        readonlyInput="true"
+                                        mask="true" styleClass="tct NoPadding"
+                                        pattern="#{bizConfig.dateFormat}"
+                                        required="true" size="12"
+                                        requiredMessage="#{ctrlCAR0014.isRequiredMessage('日期')}"
+                                        converterMessage="#{ctrlCAR0014.dateUnvalidMessage('日期')}"
+                                        locale="#{bizConfig.locale}"
+                                        >
+                            </p:calendar>
+                        </p:panelGrid>
+                        <p:outputPanel id="shen_pi_panel" styleClass="Container100 Responsive100 shen_pi_panel" rendered="#{not empty ctrlCAR0014.vm.cheWeiBaoShenQing}">
+                            <p:panel header="维保项目：#{ctrlCAR0014.vm.cheWeiBaoShenQing.xiangMu.xiangMuMing}"
+                                     toggleable="true"
+                                     styleClass="clearfix"
+                                     toggleSpeed="500">
+                                <f:facet name="actions">
+                                    <p:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+                                                   actionListener="#{ctrlCAR0014.cheXiaoWeiBao}"
+                                                   process="@this"
+                                                   update="@(.shen_pi_panel)">
+                                        <i class="fa fa-close Red" />
+                                    </p:commandLink>
+                                    <p:commandLink style="margin-left: 50px"
+                                                   value="添加维保详细"
+                                                   actionListener="#{ctrlCAR0014.addWeiBaoShenQingMingXi}"
+                                                   process="@(.dtShenQing), @this"
+                                                   update="@(.shen_pi_panel, .dtShenQing, .toolbar)">
+                                        <h:outputText styleClass="fa fa-windows Fs18" />
+                                    </p:commandLink>
+                                </f:facet>
+
+                                <p:outputPanel id="dtShenQing" styleClass="Container99 Responsive100 dtShenQing" >
+                                    <!--明细编辑行-->
+                                    <p:dataTable id="dtshenqingmingxi" value="#{ctrlCAR0014.vm.cheWeiBaoShenQing.cheWeiBaoShenQingMingXiList}"
+                                                 rendered="#{not empty ctrlCAR0014.vm.cheWeiBaoShenQing.cheWeiBaoShenQingMingXiList}"
+                                                 style="word-break: keep-all"
+                                                 var="mx">
+                                        <p:columnGroup type="header">
+                                            <p:row>
+                                                <p:column headerText="删除" styleClass="wd-p-5"/>
+                                                <p:column headerText="维保类型" styleClass="wd-p-15"/>
+                                                <p:column headerText="维保项目" styleClass="wd-p-25"/>
+                                                <p:column headerText="备注"/>
+                                            </p:row>
+                                        </p:columnGroup>
+                                        <!--删除-->
+                                        <p:column styleClass="tct">
+                                            <p:commandLink styleClass="lnkDelete"
+                                                           process="@(.dtShenQing)"
+                                                           update="@(.dtShenQing)"
+                                                           actionListener="#{ctrlCAR0014.deleteShenQingMingXi(mx)}">
+                                                <i class="fa fa-trash Fs18 Red"></i>
+                                            </p:commandLink>
+                                        </p:column>
+                                        <!--维保类型-->
+                                        <p:column>
+                                            <p:outputPanel>
+                                                <p:selectOneMenu id="IDViecleType" value="#{mx.weiBaoLeiXing}"
+                                                                 required="true" requiredMessage="#{ctrlCAR0014.isRequiredMessage('车辆分类')}">
+                                                    <f:selectItem itemLabel="维修" itemValue="维修"/>
+                                                    <f:selectItem itemLabel="保养" itemValue="保养"/>
+                                                </p:selectOneMenu>
+                                            </p:outputPanel>
+                                        </p:column>
+                                        <!--维保项目-->
+                                        <p:column styleClass="tct">
+                                            <p:inputText value="#{mx.weiBaoXianMu}" 
+                                                         required="true"
+                                                         requiredMessage="#{ctrlCAR0014.isRequiredMessage('维保项目')}"/>
+                                        </p:column>
+                                        <!--备注-->
+                                        <p:column>
+                                            <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{mx.beiZhu}" placeholder="备注"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:outputPanel>
+                            </p:panel>
+                            <div class="EmptyBox5"></div>
+                            <p:panelGrid columns="5"
+                                         layout="grid"
+                                         rendered="#{not empty ctrlCAR0014.vm.cheWeiBaoShenQing}"
+                                         styleClass="ui-panelgrid-blank MarTop10"
+                                         columnClasses="wd-p-30,wd-p-30,wd-p-60,wd-p-30,wd-p-30">
+                                <p:outputPanel />
+                                <p:outputPanel />
+                                <p:outputPanel />
+                                <!--提交申请按钮-->
+                                <p:commandButton value="#{msg.button_tijiaoshenqing}"
+                                                 actionListener="#{ctrlCAR0014.tiJiaoShenQing()}"
+                                                 process="cheWeiBaoShenQing, @this"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, cheWeiBaoShenQing, toolbar"/>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>

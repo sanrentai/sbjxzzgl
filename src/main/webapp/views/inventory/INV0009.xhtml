@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--物资调拨申请受理-->
+    <p:outputPanel id="wuzidiaoboPanel" styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Responsive100">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0009')}"/>
+                </h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <h:panelGrid id="xialacaidan" columns="4" cellpadding="8">
+                    <!--仓库名称-->
+                    <p:outputLabel for="cangkuming"
+                                   value="调出#{msg.cang_ku_ming_cheng}#{msg.mao_hao}"
+                                   styleClass="trt"/>
+                    <p:selectOneMenu id="cangkuming"
+                                     value="#{ctrlINV0009.vm.selectedCangKuId}"
+                                     class="select_width"
+                                     valueChangeListener="#{ctrlINV0009.searchDiaoBoMingXi}"
+                                     required="true"
+                                     requiredMessage="#{ctrlINV0009.isRequiredMessage(msg.cang_ku_ming_cheng)}">
+                        <p:ajax event="valueChange"
+                                update="xialacaidan pnlInputArea"
+                                process="@this"/>
+                        <f:selectItem itemLabel="#{msg.qing_xuan_ze}"
+                                      itemValue=""/>
+                        <f:selectItems value="#{ctrlINV0009.vm.cangKuList}"
+                                       var="cangku"
+                                       itemLabel="#{cangku.cangKuMing}"
+                                       itemValue="#{cangku.cangKuId}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <p:dataTable id="diaoboDate" styleClass="tct"
+                             editable="true" editMode="cell"
+                             paginatorAlwaysVisible="false"
+                             value="#{ctrlINV0009.vm.diaoBoMingXiList}" var="dbList"
+                             rendered="#{not empty ctrlINV0009.vm.diaoBoMingXiList}"
+                             lazy="true" paginator="true" rows="5" 
+                             filterDelay="500" filteredValue="#{ctrlINV0009.vm.diaoBoMingXiList}"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             widgetVar="diaoboDate" emptyMessage="No Data">
+                    <p:ajax event="cellEdit" update="frmMain:diaoboDate" />
+                    <!--申请编号-->
+                    <p:column headerText="#{msg.shen_qing_bian_hao}">
+                        <h:outputText value="#{dbList.diaoBoBianHao}" />
+                    </p:column> 
+                    <!--物品名-->
+                    <p:column headerText="#{msg.wu_pin_ming_cheng}" styleClass="wd-p-20">
+                        <h:outputText id="guigegaiyao" value="#{dbList.shiTi.wuZiMiaoShu}" styleClass="Fleft"/>
+                        <p:tooltip position="top" for="guigegaiyao" value="#{dbList.shiTi.nameWithShuXingSummary}"/>
+                    </p:column>
+                    <!--希望调拨日期-->
+                    <p:column headerText="希望调拨日期">
+                        <h:outputText value="#{dbList.jiHuaRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--调入仓库名-->
+                    <p:column headerText="#{msg.lbl_diao_ru_ku}">
+                        <h:outputText value="#{dbList.rukuCangKu.cangKuMing}"/>
+                    </p:column>
+                    <!--调拨数量-->
+                    <p:column headerText="#{msg.diao_bo_shu_liang}" styleClass="trt">
+                        <h:outputText value="#{dbList.diaoBoShu}">
+                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--计划出库日期-->
+                    <p:column headerText="计划出库日期">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="请选择出库日期" styleClass="gray" rendered="#{empty dbList.jiHuaChuKuRiQi}">
+                                </h:outputText>
+                                <h:outputText value="#{dbList.jiHuaChuKuRiQi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                            </f:facet>
+                            <f:facet name="input">   
+                                <p:calendar value="#{dbList.jiHuaChuKuRiQi}"
+                                            pages="1" readonlyInput="true"
+                                            mask="true"
+                                            pattern="#{bizConfig.dateFormat}"
+                                            required="true"
+                                            requiredMessage="#{ctrlINV0009.isRequiredMessage(msg.xi_wang_gong_huo_ri)}"
+                                            converterMessage="#{ctrlINV0009.dateUnvalidMessage(msg.xi_wang_gong_huo_ri)}"
+                                            locale="#{bizConfig.locale}"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <!--计划入库日期-->
+                    <p:column headerText="计划入库日期">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="请选择入库日期" styleClass="gray" rendered="#{empty dbList.jiHuaRuKuRiQi}">
+                                </h:outputText>
+                                <h:outputText value="#{dbList.jiHuaRuKuRiQi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                            </f:facet>
+                            <f:facet name="input">   
+                                <p:calendar value="#{dbList.jiHuaRuKuRiQi}"
+                                            pages="1" readonlyInput="true"
+                                            mask="true"
+                                            pattern="#{bizConfig.dateFormat}"
+                                            required="true"
+                                            requiredMessage="#{ctrlINV0009.isRequiredMessage(msg.xi_wang_gong_huo_ri)}"
+                                            converterMessage="#{ctrlINV0009.dateUnvalidMessage(msg.xi_wang_gong_huo_ri)}"
+                                            locale="#{bizConfig.locale}"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <!--驳回理由-->
+                    <p:column headerText="驳回理由">
+                        <p:inputText value="#{dbList.boHuiLiYou}" disabled="#{!dbList.selected}"
+                                     placeholder="仅驳回时需填写"
+                                     label="text" styleClass="wd-p-90 tlt"/>
+                    </p:column>
+                    <!--选择处理对象-->
+                    <p:column headerText="选择" styleClass="tct">
+                        <p:selectBooleanCheckbox value="#{dbList.selected}">
+                            <p:ajax update="frmMain:wuzidiaoboPanel"/>
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton value="同意和申请入出库" resetValues="true"
+                                         actionListener="#{ctrlINV0009.tongYiDiaoBo()}"
+                                         icon="fa fa-check"
+                                         styleClass="White wd-p-20"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:wuzidiaoboPanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>
+                        <p:commandButton actionListener="#{ctrlINV0009.buTongYiDiaoBo()}"
+                                         value="#{msg.bo_hui_shen_qing}"
+                                         disabled="true"
+                                         icon="fa fa-close"
+                                         resetValues="true"
+                                         styleClass="White wd-p-15"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:wuzidiaoboPanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>  
+            </p:outputPanel>
+        </div>
+    </p:outputPanel>
+</ui:composition>

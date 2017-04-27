@@ -1,0 +1,275 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0012')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 pnlInputArea">
+                    <h:panelGrid columns="3" cellpadding="5">
+                        <p:outputLabel for="cang_ku"
+                                       value="#{msg.cang_ku}"
+                                       styleClass="fr"/>
+                        <p:selectOneMenu id="cang_ku"
+                                         value="#{ctrlINV0012.vm.selectedCangKuId}"
+                                         required="true"
+                                         requiredMessage="#{ctrlINV0012.isRequiredMessage(msg.cang_ku)}">
+                            <p:ajax listener="#{ctrlINV0012.changeCangKu()}" process="@this" update="pnlInputArea"/>
+                            <f:selectItems value="#{ctrlINV0012.vm.cangKuList}"
+                                           var="cangKu"
+                                           itemLabel="#{cangKu.cangKuMing}"
+                                           itemValue="#{cangKu.cangKuId}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="新建盘库记录"
+                                         disabled="#{not ctrlINV0012.vm.isPanKuRen}"
+                                         actionListener="#{ctrlINV0012.newPanKu()}"
+                                         process="pnlInputArea"
+                                         update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         oncomplete="showErrorMsg();"/>
+                    </h:panelGrid>
+                    
+                    <p:outputPanel id="editPanel" styleClass="editPanel" rendered="#{not empty ctrlINV0012.vm.editingPanKuLuLi}">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="pankuri"
+                                           value="盘库日"
+                                           styleClass="fr"/>
+                            <p:calendar id="pankuri"
+                                        value="#{ctrlINV0012.vm.editingPanKuLuLi.panKuRiQi}"
+                                        readonlyInput="true"
+                                        mask="true" styleClass="tct"
+                                        pattern="#{bizConfig.dateFormat}"
+                                        required="true" size="12"
+                                        requiredMessage="#{ctrlBIZ0001.isRequiredMessage('盘库日')}"
+                                        converterMessage="#{ctrlBIZ0001.dateUnvalidMessage('盘库日')}"
+                                        locale="#{bizConfig.locale}">
+                            </p:calendar>
+                        </h:panelGrid>
+                        
+                        <p:dataTable value="#{ctrlINV0012.vm.editingPanKuMingXiList}"
+                                     var="item"
+                                     filterDelay="500"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     rows="10"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     styleClass="tct">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="#{msg.wu_zhi_miao_shu}" styleClass="wd-p-10"
+                                              filterBy="#{item.shiti.wuZiMiaoShu}" filterMatchMode="contains" filterMaxLength="50"/>
+                                    <p:column headerText="单位" styleClass="wd-p-3"/>
+                                    <p:column headerText="单价" styleClass="wd-p-3" sortBy="#{item.danJia}"/>
+                                    <p:column headerText="账面数量" styleClass="wd-p-3"/>
+                                    <p:column headerText="账面金额" styleClass="wd-p-5"/>
+                                    <p:column headerText="盘库数量" styleClass="wd-p-6" sortBy="#{item.panDianShu}"/>
+                                    <p:column headerText="盘库金额" styleClass="wd-p-5"/>
+                                    <p:column headerText="盈亏数量" styleClass="wd-p-3" sortBy="#{item.yingKuiShu}"/>
+                                    <p:column headerText="盈亏金额" styleClass="wd-p-5"/>
+                                    <p:column headerText="盈亏原因" styleClass="wd-p-10"/>
+                                    <p:column headerText="备注" styleClass="wd-p-10"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <!--规格概要-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <!--单位-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <!--单价-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.danJia}" rendered="#{item.existKuCun}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                                <p:inputNumber value="#{item.danJia}" styleClass="trt-inputNumber amt-length-7" rendered="#{not item.existKuCun}"
+                                               readonly="#{ctrlINV0012.vm.editingPanKuLuLi.zhuangTai.value ne 1}"
+                                               maxValue="999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                                               required="true" requiredMessage="#{ctrlINV0012.isRequiredMessage('单价')}" 
+                                               decimalPlaces="2">
+                                    <p:ajax process="@(.editPanel)" update="@(.editPanel)"/>
+                                </p:inputNumber>
+                            </p:column>
+                            <!--账面数量-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.zhangMianShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--账面金额-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.zhangMianJinE}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--盘库数量-->
+                            <p:column styleClass="trt">
+                                <p:inputText value="#{item.panDianShu}"
+                                             readonly="#{ctrlINV0012.vm.editingPanKuLuLi.zhuangTai.value ne 1}"
+                                             styleClass="trt" maxlength="13">
+                                    <p:keyFilter regEx="/[\d\.]/"/>
+                                    <p:ajax process="@(.editPanel)" update="@(.editPanel)"/>
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </p:inputText>
+                            </p:column>
+                            <!--盘库金额-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.panDianJinE}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--盈亏数量-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yingKuiShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--盈亏金额-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yingKuiJinE}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--盈亏原因-->
+                            <p:column styleClass="tlt">
+                                <p:inputText value="#{item.yingKuiYuanYin}" readonly="#{ctrlINV0012.vm.editingPanKuLuLi.zhuangTai.value ne 1}"/>
+                            </p:column>
+                            <!--备注-->
+                            <p:column styleClass="tlt">
+                                <p:inputText value="#{item.beiZhu}" readonly="#{ctrlINV0012.vm.editingPanKuLuLi.zhuangTai.value ne 1}"/>
+                            </p:column>
+                        </p:dataTable>
+                        
+                        <p:outputPanel style="width: 203px!important;padding-left: 0px;padding-right: 0px;" styleClass="Container50 Responsive100" rendered="#{ctrlINV0012.vm.editingPanKuLuLi.zhuangTai.value eq 1 and ctrlINV0012.vm.isPanKuRen}">
+                            <p:commandButton value="保存草稿"
+                                             style="width: 100px!important"
+                                             actionListener="#{ctrlINV0012.saveCaoGao()}"
+                                             process="editPanel"
+                                             update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"/>
+                            <p:commandButton value="正式提交"
+                                             style="width: 100px!important"
+                                             actionListener="#{ctrlINV0012.tiJiao()}"
+                                             process="editPanel"
+                                             update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"/>
+<!--                            <p:commandButton value="取消"
+                                             style="width: 100px!important"
+                                             actionListener="#{ctrlINV0012.cheXiao()}"
+                                             process="@this"
+                                             update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();">
+                                <p:confirm header="是否确定取消" message="取消会导致编辑中的数据丢失" icon="ui-icon-alert"/>
+                            </p:commandButton>-->
+                        </p:outputPanel>
+                        <p:outputPanel style="width: 103px!important;padding-left: 0px;padding-right: 0px;" styleClass="Container25 Responsive100" rendered="#{ctrlINV0012.vm.isShenPiRen and ctrlINV0012.vm.editingPanKuLuLi.zhuangTai.value eq 2}">
+                            <p:commandButton value="审核通过"
+                                             style="width: 100px!important"
+                                             actionListener="#{ctrlINV0012.shenHeTongGuo}"
+                                             process="@this"
+                                             update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"/>
+                        </p:outputPanel>
+                        <p:outputPanel style="width: 100px!important;padding-left: 0px;padding-right: 0px;" styleClass="Container25 Responsive100">
+                            <p:commandButton value="取消"
+                                             style="width: 100px!important"
+                                             actionListener="#{ctrlINV0012.cheXiao()}"
+                                             process="@this"
+                                             update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();">
+                            </p:commandButton>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    
+                    <div class="EmptyBox10"></div> 
+                    
+                    <p:outputPanel id="pankululiList">
+                        <p:dataTable value="#{ctrlINV0012.vm.panKuluLiList}"
+                                     var="luli"
+                                     filterDelay="500"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     rows="10"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     styleClass="tct">
+                            <f:facet name="header">
+                                <h:outputText value="盘库历史记录"/>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="修改" styleClass="wd-p-3"/>
+                                    <p:column headerText="盘库日期" styleClass="wd-p-3"/>
+                                    <p:column headerText="盘库人" styleClass="wd-p-5"/>
+                                    <p:column headerText="审核人" styleClass="wd-p-5"/>
+                                    <p:column headerText="审核时间"  styleClass="wd-p-6"/>
+                                    <p:column headerText="状态"  styleClass="wd-p-5"/>
+                                    <p:column headerText="查看明细"  styleClass="wd-p-5"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tct">
+                                <p:commandLink value="修改"
+                                               rendered="#{luli.zhuangTai.value eq 1}"
+                                               update="@(.pnlInputArea)"
+                                               actionListener="#{ctrlINV0012.editPanKuLuLi(luli)}"
+                                               process="@this"
+                                               styleClass="Blue">
+                                </p:commandLink>
+                            </p:column>
+                            <!--盘库日期-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{luli.panKuRiQi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--盘库人-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{luli.panKuRen.nameZ}" />
+                            </p:column>
+                            <!--审核人-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{luli.shenHeRen.nameZ}" />
+                            </p:column>
+                            <!--审核时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{luli.shenHeDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--状态-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{luli.zhuangTai.message}"/>
+                            </p:column>
+                            <!--查看-->
+                            <p:column>
+                                <p:commandLink value="查看"
+                                               update="@(.pnlInputArea)"
+                                               actionListener="#{ctrlINV0012.editPanKuLuLi(luli)}"
+                                               process="@this"
+                                               styleClass="Blue">
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+    
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

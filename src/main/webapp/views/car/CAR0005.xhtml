@@ -1,0 +1,539 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0005')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlCAR0005.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{not empty ctrlCAR0005.vm.editingWeiBao}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlCAR0005.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvWeiZhangList').clearFilters();"
+                                             update="WeiBaoDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <!--输入维保信息-->
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:outputPanel id="xuanZhe" styleClass="Container100 Responsive100 NoIndent xuanZhe ui-fluid" rendered="#{not empty ctrlCAR0005.vm.editingWeiBao}">
+                        <!--车辆-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoceLiang" value="车辆"/>
+                            <p:selectOneMenu id="WeiBaoceLiang" value="#{ctrlCAR0005.vm.editingWeiBao.cheLiangId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('车辆')}"
+                                             disabled="#{ctrlCAR0005.vm.flag}">
+                                <f:selectItem itemLabel="请选择车辆" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0005.vm.cheLiangList}" var="cheLiang" itemLabel="#{cheLiang.chePaiZhaoHaoMa}" itemValue="#{cheLiang.cheLiangId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--维保方式-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoDiDian" value="维保方式"/>
+                            <p:selectOneMenu id="WeiBaoDiDian" value="#{ctrlCAR0005.vm.editingWeiBao.weiBaoDiDian}" 
+                                             required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('维保方式')}"
+                                             disabled="#{ctrlCAR0005.vm.flag}">
+                                <f:selectItems value="#{bizConfig.cheLiangWeiBaoFangShi}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--归集项-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoGuiJiXiang" value="归集项"/>
+                            <p:selectOneMenu id="WeiBaoGuiJiXiang" value="#{ctrlCAR0005.vm.editingWeiBao.xiangMuId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('归集项')}"
+                                             autoWidth="false"
+                                             disabled="#{ctrlCAR0005.vm.flag}">
+                                <f:selectItem itemLabel="请选择归集项" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0005.vm.projectList}" var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.xiangMuId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--司机-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WeiBaoSiJi" value="司机"/>
+                            <p:selectOneMenu id="WeiBaoSiJi" value="#{ctrlCAR0005.vm.editingWeiBao.siJiId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('司机')}"
+                                             disabled="#{ctrlCAR0005.vm.flag}">
+                                <f:selectItem itemLabel="请选择司机" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0005.vm.siJiList}" 
+                                               var="siJi" itemLabel="#{siJi.xingMing}" itemValue="#{siJi.siJiId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--日期-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="selectedRiQi" styleClass="NoPadding" value="日期"/>
+                            <p:calendar id="selectedRiQi" value="#{ctrlCAR0005.vm.editingWeiBao.riQi}"
+                                        readonlyInput="true"
+                                        mask="true" styleClass="tct NoPadding"
+                                        pattern="#{bizConfig.dateFormat}"
+                                        required="true" size="12"
+                                        requiredMessage="#{ctrlCAR0005.isRequiredMessage('日期')}"
+                                        converterMessage="#{ctrlCAR0005.dateUnvalidMessage('日期')}"
+                                        locale="#{bizConfig.locale}"
+                                        disabled="#{ctrlCAR0005.vm.flag}">
+                            </p:calendar>
+                        </p:panelGrid>
+                        <!--备注-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="weiBaoBeiZhu" styleClass="NoPadding" value="备注"/>
+                            <p:inputText id="weiBaoBeiZhu" value="#{ctrlCAR0005.vm.editingWeiBao.beiZhu}" maxlength="400"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                    <!--维保输入区域-->
+                    <p:outputPanel id="WeiBaoInputArea" styleClass="Container100 Responsive100 NoIndent WeiBaoInputArea">
+                        <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0005.vm.editingWeiBao}">
+                            <!--维保明细显示-->
+                            <p:outputPanel id="weiBaoMingXi" styleClass="Container100 Responsive100 ui-fluid weiBaoMingXi">
+                                <p:dataTable value="#{ctrlCAR0005.vm.editingWeiBao.weiBaoMingXiList}" var="weiBaoMingXi" cellSeparator="5"
+                                             widgetVar="wvWeiBaoList"
+                                             emptyMessage="没有数据">
+                                    <f:facet name="header">
+                                        <p:commandLink value="添加维保明细" process="@this,@(.weiBaoMingXi, .xuanZhe)"
+                                                       oncomplete="showErrorMsg();"
+                                                       update="@(.pnlInputArea), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       actionListener="#{ctrlCAR0005.onAddWeiBaoMingXi}"/>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="操作" styleClass="wd-p-5"/>
+                                            <p:column headerText="类型" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="维保项目" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="金额" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="添加" styleClass="tct wd-p-5" />
+                                            <p:column headerText="物资" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="消耗数量" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <p:column styleClass="tct">
+                                        <p:commandLink actionListener="#{ctrlCAR0005.onDeleteWeiBaoMingXi(weiBaoMingXi)}"
+                                                       process="@this" 
+                                                       update="@(.pnlInputArea), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       oncomplete="showErrorMsg();">
+                                            <i class="fa fa-trash Fs18 Red"></i>
+                                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--类型-->
+                                    <p:column styleClass="tlt">
+                                        <p:selectOneMenu id="WeiBaoDiDian" value="#{weiBaoMingXi.weiBaoLeiXing}" 
+                                                         required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('类型')}"
+                                                         autoWidth="false">
+                                            <f:selectItem itemLabel="请选择类型" itemValue=""/>
+                                            <f:selectItem itemLabel="维修" itemValue="维修"/>
+                                            <f:selectItem itemLabel="保养" itemValue="维修"/>
+                                        </p:selectOneMenu>
+                                        <!--<h:inputText value="#{weiBaoMingXi.weiBaoLeiXing}"/>-->
+                                    </p:column>
+                                    <!--维保项目-->
+                                    <p:column styleClass="tct">
+                                        <p:inputText value="#{weiBaoMingXi.weiBaoXianMu}"
+                                                     required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('维保项目')}" />
+                                    </p:column>
+                                    <!--金额-->
+                                    <p:column styleClass="trt">
+                                        <p:inputText id="bjFeiYong" value="#{weiBaoMingXi.jinE}" 
+                                                     required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('金额')}" >
+                                            <p:keyFilter regEx="/[\d]/"/>
+                                        </p:inputText>
+                                    </p:column>
+                                    <!--工时-->
+                                    <!--                                <p:column styleClass="tlt">
+                                                                        <h:outputText value="#{weiBaoMingXi.gongShi}">
+                                                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                                                        </h:outputText>
+                                                                    </p:column>-->
+                                    <!--消耗物资-->
+                                    <p:column styleClass="trt">
+                                        <p:commandLink id="btnSelectWuZi" type="button"  
+                                                       actionListener="#{ctrlCAR0005.onAddWeiBaoXiaoHao(weiBaoMingXi)}"
+                                                       update="@(.pnlInputArea)"
+                                                       process="@this,@(.weiBaoMingXi)" 
+                                                       onclick="PF('wvWuZiList').show()"
+                                                       disabled="#{ctrlCAR0005.vm.editingWeiBao.weiBaoDiDian.value eq 1}">
+                                            <i class="fa fa-plus Fs18 Green"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <p:column colspan="2" styleClass="no-padding" style="padding: 0px!important;">
+                                        <p:dataTable  value="#{weiBaoMingXi.weiBaoXiaoHaoList}" 
+                                                      var="weiBaoXiaoHao"
+                                                      rendered="#{not empty weiBaoMingXi.weiBaoXiaoHaoList}"
+                                                      styleClass="innerTable">
+                                            <p:column styleClass="tct wd-p-50">
+                                                <h:outputText value="#{weiBaoXiaoHao.shiti.wuZiMiaoShu}" />
+                                            </p:column>
+                                            <!--数量-->
+                                            <p:column styleClass="tct wd-p-50">
+                                                <p:spinner min="#{weiBaoXiaoHao.shiti.zuiXiaoDanWei}" max="9999999"
+                                                           stepFactor="#{weiBaoXiaoHao.shiti.zuiXiaoDanWei}" size="7"
+                                                           style="width: 100px!important"
+                                                           value="#{weiBaoXiaoHao.shuLiang}">
+                                                </p:spinner>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:column>
+                                    <!--备注-->
+                                    <p:column styleClass="tlt">
+                                        <p:inputTextarea value="#{weiBaoMingXi.beiZhu}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                            <!--维保总金额-->
+                            <!--                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                                                     columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding"
+                                                                     rendered="#{not empty ctrlCAR0005.vm.editingWeiBao}">
+                                                            <p:outputLabel for="zongJinE" value="总金额"/>
+                                                            <p:inputText id="zongJinE" value="#{ctrlCAR0005.vm.editingWeiBao.zongJinE}" 
+                                                                         required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('维保费用')}" >
+                                                                <p:keyFilter regEx="/[\d]/"/>
+                                                            </p:inputText>
+                                                        </p:panelGrid>-->
+                            <!--维保总工时-->
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                         columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding"
+                                         rendered="#{not empty ctrlCAR0005.vm.editingWeiBao}">
+                                <p:outputLabel for="zongGongShi" value="总工时"/>
+                                <p:inputText id="zongGongShi" value="#{ctrlCAR0005.vm.editingWeiBao.zongGongShi}" 
+                                             required="true" requiredMessage="#{ctrlCAR0005.isRequiredMessage('总工时')}" >
+                                    <p:keyFilter regEx="/[\d]/"/>
+                                </p:inputText>
+                            </p:panelGrid>
+                            <!--保存按钮区-->
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                         columnClasses="wd-p-50,wd-p-50"
+                                         rendered="#{not empty ctrlCAR0005.vm.editingWeiBao.weiBaoMingXiList}">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, WeiBaoDetails, @(.toolbar,.pnlInputArea,.xuanZhe), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlCAR0005.onSaveWeiBao}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="@(.toolbar,.pnlInputArea,.xuanZhe)" actionListener="#{ctrlCAR0005.onCancelEditingWeiBao}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--维保List区域-->
+                <p:outputPanel id="WeiBaoDetails" styleClass="Container100 Responsive100 WeiBaoDetails">
+                    <p:dataTable value="#{ctrlCAR0005.vm.weiBaoList}" var="weiBao" cellSeparator="5"
+                                 widgetVar="wvWeiBaoList"
+                                 rows="10"
+                                 filterDelay="500"
+                                 style="word-break: keep-all!important"
+                                 paginator="true"
+                                 paginatorAlwaysVisible="false"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 emptyMessage="没有数据">
+                        <f:facet name="header">
+                            <h:outputText value="维保信息一览"/>
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="打印" styleClass="wd-p-2"/>
+                                <!--<p:column headerText="编辑" styleClass="wd-p-5"/>-->
+                                <p:column headerText="删除" styleClass="wd-p-5"/>
+                                <p:column headerText="车辆" filterBy="#{weiBao.cheLiangId}" filterMatchMode="exact" sortBy="#{weiBao.cheLiangId}" styleClass="wd-p-10">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('wvWeiBaoList').filter()" filter="true" filterMatchMode="contains">
+                                            <f:selectItem itemLabel="选择车辆" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{ctrlCAR0005.vm.cheLiangList}" var="cheliang"
+                                                           itemLabel="#{cheliang.chePaiZhaoHaoMa}" itemValue="#{cheliang.cheLiangId}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:column>
+                                <p:column headerText="归集项" styleClass="tct wd-p-10" sortBy="#{weiBao.xiangMuId}"/>
+                                <p:column headerText="日期" styleClass="tct wd-p-20" sortBy="#{weiBao.riQi}"/>
+                                <p:column headerText="维保方式" styleClass="tct wd-p-10"/>
+                                <p:column headerText="总金额" styleClass="tct wd-p-5"/>
+                                <p:column headerText="总工时" styleClass="tct wd-p-5"/>
+                                <!--<p:column headerText="经办人" styleClass="tct wd-p-6" sortBy="#{weiBao.yuanGongId}"/>-->
+                                <p:column headerText="维保司机" styleClass="tct wd-p-6" sortBy="#{weiBao.siJiId}"/>
+                                <p:column headerText="查看详细" styleClass="wd-p-3"/>
+                                <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--打印按钮-->
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlCAR0005.addPrint(weiBao)}"
+                                               process="@this"
+                                               update="@(.printList)"
+                                               oncomplete="PF('dialog').show()">
+                                    <i class="fa fa-print Blue Fs18"/>
+                                </p:commandLink>
+                            </p:column>
+                        <!--编辑-->
+                        <!--                        <p:column styleClass="tct">
+                                                    <p:commandLink actionListener="#{ctrlCAR0005.onEditWeiBao(weiBao)}"
+                                                                   process="@this" update="@(.WeiBaoInputArea), @(.toolbar)">
+                                                        <i class="fa fa-pencil Fs18 Blue"></i>
+                                                    </p:commandLink>
+                                                </p:column>-->
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlCAR0005.onDeleteWeiBao(weiBao)}"
+                                           process="@this" 
+                                           update="@(.WeiBaoDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                           oncomplete="showErrorMsg();">
+                                <i class="fa fa-trash Fs18 Red"></i>
+                                <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                            </p:commandLink>
+                        </p:column>
+                        <!--车辆-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{weiBao.cheLiang.chePaiZhaoHaoMa}"/>
+                        </p:column>
+                        <!--归集项-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{weiBao.xiangMu.xiangMuMing}"/>
+                        </p:column>
+                        <!--日期-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{weiBao.riQi}">
+                                <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--地点-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{weiBao.weiBaoDiDian.message}"/>
+                        </p:column>
+                        <!--总金额-->
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{weiBao.zongJinE}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--总工时-->
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{weiBao.zongGongShi}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="0"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--司机-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{weiBao.siJi.xingMing}"/>
+                        </p:column> 
+                        <!--查看详细-->
+                        <p:column styleClass="search_button">
+                            <p:commandLink update="@(.mingXiList)"
+                                           process="@this"
+                                           oncomplete="PF('ming_xi_dialog').show()"
+                                           actionListener="#{ctrlCAR0005.chaKanXiangXi(weiBao)}">
+                                <i class="fa fa-search Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                        <!--备注-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{weiBao.allBeiZhu}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:outputPanel>
+        <p:dialog widgetVar="wvWuZiList" closeOnEscape="true" header="选择物资">
+            <p:dataTable value="#{ctrlCAR0005.vm.pinLeiDetails}"
+                         var="pinLei" lazy="true"
+                         scrollHeight="400" scrollable="true"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="dtPinLeiWuZi" widgetVar="dtPinLeiWuZi"
+                         styleClass="bg-c-row-odd wd-f-600"
+                         emptyMessage="No Data">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column styleClass="tct wd-p-20" headerText="#{msg.pin_lei_ming}"
+                                  filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                        <p:column headerText="编辑" style="width: 58px;"/>
+                        <p:column headerText="物资名称" style="width: 208px;"/>
+                        <p:column headerText="规格/型号"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--品类名称-->
+                <p:column>
+                    <h:outputText value="#{pinLei.pinLeiMing}"/>
+                </p:column>
+                <!--物资-->
+                <p:column colspan="3" styleClass="no-padding" style="padding: 0px!important;">
+                    <p:dataTable value="#{pinLei.keYongWuZi}"
+                                 var="stwz"
+                                 rendered="#{not empty pinLei.keYongWuZi}"
+                                 styleClass="innerTable">
+                        <p:column styleClass="tct wd-f-50">
+                            <!--选择-->
+                            <p:commandLink value="选择"
+                                           process="@this"
+                                           actionListener="#{ctrlCAR0005.onWuZiSelect(stwz)}"
+                                           oncomplete="PF('wvWuZiList').hide()"
+                                           update="@(.weiBaoMingXi)">
+                            </p:commandLink>
+                        </p:column>
+                        <p:column styleClass="wd-f-200" >
+                            <h:outputText value="#{stwz.wuZiMiaoShu}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{stwz.shuXingSummary}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+        <p:dialog header="维保明细明细一览"
+                  styleClass="wd-p-60"
+                  widgetVar="ming_xi_dialog"
+                  closeOnEscape="true"
+                  modal="true"
+                  showEffect="fade"
+                  hideEffect="fade"
+                  resizable="false">
+            <p:outputPanel styleClass="tct mingXiList">
+                <p:dataTable value="#{ctrlCAR0005.vm.chaKanWeiBao.weiBaoMingXiList}"
+                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                             var="item">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="维保类型" sortBy="#{item.shenQingMingXiId}" styleClass="wd-p-3"/>
+                            <p:column headerText="维保项目" styleClass="wd-p-10"/>
+                            <p:column headerText="金额" styleClass="wd-p-3"/>
+                            <p:column headerText="物资" styleClass="wd-p-3"/>
+                            <p:column headerText="数量" styleClass="wd-p-3"/>
+                            <p:column headerText="备注" styleClass="wd-p-3"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column>
+                        <h:outputText value="#{item.weiBaoLeiXing}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{item.weiBaoXianMu}"/>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{item.jinE}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                        <h:outputText value="元"/>
+                    </p:column>
+                    <p:column colspan="2" styleClass="no-padding" style="padding: 0px!important;">
+                        <p:dataTable  value="#{item.weiBaoXiaoHaoList}" 
+                                      var="weiBaoXiaoHao"
+                                      rendered="#{not empty item.weiBaoXiaoHaoList}"
+                                      styleClass="innerTable">
+                            <p:column styleClass="tct wd-p-50">
+                                <h:outputText value="#{weiBaoXiaoHao.shiti.wuZiMiaoShu}" />
+                            </p:column>
+                            <!--数量-->
+                            <p:column styleClass="tct wd-p-50">
+                                <h:outputText 
+                                    style="width: 100px!important"
+                                    value="#{weiBaoXiaoHao.shuLiang}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{item.beiZhu}" />
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+        </p:dialog>
+        <p:dialog header="维保登记单"
+                  styleClass="wd-p-75"
+                  widgetVar="dialog"
+                  closeOnEscape="true"
+                  modal="true"
+                  resizable="true">
+            <p:commandLink type="button" onclick="$('#printDiv').jqprint()" process="@this" update="@this">
+                <i class="fa fa-print Blue Fs40 Fright" style="margin-top: -5px;"/>
+            </p:commandLink>
+            <p:outputPanel styleClass="MarTop30 printList">
+                <div id="printDiv">
+                    <p:dataTable value="#{ctrlCAR0005.vm.weiBaoPrintList}"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 rendered="#{not empty ctrlCAR0005.vm.weiBaoPrintList}"
+                                 styleClass="printTable"
+                                 var="item">
+                        <f:facet name="header">
+                            <h:outputText value="单号：#{ctrlCAR0005.vm.selectedWeiBao.weiBaoId}" styleClass="fl Fs20"/>
+                            <h:outputText value="维保登记单" styleClass="Fs20"/>
+                            <span class="fr Fs20">
+                                <h:outputText value="维保登记人：#{ctrlCAR0005.vm.selectedWeiBao.insUserInfo.name}"/>
+                                <p:spacer width="20" height="1"/>
+                                登记时间：<h:outputText value="#{ctrlCAR0005.vm.selectedWeiBao.insDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat}"/>
+                                </h:outputText>
+                                
+                            </span>
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <!--<p:column headerText="物资ID" styleClass="wd-p-3"/>-->
+                                <p:column headerText="归集项" styleClass="wd-p-8"/>
+                                <p:column headerText="车辆" styleClass="wd-p-8"/>
+                                <p:column headerText="司机" styleClass="wd-p-5"/>
+                                <p:column headerText="维保日期" styleClass="wd-p-4"/>
+                                <p:column headerText="总金额" styleClass="wd-p-4"/>
+                                <p:column headerText="总工时" styleClass="wd-p-5"/>
+                                <p:column headerText="备注" styleClass="wd-p-5"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--物资ID-->
+                        <!--                        <p:column styleClass="tct">
+                                                    <h:outputText value="#{item.shenqing.shiti.wuZiBianHao}"/>
+                                                </p:column>-->
+                        <!--归集项-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.xiangMu.xiangMuMing}"/>
+                        </p:column>
+                        <!--车辆-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.cheLiang.cheLiangMingCheng}"/>
+                        </p:column>
+                        <!--司机-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.siJi.xingMing}"/>
+                        </p:column>
+                        <!--用车日-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.riQi}">
+                                <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--单价-->
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.zongJinE}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--数量-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.zongGongShi}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--备注-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.allBeiZhu}"/>
+                        </p:column>
+                    </p:dataTable>
+
+                </div>
+            </p:outputPanel>
+        </p:dialog>
+    </p:outputPanel>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

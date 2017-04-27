@@ -1,0 +1,209 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0009')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0009.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{ctrlMST0009.statusEditing or ctrlMST0009.updateMode}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0009.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvGongYingWuZiList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <div class="EmptyBox10"></div>
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{ctrlMST0009.statusEditing}">
+                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-50,wd-p-20">
+                            <!--供应商物资编号-->
+                            <p:outputPanel>
+                                <p:outputLabel value="供应商"/>
+                                <p:selectOneMenu filter="true" filterMatchMode="contains" value="#{ctrlMST0009.vm.edititingGyWuZi.gongYingShang}"
+                                                 converter="GongYingShangConverter" disabled="#{ctrlMST0009.updateMode}">
+                                    <f:selectItems value="#{ctrlMST0009.vm.gysAllList}" var="gys" itemValue="#{gys}" itemLabel="#{gys.gongSiMing}"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+                            <!--实体物资-->
+                            <p:outputPanel>
+                                <p:outputLabel value="物资"/>
+                                <div class="Container100 NoPadding NoIndent">
+                                    <div class="Container80 NoPadding NoIndent">
+                                        <p:inputText id="txtShiTiWuZi" value="#{ctrlMST0009.vm.edititingGyWuZi.shiTiWuZi.wuZiMiaoShu}"
+                                                     disabled="#{ctrlMST0009.updateMode}" readonly="true"/>
+                                    </div>
+                                    <div class="Container20 NoPadding NoIndent">
+                                        <p:commandButton type="button" id="btnSelectWuZi" icon="fa fa-windows" disabled="#{ctrlMST0009.updateMode}"/>
+                                    </div>
+                                    <!--物品候选值-->
+                                    <p:overlayPanel widgetVar="wvWuZiList" for="btnSelectWuZi">
+                                        <p:dataTable value="#{ctrlMST0009.vm.pinLeiDetails}" scrollable="true" scrollHeight="400"
+                                                     var="pinLei" lazy="true"
+                                                     paginatorAlwaysVisible="false"
+                                                     paginator="true" rows="10"
+                                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                                     id="dtPinLeiWuZi" widgetVar="dtPinLeiWuZi"
+                                                     styleClass="bg-c-row-odd wd-f-800"
+                                                     emptyMessage="No Data">
+                                            <p:columnGroup type="header">
+                                                <p:row>
+                                                    <p:column styleClass="tct wd-p-20" headerText="物品名"
+                                                              filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                                                    <p:column style="width: 39px;" headerText="选择"/>
+                                                    <p:column style="width: 209px;" headerText="物资描述"/>
+                                                    <p:column headerText="物资属性"/>
+                                                </p:row>
+                                            </p:columnGroup>
+                                            <!--物品名称-->
+                                            <p:column>
+                                                <h:outputText value="#{pinLei.pinLeiMing}"/>
+                                            </p:column>
+                                            <!--物资-->
+                                            <p:column colspan="3" styleClass="no-padding" style="padding: 0px!important;">
+                                                <p:dataTable value="#{pinLei.keYongWuZi}"
+                                                             var="stwz"
+                                                             rendered="#{not empty pinLei.keYongWuZi}"
+                                                             styleClass="innerTable">
+                                                    <p:column styleClass="tct wd-f-30">
+                                                        <!--选择-->
+                                                        <p:commandLink process="@this"
+                                                                       resetValues="true"
+                                                                       actionListener="#{ctrlMST0009.onWuZiSelect(stwz)}"
+                                                                       oncomplete="PF('wvWuZiList').hide();"
+                                                                       update="frmMain:txtShiTiWuZi">
+                                                            <i class="fa fa-check Fs18 Green"></i>
+                                                        </p:commandLink>
+                                                    </p:column>
+                                                    <p:column styleClass="wd-f-200" >
+                                                        <h:outputText value="#{stwz.wuZiMiaoShu}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputText value="#{stwz.shuXingSummary}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:overlayPanel>
+                                </div>
+                            </p:outputPanel>
+                            <!--单价-->
+                            <p:outputPanel>
+                                <p:outputLabel for="txtDanJia" value="单价"/>
+                                <p:inputNumber id="txtDanJia" styleClass="trt-inputNumber" maxValue="99999999999.99" minValue="0.00"
+                                               value="#{ctrlMST0009.vm.edititingGyWuZi.danJia}" thousandSeparator=","
+                                               required="true" requiredMessage="#{ctrlMST0009.isRequiredMessage('单价')}" decimalPlaces="2"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-70">
+                            <!--物资编号-->
+                            <p:outputPanel>
+                                <p:outputLabel value="供应方物资标号"/>
+                                <p:inputText value="#{ctrlMST0009.vm.edititingGyWuZi.gongFangWuZiId}" maxlength="10"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="备注"/>
+                                <p:inputText value="#{ctrlMST0009.vm.edititingGyWuZi.beiZhu}"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="保存" process="pnlInputArea"
+                                             oncomplete="showErrorMsg();"
+                                             update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             actionListener="#{ctrlMST0009.onSaveWuZi}"/>
+                            <p:commandButton value="取消" process="@this" 
+                                             update="pnlInputArea, toolbar, frmMain:toolbar" actionListener="#{ctrlMST0009.onCancelEditing}"
+                                             styleClass="RedButton"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <div class="CardBigTopic">供应商物资信息</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlMST0009.vm.gysList}" var="gys" lazy="true" cellSeparator="5"
+                             widgetVar="wvGongYingWuZiList"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorAlwaysVisible="false"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="供应商物资一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="供应商名" filterBy="#{gys.gongSiMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="编辑" style="width: 38px;"/>
+                            <p:column headerText="物资名" filterBy="#{gys.bieMing}" filterMaxLength="15" filterMatchMode="contains" style="width: 308px;"/>
+                            <p:column headerText="单价"  style="width: 108px;"/>
+                            <p:column headerText="负责人" style="width: 108px;"/>
+                            <p:column headerText="备注"/>
+                            <p:column headerText="删除" style="width: 38px;"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column>
+                        <h:outputText value="#{gys.gongSiMing}"/>
+                    </p:column>
+                    <p:column colspan="6" styleClass="no-padding" style="padding: 0px!important;">
+                        <p:dataTable value="#{gys.gyWuZiList}" var="gywz" styleClass="innerTable" rendered="#{not empty gys.gyWuZiList}">
+                            <!--编辑-->
+                            <p:column styleClass="tct wd-f-30">
+                                <p:commandLink process="@this" actionListener="#{ctrlMST0009.onSelectGYSWuZi(gywz)}"
+                                               update="frmMain:pnlInputArea" resetValues="true">
+                                    <i class="fa fa-check Green Fs16"/>
+                                </p:commandLink>
+                            </p:column>
+                            <!--物资名-->
+                            <p:column styleClass="wd-f-300">
+                                <h:outputText id="guigegaiyao" value="#{gywz.shiTiWuZi.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao" value="#{gywz.shiTiWuZi.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <!--单价-->
+                            <p:column styleClass="trt wd-f-100">
+                                <h:outputText value="#{gywz.danJia}">
+                                    <f:convertNumber maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--负责人-->
+                            <p:column styleClass="wd-f-100">
+                                <h:outputText value="#{gywz.fuZeRen.fuZeRenMing}"/>
+                            </p:column>
+                            <!--备注-->
+                            <p:column>
+                                <h:outputText value="#{gywz.beiZhu}"/>
+                            </p:column>
+                            <!--删除-->
+                            <p:column styleClass="tct wd-f-30">
+                                <p:commandLink process="@this" actionListener="#{ctrlMST0009.onDeleteGYSWuZi(gywz)}"
+                                               update="frmMain:pnlInputArea, frmMain:pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               oncomplete="PF('wvGongYingWuZiList').clearFilters();showErrorMsg();" resetValues="true">
+                                    <i class="fa fa-trash Red Fs16"/>
+                                    <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+    </p:outputPanel>
+</ui:composition>

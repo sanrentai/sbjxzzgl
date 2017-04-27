@@ -1,0 +1,522 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('WAI', 'WAI0002')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:outputPanel styleClass=" ui-fluid" rendered="#{not empty ctrlWAI0002.vm.editingWeiWaiJiaGong}">
+                        <div class="Container100 Responsive100">
+                            <p:panelGrid columns="6" layout="grid" styleClass="ui-panelgrid-blank">
+                                <!--采购计划明细-->
+                                <p:outputLabel for="caiGouJiHuaMingXi" value="采购计划明细"/>
+                                <h:outputText id="caiGouJiHuaMingXi" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.jiHuaMingXi.title}"/>
+                                <!--预计加工数量-->
+                                <p:outputLabel for="yuJiJiaGongShuLiang" value="预计加工数量"/>
+                                <h:outputText id="yuJiJiaGongShuLiang" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.yuJiShuLiang}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <!--已完成加工数量-->
+                                <p:outputLabel for="yiWanChengShuLiang" value="已完成加工数量"/>
+                                <h:outputText id="yiWanChengShuLiang" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.shiJiShuLiang}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <!--加工商-->
+                                <p:outputLabel for="companyName" value="加工商"/>
+                                <h:outputText id="companyName" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.gongYingShang.gongSiMing}"/>
+                                <!--BOM-->
+                                <p:outputLabel for="bom" value="bom"/>
+                                <h:outputText id="bom" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.bom.wuLiaoMing}"/>
+                                <!--预计开始加工日-->
+                                <p:outputLabel for="yuJiKaiShiJiaGongRi" value="预计开始加工日"/>
+                                <h:outputText id="yuJiKaiShiJiaGongRi" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.yuJiKaiShiRi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                                <!--预计到货日-->
+                                <p:outputLabel for="yuJiDaoHuoRi" value="预计到货日"/>
+                                <h:outputText id="yuJiDaoHuoRi" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.yuJiDaoHuoRi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                                <!--仓库-->
+                                <p:outputLabel for="cangku" value="仓库"/>
+                                <h:outputText id="cangku" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.cangKu.cangKuMing}"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                                <!--备注-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBeiZhu" value="备注:"/>
+                                    <h:outputText id="txtBeiZhu" value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.beiZhu}"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid id="shenQingRuKuPanel" columns="5" layout="grid" styleClass="ui-panelgrid-blank"
+                                         rendered="#{(ctrlWAI0002.vm.editingWeiWaiJiaGong.yuJiShuLiang gt ctrlWAI0002.vm.editingWeiWaiJiaGong.shiJiShuLiang) and ctrlWAI0002.vm.editingWeiWaiJiaGong.yuanCaiLiaoChuKu}">
+                                <p:inputText id="jiHuaRuKuShu" value="#{ctrlWAI0002.vm.ruKuShenQing.shuLiang}"
+                                             placeholder="申请入库数" styleClass="trt"
+                                             required="true"
+                                             requiredMessage="#{ctrlWAI0002.isRequiredMessage('申请入库数')}">
+                                    <p:keyFilter regEx="/[\d\.]/"/>
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </p:inputText>
+                                <p:inputText id="zongJia" value="#{ctrlWAI0002.vm.ruKuShenQing.zongJia}"
+                                             placeholder="申请入库物资总价" styleClass="trt"
+                                             required="true"
+                                             requiredMessage="#{ctrlWAI0002.isRequiredMessage('申请入库物资总价')}">
+                                    <p:keyFilter regEx="/[\d\.]/"/>
+                                    <!--<f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>-->
+                                </p:inputText>
+                                <p:calendar id="yuJiRuKuRi"
+                                            value="#{ctrlWAI0002.vm.ruKuShenQing.ruKuRiQi}"
+                                            readonlyInput="true"
+                                            placeholder="申请入库日"
+                                            mask="true"
+                                            pattern="#{bizConfig.dateFormat}"
+                                            size="12"
+                                            navigator="true"
+                                            required="true"
+                                            requiredMessage="#{ctrlWAI0002.isRequiredMessage('申请入库日')}"
+                                            converterMessage="#{ctrlWAI0002.dateUnvalidMessage('申请入库日')}"
+                                            title="必须输入申请入库日"
+                                            locale="#{bizConfig.locale}">
+                                </p:calendar>
+                                <p:inputText value="#{ctrlWAI0002.vm.ruKuShenQing.beiZhu}" placeholder="备注" maxlength="400"/>
+                                <p:commandButton value="申请入库" process="shenQingRuKuPanel"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, rukushenqingTable, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlWAI0002.shenQingRuKu}"/>
+                            </p:panelGrid>
+
+                            <p:outputPanel id="rukushenqingTable">
+                                <p:dataTable value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.ruKuShenQingList}"
+                                             rendered="#{not empty ctrlWAI0002.vm.editingWeiWaiJiaGong.ruKuShenQingList}"
+                                             var="item"
+                                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                             rows="15"
+                                             paginatorAlwaysVisible="false"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="15, 30, 50"
+                                             styleClass="tct">
+                                    <f:facet name="header">
+                                        <h:outputText value="入库申请一览"/>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <!--<p:column headerText="撤销" styleClass="wd-p-5"/>-->
+                                            <p:column headerText="申请ID" styleClass="wd-p-2" sortBy="#{item.luLiId}"/>
+                                            <p:column headerText="预计入库日" styleClass="wd-p-5"/>
+                                            <p:column headerText="#{msg.wu_zhi_miao_shu}" styleClass="wd-p-10"/>
+                                            <p:column headerText="单价" styleClass="wd-p-3"/>
+                                            <p:column headerText="数量" styleClass="wd-p-3"/>
+                                            <!--<p:column headerText="入库类型" styleClass="wd-p-5"/>-->
+                                            <!--<p:column headerText="供应商" styleClass="wd-p-5"/>-->
+                                            <p:column headerText="申请人" styleClass="wd-p-5"/>
+                                            <p:column headerText="仓库" styleClass="wd-p-5"/>
+                                            <p:column headerText="状态" styleClass="wd-p-5"/>
+                                            <p:column headerText="备注" styleClass="wd-p-5"/>
+                                        </p:row>
+                                    </p:columnGroup>
+<!--                                    <p:column>
+                                        <p:commandLink oncomplete="showErrorMsg();"
+                                                       update="frmMain:cgjihuayilan, frmMain:rukushenqingTable, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       actionListener="#{ctrlWAI0002.cheXiaoShenQing(item)}"
+                                                       process="@this"
+                                                       styleClass="White">
+                                            <i class="fa fa-trash Fs18 Green"></i>
+                                            <p:confirm header="撤回申请" message="是否确定撤回申请" icon="ui-icon-alert" />
+                                        </p:commandLink>
+                                    </p:column>-->
+                                    <p:column>
+                                        <h:outputText value="#{item.luLiId}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{item.ruKuRiQi}">
+                                            <f:convertDateTime pattern="#{bizConfig.dateFormat}" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column styleClass="tlt">
+                                        <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                                        <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                                    </p:column>
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{item.danJia}">
+                                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{item.shuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--                <p:column>
+                                                        <h:outputText value="#{item.ruKuLeiXing.message}"/>
+                                                    </p:column>-->
+                                    <!--供应商-->
+<!--                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{item.gouMaiJiHuaMingXi.gongYingShangInfo.gongSiMing}"/>
+                                    </p:column>-->
+                                    <p:column>
+                                        <h:outputText value="#{item.shenqingren.nameZ}"/>
+                                    </p:column>
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{item.cangKu.cangKuMing}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{item.zhuangTai.message}"/>
+                                    </p:column>
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{item.beiZhu}"/>
+                                    </p:column>
+                                </p:dataTable>
+                                
+                                <div class="EmptyBox5"></div>
+                            </p:outputPanel>
+                           
+                            <p:outputPanel id="wuLiaoList">
+                                <p:dataTable value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.wuLiaoList}"
+                                             id="wvWuLiaoList"
+                                             var="wuLiao" 
+                                             cellSeparator="5"
+                                             widgetVar="wvWuLiaoList"
+                                             emptyMessage="没有数据">
+                                    <f:facet name="header">
+                                        <h:outputText value="物料清单"/>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="原材料" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="成品与原料比例" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="需要数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="申请数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="实际数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="成本价" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="未处理数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="使用数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="折损数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="退库数量" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="转移数量" styleClass="tct wd-p-5"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <!--物资-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{wuLiao.shiti.wuZiMiaoShu}" />  
+                                    </p:column>
+                                    <!--成品与原料比例-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="1:#{wuLiao.wuLiaoQingDan.shuLiang.stripTrailingZeros().toPlainString()}" />
+                                    </p:column>
+                                    <!--需要数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.wuLiaoQingDan.shuLiang * ctrlWAI0002.vm.editingWeiWaiJiaGong.yuJiShuLiang}" >
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--申请数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.yuJiShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--实际数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.shiJiShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--成本价-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.chengBenJia}">
+                                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--未处理数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.weiChuLiShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--使用数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.shiYongShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--折损数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.zheSunShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--退库数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.tuiKuShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--转移数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{wuLiao.zhuanYiShuLiang}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="余料处理"
+                                                 disabled="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.yuLiaoChuLiWanCheng}"
+                                                 process="@this"
+                                                 oncomplete="PF('yuLiaoChuLiDialog').show();showErrorMsg();"
+                                                 update="yuLiaoList, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlWAI0002.doNothing()}"/>
+                                <p:commandButton value="核价"
+                                                 disabled="#{not ctrlWAI0002.vm.editingWeiWaiJiaGong.yuLiaoChuLiWanCheng}"
+                                                 rendered="#{empty ctrlWAI0002.vm.editingWeiWaiJiaGong.heJia}"
+                                                 process="pnlInputArea"
+                                                 oncomplete="PF('heJiaDialog').show();showErrorMsg();"
+                                                 update="pnlInputArea, heJia, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlWAI0002.kaiShiHeJia()}"/>
+                                <p:commandButton value="取消" process="@this"
+                                                 update="pnlInputArea" actionListener="#{ctrlWAI0002.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                            <h:outputText value="先领取原材料，再将加工后的成品入库，然后处理余料，最后核价"/>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                        <p:dataTable value="#{ctrlWAI0002.vm.weiWaiJiaGongList}"
+                                     var="item"
+                                     widgetVar="wvWeiWaiJiaGongList"
+                                     rows="10"
+                                     filterDelay="500"
+                                     paginator="true"
+                                     paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="没有数据">
+                            <f:facet name="header">
+                                <h:outputText value="委外加工任务一览"/>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="操作" styleClass="wd-p-5"/>
+                                    <p:column headerText="加工商" styleClass="tct wd-p-15"/>
+                                    <p:column headerText="加工物资" styleClass="tct wd-p-15"/>
+                                    <p:column headerText="加工数量" styleClass="tct wd-p-5"/>
+                                    <p:column headerText="BOM" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="预计到货日" styleClass="tct wd-p-6"/>
+                                    <p:column headerText="创建时间" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlWAI0002.onEditWeiWaiJiaGong(item)}"
+                                               process="@this" update="@(.pnlInputArea)">
+                                    <i class="fa fa-pencil Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                            <!--加工商-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.gongYingShang.gongSiMing}"/>
+                            </p:column>
+                            <!--加工物资-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <!--加工数量-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yuJiShuLiang}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <!--BOM-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.bom.wuLiaoMing}"/>
+                            </p:column>
+                            <!--预计时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.yuJiDaoHuoRi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--创建时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.insDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--备注-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.beiZhu}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:dialog header="余料处理"
+              styleClass="wd-p-80"
+              widgetVar="yuLiaoChuLiDialog"
+              closeOnEscape="true"
+              modal="true"
+              resizable="false">
+        <p:outputPanel id="yuLiaoList">
+            <p:dataTable value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.wuLiaoList}"
+                         var="wuLiao" 
+                         cellSeparator="5"
+                         widgetVar="wvWuLiaoList"
+                         emptyMessage="没有数据">
+                <f:facet name="header">
+                    <h:outputText value="物料清单"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="原材料" styleClass="tct wd-p-10"/>
+                        <p:column headerText="未处理数量" styleClass="tct wd-p-10"/>
+                        <p:column headerText="折损数量" styleClass="tct wd-p-10"/>
+                        <p:column headerText="退库数量" styleClass="tct wd-p-10"/>
+                        <p:column headerText="转移数量" styleClass="tct wd-p-10"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--原材料-->
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{wuLiao.shiti.wuZiMiaoShu}" /> 
+                </p:column>
+                <!--未处理数量-->
+                <p:column styleClass="trt">
+                    <h:outputText value="#{wuLiao.weiChuLiShuLiang}">
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </h:outputText>
+                </p:column>
+                <!--折损数量-->
+                <p:column styleClass="tct">
+                    <p:inputText value="#{wuLiao.benCiZheSunShuLiang}" styleClass="trt">
+                        <p:keyFilter regEx="/[\d\.]/"/>
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </p:inputText>
+                </p:column>
+                <!--退库数量-->
+                <p:column styleClass="tct">
+                    <p:inputText value="#{wuLiao.benCiTuiKuShuLiang}" styleClass="trt">
+                        <p:keyFilter regEx="/[\d\.]/"/>
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </p:inputText>
+                </p:column>
+                <!--转移数量-->
+                <p:column styleClass="tct">
+                    <p:inputText value="#{wuLiao.benCiZhuanYiShuLiang}" styleClass="trt">
+                        <p:keyFilter regEx="/[\d\.]/"/>
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </p:inputText>
+                </p:column>
+            </p:dataTable>
+            
+            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                <p:selectOneMenu value="#{ctrlWAI0002.vm.tuiHuoCangKuId}" autoWidth="false">
+                    <f:selectItem itemLabel="请选择退货仓库" itemValue=""/>
+                    <f:selectItems value="#{ctrlWAI0002.vm.cangKuList}"
+                                   var="cangKu"
+                                   itemLabel="#{cangKu.cangKuMing}"
+                                   itemValue="#{cangKu.cangKuId}"/>
+                </p:selectOneMenu>
+                
+                <p:calendar value="#{ctrlWAI0002.vm.tuiKuRiQi}"
+                            readonlyInput="true"
+                            placeholder="预计退库日期"
+                            mask="true"
+                            pattern="#{bizConfig.dateFormat}"
+                            size="12"
+                            navigator="true"
+                            locale="#{bizConfig.locale}">
+                </p:calendar>
+                
+                <p:selectOneMenu value="#{ctrlWAI0002.vm.zhuanYiXiangMuId}" autoWidth="false">
+                    <f:selectItem itemLabel="请选择转移至委外加工项目" itemValue=""/>
+                    <f:selectItems value="#{ctrlWAI0002.vm.weiWaiJiaGongXiangMuList}"
+                                   var="xiangMu"
+                                   itemLabel="#{xiangMu.xiangMuMing}"
+                                   itemValue="#{xiangMu.xiangMuId}"/>
+                </p:selectOneMenu>
+                
+                <p:inputText value="#{ctrlWAI0002.vm.beiZhu}" placeholder="备注" maxlength="400"/>
+                
+                <p:commandButton value="处理余料" process="yuLiaoList"
+                                 oncomplete="showErrorMsg();"
+                                 update="pnlInputArea, yuLiaoList, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 actionListener="#{ctrlWAI0002.chuLiYuLiao}"/>
+            </p:panelGrid>
+            
+        </p:outputPanel>
+
+    </p:dialog>
+    
+    <p:dialog header="核价"
+              width="350"
+              widgetVar="heJiaDialog"
+              closeOnEscape="true"
+              modal="true"
+              resizable="false">
+        <p:outputPanel id="heJia">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-f-100,"
+                         rendered="#{not empty ctrlWAI0002.vm.editingWeiWaiJiaHeJia}">
+                <p:outputLabel value="数量"/>
+                <h:outputText value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.shiJiShuLiang}">
+                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                </h:outputText>
+                
+                <p:outputLabel value="总成本价"/>
+                <h:outputText value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.zongChengBenJia}">
+                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                </h:outputText>
+                
+                <p:outputLabel value="总折损价"/>
+                <h:outputText value="#{ctrlWAI0002.vm.editingWeiWaiJiaGong.zongZheSunJia}">
+                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                </h:outputText>
+                
+                <p:outputLabel value="总加工费"/>
+                <p:inputText value="#{ctrlWAI0002.vm.editingWeiWaiJiaHeJia.zongJiaGongFei}"
+                             styleClass="trt"
+                             required="true"
+                             requiredMessage="#{ctrlWAI0002.isRequiredMessage('总加工费')}">
+                    <p:ajax process="@this" update="zuiZhongDanJia" listener="#{ctrlWAI0002.jiSuanZuiZhongDanJia}" />
+                    <p:keyFilter regEx="/[\d\.]/"/>
+                    <!--<f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>-->
+                </p:inputText>
+                
+                <p:outputLabel value="最终单价"/>
+                <p:inputText id="zuiZhongDanJia" value="#{ctrlWAI0002.vm.editingWeiWaiJiaHeJia.zuiZhongDanJia}"
+                             styleClass="trt"
+                             required="true"
+                             requiredMessage="#{ctrlWAI0002.isRequiredMessage('最终单价')}">
+                    <p:keyFilter regEx="/[\d\.]/"/>
+                    <!--<f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>-->
+                </p:inputText>
+                <p:outputLabel value="备注"/>
+                <p:inputText value="#{ctrlWAI0002.vm.editingWeiWaiJiaHeJia.beiZhu}" placeholder="备注" maxlength="400"/>
+            </p:panelGrid>
+            
+            <p:outputPanel styleClass="tct MarTop5">
+                <p:commandButton value="核价" process="heJia @this"
+                                oncomplete="showErrorMsg();"
+                                update="pnlInputArea, heJia, yuLiaoList, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                actionListener="#{ctrlWAI0002.heJia}"/>
+            </p:outputPanel>
+        </p:outputPanel>
+
+    </p:dialog>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

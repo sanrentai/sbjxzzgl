@@ -1,0 +1,306 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0011')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="grid" styleClass="Container50 Responsive100 grid">
+                    <p:panelGrid columns="2" columnClasses="wd-p-30,wd-p-70"
+                                 layout="grid" styleClass="ui-panelgrid-blank">
+                        <!--流程ID-->
+                        <p:outputLabel for="liuchengid"
+                                       value="流程ID"
+                                       rendered="#{not empty ctrlMST0011.vm.editingLiuCheng.liuChengId}"/>
+                        <h:outputText id="liuchengid" value="#{ctrlMST0011.vm.editingLiuCheng.liuChengId}"
+                                      rendered="#{not empty ctrlMST0011.vm.editingLiuCheng.liuChengId}"/>
+                        <!--流程名称-->
+                        <p:outputLabel for="liuchengming" value="流程名称"/>
+                        <p:inputText id="liuchengming"
+                                     value="#{ctrlMST0011.vm.editingLiuCheng.liuChengMing}"
+                                     placeholder="流程名"
+                                     required="true"
+                                     requiredMessage="#{ctrlMST0011.isRequiredMessage('流程名')}"
+                                     />
+                        <!--流程区分-->
+                        <p:outputLabel for="liuchengqufen" value="流程区分"/>
+                        <p:selectOneMenu id="liuchengqufen"
+                                           disabled="#{not empty ctrlMST0011.vm.editingLiuCheng.liuChengId}"
+                                           value="#{ctrlMST0011.vm.liuChengQuFen}"
+                                           required="true"
+                                           requiredMessage="#{ctrlMST0011.isRequiredMessage('流程区分')}">
+                            <f:selectItems value="#{bizConfig.editableLiuChengQuFen}"
+                                           var="quFen"
+                                           itemLabel="#{quFen.message}"
+                                           itemValue="#{quFen.value}" />
+                        </p:selectOneMenu>
+                        <!--流程条件区分-->
+                        <p:outputLabel for="tiaojian" value="条件"/>
+                        <p:selectOneButton id="tiaojian"
+                                           value="#{ctrlMST0011.vm.liuChengTiaoJianQuFen}"
+                                           required="true"
+                                           requiredMessage="#{ctrlMST0011.isRequiredMessage('流程条件区分')}">
+                            <f:selectItems value="#{bizConfig.liuChengTiaoJianQuFen}"
+                                           var="quFen"
+                                           itemLabel="#{quFen.message}"
+                                           itemValue="#{quFen.value}" />
+                        </p:selectOneButton>
+                        <!--流程模式区分-->
+                        <p:outputLabel for="moshi" value="模式"/>
+                        <p:selectOneButton id="moshi"
+                                           value="#{ctrlMST0011.vm.liuChengMoShiQuFen}">
+                            <f:selectItems value="#{bizConfig.liuChengMoShiQuFen}"
+                                           var="quFen"
+                                           itemLabel="#{quFen.message}"
+                                           itemValue="#{quFen.value}" />
+                        </p:selectOneButton>
+                        <!--审批层数-->
+                        <p:outputLabel for="cengshu" value="审批层数"/>
+                        <p:spinner id="cengshu"
+                                   disabled="#{not empty ctrlMST0011.vm.editingLiuCheng.liuChengId}"
+                                   required="true"
+                                   requiredMessage="#{ctrlMST0011.isRequiredMessage('审批层数')}"
+                                   min="0" max="99"
+                                   stepFactor="1" size="2"
+                                   value="#{ctrlMST0011.vm.editingLiuCheng.shenPiCengShu}">
+                        </p:spinner>
+                        <!--金额上限-->
+                        <p:outputLabel for="shangxian" value="金额上限"/>
+                        <p:inputNumber id="shangxian" thousandSeparator=","
+                                       styleClass="trt-inputNumber"
+                                       value="#{ctrlMST0011.vm.editingLiuCheng.shangXian}"
+                                       decimalPlaces="2"/>
+                        <!--金额下限-->
+                        <p:outputLabel for="xiaxian" value="金额下限"/>
+                        <p:inputNumber id="xiaxian" thousandSeparator=","
+                                       styleClass="trt-inputNumber"
+                                       value="#{ctrlMST0011.vm.editingLiuCheng.xiaXian}"
+                                       decimalPlaces="2"/>
+                        <!--备注-->
+                        <p:outputLabel for="beizhu" value="备注"/>
+                        <p:inputText id="beizhu"
+                                     value="#{ctrlMST0011.vm.editingLiuCheng.beiZhu}"
+                                     placeholder="备注"/>
+                    </p:panelGrid>
+                    <p:outputPanel styleClass="Container100 Responsive100">
+                        <p:commandButton process="grid"
+                                         oncomplete="showErrorMsg();"
+                                         update="liuChengList grid xiangxilist, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{ctrlMST0011.saveLiuCheng()}"
+                                         value="提交"
+                                         styleClass="White wd-p-30"
+                                         icon="fa fa-check"/>
+                        <p:commandButton process="grid"
+                                         oncomplete="showErrorMsg();"
+                                         update="grid xiangxilist liuChengList, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{ctrlMST0011.cancelXiuGai()}"
+                                         rendered="#{not empty ctrlMST0011.vm.editingLiuCheng.liuChengId}"
+                                         value="取消"
+                                         styleClass="White wd-p-30"
+                                         icon="fa fa-close"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+                
+                <p:outputPanel id="xiangxilist" styleClass="Container50 Responsive100 xiangxilist">
+                    <p:dataTable var="xiangXi"
+                                 styleClass="tct"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 value="#{ctrlMST0011.vm.editingLiuCheng.xiangXiList}">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="编辑" styleClass="wd-p-2"/>
+                                <p:column headerText="流程详细ID" styleClass="wd-p-4"/>
+                                <p:column headerText="审批级别" styleClass="wd-p-4"/>
+                                <p:column headerText="审批区分" styleClass="wd-p-4"/>
+                                <p:column headerText="角色一览" styleClass="wd-p-15"/>
+                            </p:row>
+                        </p:columnGroup>
+
+                        <p:column>
+                            <!--编辑流程-->
+                            <p:commandLink process="@this"
+                                           update="@(.shenPiJueSePanel)"
+                                           actionListener="#{ctrlMST0011.vm.setXiangXi(xiangXi)}"
+                                           oncomplete="PF('shenPiJueSePanel').show('#{component.clientId}')">
+                                <i class="fa fa-pencil Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{xiangXi.liuChengXiangXiId}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{xiangXi.shenPiJiBie}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{xiangXi.shenPiQuFen.message}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{ctrlMST0011.getRoleName(xiangXi.editRoleList)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </div>
+        </div>
+
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <div class="CardBizTopic">审批流程一览</div>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+                    <p:outputPanel id="liuChengList" styleClass="Container100 Responsive100 liuChengList">
+                        <ui:repeat value="#{bizConfig.editableLiuChengQuFen}" var="qufen">
+                            <p:dataTable var="liucheng"
+                                         styleClass="tct"
+                                         value="#{ctrlMST0011.vm.getLiuChengByQuFen(qufen)}">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column colspan="12" headerText="#{qufen.message}"/>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column headerText="调整优先度" styleClass="wd-p-4"/>
+                                        <p:column headerText="编辑" styleClass="wd-p-2"/>
+                                        <p:column headerText="删除" styleClass="wd-p-2"/>
+                                        <p:column headerText="流程ID" styleClass="wd-p-2"/>
+                                        <p:column headerText="流程名" styleClass="wd-p-5"/>
+                                        <p:column headerText="流程区分" styleClass="wd-p-4"/>
+                                        <p:column headerText="条件" styleClass="wd-p-2"/>
+                                        <p:column headerText="模式" styleClass="wd-p-3"/>
+                                        <p:column headerText="审批层数" styleClass="wd-p-3"/>
+                                        <p:column headerText="金额上限" styleClass="wd-p-4"/>
+                                        <p:column headerText="金额下限" styleClass="wd-p-4"/>
+                                        <p:column headerText="备注" styleClass="wd-p-5"/>
+                                    </p:row>
+                                </p:columnGroup>
+
+                                <p:column>
+                                    <!--调整优先度-->
+                                    <p:commandLink process="@this"
+                                                   oncomplete="showErrorMsg();"
+                                                   update="@(.liuChengList), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   actionListener="#{ctrlMST0011.minusYouXianDu(liucheng)}">
+                                        <i class="fa fa-arrow-down Fs18 Blue"></i>
+                                    </p:commandLink>
+                                    <p:commandLink process="@this"
+                                                   oncomplete="showErrorMsg();"
+                                                   update="@(.liuChengList), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   actionListener="#{ctrlMST0011.addYouXianDu(liucheng)}">
+                                        <i class="fa fa-arrow-up Fs18 Blue"></i>
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column>
+                                    <!--编辑流程-->
+                                    <p:commandLink process="@this"
+                                                   update="@(.grid, .xiangxilist, .liuChengList)"
+                                                   actionListener="#{ctrlMST0011.editLiuCheng(liucheng)}">
+                                        <i class="fa fa-pencil Fs18 Blue"></i>
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column>
+                                    <!--删除流程-->
+                                    <p:commandLink process="@this"
+                                                   update="@(.liuChengList)"
+                                                   disabled="#{liucheng.liuChengId.equals(ctrlMST0011.vm.editingLiuCheng.liuChengId)}"
+                                                   rendered="#{ctrlMST0011.vm.getLiuChengByQuFen(qufen).size() != 1}"
+                                                   actionListener="#{ctrlMST0011.deleteLiuCheng(liucheng)}">
+                                        <i class="fa fa-trash Fs18 Red"></i>
+                                        <p:confirm header="删除流程" message="是否确定删除该流程" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{liucheng.liuChengId}"/>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{liucheng.liuChengMing}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{liucheng.liuChengQuFen.message}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{liucheng.tiaoJianQuFen.message}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{liucheng.liuChengMoShi.message}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{liucheng.shenPiCengShu}"/>
+                                </p:column>
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{liucheng.shangXian}">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{liucheng.xiaXian}">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{liucheng.beiZhu}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </ui:repeat>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+
+    <!--修改审批角色-->
+    <p:overlayPanel widgetVar="shenPiJueSePanel" id="shenPiJueSePanel" styleClass="shenPiJueSePanel">
+        <p:dataTable value="#{ctrlMST0011.vm.roleList}"
+                     var="role"
+                     paginatorAlwaysVisible="false"
+                     paginator="true" rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     styleClass="bg-c-row-odd wd-f-500 tct"
+                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column headerText="选择" styleClass="wd-p-3"/>
+                    <p:column headerText="角色ID" styleClass="wd-p-4"/>
+                    <p:column headerText="角色名" styleClass="wd-p-4"/>
+                    <p:column headerText="描述" styleClass="wd-p-4"/>
+                </p:row>
+            </p:columnGroup>
+            <p:column styleClass="tct">
+                <p:outputPanel id="selectRole">
+                    <!--选择-->
+                    <p:commandLink process="@this"
+                                   rendered="#{!ctrlMST0011.isRoleSelected(role)}"
+                                   actionListener="#{ctrlMST0011.addRole(role)}"
+                                   update="selectRole @(.xiangxilist)">
+                        <i class="fa fa-check Fs18 Green"></i>
+                    </p:commandLink>
+                    <!--取消选择-->
+                    <p:commandLink process="@this"
+                                   rendered="#{ctrlMST0011.isRoleSelected(role)}"
+                                   actionListener="#{ctrlMST0011.deleteRole(role)}"
+                                   update="selectRole @(.xiangxilist)">
+                        <i class="fa fa-close Fs18 Red"></i>
+                    </p:commandLink>
+                </p:outputPanel>
+            </p:column>
+
+            <p:column>
+                <h:outputText value="#{role.roleId}"/>
+            </p:column>
+            <p:column styleClass="tlt">
+                <h:outputText value="#{role.roleName}"/>
+            </p:column>
+            <p:column styleClass="tlt">
+                <h:outputText value="#{role.roleDescription}" />
+            </p:column>
+        </p:dataTable>
+    </p:overlayPanel>
+
+</ui:composition>

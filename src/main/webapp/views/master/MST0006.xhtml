@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+
+            <div class="Card  ui-fluid">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0006')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:toolbar id="toolbar">
+                    <f:facet name="left">
+                        <p:commandButton id="btnSelectYuanGong" value="员工选择" actionListener="#{ctrlMST0006.onStartChooseYuanGong}" update="ovlYuanGongList"
+                                         oncomplete="PF('ovlYuanGongList').show();"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100">
+            <p:outputPanel styleClass="Card  ui-fluid" rendered="#{ctrlMST0006.statusEditing}">
+                <div class="CardBizTopic">系统用户信息</div>
+                <div class="SeparatorFull"></div>
+                <p:panelGrid columns="2" layout="grid" styleClass="Container40 Responsive100 ui-panelgrid-blank" columnClasses="ht-f-40,ht-f-40">
+
+                    <h:outputLabel value="状态" styleClass="Fs16"/>
+                    <h:outputLabel value="(新建)" styleClass="Fs16 Red" rendered="#{not ctrlMST0006.vm.editingYuanGong.existsLoginUser}"/>
+                    <h:outputLabel value="(更新)" styleClass="Fs16 Blue" rendered="#{ctrlMST0006.vm.editingYuanGong.existsLoginUser}"/>
+                    
+                    <h:outputLabel value="员工号" styleClass="Fs16"/>
+                    <h:outputText value="#{ctrlMST0006.vm.editingYuanGong.yuanGongId}"/>
+
+                    <h:outputLabel value="用户名" styleClass="Fs16"/>
+                    <h:outputLabel id="lblLoginUserName" value="#{ctrlMST0006.vm.editingYuanGong.nameZ}" styleClass="Fs16"
+                                   title="#{ctrlMST0006.vm.editingYuanGong.bieMing}"/>
+                    
+                    <h:outputLabel value="登录ID" styleClass="Fs16"/>
+                    <p:outputPanel>
+<!--                        <h:outputLabel value="#{ctrlMST0006.vm.editingYuanGong.tempLoginId}" styleClass="Fs16 Blue" rendered="#{not ctrlMST0006.vm.editingYuanGong.existsLoginUser}"/>
+                        <h:outputLabel value="#{ctrlMST0006.vm.editingYuanGong.loginInfo.loginId}" styleClass="Fs16" rendered="#{ctrlMST0006.vm.editingYuanGong.existsLoginUser}"/>-->
+                        <p:inputText value="#{ctrlMST0006.vm.editingYuanGong.loginInfo.loginId}" styleClass="Fs16"/>
+                    </p:outputPanel>
+
+                    <h:outputText value="冻结用户" styleClass="Fs16"/>
+                    <p:selectOneRadio value="#{ctrlMST0006.vm.editingYuanGong.loginInfo.lock}">
+                        <f:selectItem itemLabel="可用" itemValue="0"/>
+                        <f:selectItem itemLabel="冻结" itemValue="1"/>
+                    </p:selectOneRadio>
+
+                    <p:commandButton value="保存" actionListener="#{ctrlMST0006.onSaveLoginUser}"
+                                     process="pnlInputArea"
+                                     styleClass="GreenButton"
+                                     update="pnlInputArea ,frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                     onstart="PF('diaMailProgress').show();"
+                                     oncomplete="PF('diaMailProgress').hide();showErrorMsg();"
+                                     rendered="#{ctrlMST0006.vm.editingYuanGong.hasInsertEmail}"/>
+                    <p:commandButton value="重置密码" styleClass="RedButton"
+                                     actionListener="#{ctrlMST0006.onResetPassword}"
+                                     process="@this"
+                                     update="pnlInputArea"
+                                     rendered="#{ctrlMST0006.vm.editingYuanGong.existsLoginUser}"
+                                     oncomplete="PF('diaMailProgress').hide();">
+                        <p:confirm header="确认" message="确定要重置密码吗?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:panelGrid>
+                <p:tooltip for="lblLoginUserName" rendered="#{ctrlMST0006.vm.editingYuanGong.hasBieMing}" />
+            </p:outputPanel>
+            
+        </p:outputPanel>
+
+        <p:overlayPanel id="ovlYuanGongList" for="btnSelectYuanGong" widgetVar="ovlYuanGongList" styleClass="Container30">
+            <p:dataTable value="#{ctrlMST0006.vm.yuanGongList}" var="yg" lazy="true" cellSeparator="5"
+                         widgetVar="wvYuanGongList"
+                         paginator="true" rows="10" filterDelay="500"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="No Data">
+                <f:facet name="header">
+                    <h:outputText value="员工一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="选择" styleClass="wd-p-10"/>
+                        <p:column headerText="用户ID" styleClass="wd-p-20"/>
+                        <p:column headerText="用户名" filterBy="#{yg.xing}" filterMaxLength="15" filterMatchMode="contains"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--选择-->
+                <p:column styleClass="tct">
+                    <p:commandLink rendered="#{yg.hasInsertEmail or true}">
+                        <p:ajax process="@this" resetValues="true" oncomplete="PF('ovlYuanGongList').hide();"
+                                update="frmMain:pnlInputArea" listener="#{ctrlMST0006.onSelectYuanGong(yg)}"/>
+                        <i class="fa fa-pencil Fs18 Blue"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--员工ID-->
+                <p:column styleClass="tct">
+                    <p:outputLabel rendered="#{not yg.existsLoginUser}">
+                        <i class="icon-cross47 Red Fs16" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{yg.loginInfo.loginId}" rendered="#{yg.existsLoginUser}"/>
+                </p:column>
+                <!--员工名-->
+                <p:column>
+                    <h:outputText value="#{yg.nameZ}"/>
+                </p:column>
+            </p:dataTable>
+        </p:overlayPanel>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="是" styleClass="ui-confirmdialog-yes" icon="fa fa-check" onclick="PF('diaMailProgress').show();"  />
+            <p:commandButton value="否" styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+        </p:confirmDialog>
+
+        <p:dialog widgetVar="diaMailProgress" resizable="false" modal="true" closeOnEscape="true" header="信息">
+            <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank tct">
+                <f:facet name="header">
+                    <p:graphicImage name="images/ajaxStatus.gif"/>
+                </f:facet>
+                <h:outputText value="创建中..."  styleClass="Fs20 Gray"/>
+            </p:panelGrid>
+        </p:dialog>
+    </p:outputPanel>
+</ui:composition>

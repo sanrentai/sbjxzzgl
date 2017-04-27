@@ -1,0 +1,200 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0011')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="yongCheShenQing" styleClass="Container100 Responsive100">
+                    <p:panelGrid columns="5"
+                                 layout="grid"
+                                 styleClass="ui-panelgrid-blank"
+                                 columnClasses="wd-p-30,wd-p-30,wd-p-60,wd-p-30,wd-p-30">
+                        <!--用车项目-->
+                        <p:selectOneMenu id="projectList"
+                                         styleClass="projectList"
+                                         value="#{ctrlCAR0011.vm.addedProject}">
+                            <f:selectItems value="#{ctrlCAR0011.vm.projectList}"
+                                           var="project"
+                                           itemLabel="#{project.xiangMuMing}"
+                                           itemValue="#{project.xiangMuId}"/>
+                        </p:selectOneMenu>
+                        <!--计划用车日期-->
+                        <p:calendar id="txtStartDate" value="#{ctrlCAR0011.vm.jiHuaYongCheRiQi}"
+                                    readonlyInput="true" pages="3"
+                                    placeholder="计划用车日期"
+                                    mask="true"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    required="true" size="12"
+                                    requiredMessage="#{ctrlCAR0011.isRequiredMessage('计划用车日期')}"
+                                    converterMessage="#{ctrlCAR0011.dateUnvalidMessage('计划用车日期')}"
+                                    title="必须输入计划用车日期"
+                                    locale="#{bizConfig.locale}">
+                        </p:calendar>
+                        <!--申请用车按钮-->
+                        <p:commandButton id="addProjectButton"
+                                         value="申请用车"
+                                         styleClass="addProjectButton"
+                                         actionListener="#{ctrlCAR0011.addYongChe}"
+                                         disabled="#{not empty ctrlCAR0011.vm.yongCheShenQing}"
+                                         process="yongCheShenQing, @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="yongCheShenQing, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+
+                        <!--提交申请按钮-->
+                        <p:commandButton value="#{msg.button_tijiaoshenqing}"
+                                         actionListener="#{ctrlCAR0011.tiJiaoShenQing()}"
+                                         process="@(.dtShenQing), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, addProjectButton"/>
+
+                    </p:panelGrid>
+
+                    <p:outputPanel id="shen_pi_panel" styleClass="Container100 Responsive100 shen_pi_panel" rendered="#{not empty ctrlCAR0011.vm.yongCheShenQing}">
+                        <p:panel header="用车项目：#{ctrlCAR0011.vm.yongCheShenQing.xiangMu.xiangMuMing}"
+                                 toggleable="true"
+                                 styleClass="clearfix"
+                                 toggleSpeed="500">
+                            <f:facet name="actions">
+                                <p:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+                                               actionListener="#{ctrlCAR0011.cheXiaoYongChe}"
+                                               process="@this"
+                                               update="@(.shen_pi_panel, .projectList, .addProjectButton)">
+                                    <i class="fa fa-close Red" />
+                                </p:commandLink>
+                                <p:commandLink style="margin-left: 50px"
+                                               value="添加用车详细"
+                                               actionListener="#{ctrlCAR0011.addYongCheMingXi}"
+                                               process="@(.dtShenQing), @this"
+                                               update="@(.shen_pi_panel, .dtShenQing)">
+                                    <h:outputText styleClass="fa fa-windows Fs18" />
+                                </p:commandLink>
+                            </f:facet>
+
+                            <p:outputPanel id="dtShenQing" styleClass="Container99 Responsive100 dtShenQing" >
+                                <!--明细编辑行-->
+                                <p:dataTable id="dtshenqingmingxi" value="#{ctrlCAR0011.vm.yongCheShenQing.yongCheShenQingMingXiList}"
+                                             rendered="#{not empty ctrlCAR0011.vm.yongCheShenQing.yongCheShenQingMingXiList}"
+                                             style="word-break: keep-all"
+                                             var="mx">
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                                            <p:column headerText="车辆分类" styleClass="wd-p-15"/>
+                                            <p:column headerText="详细分类" styleClass="wd-p-5"/>
+                                            <p:column headerText="使用日期" styleClass="wd-p-5"/>
+                                            <p:column headerText="用车单位" styleClass="wd-p-5"/>
+                                            <p:column headerText="用车数量" styleClass="wd-p-5"/>
+                                            <p:column headerText="车辆辆数" styleClass="wd-p-5"/>
+                                            <p:column headerText="备注"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <!--删除-->
+                                    <p:column styleClass="tct">
+                                        <p:commandLink styleClass="lnkDelete"
+                                                       process="@(.dtShenQing)"
+                                                       update="@(.dtShenQing)"
+                                                       actionListener="#{ctrlCAR0011.deleteShenQingMingXi(mx)}">
+                                            <i class="fa fa-trash Fs18 Red"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--车辆分类-->
+                                    <p:column>
+                                        <p:outputPanel>
+                                            <p:selectOneMenu id="IDViecleType" value="#{mx.fenLeiId}"
+                                                             required="true" requiredMessage="#{ctrlCAR0011.isRequiredMessage('车辆分类')}">
+                                                <p:ajax process="@this" update="IDDetailType" listener="#{ctrlCAR0011.onTypeChanged(mx)}"></p:ajax>
+                                                <f:selectItems value="#{bizConfig.cheLiangLeiXing}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+                                            </p:selectOneMenu>
+                                        </p:outputPanel>
+                                    </p:column>
+                                    <!--详细分类-->
+                                    <p:column styleClass="tct">
+                                        <p:selectOneMenu id="IDDetailType" value="#{mx.xiangXiFenLeiId}"
+                                                         styleClass="leiBieGuanLi"
+                                                         required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('详细分类')}">
+                                            <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing(mx.fenLeiId.code)}"
+                                                           var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <!--使用日期-->
+                                    <p:column styleClass="wd-f-100">
+                                        <p:calendar id="txtStartDate" value="#{mx.shiYongRiQi}"
+                                                    readonlyInput="true" pages="3"
+                                                    placeholder="使用日期"
+                                                    mask="true"
+                                                    pattern="#{bizConfig.dateFormat}"
+                                                    required="true" size="12"
+                                                    requiredMessage="#{ctrlCAR0011.isRequiredMessage('使用日期')}"
+                                                    converterMessage="#{ctrlCAR0011.dateUnvalidMessage('使用日期')}"
+                                                    title="使用日期"
+                                                    locale="#{bizConfig.locale}">
+                                        </p:calendar>
+                                    </p:column>
+                                    <!--用车单位-->
+                                    <p:column styleClass="wd-f-100">
+                                        <p:selectOneMenu id="danWei"
+                                                         value="#{mx.yongCheDanWei}"
+                                                         required="true"
+                                                         requiredMessage="#{ctrlCAR0011.isRequiredMessage('计价方式')}">
+                                            <f:selectItem itemLabel="天" itemValue="天"/>
+                                            <f:selectItem itemLabel="时" itemValue="时"/>
+                                            <f:selectItem itemLabel="月" itemValue="月"/>
+                                            <f:selectItem itemLabel="自定义" itemValue="自定义"/>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <!--用车数量-->
+                                    <p:column styleClass="tct wd-f-100">
+                                        <p:spinner min="1" max="9999999"
+                                                   stepFactor="1" size="7"
+                                                   style="width: 100px!important"
+                                                   value="#{mx.yongCheShuLiang}">
+                                        </p:spinner>
+                                    </p:column>
+                                    <!--车辆辆数-->
+                                    <p:column styleClass="tct wd-f-150">
+                                        <p:spinner min="1" max="9999999"
+                                                   stepFactor="1" size="7"
+                                                   style="width: 100px!important"
+                                                   value="#{mx.liangShu}">
+                                        </p:spinner>
+                                    </p:column>
+                                    <!--备注-->
+                                    <p:column>
+                                        <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{mx.beiZhu}" placeholder="备注"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:panel>
+                        <div class="EmptyBox5"></div>
+                        <p:panelGrid columns="5"
+                                     layout="grid"
+                                     rendered="#{not empty ctrlCAR0011.vm.yongCheShenQing}"
+                                     styleClass="ui-panelgrid-blank MarTop10"
+                                     columnClasses="wd-p-30,wd-p-30,wd-p-60,wd-p-30,wd-p-30">
+                            <p:outputPanel />
+                            <p:outputPanel />
+                            <p:outputPanel />
+                            <!--提交申请按钮-->
+                            <p:commandButton value="#{msg.button_tijiaoshenqing}"
+                                             actionListener="#{ctrlCAR0011.tiJiaoShenQing()}"
+                                             process="@(.dtShenQing), @this"
+                                             oncomplete="showErrorMsg();"
+                                             update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, addProjectButton"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>

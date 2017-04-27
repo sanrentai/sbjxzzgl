@@ -1,0 +1,351 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container50">
+            <p:outputPanel id="pngInputArea" styleClass="Card Container100 Responsive100 pngInputArea">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0003')}"/>
+                </h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <div class="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建"
+                                             process="@this" update="pngInputArea"
+                                             actionListener="#{ctrlMST0003.onNewButtonClick}"
+                                             resetValues="true"
+                                             disabled="#{ctrlMST0003.statusEditing}"/>
+                            <!--取消按钮-->
+                            <p:commandButton value="取消" styleClass="RedButton"
+                                             process="@this" update="pngInputArea, pngShuXingInputArea"
+                                             disabled="#{ctrlMST0003.statusInit}"
+                                             resetValues="true"
+                                             actionListener="#{ctrlMST0003.onCancelButtonClick}"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton id="btnSelectWuZi" value="选择物资" type="button"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank">
+                        <!--品类候选值-->
+                        <p:overlayPanel widgetVar="wvWuZiList" for="btnSelectWuZi">
+                            <p:dataTable value="#{ctrlMST0003.vm.pinLeiDetails}"
+                                         var="pinLei" lazy="true"
+                                         paginatorAlwaysVisible="false"
+                                         paginator="true" rows="10"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         id="dtPinLeiWuZi" widgetVar="dtPinLeiWuZi"
+                                         styleClass="bg-c-row-odd wd-f-600"
+                                         emptyMessage="No Data">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column styleClass="tct wd-p-20" headerText="#{msg.pin_lei_ming}"
+                                                  filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                                        <p:column headerText="编辑" style="width: 38px;"/>
+                                        <p:column headerText="物资名称" style="width: 208px;"/>
+                                        <p:column headerText="规格/型号"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--品类名称-->
+                                <p:column>
+                                    <h:outputText value="#{pinLei.pinLeiMing}"/>
+                                </p:column>
+                                <!--物资-->
+                                <p:column colspan="3" styleClass="no-padding" style="padding: 0px!important;">
+                                    <p:dataTable value="#{pinLei.shiTiWuZi}"
+                                                 var="stwz"
+                                                 rendered="#{not empty pinLei.shiTiWuZi}"
+                                                 styleClass="innerTable">
+                                        <p:column styleClass="tct wd-f-30">
+                                            <!--选择-->
+                                            <p:commandLink process="@(.selected_project, .dtShenQing), @this"
+                                                           resetValues="true"
+                                                           actionListener="#{ctrlMST0003.onWuZiSelect(stwz)}"
+                                                           update="frmMain:pngInputArea,frmMain:pngShuXingInputArea">
+                                                <i class="fa fa-pencil Fs18 Green"></i>
+                                            </p:commandLink>
+                                        </p:column>
+                                        <p:column styleClass="wd-f-200" >
+                                            <h:outputText value="#{stwz.wuZiMiaoShu}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{stwz.shuXingSummary}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:column>
+                            </p:dataTable>
+                        </p:overlayPanel>
+                    </p:panelGrid>
+                </div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+                    <p:panelGrid columns="2" layout="grid" columnClasses="wd-p-20" styleClass="ui-panelgrid-blank">
+                        <!--实体物资编号-->
+<!--                        <p:outputLabel value="实体物资编号"/>
+                        <p:outputLabel value="#{ctrlMST0003.insertMode ? '新建' : ctrlMST0003.vm.editingWuZiBianHao.wuZiBianHao}" styleClass="Red"/>-->
+                        <!--物资描述-->
+                        <p:outputLabel value="物资描述" for="txtWuZiMiaoShu"/>
+                        <p:inputText id="txtWuZiMiaoShu" value="#{ctrlMST0003.vm.editingWuZiBianHao.wuZiMiaoShu}" styleClass="wd-f-300"
+                                     required="true" requiredMessage="#{ctrlMST0003.isRequiredMessage('物资描述')}"
+                                     disabled="#{ctrlMST0003.statusInit}"
+                                     maxlength="30"/>
+                        <!--物品-->
+                        <p:outputLabel value="物品" for="txtPinLei"/>
+                        <p:outputPanel>
+                            <table style="border-collapse:collapse;border-spacing:0px;border: 0;">
+                                <tr>
+                                    <td>
+                                        <p:inputText id="txtPinLei" value="#{ctrlMST0003.vm.editingWuZiBianHao.pinLei.pinLeiMing}"
+                                                     readonly="true" styleClass="ht-f-textbox wd-f-300 LeadenGreenBack White txtPinLei"
+                                                     disabled="#{ctrlMST0003.statusInit}"/>
+                                    </td>
+                                    <td><!--物品选择-->
+                                        <p:commandButton id="btnSelectPinLei" type="button" icon="fa fa-windows" title="物品选择"
+                                                         styleClass="White"
+                                                         resetValues="true"
+                                                         disabled="#{ctrlMST0003.statusInit}"/>
+                                    </td>
+                                    <td>
+                                        <!--取消物品选择-->
+                                        <p:commandButton id="btnUnSelectPinLei" icon="fa fa-trash-o" title="删除物品" 
+                                                         process="@this" update="@this, txtPinLei, pngShuXingInputArea" styleClass="RedBack White btnUnSelectPinLei"
+                                                         resetValues="true"
+                                                         disabled="#{ctrlMST0003.statusInit or not ctrlMST0003.vm.selectedPinLei}"
+                                                         actionListener="#{ctrlMST0003.onPinLeiUnSelect}">
+                                            <p:confirm header="确定要删除?" message="更改或删除物品信息,所有属性将被重置" />
+                                        </p:commandButton>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--物品候选值-->
+                            <p:overlayPanel for="btnSelectPinLei" widgetVar="ovlPinleiList">
+                                <p:dataTable value="#{ctrlMST0003.vm.pinLeiDetails}" var="pinLei" lazy="true"
+                                             paginator="true" rows="10"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             id="dtPinLei" widgetVar="dtPinLei"
+                                             emptyMessage="No Data">
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column styleClass="tct wd-p-20" headerText="选择"/>
+                                            <p:column styleClass="tct" headerText="物品名"
+                                                      filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <p:column styleClass="tct">
+                                        <!--选择-->
+                                        <p:commandLink process="@this" update="@(.txtPinLei, .pngShuXingInputArea, .btnUnSelectPinLei)"
+                                                       actionListener="#{ctrlMST0003.onPinLeiSelect(pinLei)}" resetValues="true"
+                                                       onsuccess="PF('ovlPinleiList').hide();">
+                                            <i class="fa fa-check-square-o Fs18 Green"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--物品名称-->
+                                    <p:column>
+                                        <h:outputText value="#{pinLei.pinLeiMing}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:overlayPanel>
+                        </p:outputPanel>
+                        <!--单位-->
+                        <p:outputLabel value="单位" for="ddlDanWei"/>
+                        <table style="border-collapse:collapse;border-spacing:0px;border: 0;">
+                            <tr>
+                                <td>
+                                    <p:selectOneMenu id="ddlDanWei" value="#{ctrlMST0003.vm.editingWuZiBianHao.danWei}"
+                                                     disabled="#{ctrlMST0003.statusInit}"
+                                                     converter="javax.faces.Integer" filter="true" filterMatchMode="contains"
+                                                     styleClass="wd-f-100">
+                                        <f:selectItems value="#{ctrlMST0003.vm.danWeiList}"  var="dw" itemValue="#{dw.danWeiId}" itemLabel="#{dw.danWeiMing}"/>
+                                    </p:selectOneMenu>
+                                </td>
+                                <td>
+                                    <p:commandButton value="添加新单位" styleClass="wd-f-200"
+                                                     disabled="#{ctrlMST0003.statusInit}"
+                                                     process="@this"
+                                                     update="@this"
+                                                     actionListener="#{ctrlMST0003.createDanWei}"
+                                                     oncomplete="PF('createDanWeiDialog').show();"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--内部编号-->
+                        <p:outputLabel value="内部编号" for="txtNeiBuBianHao"/>
+                        <p:inputText id="txtNeiBuBianHao" value="#{ctrlMST0003.vm.editingWuZiBianHao.neiBuBianHao}"
+                                     styleClass="wd-f-300"
+                                     disabled="#{ctrlMST0003.statusInit}"
+                                     maxlength="10"/>
+                        <!--最小单位-->
+                        <p:outputLabel value="最小单位" for="numZuiXiaoDanWei"/>
+                        <p:inputText id="numZuiXiaoDanWei"
+                                     disabled="#{ctrlMST0003.statusInit}"
+                                     maxlength="9"
+                                     styleClass="trt"
+                                     required="true" requiredMessage="#{ctrlMST0003.isRequiredMessage('最小单位')}"
+                                     value="#{ctrlMST0003.vm.editingWuZiBianHao.zuiXiaoDanWei}"
+                                     converterMessage="#{ctrlMST0003.isMustAboveDouble('最小单位', 0.001)}"
+                                     validatorMessage="#{ctrlMST0003.isMustAboveDouble('最小单位', 0.001)}">
+                            <f:validateDoubleRange minimum="0.001" maximum="999999999"/>
+                        </p:inputText>
+                        <!--采购周期-->
+                        <p:outputLabel value="采购周期" for="numCaiGouZhouQi"/>
+                        <p:outputPanel>
+                           <p:inputNumber id="numCaiGouZhouQi" value="#{ctrlMST0003.vm.editingWuZiBianHao.caiGouZhouQi}"
+                                       styleClass="wd-f-300 trt-inputNumber" maxValue="365"
+                                       maxlength="3" decimalPlaces="0"
+                                       required="true" requiredMessage="#{ctrlMST0003.isRequiredMessage('采购周期')}"
+                                       disabled="#{ctrlMST0003.statusInit}"/>天 
+                        </p:outputPanel>
+                        <!--物资类型-->
+                        <p:outputLabel value="物资类型" for="wuZiLeiXing"/>
+                        <p:selectOneRadio id="wuZiLeiXing" value="#{ctrlMST0003.vm.editingWuZiBianHao.leiXing}"
+                                          required="true" requiredMessage="#{ctrlMST0003.isRequiredMessage('物资类型')}"
+                                          disabled="#{ctrlMST0003.statusInit}">
+                            <f:selectItems value="#{bizConfig.wuZiLeiXing}" var="leixing" itemLabel="#{leixing.message}" itemValue="#{leixing}" />
+                        </p:selectOneRadio>
+                        
+                        <!--上传图片-->
+                        <h:outputText value="上传实物照片"/>
+                        <p:outputPanel id="uploadPhotoArea">
+                            <h:outputText value="文件上传路径没有设置,请联系管理员"
+                                          rendered="#{not ctrlMST0003.existsFinalUploadFolder}"
+                                          styleClass="Fs18 Red"/>
+                            <h:outputText value="实物照片已上传"
+                                          rendered="#{not empty ctrlMST0003.vm.editingWuZiBianHao.tuXiangLuJing}"
+                                          styleClass="Fs18"/>
+                            <p:commandButton id="imgWuZiPhoto"
+                                             value="上传图片"
+                                             type="button"
+                                             onclick="$('input[type=file]').click();"
+                                             disabled="#{ctrlMST0003.statusInit}"
+                                             rendered="#{ctrlMST0003.existsFinalUploadFolder}"/>
+<!--                            <p:graphicImage id="imgWuZiPhoto" styleClass="wuzi-photo" rendered="#{ctrlMST0003.existsFinalUploadFolder}"
+                                            onclick="$('input[type=file]').click();"
+                                            value="#{ctrlMST0003.vm.editingWuZiBianHao.compressedPictureURL}"/>-->
+                        </p:outputPanel>
+                    </p:panelGrid>
+                </p:outputPanel>
+
+                <p:outputPanel>
+                    选择可储存仓库
+                    <p:dataTable value="#{ctrlMST0003.vm.cangKuList}" var="cangKu"
+                                 selection="#{ctrlMST0003.vm.selectedCangKuList}"
+                                 rowKey="#{cangKu.cangKuId}"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="仓库ID" styleClass="wd-p-4"/>
+                                <p:column headerText="仓库名" styleClass="wd-p-10"/>
+                                <p:column selectionMode="multiple" styleClass="wd-p-2"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{cangKu.cangKuId}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{cangKu.cangKuMing}"/>
+                        </p:column>
+                        <p:column styleClass="tct" selectionMode="multiple"/>
+                    </p:dataTable>
+                </p:outputPanel>
+
+                <!--删除-->
+                <p:commandButton value="删除" styleClass="Fright RedButton"
+                                 process="@this" 
+                                 update="pngInputArea, pngShuXingInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 actionListener="#{ctrlMST0003.onDeleteWuZi}"
+                                 oncomplete="showErrorMsg();"
+                                 resetValues="true"
+                                 rendered="#{ctrlMST0003.statusEditing and ctrlMST0003.updateMode}">
+                    <p:confirm header="确定" message="确定要删除吗?" icon="ui-icon-alert"/>
+                </p:commandButton>
+                <!--保存按钮-->
+                <p:commandButton value="保存并继续" styleClass="Fright"
+                                 process="@this, pngInputArea, pngShuXingInputArea" 
+                                 update="pngInputArea, pngShuXingInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 actionListener="#{ctrlMST0003.onSaveButtonClick}"
+                                 oncomplete="showErrorMsg();"
+                                 resetValues="true"
+                                 disabled="#{not ctrlMST0003.statusEditing}"/>
+                <p:fileUpload styleClass="111"
+                              auto="true"
+                              disabled="#{ctrlMST0003.statusInit}"
+                              label="选择" uploadLabel="上传" cancelLabel="取消"
+                              invalidSizeMessage="最大只能上传4M以内的照片"
+                              previewWidth="50"
+                              mode="advanced" dragDropSupport="true"
+                              sizeLimit="4000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                              fileUploadListener="#{ctrlMST0003.onFileUploaded}"
+                              update="uploadPhotoArea imgWuZiPhoto"/>
+            </p:outputPanel>
+        </div>
+        <p:outputPanel id="pngShuXingInputArea" styleClass="Container50">
+            <p:outputPanel styleClass="Card Container100 Responsive100 pngShuXingInputArea">
+                <!--标题-->
+                <h1 class="CardBigTopic">物资属性信息编辑区域</h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <p:dataGrid value="#{ctrlMST0003.vm.editingWuZiBianHao.pinLei.wuPinShuXingList}" var="sx" 
+                            columns="3" layout="grid" rendered="#{ctrlMST0003.vm.selectedPinLei}">
+                    <h:panelGrid columns="2">
+                        <p:inputSwitch value="#{sx.shuXing.rowChecked}">
+                            <p:ajax process="@this, @(.dtWuZhiShuXing)" listener="#{ctrlMST0003.onShuXingSelect(sx)}" update="@(.dtWuZhiShuXing)"/>
+                        </p:inputSwitch>
+                        <h:outputText value="#{sx.shuXing.shuXingMing}" styleClass="Fs16 Purple"/>
+                    </h:panelGrid>
+                </p:dataGrid>
+                <p:dataTable id="dtWuZhiShuXing" styleClass="dtWuZhiShuXing"
+                             value="#{ctrlMST0003.vm.editingWuZiBianHao.shiTiWuZiXinXiList}" var="wzsx" 
+                             rendered="#{ctrlMST0003.vm.selectedPinLei}">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="属性名" styleClass="wd-p-20"/>
+                            <p:column headerText="属性值"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <!--属性名-->
+                    <p:column>
+                        <h:outputText value="#{wzsx.shuXingObj.shuXingMing}"/>
+                    </p:column>
+                    <p:column>
+                        <!--只有非列举时才显示-->
+                        <p:inputText value="#{wzsx.shuXingZhi}"
+                                     styleClass="wd-p-95"
+                                     rendered="#{not ctrlMST0003.vm.isLieJueType(wzsx.pk.shuXingId)}"/>
+                        <!--列举时才显示候选属性值-->
+                        <p:selectOneListbox value="#{wzsx.shuXingZhi}" scrollHeight="100" styleClass="wd-p-98" rendered="#{ctrlMST0003.vm.isLieJueType(wzsx.pk.shuXingId)}">
+                            <f:selectItems value="#{ctrlMST0003.vm.listAllSelectedWuPinShuXingZhi(wzsx.pk.shuXingId)}" var="ljz" 
+                                           itemLabel="#{ljz.shuXingZhi}"
+                                           itemValue="#{ljz.shuXingZhi}"/>
+                        </p:selectOneListbox>
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+    </p:outputPanel>
+    
+    <p:dialog id="createDanWeiDialog" styleClass="createDanWeiDialog"
+              widgetVar="createDanWeiDialog" closeOnEscape="true">
+        <h:panelGrid columns="3" cellpadding="5">
+            <p:outputLabel for="danweiming" value="单位名"/>
+            <p:inputText id="danweiming" value="#{ctrlMST0003.vm.editingDanWei.danWeiMing}"
+                         required="true"
+                         requiredMessage="#{ctrlMST0003.isRequiredMessage('单位名')}"/>
+            <p:commandButton value="保存"
+                             actionListener="#{ctrlMST0003.saveDanWei}"
+                             process="@this, createDanWeiDialog"
+                             update="ddlDanWei, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                             oncomplete="showErrorMsg();PF('createDanWeiDialog').hide();"/>
+        </h:panelGrid>
+    </p:dialog>
+</ui:composition>

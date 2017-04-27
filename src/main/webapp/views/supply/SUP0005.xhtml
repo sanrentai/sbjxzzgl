@@ -1,0 +1,395 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:f="http://xmlns.jcp.org/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:pe="http://primefaces.org/ui/extensions" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!--采购合同-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('SUP', 'SUP0005')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:commandButton value="创建采购合同" process="@this" rendered="#{empty ctrlSUP0005.vm.editingHeTong}"
+                                     update="pnlInputArea" actionListener="#{ctrlSUP0005.createHeTong}"/>
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlSUP0005.vm.editingHeTong}">
+                        <div class="Container30 Responsive100 tct">
+                            <p class="Heading6">
+                                <h:outputText value="采购合同扫描件"/>
+                            </p>
+                            <p:fileUpload id="fileUpload"
+                                          label="选择" uploadLabel="上传" cancelLabel="取消" styleClass="hide"
+                                          auto="true" process="@this" update="imgProfilePhoto"
+                                          fileUploadListener="#{ctrlSUP0005.onFileUploaded}"
+                                          invalidSizeMessage="最大只能上传4M以内的图片"
+                                          previewWidth="50"
+                                          mode="advanced" dragDropSupport="true"
+                                          widgetVar="fileUpload"
+                                          sizeLimit="4000000" allowTypes="/(\.|\/)(jpe?g|png)$/">
+                            </p:fileUpload>
+                            <!--照片-->
+                            <p:graphicImage id="imgProfilePhoto" value="#{ctrlSUP0005.vm.editingHeTong.compressedPictureURL}" styleClass="wd-p-60" 
+                                            onclick="$('input[type=file]').click();"/>
+                            <p class="Heading6">
+                                点击上传采购合同扫描件
+                            </p>
+                        </div>
+                        <div class="Container70 Responsive100">
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:outputPanel>
+                                    <p:outputLabel for="heTongMingCheng" value="合同名称"/>
+                                    <p:inputText id="heTongMingCheng" value="#{ctrlSUP0005.vm.editingHeTong.heGongMingCheng}"
+                                                 required="true" requiredMessage="#{ctrlSUP0005.isRequiredMessage('合同名称')}"/>
+                                </p:outputPanel>
+                                <!--总价-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="zongJia" value="总价"/>
+                                    <p:inputNumber id="zongJia" value="#{ctrlSUP0005.vm.editingHeTong.zongJia}"
+                                                   styleClass="trt-inputNumber" readonly="true"
+                                                   maxValue="999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                                                   required="true" requiredMessage="#{ctrlSUP0005.isRequiredMessage('总价')}" 
+                                                   decimalPlaces="2">
+                                    </p:inputNumber>
+                                </p:outputPanel>
+                                <!--预付款-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="yuFuKuan" value="预付款"/>
+                                    <p:inputNumber id="yuFuKuan" value="#{ctrlSUP0005.vm.editingHeTong.yuFuKuan}"
+                                                   styleClass="trt-inputNumber" readonly="true"
+                                                   maxValue="999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                                                   decimalPlaces="2">
+                                    </p:inputNumber>
+                                </p:outputPanel>
+                                <p:outputPanel>
+                                    <p:outputLabel for="gongYingShang" value="供应商"/>
+                                    <!--<h:outputText id="gongYingShang" value="#{ctrlSUP0005.vm.editingHeTong.gongHuoShangId}"/>-->
+                                    <p:selectOneMenu id="gongYingShang" value="#{ctrlSUP0005.vm.editingHeTong.gongHuoShangId}" filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{ctrlSUP0005.vm.gongYingShangList}" var="gongyingshang"
+                                                       itemLabel="#{gongyingshang.gongSiMing}" itemValue="#{gongyingshang.gongYingShangId}"/>
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <p:outputPanel>
+                                    <p:outputLabel value="供应商业务员"/>
+                                    <p:inputText value="#{ctrlSUP0005.vm.editingHeTong.yeWuYuan}"/>
+                                </p:outputPanel>
+                                <p:outputPanel>
+                                    <p:outputLabel value="备注"/>
+                                    <p:inputText value="#{ctrlSUP0005.vm.editingHeTong.beiZhu}"/>
+                                </p:outputPanel>
+                                <!--创建支付计划-->
+                            </p:panelGrid>
+                            
+                            <div class="EmptyBox5"></div>
+                            
+                            <p:dataTable var="jiHuaMingXi"
+                                         value="#{ctrlSUP0005.vm.editingHeTong.jiHuaMingXiList}"
+                                         rendered="#{not empty ctrlSUP0005.vm.editingHeTong.jiHuaMingXiList}"
+                                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                         rows="10"
+                                         paginatorAlwaysVisible="false"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                                <f:facet name="header">
+                                    关联采购计划
+                                </f:facet>
+                                <p:columnGroup type="header" >
+                                    <p:row>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                        <p:column headerText="#{msg.wu_pin_ming_cheng}" styleClass="wd-p-20"/>
+                                        <p:column headerText="#{msg.gong_ying_shang}" styleClass="wd-p-15"/>
+                                        <p:column headerText="#{msg.dan_jia}" styleClass="wd-p-8"/>
+                                        <p:column headerText="#{msg.ji_hua_cai_gou_liang}" styleClass="wd-p-8"/>
+                                        <p:column headerText="#{msg.jin_e_he_ji}" styleClass="wd-p-10"/>
+                                        <p:column headerText="#{msg.ji_hua_dao_huo_ri_qi}" sortBy="#{jiHuaMingXi.insDate}" styleClass="wd-p-10"/>
+                                    </p:row>
+                                </p:columnGroup> 
+                                <p:column styleClass="tct">
+                                    <p:commandLink update="frmMain:pnlInputArea, frmMain:zongJia, frmMain:yuFuKuan, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   actionListener="#{ctrlSUP0005.deleteJiHuaFromHeTong(jiHuaMingXi)}"
+                                                   process="@this">
+                                        <i class="fa fa-trash Fs18 Red"/>
+                                    </p:commandLink>
+                                </p:column>
+                                <!--物品名称-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText id="lblWuZi" value="#{jiHuaMingXi.shiti.wuZiMiaoShu}"
+                                                  title="#{jiHuaMingXi.shiti.nameWithShuXingSummary}"/>
+                                    <p:tooltip for="lblWuZi" position="bottom"/>
+                                </p:column>
+                                <!--供应商-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{jiHuaMingXi.gongYingShangInfo.gongSiMing}"/>
+                                </p:column>
+                                <!--单价-->
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{jiHuaMingXi.danJia}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--申请数-->
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{jiHuaMingXi.jiHuanGouManShu}" styleClass="Blue">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                    <h:outputLabel value=" #{jiHuaMingXi.shiti.wuZiDanWei.danWeiMing}" />
+                                </p:column>
+                                <!--合计金额-->
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{jiHuaMingXi.totalPrice}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--计划到货日期-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{jiHuaMingXi.daoHuoRiQi}" >
+                                        <f:convertDateTime pattern="#{bizConfig.dateFormat}" />   
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                            
+                            <p:outputPanel id="zhifumingxiTable">
+                                <div class="EmptyBox5"></div>
+                                <p:dataTable var="zhiFuMingXi"
+                                             value="#{ctrlSUP0005.vm.editingHeTong.zhiFuJiHua.mingXiList}"
+                                             rendered="#{not empty ctrlSUP0005.vm.editingHeTong.zhiFuJiHua}"
+                                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                             rows="10"
+                                             paginatorAlwaysVisible="false"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                                    <f:facet name="header">
+                                        关联支付计划
+                                    </f:facet>
+                                    <p:columnGroup type="header" >
+                                        <p:row>
+                                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                                            <p:column headerText="拆分" styleClass="wd-p-5"/>
+                                            <p:column headerText="预计支付款" styleClass="wd-p-8"/>
+                                            <p:column headerText="预计支付日" styleClass="wd-p-8"/>
+                                            <p:column headerText="是否预付款" styleClass="wd-p-5"/>
+                                            <p:column headerText="备注" styleClass="wd-p-10"/>
+                                        </p:row>
+                                    </p:columnGroup> 
+                                    <p:column styleClass="tct">
+                                        <p:commandLink update="frmMain:zhifumingxiTable, frmMain:yuFuKuan, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       actionListener="#{ctrlSUP0005.deleteZhiFuMingXi(zhiFuMingXi)}"
+                                                       process="frmMain:zhifumingxiTable">
+                                            <i class="fa fa-trash Fs18 Red"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--拆分-->
+                                    <p:column styleClass="tct">
+                                        <p:commandLink update="frmMain:zhifumingxiTable, frmMain:yuFuKuan, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       actionListener="#{ctrlSUP0005.chaiFenZhiFuMingXi(zhiFuMingXi)}"
+                                                       process="frmMain:zhifumingxiTable">
+                                            <i class="fa fa-plus Fs18 Blue"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--预计支付款-->
+                                    <p:column styleClass="trt">
+                                        <p:inputNumber value="#{zhiFuMingXi.jiHuaZhiFu}"
+                                                       styleClass="trt-inputNumber"
+                                                       maxValue="999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                                                       required="true" requiredMessage="#{ctrlSUP0005.isRequiredMessage('预计支付款')}" 
+                                                       decimalPlaces="2">
+                                            <p:ajax process="frmMain:zhifumingxiTable"
+                                                    update="frmMain:zhifumingxiTable, frmMain:yuFuKuan"
+                                                    listener="#{ctrlSUP0005.calcYuFuKuan}"/>
+                                        </p:inputNumber>
+                                    </p:column>
+                                    <!--预计支付日-->
+                                    <p:column styleClass="tct">
+                                        <p:calendar value="#{zhiFuMingXi.jiHuaZhiFuRi}"
+                                                    readonlyInput="true" pages="3"
+                                                    mask="true" styleClass="tct"
+                                                    pattern="#{bizConfig.dateFormat}"
+                                                    required="true" size="12"
+                                                    requiredMessage="#{ctrlBIZ0001.isRequiredMessage('预计支付日')}"
+                                                    converterMessage="#{ctrlBIZ0001.dateUnvalidMessage('预计支付日')}"
+                                                    locale="#{bizConfig.locale}">
+                                        </p:calendar>
+                                    </p:column>
+                                    <!--是否预付款-->
+                                    <p:column styleClass="tct">
+                                        <p:selectBooleanCheckbox value="#{zhiFuMingXi.yuFu}">
+                                            <p:ajax process="frmMain:zhifumingxiTable"
+                                                    update="frmMain:zhifumingxiTable, frmMain:yuFuKuan"
+                                                    listener="#{ctrlSUP0005.calcYuFuKuan}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <!--备注-->
+                                    <p:column styleClass="tct">
+                                        <p:inputTextarea autoResize="true" rows="1" value="#{zhiFuMingXi.beiZhu}" placeholder="备注"/>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:commandButton value="创建支付计划"
+                                                 rendered="#{empty ctrlSUP0005.vm.editingHeTong.zhiFuJiHua}"
+                                                 process="@this"
+                                                 style="width: 150px!important;"
+                                                 update="zhifumingxiTable"
+                                                 actionListener="#{ctrlSUP0005.createZhiFuJiHua}"/>
+                            </p:outputPanel>
+                            
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlSUP0005.onSaveHeTong}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea" actionListener="#{ctrlSUP0005.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+                    
+                    <div class="EmptyBox5"></div>
+                    
+                    <p:outputPanel>
+                        <p:dataTable var="jiHuaMingXi"
+                                     value="#{ctrlSUP0005.vm.wuHeTongJiHuaList}" 
+                                     id="cgjiHuaMingXi"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     rows="10"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                            <f:facet name="header">
+                                无合同采购计划一览
+                            </f:facet>
+                            <p:columnGroup type="header" >
+                                <p:row>
+                                    <p:column headerText="添加至采购合同" styleClass="wd-p-10"/>
+                                    <p:column headerText="#{msg.wu_pin_ming_cheng}" styleClass="wd-p-20"/>
+                                    <p:column headerText="#{msg.gong_ying_shang}" styleClass="wd-p-15"/>
+                                    <p:column headerText="#{msg.dan_jia}" styleClass="wd-p-8"/>
+                                    <p:column headerText="#{msg.ji_hua_cai_gou_liang}" styleClass="wd-p-8"/>
+                                    <p:column headerText="#{msg.jin_e_he_ji}" styleClass="wd-p-10"/>
+                                    <p:column headerText="#{msg.ji_hua_dao_huo_ri_qi}" sortBy="#{jiHuaMingXi.insDate}" styleClass="wd-p-10"/>
+                                </p:row>
+                            </p:columnGroup> 
+                            <p:column styleClass="tct">
+                                <p:commandLink value="添加"
+                                               update="frmMain:pnlInputArea, frmMain:zongJia, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               actionListener="#{ctrlSUP0005.addJiaHuaToHeTong(jiHuaMingXi)}"
+                                               process="@this"/>
+                            </p:column>
+                            <!--物品名称-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="lblWuZi" value="#{jiHuaMingXi.shiti.wuZiMiaoShu}"
+                                              title="#{jiHuaMingXi.shiti.nameWithShuXingSummary}"/>
+                                <p:tooltip for="lblWuZi" position="bottom"/>
+                            </p:column>
+                            <!--供应商-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{jiHuaMingXi.gongYingShangInfo.gongSiMing}"/>
+                            </p:column>
+                            <!--单价-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{jiHuaMingXi.danJia}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--申请数-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{jiHuaMingXi.jiHuanGouManShu}" styleClass="Blue">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputLabel value=" #{jiHuaMingXi.shiti.wuZiDanWei.danWeiMing}" />
+                            </p:column>
+                            <!--合计金额-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{jiHuaMingXi.totalPrice}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--计划到货日期-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{jiHuaMingXi.daoHuoRiQi}" >
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}" />   
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <div class="CardBigTopic">采购合同一览</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable var="heTong"
+                             value="#{ctrlSUP0005.vm.heTongList}" 
+                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                             rows="10"
+                             paginatorAlwaysVisible="false"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                    <p:columnGroup type="header" >
+                        <p:row>
+                            <p:column headerText="查看详情" styleClass="wd-p-5"/>
+                            <p:column headerText="合同名称" styleClass="wd-p-15"/>
+                            <p:column headerText="#{msg.gong_ying_shang}" styleClass="wd-p-10"/>
+                            <p:column headerText="总价" styleClass="wd-p-8"/>
+                            <p:column headerText="预付款" styleClass="wd-p-8"/>
+                            <p:column headerText="供应商负责人" styleClass="wd-p-5"/>
+                            <p:column headerText="合同创建人" styleClass="wd-p-5"/>
+                            <p:column headerText="创建时间" styleClass="wd-p-10"/>
+                            <p:column headerText="备注" styleClass="wd-p-10"/>
+                        </p:row>
+                    </p:columnGroup> 
+                    <p:column styleClass="tct">
+                        <p:commandLink update="frmMain:pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                       actionListener="#{ctrlSUP0005.chaKanHeTong(heTong)}"
+                                       process="@this">
+                            <i class="fa fa-search Fs18 Blue"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{heTong.heGongMingCheng}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{heTong.gongYingShang.gongSiMing}"/>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{heTong.zongJia}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{heTong.yuFuKuan}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{heTong.yeWuYuan}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{heTong.insUserInfo.nameZ}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{heTong.insDate}">
+                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{heTong.beiZhu}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <!--确认画面-->
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

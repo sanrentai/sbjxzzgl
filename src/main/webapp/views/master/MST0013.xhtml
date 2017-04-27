@@ -1,0 +1,256 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0013')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建部门按钮-->
+                            <p:commandButton value="新建部门" process="@this" actionListener="#{ctrlMST0013.newBuMen}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{ctrlMST0013.statusEditing or ctrlMST0013.updateMode}"/>
+                            <!--新建部门按钮-->
+                            <p:commandButton value="新建职能" process="@this" actionListener="#{ctrlMST0013.newZhiNeng}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{ctrlMST0013.statusEditing or ctrlMST0013.updateMode}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0013.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('buMenList').clearFilters();PF('zhiNengList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{ctrlMST0013.statusEditing}">
+                        <div class="Container100 Responsive100">
+                            <p:outputPanel id="bumenPanel" styleClass="bumenPanel" rendered="#{not empty ctrlMST0013.vm.editingBuMen}">
+                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-20,wd-p-50">
+                                    <!--部门名-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtBuMenMing" value="部门名"/>
+                                        <p:inputText id="txtBuMenMing" value="#{ctrlMST0013.vm.editingBuMen.buMenMing}"
+                                                     required="true" requiredMessage="#{ctrlMST0013.isRequiredMessage('部门名')}"/>
+                                    </p:outputPanel>
+                                    <!--部门编号-->
+                                    <p:outputPanel>
+                                        <p:outputLabel value="部门编号" for="txtBianHao"/>
+                                        <p:inputText id="txtBianHao" value="#{ctrlMST0013.vm.editingBuMen.buMenBianHao}" maxlength="10">
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                    <!--住址-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtDiZhi" value="地址"/>
+                                        <p:inputText id="txtDiZhi" value="#{ctrlMST0013.vm.editingBuMen.diZhi}"/>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-20,wd-p-20,wd-p-30">
+                                    <!--购买方式-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="suoShuBuMen" value="所属部门"/>
+                                        <p:selectOneMenu id="suoShuBuMen" value="#{ctrlMST0013.vm.editingBuMen.suoShuBuMenId}">
+                                            <f:selectItem itemLabel="无" itemValue=""/>
+                                            <f:selectItems value="#{ctrlMST0013.vm.buMenList}"
+                                                           var="bumen" 
+                                                           itemValue="#{bumen.buMenId}"
+                                                           itemLabel="#{bumen.buMenMing}"/>
+                                        </p:selectOneMenu>
+                                    </p:outputPanel>
+                                    <!--电话-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtDianHua" value="电话"/>
+                                        <p:inputText id="txtDianHua" value="#{ctrlMST0013.vm.editingBuMen.dianHua}" maxlength="13">
+                                            <p:keyFilter regEx="/[\d-]/"/>
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                    <!--邮编-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtYouBian" value="邮编"/>
+                                        <p:inputMask id="txtYouBian" value="#{ctrlMST0013.vm.editingBuMen.youBian}" mask="999-999"/>
+                                    </p:outputPanel>
+                                    <!--邮箱地址-->
+                                    <p:outputPanel>
+                                        <p:outputLabel id="lbl_email" value="邮箱地址" for="txtEmail"/>
+                                        <p:inputText id="txtEmail" value="#{ctrlMST0013.vm.editingBuMen.email}" maxlength="50" pt:msgKey="lbl_email">
+                                            <f:validator validatorId="EmailValidator"/>
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                    <!--主页-->
+                                    <!--                                <p:outputPanel>
+                                                                        <p:outputLabel for="txtWebPage" value="主页"/>
+                                                                        <p:inputText id="txtWebPage" value="#{ctrlMST0013.vm.editingGongYingShang.webPage}"/>
+                                                                    </p:outputPanel>-->
+                                </p:panelGrid>
+                            </p:outputPanel>
+                            
+                            <p:outputPanel id="zhinengPanel" styleClass="zhinengPanel" rendered="#{not empty ctrlMST0013.vm.editingZhiNeng}">
+                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-50,">
+                                    <!--职能名-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtZhiNengMing" value="职能名"/>
+                                        <p:inputText id="txtZhiNengMing" value="#{ctrlMST0013.vm.editingZhiNeng.zhiWuMing}"
+                                                     required="true" requiredMessage="#{ctrlMST0013.isRequiredMessage('职能名')}"/>
+                                    </p:outputPanel>
+                                    <!--职能概述-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtZhiNengGaiShu" value="职能概述"/>
+                                        <p:inputText id="txtZhiNengGaiShu" value="#{ctrlMST0013.vm.editingZhiNeng.zhiNengGaiYao}"/>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, toolbar, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlMST0013.onSave()}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea, toolbar, frmMain:toolbar" actionListener="#{ctrlMST0013.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <div class="CardBigTopic">部门与职能信息</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlMST0013.vm.buMenList}" var="bumen"
+                             cellSeparator="5" styleClass="Container60 Responsive100"
+                             widgetVar="buMenList"
+                             paginatorAlwaysVisible="false"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="部门一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-3"/>
+                            <p:column headerText="删除" styleClass="wd-p-3"/>
+                            <p:column headerText="部门名" filterBy="#{bumen.buMenMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="部门编号" styleClass="tct wd-p-10"/>
+<!--                            <p:column headerText="邮编" styleClass="tct wd-p-10"/>
+                            <p:column headerText="邮箱" styleClass="tct wd-p-10"/>
+                            <p:column headerText="电话" styleClass="tct wd-p-15"/>
+                            <p:column headerText="地址" styleClass="tct wd-p-30"/>-->
+                            <p:column headerText="所属部门" styleClass="tct wd-p-20"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pnlInputArea, frmMain:toolbar" listener="#{ctrlMST0013.editBuMen(bumen)}"/>
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pngDetails, frmMain:pnlInputArea, frmMain:toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    listener="#{ctrlMST0013.deleteBuMen(bumen)}"
+                                    oncomplete="showErrorMsg();">
+                            </p:ajax>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                            <i class="fa fa-trash Fs18 Red"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <!--部门名-->
+                    <p:column>
+                        <h:outputText value="#{bumen.buMenMing}"/>
+                    </p:column>
+                    <!--部门编号-->
+                    <p:column>
+                        <h:outputText value="#{bumen.buMenBianHao}"/>
+                    </p:column>
+                    <!--邮编-->
+<!--                    <p:column styleClass="tct">
+                        <h:outputText value="#{bumen.youBian}"/>
+                    </p:column>-->
+                    <!--邮箱-->
+<!--                    <p:column styleClass="tct">
+                        <h:outputText value="#{bumen.email}"/>
+                    </p:column>-->
+                    <!--电话-->
+<!--                    <p:column styleClass="tct">
+                        <h:outputText value="#{bumen.dianHua}"/>
+                    </p:column>-->
+                    <!--地址-->
+<!--                    <p:column>
+                        <h:outputText value="#{bumen.diZhi}"/>
+                    </p:column>-->
+                    <!--所属部门-->
+                    <p:column>
+                        <h:outputText value="#{bumen.suoShuBuMen.buMenMing}"/>
+                    </p:column>
+                    <!--备注-->
+<!--                    <p:column>
+                        <h:outputText value="#{bumen.beiZhu}"/>
+                    </p:column>-->
+                </p:dataTable>
+
+                <p:dataTable value="#{ctrlMST0013.vm.zhiNengList}" var="zhineng"
+                             cellSeparator="5"  styleClass="Container40 Responsive100"
+                             widgetVar="zhiNengList"
+                             paginatorAlwaysVisible="false"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="职能一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-3"/>
+                            <p:column headerText="删除" styleClass="wd-p-3"/>
+                            <p:column headerText="职能名" filterBy="#{zhineng.zhiWuMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="职能概要" styleClass="tct wd-p-30"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pnlInputArea, frmMain:toolbar" listener="#{ctrlMST0013.editZhiNeng(zhineng)}"/>
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pngDetails, frmMain:pnlInputArea, frmMain:toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    oncomplete="showErrorMsg();"
+                                    listener="#{ctrlMST0013.deleteZhiNeng(zhineng)}">
+                            </p:ajax>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                            <i class="fa fa-trash Fs18 Red"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <!--职能名-->
+                    <p:column>
+                        <h:outputText value="#{zhineng.zhiWuMing}"/>
+                    </p:column>
+                    <!--职能概要-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{zhineng.zhiNengGaiYao}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

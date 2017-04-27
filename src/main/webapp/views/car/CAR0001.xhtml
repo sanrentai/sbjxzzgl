@@ -1,0 +1,358 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0001')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建车辆信息" process="@this" actionListener="#{ctrlCAR0001.onStartEditing}"
+                                             resetValues="true" 
+                                             update="pnlInputArea,toolbar"
+                                             disabled="#{not empty ctrlCAR0001.vm.editingCheLiang}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlCAR0001.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvCheLiangList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0001.vm.editingCheLiang}">
+			<p:panelGrid id="IDViecleClass" columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+			    <!--车辆分类-->
+			    <p:outputPanel>
+				<p:outputLabel for="IDViecleType" value="车辆分类"/>
+				<p:selectOneMenu id="IDViecleType" value="#{ctrlCAR0001.vm.editingCheLiang.leiXing}"
+                                                 required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('车辆分类')}">
+				    <p:ajax process="@this" update="IDDetailType" listener="#{ctrlCAR0001.onTypeChanged()}"></p:ajax>
+				    <f:selectItems value="#{bizConfig.cheLiangLeiXing}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+				</p:selectOneMenu>
+			    </p:outputPanel>
+			    <p:outputPanel>
+				<p:outputLabel for="IDDetailType" value="详细分类"/>
+                                <table class="border_clear wd-p-100">
+                                    <tr>
+                                        <td style="border: 0px!important;">
+                                            <p:selectOneMenu id="IDDetailType" value="#{ctrlCAR0001.vm.editingCheLiang.detailType}"
+                                                             styleClass="leiBieGuanLi"
+                                                             required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('详细分类')}">
+                                                <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing(ctrlCAR0001.vm.editingCheLiang.leiXing.code)}"
+                                                               var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                                            </p:selectOneMenu>
+                                        </td>
+                                        <td style="width: 30px; border: 0px!important;">
+                                            <p:commandLink value="新建"
+                                                           style="margin-right: 0px;"
+                                                           actionListener="#{ctrlSystemConfig.newLeiBieGuanLi(ctrlCAR0001.vm.editingCheLiang.leiXing.code)}"
+                                                           process="@this IDViecleType"
+                                                           update="@(.add_fen_lei_xiang_mu)"
+                                                           oncomplete="PF('add_fen_lei_xiang_mu').show();"/>
+                                        </td>
+                                    </tr>
+                                </table>
+			    </p:outputPanel>
+			    <!--车辆所属-->
+			    <p:outputPanel>
+				<p:outputLabel for="IDViecleOwner" value="车辆所属"/>
+				<p:selectOneMenu id="IDViecleOwner" value="#{ctrlCAR0001.vm.editingCheLiang.owner}"
+                                                 required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('车辆所属')}">
+				    <f:selectItems value="#{bizConfig.cheLiangSuoShu}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+				    <p:ajax process="@this" update="IDGongSi" listener="#{ctrlCAR0001.onCarOwnerChanged}"></p:ajax>
+				</p:selectOneMenu>
+			    </p:outputPanel>
+			</p:panelGrid>
+			
+			<div class="SeparatorFull"></div>
+                        <!--div class="Container100 Responsive100"-->
+                            <p:outputPanel rendered="#{not empty ctrlCAR0001.vm.editingCheLiang}">
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <!--车牌照号码-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtChePaiZhaoHaoMa" value="车牌照号码"/>
+                                        <p:inputText id="txtChePaiZhaoHaoMa" value="#{ctrlCAR0001.vm.editingCheLiang.chePaiZhaoHaoMa}" required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('车牌照号码')}">
+					    <p:ajax event="keyup" process="@this" update="txtCheLiangMing" listener="#{ctrlCAR0001.onChePaiZhaoHaoMaChanged}"></p:ajax>
+					</p:inputText>
+                                    </p:outputPanel>
+                                    <!--车辆名-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtCheLiangMing" value="车辆名称"/>
+                                        <p:inputText id="txtCheLiangMing" value="#{ctrlCAR0001.vm.editingCheLiang.cheLiangMingCheng}" required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('车辆名称')}"/>
+                                    </p:outputPanel>
+                                    <!--使用油-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="dllShiYongYou" value="使用油"/>
+                                        <p:selectOneMenu id="dllShiYongYou" value="#{ctrlCAR0001.vm.editingCheLiang.wuZiId}"
+                                                         required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('使用油')}">
+                                            <f:selectItems value="#{ctrlCAR0001.vm.youList}" var="you" itemLabel="#{you.wuZiMiaoShu}" itemValue="#{you.wuZiBianHao}"/>
+                                        </p:selectOneMenu>
+                                    </p:outputPanel>
+                                    <!--所属公司-->
+                                    <p:outputPanel id="IDGongSi">
+					<p:outputPanel rendered="#{ctrlCAR0001.vm.ifGongSiRendered}">
+					    <p:outputLabel for="gongsi" value="所属公司"/>
+                                        <p:selectOneMenu id="gongsi" value="#{ctrlCAR0001.vm.editingCheLiang.gongSiId}"
+                                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="#{ctrlCAR0001.isRequiredMessage('所属公司')}">
+                                            <f:selectItem itemLabel="请选择公司" itemValue="" />
+                                            <f:selectItems value="#{ctrlCAR0001.vm.gongSiList}"
+                                                           var="gongsi"
+                                                           itemLabel="#{gongsi.gongSiMing}"
+                                                           itemValue="#{gongsi.gongYingShangId}" />
+                                        </p:selectOneMenu>
+					</p:outputPanel>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <!--品牌-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtPinPai" value="品牌"/>
+                                        <p:inputText id="txtPinPai" value="#{ctrlCAR0001.vm.editingCheLiang.pinPai}"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('品牌')}"/>
+                                    </p:outputPanel>
+                                    <!--型号-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtXingHao" value="型号"/>
+                                        <p:inputText id="txtXingHao" value="#{ctrlCAR0001.vm.editingCheLiang.xingHao}"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('型号')}"/>
+                                    </p:outputPanel>
+                                    <!--价格-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtPrice" value="价格"/>
+                                        <p:inputText id="txtPrice" value="#{ctrlCAR0001.vm.editingCheLiang.price}"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('价格')}">
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                    <p:outputPanel>
+                                        <p:outputLabel for="IDColor" value="颜色"/>
+                                        <p:inputText id="IDColor" value="#{ctrlCAR0001.vm.editingCheLiang.color}"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('颜色')}">
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <!--司机-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="IDDriver" value="常用司机"/>
+                                        <p:inputText id="IDDriver" value="#{ctrlCAR0001.vm.editingCheLiang.siJi}" maxlength="10"/>
+                                    </p:outputPanel>
+                                    <p:outputPanel>
+                                        <p:outputLabel for="IDPurchaseDate" value="购买日期"/>
+                                        <p:calendar id="IDPurchaseDate" value="#{ctrlCAR0001.vm.editingCheLiang.purchaseDate}"
+						    pattern="#{bizConfig.dateFormat}" readonly="true"
+                                                    yearRange="c-50:c" navigator="true" locale="#{bizConfig.locale}"
+						    required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('购买日期')}">
+					</p:calendar>
+                                    </p:outputPanel>
+                                    <!--油箱容量-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtYouXiangRongLiang" value="油箱容量"/>
+                                        <p:inputText id="txtYouXiangRongLiang" value="#{ctrlCAR0001.vm.editingCheLiang.youXiangRongLiang}" styleClass="trt"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('油箱容量')}">
+                                            <p:keyFilter regEx="/[\d]/"/>
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                    <!--核载-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="IDHeZai" value="核载人数"/>
+                                        <p:inputText id="IDHeZai" value="#{ctrlCAR0001.vm.editingCheLiang.heZai}" styleClass="trt"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('核载人数')}">
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <p:outputPanel>
+                                        <p:outputLabel for="IDEngineNumber" value="发动机号码"/>
+                                        <p:inputText id="IDEngineNumber" value="#{ctrlCAR0001.vm.editingCheLiang.engineNumber}"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('发动机号码')}">
+                                        </p:inputText>
+                                    </p:outputPanel>
+				    <p:outputPanel>
+                                        <p:outputLabel for="IDOutputVolume" value="排量"/>
+                                        <p:inputText id="IDOutputVolume" value="#{ctrlCAR0001.vm.editingCheLiang.outputVolume}"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('排量')}">
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                    <!--备注-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="txtBeiZhu" value="备注"/>
+                                        <p:inputText id="txtBeiZhu" value="#{ctrlCAR0001.vm.editingCheLiang.beiZhu}" maxlength="400"/>
+                                    </p:outputPanel>
+                                    <!--载重-->
+                                    <p:outputPanel>
+                                        <p:outputLabel for="IDZaiZhong" value="载重"/>
+                                        <p:inputText id="IDZaiZhong" value="#{ctrlCAR0001.vm.editingCheLiang.zaiZhong}" styleClass="trt"
+                                                     required="false" requiredMessage="#{ctrlCAR0001.isRequiredMessage('载重')}">
+                                        </p:inputText>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                            <div class="SeparatorFull"></div>
+			    <p:panelGrid id="IDPuTongCheBianJi" columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+				
+			    </p:panelGrid>
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlCAR0001.onSave()}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea, toolbar, frmMain:toolbar" actionListener="#{ctrlCAR0001.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        <!--/div-->
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+            <div class="Card">
+                <div class="CardBigTopic">车辆信息</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlCAR0001.vm.cheLiangList}" var="cheLiang" cellSeparator="5"
+                             widgetVar="wvCheLiangList"
+                             rows="10"
+                             filterDelay="500"
+                             style="word-break: keep-all!important"
+                             paginator="true"
+                             paginatorAlwaysVisible="false"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="车辆一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                            <p:column headerText="车辆名" filterBy="#{cheLiang.cheLiangMingCheng}" filterMaxLength="20" filterMatchMode="contains" styleClass="wd-p-10"/>
+                            <p:column headerText="车辆分类" styleClass="tct wd-p-5"/>
+                            <p:column headerText="详细分类" styleClass="tct wd-p-5"/>
+                            <p:column headerText="车辆所属" styleClass="tct wd-p-5"/>
+                            <p:column headerText="所属公司" styleClass="tct wd-p-10"/>
+                            <p:column headerText="车牌照号码" styleClass="tct wd-p-5"/>
+                            <p:column headerText="使用油" styleClass="tct wd-p-5"/>
+                            <p:column headerText="司机" styleClass="tct wd-p-5"/>
+                            <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                            <p:column headerText="品牌" styleClass="tct wd-p-5"/>
+                            <p:column headerText="型号" styleClass="tct wd-p-8"/>
+                            <p:column headerText="价格" styleClass="tct wd-p-5"/>
+                            <p:column headerText="购买日期" styleClass="tct wd-p-8"/>
+                            <p:column headerText="发动机号码" styleClass="tct wd-p-5"/>
+                            <p:column headerText="颜色" styleClass="tct wd-p-5"/>
+                            <p:column headerText="排量" styleClass="tct wd-p-5"/>
+                            <p:column headerText="核载" styleClass="tct wd-p-5"/>
+                            <p:column headerText="载重" styleClass="tct wd-p-5"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pnlInputArea, frmMain:toolbar" listener="#{ctrlCAR0001.onEditCheLiang(cheLiang)}"/>
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true"
+                                    oncomplete="showErrorMsg();"
+                                    update="frmMain:pnlInputArea, frmMain:toolbar, frmMain:pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    listener="#{ctrlCAR0001.onDeleteCheLiang(cheLiang)}"/>
+                            <i class="fa fa-trash Fs18 Red"></i>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                    </p:column>
+                    <!--车辆名-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.cheLiangMingCheng}"/>
+                    </p:column>
+                    <!--车辆类型-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{cheLiang.leiXing.message}"/>
+                    </p:column>
+                    <!--详细分类-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{cheLiang.xiangXiFenLei.xiangMuMing}"/>
+                    </p:column>
+                    <!--车辆所属-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.owner.message}"/>
+                    </p:column>
+                    <!--公司-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{cheLiang.gongSi.gongSiMing}"/>
+                    </p:column>
+                    <!--车牌照号码-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.chePaiZhaoHaoMa}"/>
+                    </p:column>
+                    <!--使用油-->
+                    <p:column styleClass="tct">
+                        <h:outputText id="guigegaiyao" value="#{cheLiang.shiTi.wuZiMiaoShu}"/>
+                        <p:tooltip position="top" for="guigegaiyao" value="#{cheLiang.shiTi.nameWithShuXingSummary}"/>
+                    </p:column>
+                    <!--司机-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{cheLiang.siJi}"/>
+                    </p:column>
+                    <!--备注-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.beiZhu}"/>
+                    </p:column>
+                    <!--品牌-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.pinPai}"/>
+                    </p:column>
+                    <!--型号-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.xingHao}"/>
+                    </p:column>
+                    <!--价格-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.price}"/>
+                    </p:column>
+                    <!--购买日期-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.purchaseDate}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--发动机号码-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.engineNumber}"/>
+                    </p:column>
+                    <!--颜色-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.color}"/>
+                    </p:column>
+                    <!--排量-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.outputVolume}"/>
+                    </p:column>
+                    <!--核载-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.heZai}"/>
+                    </p:column>
+                    <!--载重-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.zaiZhong}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

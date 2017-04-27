@@ -1,0 +1,275 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('WAI', 'WAI0003')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <!--工具条-->
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--添加清单-->
+                            <p:commandButton value="新建" process="@this, WuLiaoInputArea" actionListener="#{ctrlWAI0003.onStartEditing}"
+                                             resetValues="false"
+                                             oncomplete="showErrorMsg();"
+                                             update="@(.WuLiaoInputArea), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel" />
+                            <p:commandButton value="取消" process="@this"
+                                             update="@(.toolbar,.WuLiaoInputArea)"
+                                             actionListener="#{ctrlWAI0003.onCancelEditing}"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <!--输入区域-->
+                <p:outputPanel id="WuLiaoInputArea" styleClass="Container100 Responsive100 NoIndent WuLiaoInputArea">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlWAI0003.vm.editingWuLiao}">
+                        <!--选择物资-->
+                        <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-60 NoPadding,wd-p-10">
+                            <p:outputLabel for="XuanZheWuZi" value="选择物资"/>
+                            <p:inputText id="XuanZheWuZi" value="#{ctrlWAI0003.vm.editingWuLiao.shiti.wuZiMiaoShu}" 
+                                         required="true"   disabled="true"
+                                         requiredMessage="#{ctrlWAI0003.isRequiredMessage('选择物资')}"/> 
+                            <p:commandLink id="btnSelectWuZi" type="button"  
+                                           actionListener="#{ctrlWAI0003.onAddWuLiao}"
+                                           update="XuanZheWuZi,XuanZheWuZi,wuLiao"
+                                           process="@this"
+                                           onclick="PF('wvWuZiList').show()">
+                                <i class="fa fa-plus Fs18 Green"></i>
+                            </p:commandLink>
+                        </p:panelGrid>
+                        <!--物料名称-->
+                        <p:panelGrid columns="2" layout="grid" 
+                                     styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                     columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="WuLiaoMing" value="物料名称"/>
+                            <p:inputText id="WuLiaoMing" value="#{ctrlWAI0003.vm.editingWuLiao.wuLiaoMing}" 
+                                         required="true" 
+                                         requiredMessage="#{ctrlWAI0003.isRequiredMessage('物料名称')}"/> 
+                        </p:panelGrid>
+                        <p:panelGrid columns="2" layout="grid" 
+                                     styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                     columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:commandLink id="btnSelectZiWuZi" type="button"  
+                                           actionListener="#{ctrlWAI0003.onAddWuLiaoQingDan}"
+                                           update="@(.wuLiao)"
+                                           process="@this, wuLiao" 
+                                           value="添加清单"
+                                           onclick="PF('wvWuZiList').show()">
+                            </p:commandLink>
+                        </p:panelGrid>
+                        <!--物料明细显示-->
+                        <p:outputPanel id="wuLiao" styleClass="Container100 Responsive100 wuLiao">
+                            <p:dataTable value="#{ctrlWAI0003.vm.editingWuLiao.wuLiaoQingDanList}" var="qingDan" 
+                                         cellSeparator="5"
+                                         widgetVar="wvWuLiaoList"
+                                         rendered="#{not empty ctrlWAI0003.vm.editingWuLiao.wuLiaoQingDanList}"
+                                         emptyMessage="没有数据">
+                                <f:facet name="header">
+                                    <h:outputText value="物料清单"/>
+                                </f:facet>
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                        <!--<p:column headerText="添加" styleClass="tct wd-p-5" />-->
+                                        <p:column headerText="原材料" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="数量" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--删除-->
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlWAI0003.onDeleteWuLiaoQingDan(qingDan)}"
+                                                   process="@this" 
+                                                   update="@(.wuLiao), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   oncomplete="showErrorMsg();">
+                                        <i class="fa fa-trash Fs18 Red"></i>
+                                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>
+                                <!--添加-->
+                                <!--                                <p:column styleClass="trt">
+                                                                    <p:commandLink id="btnSelectWuZi" type="button"  
+                                                                                   actionListener="#{ctrlWAI0003.onAddWuLiaoQingDan}"
+                                                                                   update="@(.wuLiao)"
+                                                                                   process="@this" 
+                                                                                   onclick="PF('wvWuZiList').show()">
+                                                                        <i class="fa fa-plus Fs18 Green"></i>
+                                                                    </p:commandLink>
+                                                                </p:column>-->
+                                <!--物资-->
+                                <p:column>
+                                    <h:outputText value="#{qingDan.shiti.wuZiMiaoShu}" />  
+                                </p:column>
+                                <!--数量-->
+                                <p:column>
+                                    <p:spinner min="#{qingDan.shiti.zuiXiaoDanWei}" max="9999999"
+                                               stepFactor="#{qingDan.shiti.zuiXiaoDanWei}" size="7"
+                                               style="width: 100%!important"
+                                               value="#{qingDan.shuLiang}">
+                                        <!--<p:ajax  process="@this"/>-->
+                                    </p:spinner>
+                                </p:column>
+                                <!--备注-->
+                                <p:column styleClass="tlt">
+                                    <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{qingDan.beiZhu}" placeholder="备注"/>
+                                    <!--<h:inputText value="#{qingDan.beiZhu}"/>-->
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                        <!--保存按钮区-->
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank"
+                                     rendered="#{not empty ctrlWAI0003.vm.editingWuLiao.wuLiaoQingDanList}">
+                            <p:commandButton value="保存" process="WuLiaoInputArea"
+                                             oncomplete="showErrorMsg();"
+                                             update="WuLiaoInputArea, WuLiaoDetails, toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             actionListener="#{ctrlWAI0003.onSaveWuLiao}"/>
+                            <p:commandButton value="取消" process="@this" 
+                                             update="@(.toolbar,.WuLiaoInputArea)" actionListener="#{ctrlWAI0003.onCancelEditing}"
+                                             styleClass="RedButton"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+
+                </p:outputPanel>
+                <!--物料List区域-->
+                <p:outputPanel id="WuLiaoDetails" styleClass="Container100 Responsive100 WuLiaoDetails">
+                    <p:dataTable value="#{ctrlWAI0003.vm.wuLiaoList}" var="wuLiao" cellSeparator="5"
+                                 widgetVar="wvWuLiaoList"
+                                 rows="10"
+                                 filterDelay="500"
+                                 style="word-break: keep-all!important"
+                                 paginator="true"
+                                 paginatorAlwaysVisible="false"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 emptyMessage="没有数据">
+                        <f:facet name="header">
+                            <h:outputText value="物料信息一览"/>
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <!--<p:column headerText="编辑" styleClass="wd-p-5"/>-->
+                                <p:column headerText="删除" styleClass="wd-p-5"/>
+                                <p:column headerText="物资" styleClass="tct wd-p-5"/>
+                                <p:column headerText="物料名称" styleClass="tct wd-p-10"/>
+                                <p:column headerText="原材料" styleClass="tct wd-p-10"/>
+                                <p:column headerText="数量" styleClass="tct wd-p-10"/>
+                                <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--编辑-->
+                        <!--                        <p:column styleClass="tct">
+                                                    <p:commandLink actionListener="#{ctrlWAI0003.onEditWuLiao(wuLiao)}"
+                                                                   process="@this" update="@(.WuLiaoInputArea), @(.toolbar)">
+                                                        <i class="fa fa-pencil Fs18 Blue"></i>
+                                                    </p:commandLink>
+                                                </p:column>-->
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlWAI0003.onDeleteWuLiao(wuLiao)}"
+                                           process="@this" 
+                                           update="@(.WuLiaoDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                           oncomplete="showErrorMsg();">
+                                <i class="fa fa-trash Fs18 Red"></i>
+                                <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                            </p:commandLink>
+                        </p:column>
+                        <!--物资-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{wuLiao.shiti.wuZiMiaoShu}"/>
+                        </p:column>
+                        <!--物料名称-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{wuLiao.wuLiaoMing}"/>
+                        </p:column>
+                        <!--物资-->
+                        <p:column colspan="2" styleClass="no-padding" style="padding: 0px!important;">
+                            <p:dataTable  value="#{wuLiao.wuLiaoQingDanList}" 
+                                          var="wuLiaoQingDan"
+                                          rendered="#{not empty wuLiao.wuLiaoQingDanList}"
+                                          styleClass="innerTable">
+                                <p:column styleClass="tct wd-p-50">
+                                    <h:outputText value="#{wuLiaoQingDan.shiti.wuZiMiaoShu}" />  
+                                </p:column>
+                                <!--数量-->
+                                <p:column styleClass="tct wd-p-50">
+                                    <h:outputText value="#{wuLiaoQingDan.shuLiang}">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+                        <!--备注-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{wuLiao.beiZhu}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:outputPanel>
+        <p:dialog widgetVar="wvWuZiList" 
+                  width="800"
+                  closeOnEscape="true" header="选择物资">
+            <p:dataTable value="#{ctrlWAI0003.vm.pinLeiDetails}"
+                         var="pinLei" lazy="true"
+                         scrollHeight="400" scrollable="true"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="dtPinLeiWuZi" widgetVar="dtPinLeiWuZi"
+                         styleClass="bg-c-row-odd wd-f-600"
+                         emptyMessage="No Data">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column styleClass="tct wd-p-20" headerText="#{msg.pin_lei_ming}"
+                                  filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                        <p:column headerText="编辑" style="width: 58px;"/>
+                        <p:column headerText="物资名称" style="width: 208px;"/>
+                        <p:column headerText="规格/型号"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--品类名称-->
+                <p:column>
+                    <h:outputText value="#{pinLei.pinLeiMing}"/>
+                </p:column>
+                <!--物资-->
+                <p:column colspan="3" styleClass="no-padding" style="padding: 0px!important;">
+                    <p:dataTable value="#{pinLei.keYongWuZi}"
+                                 var="stwz"
+                                 rendered="#{not empty pinLei.keYongWuZi}"
+                                 styleClass="innerTable">
+                        <p:column styleClass="tct wd-f-50">
+                            <!--选择-->
+                            <p:commandLink value="选择"
+                                           process="@this"
+                                           actionListener="#{ctrlWAI0003.onWuZiSelect(stwz)}"
+                                           oncomplete="PF('wvWuZiList').hide()"
+                                           update="@(.WuLiaoInputArea)">
+                            </p:commandLink>
+<!--                            <p:selectBooleanCheckbox value="#{stwz.selected}" >
+                                <p:ajax process="@(.WuLiaoInputArea), @this"
+                                        listener="#{ctrlWAI0003.onWuZiSelect(stwz)}"
+                                        update="@(.WuLiaoInputArea)"/>
+                            </p:selectBooleanCheckbox>-->
+                        </p:column>
+                        <p:column styleClass="wd-f-200" >
+                            <h:outputText value="#{stwz.wuZiMiaoShu}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{stwz.shuXingSummary}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </p:outputPanel>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

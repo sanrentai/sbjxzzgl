@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+
+            <div class="Card  ui-fluid">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0007')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:toolbar id="toolbar">
+                    <f:facet name="left">
+                        <p:commandButton id="btnSelectYuanGong" value="员工选择" actionListener="#{ctrlMST0007.onStartChooseYuanGong}" update="ovlYuanGongList"
+                                         oncomplete="PF('ovlYuanGongList').show();"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100">
+            <p:outputPanel styleClass="Card" rendered="#{ctrlMST0007.statusEditing}">
+                <div class="CardBizTopic">用户角色</div>
+                <div class="SeparatorFull"></div>
+                <div class="Container50">
+                    <p:dataTable value="#{ctrlMST0007.vm.yuanGongRoleList}" var="ygr">
+                        <f:facet name="header">
+                            <h:outputText value="#{ctrlMST0007.vm.editingYuanGong.name}" styleClass="Blue"/>
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="选择" styleClass="wd-p-10" />
+                                <p:column headerText="角色名" styleClass="wd-p-30" />
+                                <p:column headerText="说明" />
+                                <p:column headerText="查看" styleClass="wd-p-10"  rendered="false"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--选择-->
+                        <p:column styleClass="tct">
+                            <p:selectBooleanCheckbox value="#{ygr.youXiaoB}"/>
+                        </p:column>
+                        <!--角色名-->
+                        <p:column>
+                            <h:outputText value="#{ygr.role.roleName}"/>
+                        </p:column>
+                        <!--角色说明-->
+                        <p:column>
+                            <h:outputText value="#{ygr.role.roleDescription}"/>
+                        </p:column>
+                        <!--查看-->
+                        <p:column styleClass="tct" rendered="false">
+                            <p:commandLink>
+                                <p:ajax process="@this" listener="#{ctrlMST0007.onSelectGongNengRole(ygr)}"
+                                        update="frmMain:vwDiaQuanXian" oncomplete="PF('vwDiaQuanXian').show();"/>
+                                <i class="fa fa-search Fs16 Purple"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                    <div class="EmptyBox10"></div>
+                    <p:panelGrid layout="grid" columns="2" styleClass="Container50 Responsive100 ui-panelgrid-blank">
+                        <p:commandButton value="保存" process="pnlInputArea" styleClass="GreenButton" actionListener="#{ctrlMST0007.onSaveYuanGongRole}"
+                                         oncomplete="showErrorMsg();"
+                                         update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                    </p:panelGrid>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <p:overlayPanel id="ovlYuanGongList" for="btnSelectYuanGong" widgetVar="ovlYuanGongList" styleClass="wd-f-500">
+            <p:dataTable value="#{ctrlMST0007.vm.yuanGongList}" var="yg" lazy="true" cellSeparator="5"
+                         widgetVar="wvYuanGongList"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10" filterDelay="500"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="No Data">
+                <f:facet name="header">
+                    <h:outputText value="员工一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="选择" styleClass="wd-p-10"/>
+                        <p:column headerText="员工ID" styleClass="wd-p-10"/>
+                        <p:column headerText="员工名" styleClass="wd-p-10" filterBy="#{yg.xing}" filterMaxLength="15" filterMatchMode="contains"/>
+                        <p:column headerText="已分配角色" styleClass="wd-p-70"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--选择-->
+                <p:column styleClass="tct">
+                    <p:commandLink rendered="#{yg.hasInsertEmail}">
+                        <p:ajax process="@this" resetValues="true" oncomplete="PF('ovlYuanGongList').hide();"
+                                update="frmMain:pnlInputArea" listener="#{ctrlMST0007.onSelectYuanGong(yg)}"/>
+                        <i class="fa fa-pencil Fs18 Blue"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--员工ID-->
+                <p:column styleClass="tct">
+                    <p:outputLabel rendered="#{not yg.existsLoginUser}">
+                        <i class="icon-cross47 Red Fs16" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{yg.loginInfo.loginId}" rendered="#{yg.existsLoginUser}"/>
+                </p:column>
+                <!--员工名-->
+                <p:column>
+                    <h:outputText value="#{yg.nameZ}"/>
+                </p:column>
+                <!--已分配角色-->
+                <p:column>
+                    <h:outputText value="#{yg.yiFenJueSe}"/>
+                </p:column>
+            </p:dataTable> 
+        </p:overlayPanel>
+
+        <p:dialog id="vwDiaQuanXian" widgetVar="vwDiaQuanXian" appendTo="@(.body)" dynamic="true" closeOnEscape="true">
+            <p:outputPanel id="pnlQuanXian">
+                <!--角色功能一览-->
+                <p:dataTable value="#{ctrlMST0007.vm.usableQuanXian}" var="qx" sortBy="#{qx.gongNeng.huaMianId}" styleClass="wd-f-200">
+                    <f:facet name="header">
+                        <h:outputText value="功能一览" styleClass="Blue"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="菜单名" />
+                            <p:column headerText="功能名" styleClass="wd-p-30" />
+                        </p:row>
+                    </p:columnGroup>
+                    <!--菜单名-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{qx.gongNeng.xiangMu.xiangMuMing}"/>
+                    </p:column>
+                    <!--功能名-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{qx.gongNeng.gaiYao}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+        </p:dialog>
+    </p:outputPanel>
+</ui:composition>

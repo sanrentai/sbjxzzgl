@@ -1,0 +1,15 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:po="http://primefaces.org/olympos"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+
+    <p:outputPanel id="menu">
+        <p:outputPanel styleClass="White Fs20" style="margin-left: 90px;margin-top: 25px;" 
+                       rendered="#{empty ctrlMaster.menus.elements}">
+            <h:outputText value="无可使用的功能"/>
+        </p:outputPanel>
+        <po:menu widgetVar="SystemMenu" model="#{ctrlMaster.menus}" rendered="#{not empty ctrlMaster.menus.elements}"/>
+    </p:outputPanel>
+</ui:composition>

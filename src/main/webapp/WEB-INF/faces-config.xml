@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                                  http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    
+    <name>primefaces_olympos</name>
+    
+    <component>
+        <component-type>org.primefaces.component.OlymposMenu</component-type>
+        <component-class>org.primefaces.olympos.component.menu.OlymposMenu</component-class>
+    </component>
+    
+    <render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.OlymposMenuRenderer</renderer-type>
+            <renderer-class>org.primefaces.olympos.component.menu.OlymposMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+    
+    <application>
+        <!--本地化/国际化对应配置START-->
+        <locale-config>
+            <default-locale>zh</default-locale>
+            <supported-locale>zh</supported-locale>
+            <supported-locale>en</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>i18n.messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
+        <!--本地化/国际化对应配置END-->
+        
+        <!--Primefaces 对话框 START-->
+        <action-listener>org.primefaces.application.DialogActionListener</action-listener>
+        <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+        <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+        <!--Primefaces 对话框 END-->
+        
+        <!--异常处理  START-->
+        <el-resolver>
+            org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver
+        </el-resolver>
+        <!--异常处理  END-->
+    </application>
+    <factory>
+        <exception-handler-factory>
+            org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+        </exception-handler-factory>
+    </factory>
+</faces-config>

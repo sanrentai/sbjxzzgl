@@ -1,0 +1,552 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card  ui-fluid">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0005')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="pnlInputArea" styleClass="Container60 Responsive100">
+                    <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+
+                        <p:outputPanel>
+                            <p:outputLabel for="ddlRole" value="角色"/>
+                            <p:selectOneMenu id="ddlRole" value="#{ctrlMST0005.vm.selectedRole}" converter="RoleConverter"
+                                             disabled="#{ctrlMST0005.statusEditing}">
+                                <f:selectItems value="#{ctrlMST0005.vm.roleList}" 
+                                               var="rl" itemValue="#{rl}" itemLabel="#{rl.roleName}"/>
+                            </p:selectOneMenu>
+                        </p:outputPanel>
+                        <!--选择按钮-->
+                        <p:commandButton id="btnStartEditing" value="选择" styleClass="MarTop20" 
+                                         actionListener="#{ctrlMST0005.onLoadQuanXian}" resetValues="true"
+                                         disabled="#{ctrlMST0005.statusEditing}"
+                                         process="pnlInputArea" update="pnlQuanXian, pnlInputArea"/>
+                        <!--取消按钮-->
+                        <p:commandButton id="btnCancel" value="取消" styleClass="MarTop20 RedButton"
+                                         actionListener="#{ctrlMST0005.onCancel}"
+                                         update="pnlInputArea, pnlQuanXian"
+                                         disabled="#{ctrlMST0005.statusInit}"/>
+                        <!--保存按钮-->
+                        <p:commandButton id="btnSave" value="保存" styleClass="MarTop20 GreenButton" 
+                                         process="@this, pnlQuanXian, pngRoleEdit" 
+                                         oncomplete="showErrorMsg();"
+                                         update="pnlInputArea, pnlQuanXian, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         disabled="#{ctrlMST0005.statusInit}"
+                                         actionListener="#{ctrlMST0005.onSaveAuthority}"/>
+                        <!--增加角色-->
+                        <p:commandButton process="@this" actionListener="#{ctrlMST0005.onAddNewRole}" 
+                                         value="增加角色" onclick="PF('wvAddNewRole').show();"
+                                         styleClass="MarTop20 AquaButton" 
+                                         disabled="#{ctrlMST0005.statusEditing}"/>
+                    </p:panelGrid>
+                    <p:panelGrid id="pngRoleEdit" rendered="#{ctrlMST0005.statusEditing}" layout="grid" columns="2" columnClasses="wd-p-30,wd-p-70" styleClass="ui-panelgrid-blank">
+                        <p:outputPanel>
+                            <p:outputLabel for="txtRoleName" value="角色名"/>
+                            <p:inputText id="txtRoleName" value="#{ctrlMST0005.vm.selectedRole.roleName}" required="true" requiredMessage="#{ctrlMST0005.isRequiredMessage('角色名')}"/>
+                        </p:outputPanel>
+                        <p:outputPanel>
+                            <p:outputLabel for="txtRoleDescription" value="角色描述"/>
+                            <p:inputText id="txtRoleDescription" value="#{ctrlMST0005.vm.selectedRole.roleDescription}"/>
+                        </p:outputPanel>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pnlQuanXian" styleClass="Container100 Responsive100">
+            <p:outputPanel styleClass="Card  ui-fluid" rendered="#{ctrlMST0005.statusEditing}">
+                <div class="CardBizTopic Red">#{ctrlMST0005.vm.selectedRole.roleName}</div>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel rendered="#{ctrlMST0005.vm.caiDanList != null 
+                                           and not empty ctrlMST0005.vm.caiDanList 
+                                           and ctrlMST0005.statusEditing}">
+                    <div class="Container100 Responsive100">
+                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAll}" itemLabel="全选择">
+                            <p:ajax process="@this" update="pnlQuanXian" listener="#{ctrlMST0005.onCheckAll('')}"/>
+                        </p:selectBooleanCheckbox>
+                    </div>
+                    <div class="Container100 Responsive100">
+                        <div class="Container20 Responsive100">
+                            <p:panelGrid id="pngBIZ" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="申请管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllBIZ}">
+                                            <p:ajax process="@this" update="pngBIZ" listener="#{ctrlMST0005.onCheckAll('BIZ')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListBIZ}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+
+                            <div class="EmptyBox10"/>
+
+                            <p:panelGrid id="pngCAR" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="车辆管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllCAR}">
+                                            <p:ajax process="@this" update="pngCAR" listener="#{ctrlMST0005.onCheckAll('CAR')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListCAR}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+                        </div>
+                        <div class="Container20 Responsive100">
+                            <p:panelGrid id="pngARP" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="审批管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllARP}">
+                                            <p:ajax process="@this" update="pngARP" listener="#{ctrlMST0005.onCheckAll('ARP')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListARP}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+
+                            <div class="EmptyBox10"/>
+
+                            <p:panelGrid id="pngYOU" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="用油管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllYOU}">
+                                            <p:ajax process="@this" update="pngYOU" listener="#{ctrlMST0005.onCheckAll('YOU')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListYOU}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+
+                            <div class="EmptyBox10"/>
+
+                            <p:panelGrid id="pngMEI" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="用煤管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllMEI}">
+                                            <p:ajax process="@this" update="pngMEI" listener="#{ctrlMST0005.onCheckAll('MEI')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListMEI}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+                            <div class="EmptyBox10"/>
+                            <p:panelGrid id="pngMET" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="抄表管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllMET}">
+                                            <p:ajax process="@this" update="pngMET" listener="#{ctrlMST0005.onCheckAll('MET')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListMET}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+                        </div>
+                        <div class="Container20 Responsive100">
+                            <p:panelGrid id="pngINV" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="库存管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllINV}">
+                                            <p:ajax process="@this" update="pngINV" listener="#{ctrlMST0005.onCheckAll('INV')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListINV}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+                        </div>
+                        <div class="Container20 Responsive100">
+                            <p:panelGrid id="pngSUP" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="采购计划"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllSUP}">
+                                            <p:ajax process="@this" update="pngSUP" listener="#{ctrlMST0005.onCheckAll('SUP')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListSUP}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+
+                        </div>
+                        <div class="Container20 Responsive100">
+                            <p:panelGrid id="pngMST" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="系统管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllMST}">
+                                            <p:ajax process="@this" update="pngMST" listener="#{ctrlMST0005.onCheckAll('MST')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListMST}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+
+                            <div class="EmptyBox10"/>
+
+                            <p:panelGrid id="pngWAI" styleClass="Container100 Responsive100">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="3">
+                                            <h:outputText value="委外加工管理"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column styleClass="LightGrayBack tct wd-p-60">
+                                        <h:outputText value="菜单名"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-30">
+                                        <h:outputText value="功能"/>
+                                    </p:column>
+                                    <p:column styleClass="LightGrayBack tct wd-p-10">
+                                        <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.checkAllWAI}">
+                                            <p:ajax process="@this" update="pngWAI" listener="#{ctrlMST0005.onCheckAll('WAI')}"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <ui:repeat value="#{ctrlMST0005.vm.caiDanListWAI}" var="cd" varStatus="cdStatus">
+                                    <ui:repeat value="#{cd.gongNengList}" var="gn" varStatus="gnStatus">
+                                        <p:row>
+                                            <!--菜单名-->
+                                            <p:column rowspan="#{cd.gongNengList.size()}" rendered="#{gnStatus.index eq 0}">
+                                                <h:outputText value="#{cd.xiangMuMing}"/>
+                                            </p:column>
+                                            <!--功能-->
+                                            <p:column styleClass="tct">
+                                                <h:outputText value="#{gn.gaiYao}"/>
+                                            </p:column>
+                                            <!--权限-->
+                                            <p:column styleClass="tct">
+                                                <p:selectBooleanCheckbox value="#{ctrlMST0005.vm.quanXianList[gn.gongNengId].quanXianB}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </ui:repeat>
+                                </ui:repeat>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>    
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:dialog id="wvAddNewRole" widgetVar="wvAddNewRole" modal="true" closeOnEscape="true" width="800" height="500"
+              resizable="false" responsive="true"
+              closable="true" dynamic="true" fitViewport="true" minWidth="600" header="新增角色">
+        <div class="Card Container100 Responsive100 ui-fluid">
+            <div class="CardBigTopic">角色信息</div>
+            <div class="SeparatorFull"></div>
+            <p:panelGrid id="pngRoleInput" layout="grid" columns="2" columnClasses="wd-p-30,wd-p-70" styleClass="ui-panelgrid-blank">
+                <p:outputPanel>
+                    <p:outputLabel for="lblRoleName" value="角色名"/>
+                    <p:inputText id="lblRoleName" value="#{ctrlMST0005.vm.editingRole.roleName}" required="true" requiredMessage="#{ctrlMST0005.isRequiredMessage('角色名')}"/>
+                </p:outputPanel>
+                <p:outputPanel>
+                    <p:outputLabel for="lblRoleDescription" value="角色描述"/>
+                    <p:inputText id="lblRoleDescription" value="#{ctrlMST0005.vm.editingRole.roleDescription}"/>
+                </p:outputPanel>
+            </p:panelGrid>
+
+            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank Container40">
+                <p:commandButton value="保存" process="@this, pngRoleInput" update="pngRoleInput, msgRole, frmMain:pnlInputArea, dtRoleList"
+                                 actionListener="#{ctrlMST0005.onSaveRole}"/>
+            </p:panelGrid>
+
+            <p:outputPanel styleClass="Container60">
+                <p:messages id="msgRole" showSummary="false" showDetail="true"/>
+            </p:outputPanel>
+
+            <div class="EmptyBox5"></div>
+            <p:dataTable id="dtRoleList" value="#{ctrlMST0005.vm.roleList}" var="rl">
+                <f:facet name="header">
+                    <h:outputText value="角色一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="角色名" styleClass="wd-p-30"/>
+                        <p:column headerText="角色描述" />
+                    </p:row>
+                </p:columnGroup>
+                <!--角色名-->
+                <p:column>
+                    <h:outputText value="#{rl.roleName}"/>
+                </p:column>
+                <!--角色描述-->
+                <p:column>
+                    <h:outputText value="#{rl.roleDescription}"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+    </p:dialog>
+</ui:composition>

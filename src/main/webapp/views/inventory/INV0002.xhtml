@@ -1,0 +1,463 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!--库存现状-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0002')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+                    <h:panelGrid id="grid" columns="5" cellpadding="5">
+                        <p:outputLabel for="cang_ku"
+                                       value="#{msg.cang_ku}"
+                                       styleClass="fr"/>
+                        <p:selectOneMenu id="cang_ku"
+                                         value="#{ctrlINV0002.vm.lazyModel.cangKuId}"
+                                         required="true"
+                                         requiredMessage="#{ctrlINV0002.isRequiredMessage(msg.cang_ku)}">
+                            <p:ajax listener="#{ctrlINV0002.changeCangKu}" process="@this" update="kucun shenqinggoumai"/>
+                            <f:selectItems value="#{ctrlINV0002.vm.cangKuYiLanList}"
+                                           var="cangKu"
+                                           itemLabel="#{cangKu.cangKuMing}"
+                                           itemValue="#{cangKu.cangKuId}"/>
+                        </p:selectOneMenu>
+                        <p:selectBooleanCheckbox itemLabel="显示警报物资" value="#{ctrlINV0002.vm.lazyModel.chaKanBaoJingWuZi}">
+                            <p:ajax process="@this" update="kucun" />
+                        </p:selectBooleanCheckbox>
+                        <p:selectBooleanCheckbox itemLabel="显示所有物资" value="#{ctrlINV0002.vm.lazyModel.chaKanSuoYouWuZi}">
+                            <p:ajax process="@this" update="kucun" />
+                        </p:selectBooleanCheckbox>
+                        <!--查看仓库物品总价-->
+                        <p:commandButton value="查看仓库物品总价"
+                                         rendered="#{ctrlINV0002.vm.displayDanJia}"
+                                         actionListener="#{ctrlINV0002.chaKanCangKuWuPinZongJia}"
+                                         process="@this"
+                                         oncomplete="showErrorMsg();PF('cang_ku_wu_pin_zong_jia').show();"
+                                         update="cang_ku_wu_pin_zong_jia_panel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                    </h:panelGrid>
+
+                    <p:outputPanel id="kucun">
+                        <p:dataTable id="kucunTable"
+                                     value="#{ctrlINV0002.vm.lazyModel}"
+                                     widgetVar="kucunTable"
+                                     lazy="true"
+                                     var="item"
+                                     rowStyleClass="#{(item.kuCunShu le item.linJieZhi.xiaXian) or (item.kuCunShu ge item.linJieZhi.shangXian) ? 'row-warning' : null}"
+                                     filterDelay="500"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     rows="15"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="15, 30, 50"
+                                     styleClass="tct">
+                            <f:facet name="header">
+                                库存状况一览
+                                <p:commandLink id="toggler" type="button" value="显示列选择" styleClass="Fleft" style="width: 100px!important" />
+                                <p:columnToggler datasource="kucunTable" trigger="toggler" />
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="库房" filterBy="#{item.kuFangMing}" filterMatchMode="exact" styleClass="wd-p-8">
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('kucunTable').filter()" filter="true" filterMatchMode="contains" autoWidth="false">
+                                                <f:selectItem itemLabel="选择库房" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{ctrlINV0002.vm.currentCangKu.kuFangList}" var="kuFang"
+                                                               itemLabel="#{kuFang.kuFangMing}" itemValue="#{kuFang.kuFangMing}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:column>
+                                    <!--<p:column headerText="#{msg.wu_zi_id}" styleClass="wd-p-8" filterBy="#{item.pk.wuZiId}" filterMaxLength="12"/>-->
+                                    <p:column headerText="类别" filterBy="#{item.shiti.pinLei.pinLeiId}" filterMatchMode="exact" styleClass="wd-p-10">
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('kucunTable').filter()" filter="true" filterMatchMode="contains" autoWidth="false">
+                                                <f:selectItem itemLabel="选择分类" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{ctrlINV0002.vm.fenLeiList}" var="fenlei"
+                                                               itemLabel="#{fenlei.pinLeiMing}" itemValue="#{fenlei.pinLeiId}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:column>
+                                    <p:column headerText="#{msg.wu_zhi_miao_shu}" filterBy="#{item.shiti.wuZiMiaoShu}" filterMaxLength="50" styleClass="wd-p-10"/>
+                                    <p:column headerText="单位" styleClass="wd-p-4"/>
+                                    <p:column headerText="单价" styleClass="wd-p-5" sortBy="#{item.danJia}" rendered="#{ctrlINV0002.vm.displayDanJia}"/>
+                                    <p:column headerText="总价" styleClass="wd-p-5" rendered="#{ctrlINV0002.vm.displayDanJia}"/>
+                                    <p:column headerText="#{msg.ku_cun_zong_liang}" styleClass="wd-p-5" sortBy="#{item.kuCunShu}"/>
+                                    <p:column headerText="自由库存数" styleClass="wd-p-5"/>
+                                    <p:column headerText="申请占用数" styleClass="wd-p-5"/>
+                                    <p:column headerText="#{msg.ji_hua_ru_ku_shu}" styleClass="wd-p-5"/>
+                                    <p:column headerText="#{msg.ji_hua_chu_ku_shu}" styleClass="wd-p-5"/>
+                                    <p:column headerText="上限" styleClass="wd-p-5" rendered="false"/>
+                                    <p:column headerText="下限" styleClass="wd-p-5"/>
+                                    <p:column headerText="临界值"  styleClass="wd-p-4" rendered="#{ctrlINV0002.vm.canCaoZuo}"/>
+                                    <p:column headerText="购买申请"  styleClass="wd-p-6" rendered="#{ctrlINV0002.vm.canCaoZuo}"/>
+                                    <p:column headerText="库间调拨"  styleClass="wd-p-6" rendered="#{ctrlINV0002.vm.canCaoZuo}"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.kuFangMing}"/>
+                            </p:column>
+<!--                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.pk.wuZiId}" />
+                            </p:column>-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.shiti.pinLei.firstSuoShu.parent.pinLei.pinLeiMing}"/>
+                            </p:column>
+                            <!--规格概要-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <!--单位-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <!--单价-->
+                            <p:column styleClass="trt"  rendered="#{ctrlINV0002.vm.displayDanJia}">
+                                <h:outputText value="#{item.danJia}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--总价-->
+                            <p:column styleClass="trt"  rendered="#{ctrlINV0002.vm.displayDanJia}">
+                                <h:outputText value="#{item.danJia * item.kuCunShu}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--库存数-->
+                            <p:column>
+                                <h:outputText value="#{item.kuCunShu}" styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--当前可用数-->
+                            <p:column>
+                                <h:outputText value="#{item.dangQianKeYongShu}" styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--申请占用数-->
+                            <p:column>
+                                <h:outputText value="#{item.shenQingZanYongShu}" styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--计划入库数-->
+                            <p:column>
+                                <h:outputText value="#{item.jiHuaRuKuShu}" styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--计划出库数-->
+                            <p:column>
+                                <h:outputText value="#{item.jiHuaChuKuShu}" styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--临界值上限-->
+                            <p:column rendered="false">
+                                <h:outputText value="#{item.linJieZhi.shangXian}"
+                                              rendered="#{not empty item.linJieZhi.shangXian}"
+                                              styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--临界值下限-->
+                            <p:column>
+                                <h:outputText value="#{item.linJieZhi.xiaXian}"
+                                              rendered="#{not empty item.linJieZhi.xiaXian}"
+                                              styleClass="fr">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--修改按钮-->
+                            <p:column rendered="#{ctrlINV0002.vm.canCaoZuo}">
+                                <p:commandLink value="修改"
+                                               disabled="#{not ctrlINV0002.vm.canCaoZuo}"
+                                               update="@(.xiugailinjiezhi)"
+                                               oncomplete="PF('xiu_gai_lin_jie_zhi_dialog').show()"
+                                               actionListener="#{ctrlINV0002.displayLinJieZhi(item)}"
+                                               process="@this"
+                                               styleClass="Blue">
+                                </p:commandLink>
+                            </p:column>
+                            <!--购买申请-->
+                            <p:column rendered="#{ctrlINV0002.vm.canCaoZuo}">
+                                <p:commandLink value="购买"
+                                               update="@(.shenqinggoumai)"
+                                               oncomplete="PF('shen_qing_gou_mai_dialog').show()"
+                                               actionListener="#{ctrlINV0002.shenQingGouMai(item)}"
+                                               process="@this"
+                                               styleClass="Blue">
+                                </p:commandLink>
+                            </p:column>
+                            <!--库间调拨-->
+                            <p:column rendered="#{ctrlINV0002.vm.canCaoZuo}">
+                                <p:commandLink value="调拨"
+                                               update="@(.shenqingdiaobo)"
+                                               oncomplete="PF('ku_jian_diao_bo_dialog').show()"
+                                               actionListener="#{ctrlINV0002.shenQingDiaoBo(item)}"
+                                               process="@this"
+                                               styleClass="Blue">
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+    
+    <p:dialog header="申请购买"
+              widgetVar="shen_qing_gou_mai_dialog"
+              modal="true"
+              closeOnEscape="true"
+              showEffect="fade"
+              hideEffect="fade"
+              resizable="false">
+        <p:outputPanel id="shenqinggoumai" styleClass="shenqinggoumai">
+            <h:panelGrid columns="2" columnClasses="tlt,">
+                <p:outputLabel value="#{msg.cang_ku_ming_cheng}"/>
+                <h:outputText value="#{ctrlINV0002.vm.gouMaiShenQingMingXi.cangKu.cangKuMing}" />
+                <p:outputLabel value="#{msg.wu_zhi_miao_shu}"/>
+                <p:outputPanel>
+                    <h:outputText id="guigegaiyao1" value="#{ctrlINV0002.vm.gouMaiShenQingMingXi.wuziBianHaoObj.wuZiMiaoShu}"/>
+                    <p:tooltip position="top" for="guigegaiyao1" value="#{ctrlINV0002.vm.gouMaiShenQingMingXi.wuziBianHaoObj.nameWithShuXingSummary}"/>
+                </p:outputPanel>
+                <p:outputLabel for="shenqingshuliang"
+                               value="申请数量"/>
+                <p:inputNumber id="shenqingshuliang"
+                               value="#{ctrlINV0002.vm.gouMaiShenQingMingXi.shenQingShuLiang}"
+                               styleClass="trt-inputNumber"
+                               decimalPlaces="#{ctrlINV0002.vm.gouMaiShenQingMingXi.wuziBianHaoObj.decimalPlaces}"
+                               minValue="0"
+                               required="true"
+                               requiredMessage="#{ctrlINV0002.isRequiredMessage('申请数量')}"
+                               thousandSeparator=","
+                               emptyValue="zero"
+                               maxlength="11">
+                </p:inputNumber>
+                <p:outputLabel for="xiwangdaohuori"
+                               value="希望到货日"/>
+                <p:calendar id="xiwangdaohuori"
+                            value="#{ctrlINV0002.vm.gouMaiShenQingMingXi.xiWangRiQi}"
+                            readonlyInput="true"
+                            placeholder="希望到货日"
+                            mask="true"
+                            pattern="#{bizConfig.dateFormat}"
+                            required="true" size="12"
+                            requiredMessage="#{ctrlINV0002.isRequiredMessage('希望到货日')}"
+                            converterMessage="#{ctrlINV0002.dateUnvalidMessage('希望到货日')}"
+                            title="希望到货日"
+                            locale="#{bizConfig.locale}">
+                </p:calendar>
+                <p:outputLabel for="shenqingliyou"
+                               value="申请理由"/>
+                <p:inputTextarea id="shenqingliyou" value="#{ctrlINV0002.vm.gouMaiShenQingMingXi.shenQingLiYou}"/>
+            </h:panelGrid>
+
+            <p:outputPanel styleClass="tct">
+                <p:commandButton value="确定"
+                                 actionListener="#{ctrlINV0002.saveGouMaiShenQing()}"
+                                 process="shenqinggoumai"
+                                 oncomplete="PF('shen_qing_gou_mai_dialog').hide();showErrorMsg();"
+                                 update="kucun, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 styleClass="White"
+                                 icon="fa fa-check"/>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog header="申请调拨"
+              widgetVar="ku_jian_diao_bo_dialog"
+              modal="true"
+              closeOnEscape="true"
+              showEffect="fade"
+              hideEffect="fade"
+              resizable="false">
+        <p:outputPanel id="shenqingdiaobo" styleClass="shenqingdiaobo">
+            <h:panelGrid columns="2" columnClasses="trt," rendered="#{not empty ctrlINV0002.vm.diaoBoMingXi}">
+                <p:outputLabel value="#{msg.wu_zhi_miao_shu}"/>
+                <p:outputPanel>
+                    <h:outputText id="guigegaiyao2" value="#{ctrlINV0002.vm.diaoBoMingXi.shiTi.wuZiMiaoShu}"/>
+                    <p:tooltip position="top" for="guigegaiyao2" value="#{ctrlINV0002.vm.diaoBoMingXi.shiTi.nameWithShuXingSummary}"/>
+                </p:outputPanel>
+                
+                <p:outputLabel value="调入库"/>
+                <p:selectOneMenu value="#{ctrlINV0002.vm.diaoBoMingXi.ruKuCangKuId}"
+                                 required="true"
+                                 requiredMessage="#{ctrlINV0002.isRequiredMessage('调入库')}">
+                    <f:selectItems value="#{ctrlINV0002.vm.diaoBoYongKuCunList}"
+                                   var="kuCun"
+                                   itemLabel="#{kuCun.cangKu.cangKuMing}"
+                                   itemValue="#{kuCun.cangKu.cangKuId}"/>
+                </p:selectOneMenu>
+                
+                <p:outputLabel value="调出库"/>
+                <p:selectOneMenu value="#{ctrlINV0002.vm.diaoBoMingXi.chuKuCangKuId}"
+                                 required="true"
+                                 requiredMessage="#{ctrlINV0002.isRequiredMessage('调出库')}">
+                    <p:ajax process="@this" update="dangQianKeYongShu"/>
+                    <f:selectItems value="#{ctrlINV0002.vm.diaoBoYongKuCunList}"
+                                   var="kuCun"
+                                   itemLabel="#{kuCun.cangKu.cangKuMing}"
+                                   itemValue="#{kuCun.cangKu.cangKuId}"/>
+                </p:selectOneMenu>
+                
+                <p:outputLabel value="当前可用数"/>
+                <p:outputPanel>
+                    <h:outputText value="#{ctrlINV0002.vm.diaoBoMingXi.shiTi.wuZiDanWei.danWeiMing}" styleClass="fr"/>
+                    <h:outputText id="dangQianKeYongShu" value="#{ctrlINV0002.dangQianKeYongShu}" styleClass="fr">
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </h:outputText>
+                </p:outputPanel>
+                
+                <p:outputLabel for="diaoBoShuLiang"
+                               value="调拨数量"/>
+                <p:inputNumber id="diaoBoShuLiang"
+                               value="#{ctrlINV0002.vm.diaoBoMingXi.diaoBoShu}"
+                               styleClass="trt-inputNumber"
+                               decimalPlaces="#{ctrlINV0002.vm.diaoBoMingXi.shiTi.decimalPlaces}"
+                               minValue="0"
+                               required="true"
+                               requiredMessage="#{ctrlINV0002.isRequiredMessage('调拨数量')}"
+                               thousandSeparator=","
+                               emptyValue="zero"
+                               maxlength="11">
+                </p:inputNumber>
+                
+                <p:outputLabel for="jiHuaDiaoBoRi"
+                               value="计划调拨日"/>
+                <p:calendar id="jiHuaDiaoBoRi"
+                            value="#{ctrlINV0002.vm.diaoBoMingXi.jiHuaRiQi}"
+                            readonlyInput="true"
+                            placeholder="计划调拨日"
+                            mask="true" styleClass="tct"
+                            pattern="#{bizConfig.dateFormat}"
+                            required="true"
+                            requiredMessage="#{ctrlINV0002.isRequiredMessage('计划调拨日')}"
+                            converterMessage="#{ctrlINV0002.dateUnvalidMessage('计划调拨日')}"
+                            title="计划调拨日"
+                            locale="#{bizConfig.locale}">
+                </p:calendar>
+                
+                <p:outputLabel value="申请理由"/>
+                <p:inputTextarea value="#{ctrlINV0002.vm.diaoBoMingXi.shenQingLiYou}"/>
+            </h:panelGrid>
+
+            <p:outputPanel styleClass="tct">
+                <p:commandButton value="确定"
+                                 actionListener="#{ctrlINV0002.saveDiaoBoShenQing}"
+                                 process="shenqingdiaobo"
+                                 oncomplete="showErrorMsg();"
+                                 update="shenqingdiaobo, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 styleClass="White"
+                                 icon="fa fa-check"/>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:dialog>
+
+    <p:dialog header="修改临界值"
+              widgetVar="xiu_gai_lin_jie_zhi_dialog"
+              modal="true"
+              closeOnEscape="true"
+              showEffect="fade"
+              hideEffect="fade"
+              resizable="false">
+        <p:outputPanel id="xiugailinjiezhi" styleClass="xiugailinjiezhi">
+            <h:panelGrid columns="2" rendered="#{not empty ctrlINV0002.vm.selectedCangKuKuCun}">
+                <p:outputLabel for="cangkuming"
+                               value="#{msg.cang_ku_ming_cheng}"
+                               styleClass="fr" />
+                <h:outputText id="cangkuming"
+                              value="#{ctrlINV0002.vm.selectedCangKuKuCun.cangKu.cangKuMing}" />
+                <p:outputLabel for="guigegaiyao"
+                               value="#{msg.wu_zhi_miao_shu}"
+                               styleClass="fr" />
+                <p:outputPanel>
+                    <h:outputText id="guigegaiyao" value="#{ctrlINV0002.vm.selectedCangKuKuCun.shiti.wuZiMiaoShu}"/>
+                    <p:tooltip position="top" for="guigegaiyao" value="#{ctrlINV0002.vm.selectedCangKuKuCun.shiti.nameWithShuXingSummary}"/>
+                </p:outputPanel>
+                <p:outputLabel for="shangxian"
+                               value="#{msg.shang_xian}"
+                               styleClass="fr" />
+                <p:inputText id="shangxian"
+                             maxlength="9"
+                             value="#{ctrlINV0002.vm.selectedLinJieZhi.shangXian}"
+                             converterMessage="#{ctrlINV0002.numberOnly(msg.shang_xian)}"
+                             validatorMessage="#{ctrlINV0002.isMustAbove(msg.shang_xian, 1)}">
+                    <!--<pe:keyFilter regEx="/[ABC]/i"/>-->
+                    <f:validateLongRange minimum="1" />
+                </p:inputText>
+
+                <p:outputLabel for="xiaxian"
+                               value="#{msg.xia_xian}"
+                               styleClass="fr" />
+                <p:inputText id="xiaxian"
+                             maxlength="9"
+                             value="#{ctrlINV0002.vm.selectedLinJieZhi.xiaXian}"
+                             converterMessage="#{ctrlINV0002.numberOnly(msg.xia_xian)}"
+                             validatorMessage="#{ctrlINV0002.isMustAbove(msg.xia_xian, 1)}">
+                    <!--                                <pe:keyFilter regEx="/[\d]/"/>-->
+                    <f:validateLongRange minimum="1" />
+                </p:inputText>
+            </h:panelGrid>
+
+            <p:outputPanel styleClass="tct">
+                <p:commandButton value="#{msg.button_edit}"
+                                 actionListener="#{ctrlINV0002.saveLinJieZhi}"
+                                 process="xiugailinjiezhi"
+                                 oncomplete="showErrorMsg();"
+                                 update="kucun, xiugailinjiezhi, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 styleClass="White"
+                                 icon="fa fa-pencil"/>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog header="仓库物品总价"
+              widgetVar="cang_ku_wu_pin_zong_jia"
+              modal="true"
+              width="500"
+              closeOnEscape="true"
+              showEffect="fade"
+              hideEffect="fade"
+              resizable="false">
+        <p:outputPanel id="cang_ku_wu_pin_zong_jia_panel" styleClass="cang_ku_wu_pin_zong_jia_panel">
+            <p:dataTable value="#{ctrlINV0002.vm.cangKuWuPinZongJiaDTOList}"
+                         var="item"
+                         filterDelay="500"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                         styleClass="tct">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="仓库名" styleClass="wd-p-20"/>
+                        <p:column headerText="物品总价" styleClass="wd-p-8"/>
+                        <p:column headerText="物品总数" styleClass="wd-p-8"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{item.cangKuMing}"/>
+                </p:column>
+                <p:column styleClass="trt">
+                    <h:outputText value="#{item.zongJia}">
+                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                    </h:outputText>
+                </p:column>
+                <p:column styleClass="trt">
+                    <h:outputText value="#{item.zongShu}">
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </p:dialog>
+</ui:composition>

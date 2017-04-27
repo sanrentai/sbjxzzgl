@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:outputStylesheet name="css/loading-animation.css"/>
+
+    <!-- LAYOUT TOPBAR COVER -->
+    <div id="layout-topbar-cover">
+        <div id="layout-topbar-row">
+            <div id="layout-topbar-left" class="tct Padding5">
+                <p:link outcome="/views/index.xhtml" value="#{ctrlSystemConfig.vm.config.title}" styleClass="White Fs16" style="text-decoration: none!important;" onclick="window.onbeforeunload = null;"/>
+            </div>
+            <div id="layout-topbar-right">
+                <!--菜单展开缩按钮-->
+                <a id="menu-resize-btn" onclick="switchMenu()" class="topbar-link Animated03"><h:graphicImage name="images/menu-resize-btn-icon.svg" id="menu-resize-btn" library="olympos-layout" /></a>
+                <p:remoteCommand name="switchMenu" actionListener="#{ctrlSystemConfig.vm.swtichMenu}" process="@this" immediate="true"/>
+                <a id="mobile-menu-btn" class="topbar-link Animated03"><h:graphicImage name="images/menu-btn-icon.svg" id="menu-btn-icon" library="olympos-layout" /></a>
+
+                <!--退出-->
+                <p:commandLink id="lnkLogout" styleClass="topbar-link Animated03 Fright" process="@this" 
+                               onclick="PAGE_COM.playAlertAudio();PF('digCloseWin').show();">
+                    <i class="fa fa-sign-out"></i>
+                    <!--<p:confirm header="确认" message="是否要退出吗?" icon="ui-icon-alert"/>-->
+                </p:commandLink>
+                <p:tooltip for="lnkLogout" value="注销" position="bottom" />
+
+                <!--广播-->
+<!--                <p:commandLink id="lnkBoardcast" styleClass="topbar-link Animated03 Fright" process="@none">
+                    <i class="icon-speaker95"></i>
+                </p:commandLink>
+                <p:tooltip for="lnkBoardcast" value="广播" position="bottom" />-->
+
+                <!--未完成工作一览-->
+                <p:commandLink id="btnGongZuoTaiPanel" type="button" styleClass="topbar-link Animated03 Fright" process="@none">
+                    <i class="fa fa-list-ul"></i>
+                </p:commandLink>
+                <!--<p:tooltip for="btnGongZuoTaiPanel" value="未完成工作一览" position="bottom" />-->
+
+                <!--验证信息集合-->
+                <p:commandLink id="btnValidationPanel" type="button" styleClass="topbar-link Animated03 Fright" process="@none"
+                               style="background-color: #{ facesContext.validationFailed or not empty facesContext.messageList ? '' : '' };">
+                    <i class="fa fa-warning"></i>
+                </p:commandLink>
+                <p:tooltip for="btnValidationPanel" value="错误信息" position="bottom" />
+
+                <!--登录者信息-->
+                <p:commandLink id="lnkProfile" styleClass="topbar-link Animated03 Fright" process="@none">
+                    <i class="icon-user7"></i>
+                </p:commandLink>
+                <!--<p:tooltip for="lnkProfile" value="登录者信息" position="bottom" />-->
+                
+                <p:outputPanel styleClass="Fright White Fs16 MarTop5">
+
+                    <!--<p:outputPanel styleClass="">-->
+                        <h:outputText value="#{accountManager.loginInfo.loginUserName}" style="margin-right: 10px;margin-left: 10px"/>
+                        <h:outputText value="#{accountManager.loginInfo.buMen.buMenMing}" style="margin-right: 10px"/>
+                        <h:outputText value="#{accountManager.loginInfo.zhiNeng.zhiWuMing}" style="margin-right: 10px"/>  
+                    <!--</p:outputPanel>-->
+                </p:outputPanel>
+                
+<!--                <p:outputPanel styleClass="Fright" style="margin-top: 3px">
+                    <iframe width="420" scrolling="no" height="50" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&amp;id=12&amp;color=%23FFFFFF&amp;icon=1&amp;num=3"></iframe>
+                    <iframe name="sinaWeatherTool" src="http://weather.news.sina.com.cn/chajian/iframe/weatherStyle1.html?city=%E6%9C%AC%E6%BA%AA" style="transform: scale(1.5); margin-top: 4px" width="200" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe>
+                </p:outputPanel>-->
+
+                <p:overlayPanel id="ovPnlGongZuoTai" for="btnGongZuoTaiPanel" showEvent="mouseover">
+<!--                    <h:panelGrid id="gongZuoTai" columns="1">
+                        <p:outputPanel>
+                            <h:outputText value="数据更新于："/>
+                            <h:outputText value="#{ctrlGongZuoTai.vm.updateTime}">
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                            </h:outputText>
+                        </p:outputPanel>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.shenQingLingHuo}件请求领货未处理，请到 请求领货 页面处理" rendered="#{ctrlGongZuoTai.vm.shenQingLingHuo ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiShenQingShenPi}件物资申请没有审批，请到 物资申请审批 页面处理" rendered="#{ctrlGongZuoTai.vm.wuZiShenQingShenPi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.gouMaiShenQingShenPi}件购买申请没有审批，请到 购买申请审批 页面处理" rendered="#{ctrlGongZuoTai.vm.gouMaiShenQingShenPi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouJiHuaShenPi}件采购计划没有审批，请到 采购计划审批 页面处理" rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaShenPi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouHeTongShenPi}件采购合同没有审批，请到 采购合同审批 页面处理" rendered="#{ctrlGongZuoTai.vm.caiGouHeTongShenPi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.zhiFuJiHuaShenPi}件采购支付计划没有审批，请到 采购支付计划审批 页面处理" rendered="#{ctrlGongZuoTai.vm.zhiFuJiHuaShenPi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiShenQingShouLi}件物资申请没有处理，请到 物资申请受理 页面处理" rendered="#{ctrlGongZuoTai.vm.wuZiShenQingShouLi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiTiaoPei}件物资申请没有调配，请到 物资调配 页面处理" rendered="#{ctrlGongZuoTai.vm.wuZiTiaoPei ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.beiHuoQueRen}件物资分配没有备货，请到 备货确认 页面处理" rendered="#{ctrlGongZuoTai.vm.beiHuoQueRen ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.beiBoHuiWuZiShenQing}件物资申请被驳回未处理，请到 物资申请 页面处理" rendered="#{ctrlGongZuoTai.vm.beiBoHuiWuZiShenQing ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.beiBoHuiGouMaiShenQing}件购买申请被驳回未处理，请到 购买申请一栏 页面处理" rendered="#{ctrlGongZuoTai.vm.beiBoHuiGouMaiShenQing ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.beiBoHuiCaiGouJiHua}件采购计划被驳回未处理，请到 采购计划制定 页面处理" rendered="#{ctrlGongZuoTai.vm.beiBoHuiCaiGouJiHua ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiRuKu}件物资入库申请未处理，请到 物资入库 页面处理" rendered="#{ctrlGongZuoTai.vm.wuZiRuKu ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiChuKu}件物资出库申请未处理，请到 物资出库 页面处理" rendered="#{ctrlGongZuoTai.vm.wuZiChuKu ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouJiHuaZhiDing}件购买申请没有制定采购计划，请到 采购计划制定 页面处理" rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaZhiDing ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.fenPeiCaiGouRenWu}件采购计划没有分配采购员，请到 分配采购任务 页面处理" rendered="#{ctrlGongZuoTai.vm.fenPeiCaiGouRenWu ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouJiHuaZhiXing}件采购任务未处理，请到 采购计划执行 页面处理" rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaZhiXing ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiDiaoBoShenQingShouLi}件调拨申请未处理，请到 物资调拨申请受理 页面处理" rendered="#{ctrlGongZuoTai.vm.wuZiDiaoBoShenQingShouLi ne 0}"/>
+                        <h:outputText value="您有#{ctrlGongZuoTai.vm.kuCunShuChaoGuoJingJieZhi}件物资库存数超过警戒值未处理，请到 库存现状 页面处理" rendered="#{ctrlGongZuoTai.vm.kuCunShuChaoGuoJingJieZhi ne 0}"/>
+                    </h:panelGrid>-->
+                </p:overlayPanel>
+                <!--<p:poll interval="#{ctrlGongZuoTai.vm.updateInterval}" listener="#{ctrlGongZuoTai.update}" process="@this" update="gongZuoTai" />-->
+
+                <p:overlayPanel id="ovPnlValidation" for="btnValidationPanel" appendToBody="true">
+                    <p:messages id="msgValidation" severity="info,warn,error" showSummary="false" showDetail="true"/>
+                </p:overlayPanel>
+
+                <!--Pop 信息-->
+                <p:outputPanel id="growlMessage"/>
+
+                <p:overlayPanel for="lnkProfile" dynamic="true" showEvent="mouseover">
+                    <p:panelGrid columns="2">
+                        <f:facet name="header">
+                            <p:graphicImage value="#{accountManager.loginInfo.yuanGong.compressedPictureURL}" styleClass="Wid40"/>
+                        </f:facet>
+                        <h:outputText value="用户名"/>
+                        <h:outputText value="#{accountManager.loginInfo.loginUserName}"/>
+                        <h:outputText value="部门"/>
+                        <h:outputText value="#{accountManager.loginInfo.buMen.buMenMing}"/>
+                        <h:outputText value="职位"/>
+                        <h:outputText value="#{accountManager.loginInfo.zhiNeng.zhiWuMing}"/>
+                        <f:facet name="footer">
+                            <div class="Container100 ui-fluid">
+                                <p:button value="修改密码" href="/views/changePassword.xhtml" styleClass="Responsive100 OrangeButton" onclick="window.onbeforeunload = null;"/>
+                            </div>
+                        </f:facet>
+                    </p:panelGrid>
+                </p:overlayPanel>
+
+                <!--Ajax 通行时的加载动画-->
+                <p:ajaxStatus style="width:20px;height:20px;position:fixed;left:50%;top:0px;z-index: 9999;">
+                    <f:facet name="start">
+                        <div class="spinner">
+                            <div class="rect1"></div>
+                            <div class="rect2"></div>
+                            <div class="rect3"></div>
+                            <div class="rect4"></div>
+                            <div class="rect5"></div>
+                        </div>
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value="" />
+                    </f:facet>
+                </p:ajaxStatus>
+            </div>
+        </div>
+    </div>
+
+    <p:confirmDialog header="确认" message="是否要退出吗?" widgetVar="digCloseWin" styleClass="ui-icon-alert"
+                      showEffect="fade" hideEffect="fade" closeOnEscape="true" severity="error">
+        <p:commandButton value="是" immediate="true" action="#{ctrlLogin.logOut()}"
+                         process="@this" styleClass="GreenButton" onclick="window.onbeforeunload = null;"/>
+        <p:commandButton value="否" type="button" styleClass="ui-confirmdialog-no" onclick="PF('digCloseWin').hide();"/>
+    </p:confirmDialog>
+
+    <audio id="audAlert">
+        <source src="#{resource['sound/smallbox.ogg']}" type="audio/ogg"/>
+        <source src="#{resource['sound/smallbox.mp3']}"  type="audio/mpeg"/>
+    </audio>
+</ui:composition>

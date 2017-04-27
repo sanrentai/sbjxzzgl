@@ -1,0 +1,198 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0016')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0016.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{not empty ctrlMST0016.vm.editingSystemConfig}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0016.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvYongMeiList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlMST0016.vm.editingSystemConfig}">
+                        <div class="Container100 Responsive100">
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank">
+                                <!--系统ID-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="systemID" value="系统ID"/>
+                                    <p:inputText id="systemID" value="#{ctrlMST0016.vm.editingSystemConfig.sysId}"
+                                                 readonly="#{not empty ctrlMST0016.vm.editingSystemConfig.sysId}"
+                                                 maxlength="10"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlMST0016.isRequiredMessage('系统ID')}"/>
+                                </p:outputPanel>
+                                <!--系统名称-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="title" value="系统名称"/>
+                                    <p:inputText id="title" value="#{ctrlMST0016.vm.editingSystemConfig.title}"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlMST0016.isRequiredMessage('系统名称')}"/>
+                                </p:outputPanel>
+                                <!--公司名-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="companyName" value="公司名"/>
+                                    <p:inputText id="companyName" value="#{ctrlMST0016.vm.editingSystemConfig.companyName}"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlMST0016.isRequiredMessage('公司名')}"/>
+                                </p:outputPanel>
+                                <!--数据库JNDI名-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="dbName" value="数据库JNDI名"/>
+                                    <p:inputText id="dbName" value="#{ctrlMST0016.vm.editingSystemConfig.dbName}"
+                                                 readonly="#{ctrlMST0016.vm.editingSystemConfig.mainDb}"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlMST0016.isRequiredMessage('数据库JNDI名')}"/>
+                                </p:outputPanel>
+                                <!--主题颜色-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="color" value="主题颜色"/>
+<!--                                    <p:colorPicker id="color" value="#{ctrlMST0016.vm.editingSystemConfig.color}"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlMST0016.isRequiredMessage('主题颜色')}"/>-->
+                                    <p:selectOneMenu id="color" value="#{ctrlMST0016.vm.editingSystemConfig.color}" var="c">
+                                        <p:ajax process="@this" update="shili"/>
+                                        <f:selectItem itemLabel="海军蓝" itemValue="Navy" />
+                                        <f:selectItem itemLabel="红色" itemValue="Red" />
+                                        <f:selectItem itemLabel="绿色" itemValue="Green" />
+                                        <f:selectItem itemLabel="黄色" itemValue="Yellow" />
+                                        <f:selectItem itemLabel="橙色" itemValue="Orange" />
+                                        <f:selectItem itemLabel="紫色" itemValue="Purple" />
+                                        <f:selectItem itemLabel="青色" itemValue="Aqua" />
+                                        <f:selectItem itemLabel="蓝色" itemValue="Blue" noSelectionOption="true"/>
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <!--颜色示例-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="shili" value="颜色示例"/>
+                                    <p:inputText id="shili" readonly="true"
+                                                 style="background-color: #{ctrlMST0016.vm.editingSystemConfig.color}" />
+                                </p:outputPanel>
+                                <!--在库表示级别-->
+<!--                                <p:outputPanel>
+                                    <p:outputLabel for="invLevel" value="在库表示级别"/>
+                                    <p:inputText id="invLevel" value="#{ctrlMST0016.vm.editingSystemConfig.invLevel}"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlMST0016.isRequiredMessage('在库表示级别')}"/>
+                                </p:outputPanel>-->
+                            </p:panelGrid>
+<!--                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                                备注
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBeiZhu" value="备注"/>
+                                    <p:inputText id="txtBeiZhu" value="#{ctrlMST0016.vm.editingSystemConfig.beiZhu}" maxlength="400"/>
+                                </p:outputPanel>
+                            </p:panelGrid>-->
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="提交" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlMST0016.onSaveSystemConfig}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea, toolbar" actionListener="#{ctrlMST0016.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                        <p:dataTable value="#{ctrlMST0016.vm.systemConfigList}" var="systemConfig"
+                                     widgetVar="wvYongMeiList"
+                                     rows="10"
+                                     filterDelay="500"
+                                     paginator="true"
+                                     paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="没有数据">
+                            <f:facet name="header">
+                                <h:outputText value="系统设定一览"/>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="编辑" styleClass="wd-p-5"/>
+                                    <p:column headerText="删除" styleClass="wd-p-5"/>
+                                    <p:column headerText="系统ID" styleClass="tct wd-p-5"/>
+                                    <p:column headerText="系统名称" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="公司名" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="数据库JNDI名" styleClass="tct wd-p-5"/>
+                                    <p:column headerText="主题颜色" styleClass="tct wd-p-5"/>
+                                    <p:column headerText="创建时间" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="更新时间" styleClass="tct wd-p-10"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlMST0016.onEditSystemConfig(systemConfig)}"
+                                               process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                    <i class="fa fa-pencil Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlMST0016.onDeleteSystemConfig(systemConfig)}"
+                                               rendered="#{not systemConfig.mainDb}"
+                                               process="@this" 
+                                               update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               oncomplete="showErrorMsg();">
+                                    <i class="fa fa-trash Fs18 Red"></i>
+                                    <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                            <!--系统ID-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{systemConfig.sysId}"/>
+                            </p:column>
+                            <!--系统名称-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{systemConfig.title}"/>
+                            </p:column>
+                            <!--公司名-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{systemConfig.companyName}"/>
+                            </p:column>
+                            <!--数据库JNDI名-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{systemConfig.dbName}"/>
+                            </p:column>
+                            <!--主题颜色-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{systemConfig.color}" style="background-color: #{systemConfig.color}" />
+                            </p:column>
+                            <!--创建时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{systemConfig.insDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--更新时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{systemConfig.updDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

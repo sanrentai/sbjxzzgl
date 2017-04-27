@@ -1,0 +1,346 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel id="inputArea" styleClass="Container100 NoIndent inputArea">
+        <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Responsive100 ui-fluid">
+            <!--标题-->
+            <h1 class="CardBigTopic Purple">
+                <h:outputText value="#{ctrlMaster.createPageTitle('SUP', 'SUP0001')}"/>
+            </h1>
+            <!--无敌分割线-->
+            <div class="SeparatorFull"></div>
+            <p:outputPanel id="gouMaiShenQingTable" styleClass="gouMaiShenQingTable">
+
+                <p:dataTable styleClass="tct"
+                             value="#{ctrlSUP0001.vm.gouMaiShenQingXiangXiList}"
+                             var="shenQing"
+                             rendered="#{not empty ctrlSUP0001.vm.gouMaiShenQingXiangXiList}">
+                    <f:facet name="header">
+                        <p:outputPanel styleClass="tlt">
+                            <p:selectBooleanCheckbox value="#{ctrlSUP0001.vm.selectAll}">
+                                <p:ajax listener="#{ctrlSUP0001.createPlan()}"
+                                        process="@this, @(.gouMaiJiHuaTable)"
+                                        update="@this, @(.gouMaiShenQingTable, .gouMaiJiHuaTable)"/>
+                            </p:selectBooleanCheckbox>
+                            全选
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="规格概要" styleClass="wd-p-10"/>
+                            <p:column headerText="购买申请数量" styleClass="wd-p-5"/>
+                            <p:column headerText="预计使用日期" styleClass="wd-p-5"/>
+                            <p:column headerText="申请日期" styleClass="wd-p-5"/>
+                            <p:column headerText="使用目的" styleClass="wd-p-5"/>
+                            <p:column headerText="备注" styleClass="wd-p-5"/>
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column styleClass="tlt">
+                        <p:selectBooleanCheckbox value="#{shenQing.selected}">
+                            <p:ajax listener="#{ctrlSUP0001.selectMingXi(shenQing)}"
+                                    process="@this, @(.gouMaiJiHuaTable)"
+                                    update="@this, @(.gouMaiJiHuaTable)"/>
+                        </p:selectBooleanCheckbox>
+                        <h:outputText id="guigegaiyao" value="#{shenQing.wuziBianHaoObj.wuZiMiaoShu}"/>
+    <!--                    <p:tooltip position="top" for="guigegaiyao" value="#{shenQing.wuziBianHaoObj.nameWithShuXingSummary}"/>-->
+                        <!--                        <p:overlayPanel id="imagePanel" for="guigegaiyao" hideEffect="fade">
+                        
+                                                            <p:chart type="line" model="#{ctrlSUP0001.findChart(shenQing.wuziBianHaoObj)}" style="height:300px;"/>
+                        
+                                                </p:overlayPanel>-->
+                        <!--<p:commandButton value="Basic" type="button" onclick="PF('dlg1').show();" />-->
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{shenQing.shenQingShuLiang}">
+                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                        </h:outputText>
+                        <h:outputText value="#{shenQing.wuziBianHaoObj.wuZiDanWei.danWeiMing}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{shenQing.xiWangRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{shenQing.insDate}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{shenQing.shiYongQuXiang}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <!--申请备注-->
+                        <h:outputText value="#{shenQing.fenPeiMingXi.jiHua.beiZhu}；" rendered="#{not empty shenQing.fenPeiMingXi.jiHua.beiZhu}"/>
+                        <!--分配备注-->
+                        <h:outputText value="#{shenQing.fenPeiMingXi.beiZhu}" rendered="#{not empty shenQing.fenPeiMingXi.beiZhu}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <h:outputText value="目前没有需要购买的物资申请"
+                              styleClass="font-size-20"
+                              rendered="#{empty ctrlSUP0001.vm.gouMaiShenQingXiangXiList}" />
+
+                <p:dataTable id="weishenpishenqingTable"
+                             var="item"
+                             value="#{ctrlSUP0001.vm.boHuiLuLiList}"
+                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                             rendered="#{not empty ctrlSUP0001.vm.boHuiLuLiList}"
+                             styleClass="tct MarTop20"
+                             rows="15"
+                             paginatorAlwaysVisible="false"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="15, 30, 50">
+                    <f:facet name="header">
+                        <h:outputText value="被驳回采购计划一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="选择" styleClass="wd-p-3"/>
+                            <p:column headerText="#{msg.shen_qing_bian_hao}" styleClass="wd-p-3"/>
+                            <p:column headerText="#{msg.shen_qing_ren}" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.shen_qing_shi_jian}" styleClass="wd-p-4"/>
+                            <p:column headerText="总价" styleClass="wd-p-4"/>
+                            <p:column headerText="批复理由" styleClass="wd-p-5"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="search_button">
+                        <p:commandLink update="@(.gouMaiJiHuaTable)"
+                                       process="@this"
+                                       actionListener="#{ctrlSUP0001.editBoHuiLuLi(item)}">
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{item.jiHuaId}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{item.insUserInfo.nameZ}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{item.insDate}" >
+                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{item.zongJia}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{item.lastPiFuLiYou}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <p:outputPanel id="gouMaiJiHuaTable" styleClass="gouMaiJiHuaTable">
+            <p:outputPanel rendered="#{not empty ctrlSUP0001.vm.jiHuaMingXiList}" styleClass="Container100 Responsive100">
+                <div class="Card ui-fluid">
+                    <div class="CardBizTopic">计划制定</div>
+                    <div class="SeparatorFull"></div>
+
+                    <!--<p:chart type="line" model="#{ctrlSUP0001.lineModel2}" responsive="true" />-->
+                    <p:dataTable styleClass="tct gouMaiJiHuaTable"
+                                 value="#{ctrlSUP0001.vm.jiHuaMingXiList}"
+                                 var="jiHua"
+                                 rendered="#{not empty ctrlSUP0001.vm.jiHuaMingXiList}">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="规格概要" styleClass="wd-p-10"/>
+                                <p:column headerText="供应商" styleClass="wd-p-10"/>
+                                <p:column headerText="参考价" styleClass="wd-p-5"/>
+                                <p:column headerText="最高采购价" styleClass="wd-p-5"/>
+                                <p:column headerText="采购数量" styleClass="wd-p-5"/>
+                                <p:column headerText="计划到货日期" styleClass="wd-p-6"/>
+                                <p:column headerText="参考价合计" styleClass="wd-p-3"/>
+                                <p:column headerText="最高采购价合计" styleClass="wd-p-3"/>
+                                <p:column headerText="备注" styleClass="wd-p-5"/>
+                                <p:column headerText="撤销" styleClass="wd-p-2"/>
+                            </p:row>
+                        </p:columnGroup>
+
+                        <p:column styleClass="tlt">
+                            <h:outputText id="guigegaiyao" value="#{jiHua.shiti.wuZiMiaoShu}"/>
+                            <p:tooltip position="top" for="guigegaiyao" value="#{jiHua.shiti.nameWithShuXingSummary}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{jiHua.gongYingShangInfo.gongSiMing}" rendered="#{not empty jiHua.gongYingShangInfo}"/>
+                            <h:outputText value="请选择供应商" rendered="#{empty jiHua.gongYingShangInfo}"/>
+                            <p:commandButton icon="fa fa-search White Fs14"
+                                             process="@this"
+                                             update="@(.dialog),frmMain:ovPnlValidation, frmMain:msgValidation, 
+                                             frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"
+                                             actionListener="#{ctrlSUP0001.choseGongYingShang(jiHua)}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:inputNumber value="#{jiHua.danJia}"
+                                           maxValue="999999999"
+                                           styleClass="trt-inputNumber"
+                                           decimalPlaces="2"
+                                           minValue="0"
+                                           thousandSeparator=","
+                                           required="true"
+                                           requiredMessage="#{ctrlSUP0001.isRequiredMessage('参考价')}"
+                                           maxlength="12">
+                                <p:ajax listener="#{ctrlSUP0001.updateHeJi(jiHua)}"
+                                        process="@(.gouMaiJiHuaTable)"
+                                        oncomplete="showErrorMsg();"
+                                        update="@(.gouMaiJiHuaTable) frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                            </p:inputNumber>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:inputNumber value="#{jiHua.zuiGaoJia}"
+                                           maxValue="999999999"
+                                           styleClass="trt-inputNumber"
+                                           decimalPlaces="2"
+                                           minValue="0"
+                                           thousandSeparator=","
+                                           emptyValue="zero"
+                                           maxlength="12">
+                                <p:ajax listener="#{ctrlSUP0001.updateHeJi(jiHua)}"
+                                        process="@(.gouMaiJiHuaTable)"
+                                        oncomplete="showErrorMsg();"
+                                        update="@(.gouMaiJiHuaTable) frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                            </p:inputNumber>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:outputPanel styleClass="">
+                                <p:inputNumber value="#{jiHua.jiHuanGouManShu}"
+                                               maxValue="999999999"
+                                               styleClass="trt-inputNumber"
+                                               decimalPlaces="#{jiHua.shiti.decimalPlaces}"
+                                               minValue="0"
+                                               thousandSeparator=","
+                                               required="true"
+                                               requiredMessage="#{ctrlSUP0001.isRequiredMessage('采购数量')}"
+                                               maxlength="12">
+                                    <p:ajax listener="#{ctrlSUP0001.updateHeJi(jiHua)}"
+                                            process="@(.gouMaiJiHuaTable)"
+                                            oncomplete="showErrorMsg();"
+                                            update="@(.gouMaiJiHuaTable) frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                                </p:inputNumber>
+                                <!--<h:outputText value="#{jiHua.shiti.wuZiDanWei.danWeiMing}"/>-->
+                            </p:outputPanel>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:calendar value="#{jiHua.daoHuoRiQi}"
+                                        readonlyInput="true"
+                                        mask="true" styleClass="tct"
+                                        pattern="#{bizConfig.dateFormat}"
+                                        size="12"
+                                        locale="#{bizConfig.locale}">
+                                <p:ajax listener="#{ctrlSUP0001.changeJiHuaDaoHuoRiQi(jiHua)}"
+                                        process="@(.gouMaiJiHuaTable)"
+                                        oncomplete="showErrorMsg();"
+                                        update="@(.gouMaiJiHuaTable) frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                            </p:calendar>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{jiHua.totalPrice}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{jiHua.totalZuiGaoJia}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:inputText value="#{jiHua.beiZhu}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlSUP0001.cheXiaoJiHua(jiHua)}"
+                                           process="@(.gouMaiJiHuaTable)"
+                                           update="@(.gouMaiJiHuaTable, .gouMaiShenQingTable)">
+                                <i class="fa fa-reply Fs18 Red"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:outputPanel styleClass="trt">
+                        <!--提交-->
+                        <p:commandButton value="提交"
+                                         process="gouMaiJiHuaTable" 
+                                         update="inputArea,frmMain:ovPnlValidation,
+                                         frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"           
+                                         oncomplete="showErrorMsg();"
+                                         icon="fa fa-check"
+                                         style="width: 100px!important"
+                                         styleClass="White"
+                                         rendered="#{not empty ctrlSUP0001.vm.jiHuaMingXiList}"
+                                         actionListener="#{ctrlSUP0001.tiJiao}">
+                        </p:commandButton>
+                        <!--撤销-->
+                        <p:commandButton value="撤销"
+                                         process="@this" 
+                                         update="inputArea,frmMain:ovPnlValidation,
+                                         frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"                
+                                         icon="fa fa-trash"
+                                         oncomplete="showErrorMsg();"
+                                         styleClass="White RedButton"
+                                         style="width: 100px!important"
+                                         rendered="#{not empty ctrlSUP0001.vm.jiHuaMingXiList}"
+                                         actionListener="#{ctrlSUP0001.cheXiao}">
+                            <p:confirm header="是否确定撤销" message="撤销后所有编辑中的数据都将丢失"/>
+                        </p:commandButton>
+                    </p:outputPanel>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+
+    </p:outputPanel>
+
+    <p:dialog header="请选择 #{ctrlSUP0001.vm.gouMaiJiHuaMingXi.shiti.wuZiMiaoShu} 的供应商"
+              widgetVar="dlg" 
+              modal="true" 
+              width="800">
+        <p:dataTable id="dialog" styleClass="dialog"
+                     var="gongYingShangInfo"
+                     value="#{ctrlSUP0001.vm.gongYingShangBaoJiaList}" 
+                     rowKey="#{gongYingShangInfo.gongSiMing}" 
+                     selection="#{ctrlSUP0001.vm.selectionGongYingShang}">
+            <p:column selectionMode="single" styleClass="single-style" />
+            <!--公司名-->
+            <p:column headerText="#{msg.gong_si_ming}" styleClass="wd-p-15 tct">
+                <h:outputText value="#{gongYingShangInfo.gongSiMing}" styleClass="fl"/>
+            </p:column>
+            <!--物资特点描述-->
+            <p:column headerText="#{msg.wu_zi_te_dian_miao_shu}" 
+                      styleClass="wd-p-15 tct">
+                <h:outputText value="#{gongYingShangInfo.wuZiTeDing}" styleClass="fl"/>
+            </p:column>
+            <!--单价-->
+            <p:column headerText="#{msg.dan_jia}" styleClass="wd-p-10 tct">
+                <h:outputText value="#{gongYingShangInfo.danJia}" styleClass="fr">
+                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+        <p:outputPanel style="text-align: right">
+            <!--确认按钮-->
+            <p:commandButton value="#{msg.que_ren}"
+                             update="gouMaiJiHuaTable @(.gouMaiJiHuaTable)" 
+                             process="@this dialog"
+                             actionListener="#{ctrlSUP0001.submitGongYingShangInfo}" 
+                             styleClass="dialog-style" 
+                             oncomplete="PF('dlg').hide();">
+            </p:commandButton>
+            <!--关闭按钮-->
+            <p:commandButton value="#{msg.guan_bi}" 
+                             styleClass="dialog-style" 
+                             onclick="PF('dlg').hide();"/>
+        </p:outputPanel>
+    </p:dialog>
+
+    <!--确认画面-->
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+<!--    <p:dialog header="Basic Dialog" widgetVar="dlg1" minHeight="40">
+        <h:outputText value="Resistance to PrimeFaces is futile!" />
+    </p:dialog>-->
+</ui:composition>

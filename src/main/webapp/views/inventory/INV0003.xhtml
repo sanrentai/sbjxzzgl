@@ -1,0 +1,182 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0003')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+
+                    <h:panelGrid id="search_panel" columns="11">
+                        <p:outputLabel for="cang_ku"
+                                       value="#{msg.cang_ku}"
+                                       styleClass="trt"/>
+                        <p:selectOneMenu id="cang_ku"
+                                         value="#{ctrlINV0003.vm.cangKuId}"
+                                         class="select_width"
+                                         required="true"
+                                         requiredMessage="#{ctrlINV0003.isRequiredMessage(msg.cang_ku)}">
+                            <p:ajax process="@this" update="ku_cun_xiang_xi"/>
+                            <f:selectItems value="#{ctrlINV0003.vm.cangKuYiLanList}"
+                                           var="cangKu"
+                                           itemLabel="#{cangKu.cangKuMing}"
+                                           itemValue="#{cangKu.cangKuId}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+                    <p:dataTable id="ku_cun_xiang_xi"
+                                 value="#{ctrlINV0003.vm.lazyModel}"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 var="item"
+                                 lazy="true"
+                                 rows="15"
+                                 filterDelay="500"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="15, 30, 50"
+                                 styleClass="tct ku_cun_xiang_xi">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="库房" styleClass="wd-p-10"/>
+                                <p:column headerText="货位" styleClass="wd-p-15" rendered="false"/>
+                                <p:column headerText="#{msg.wu_zi_id}" styleClass="wd-p-10" rendered="false"
+                                           filterBy="#{item.pk.wuZiId}" filterMaxLength="12"/>
+                                <p:column headerText="#{msg.wu_zhi_miao_shu}" styleClass="wd-p-10"
+                                          filterBy="#{item.shiTi.wuZiMiaoShu}" filterMaxLength="50"/>
+                                <p:column headerText="#{msg.shu_liang}" styleClass="wd-p-10"/>
+<!--                                <p:column headerText="#{msg.ji_hua_ru_ku_shu}" styleClass="wd-p-10"/>
+                                <p:column headerText="#{msg.ji_hua_chu_ku_shu}" styleClass="wd-p-10"/>-->
+                                <p:column headerText="#{msg.bei_zhu}" styleClass="wd-p-20"/>
+                                <p:column headerText="直接出库" styleClass="wd-p-10"/>
+                                <p:column headerText="调整货位" styleClass="wd-p-10"/>
+                            </p:row>
+                        </p:columnGroup>
+
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.huoWei.kuFang.kuFangMing}"/>
+                        </p:column>
+                        <p:column styleClass="tlt" rendered="false">
+                            <h:outputText value="#{item.huoWei.huoWeiMiaoShu}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.pk.wuZiId}" rendered="false">
+                            <h:outputText value="#{item.pk.wuZiId}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText id="guigegaiyao" value="#{item.shiTi.wuZiMiaoShu}"/>
+                            <p:tooltip position="top" for="guigegaiyao" value="#{item.shiTi.nameWithShuXingSummary}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.kuCunShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shiTi.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+<!--                        <p:column sortBy="#{item.jiHuaRuKuShu}" styleClass="trt">
+                            <h:outputText value="#{item.jiHuaRuKuShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column sortBy="#{item.jiHuaChuKuShu}" styleClass="trt">
+                            <h:outputText value="#{item.jiHuaChuKuShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                        </p:column>-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.beiZhu}"/>
+                        </p:column>
+                        
+                        <p:column styleClass="tct">
+                            <p:commandLink value="出库" actionListener="#{ctrlINV0003.showZhiJieChuKuDialog(item)}"
+                                             process="@this" update="@(.zhijiechukuPanel)"
+                                             oncomplete="PF('zhijiechukuDialog').show()"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:commandLink value="调整货位" actionListener="#{ctrlINV0003.showTiaoZhenHuoWeiDialog(item)}"
+                                             process="@this"
+                                             update="@(.tiaozhenghuoweiPanel)"
+                                             oncomplete="PF('tiaozhenghuoweiDialog').show()"/>
+                        </p:column>
+                    </p:dataTable>
+
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+    
+    <p:dialog header="直接出库"
+              styleClass=""
+              widgetVar="zhijiechukuDialog"
+              closeOnEscape="true"
+              modal="true"
+              resizable="false">
+        <h:panelGrid id="zhijiechukuPanel" columns="2" styleClass="zhijiechukuPanel">
+            <p:outputLabel for="shuliang" value="数量"/>
+            <p:inputNumber id="shuliang" value="#{ctrlINV0003.vm.shuLiang}"
+                           required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('数量')}" 
+                           maxValue="#{ctrlINV0003.vm.selectedKuCun.kuCunShu}"
+                           styleClass="trt-inputNumber"
+                           decimalPlaces="#{ctrlINV0003.vm.selectedKuCun.shiTi.decimalPlaces}"
+                           thousandSeparator=","
+                           emptyValue="zero"
+                           maxlength="11">
+            </p:inputNumber>
+
+            <p:outputLabel value="备注"/>
+            <p:inputText value="#{ctrlINV0003.vm.beiZhu}"/>
+        </h:panelGrid>
+
+        <p:commandButton value="直接出库"
+                         actionListener="#{ctrlINV0003.zhiJieChuKu}"
+                         process="@this, zhijiechukuPanel"
+                         update="ku_cun_xiang_xi frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                         oncomplete="showErrorMsg();PF('zhijiechukuDialog').hide();"/>
+    </p:dialog>
+    
+    <p:dialog header="调整货位"
+              styleClass=""
+              widgetVar="tiaozhenghuoweiDialog"
+              closeOnEscape="true"
+              modal="true"
+              resizable="false">
+        <h:panelGrid id="tiaozhenghuoweiPanel" columns="2" styleClass="tiaozhenghuoweiPanel">
+            <p:outputLabel value="物资"/>
+            <h:outputText value="#{ctrlINV0003.vm.selectedKuCun.shiTi.wuZiMiaoShu}"/>
+            
+            <p:outputLabel value="数量"/>
+            <h:outputText value="#{ctrlINV0003.vm.selectedKuCun.kuCunShu}">
+                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+            </h:outputText>
+            
+            <p:outputLabel for="yidongzhihuowei" value="移动至"/>
+            <p:selectOneMenu id="yidongzhihuowei" value="#{ctrlINV0003.vm.yiDongHouHuoWeiId}" required="true">
+                <f:selectItems value="#{ctrlINV0003.vm.huoWeiList}"
+                               var="huowei"
+                               itemLabel="#{huowei.huoWeiMiaoShu}"
+                               itemValue="#{huowei.huoWeiId}"/>
+            </p:selectOneMenu>
+            
+            <p:outputLabel for="yidongshuliang" value="移动数量"/>
+            <p:inputText id="yidongshuliang" value="#{ctrlINV0003.vm.yiDongShuLiang}" styleClass="trt"
+                         required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('移动数量')}" maxlength="13">
+                <p:keyFilter regEx="/[\d\.]/"/>
+                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+            </p:inputText>
+        </h:panelGrid>
+
+        <p:commandButton value="移动"
+                         actionListener="#{ctrlINV0003.tiaoZhengHuoWei}"
+                         process="@this, tiaozhenghuoweiPanel"
+                         update="ku_cun_xiang_xi frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                         oncomplete="showErrorMsg();PF('tiaozhenghuoweiDialog').hide();"/>
+    </p:dialog>
+</ui:composition>

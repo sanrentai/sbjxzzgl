@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="PSUT_MaterialMG" transaction-type="JTA">
+    <!--内网: jdbc/material_I-->
+    <!--外网: jdbc/material_E-->
+    <!--108公开: jdbc/material_R-->
+    <!--内部集合测试1: jdbc/material_ct_1-->
+    <!--内部集合测试2: jdbc/material_ct_2-->
+    <!--商用: jdbc/material_R-->
+    <jta-data-source>jdbc/sbjx_n</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <!--SQL日志级别 开发时设置FINE, 运用时设置为 OFF-->
+      <property name="eclipselink.logging.level.sql" value="FINE"/>
+      <!--输入SQL语句绑定的参数 true:输出, false:不输出-->
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <!--禁止JPA所有缓存,以确保每次都取出最新的数据-->
+      <property name="eclipselink.cache.shared.default" value="false"/>
+    </properties>
+  </persistence-unit>
+  <!--分公司数据库-->
+  <!--  <persistence-unit name="subdb1" transaction-type="JTA">
+      <jta-data-source>testsubdb1</jta-data-source>
+      <exclude-unlisted-classes>false</exclude-unlisted-classes>
+      <properties>
+          <property name="eclipselink.logging.level.sql" value="OFF"/>
+          <property name="eclipselink.logging.parameters" value="false"/>
+          <property name="eclipselink.cache.shared.default" value="false"/>
+      </properties>
+  </persistence-unit>-->
+</persistence>

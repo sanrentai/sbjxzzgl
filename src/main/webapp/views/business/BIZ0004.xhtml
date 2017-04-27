@@ -1,0 +1,353 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--请求领货-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('BIZ', 'BIZ0004')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+
+                <h:outputText value="目前没有能够领货的申请"
+                              styleClass="font-size-20"
+                              rendered="#{empty ctrlBIZ0004.vm.fenPeiList}" />
+
+                <p:outputPanel rendered="#{not empty ctrlBIZ0004.vm.weiBeiHuoFenPeiList}">
+                    <p:dataTable value="#{ctrlBIZ0004.vm.weiBeiHuoFenPeiList}"
+                                 var="item"
+                                 widgetVar="weiBeiHuoFenPeiList"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 styleClass="tct fenPeiMingXiTabel"
+                                 rows="10"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                        <f:facet name="header">
+                            未完成备货的分配一览
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <!--<p:column headerText="分配明细ID" styleClass="wd-p-4"/>-->
+                                <!--<p:column headerText="分配编号" styleClass="wd-p-4"/>-->
+                                <!--<p:column headerText="#{msg.wu_zi_id}" styleClass="wd-p-4"/>-->
+                                <p:column headerText="#{msg.ju_ti_xing_hao}" styleClass="wd-p-10"/>
+                                <p:column headerText="预计分配数" styleClass="wd-p-4"/>
+                                <p:column headerText="实际分配数" styleClass="wd-p-4"/>
+                                <p:column headerText="已备货完成数" styleClass="wd-p-4"/>
+                                <p:column headerText="#{msg.xiang_mu_ming}" styleClass="wd-p-8" sortBy="#{item.jiHua.shenQingMingXing.xiangMu.xiangMuMing}">
+                                </p:column>
+                                <p:column headerText="#{msg.cang_ku_ming_cheng}" styleClass="wd-p-5"/>
+                                <p:column headerText="申请人" styleClass="wd-p-6"  sortBy="#{item.jiHua.insUserInfo.nameZ}"
+                                          filterBy="#{item.jiHua.insUserInfo.nameZ}" filterMatchMode="contains">
+                                </p:column>
+                                <p:column headerText="分配时间" styleClass="wd-p-8"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--                            <p:column>
+                                                        <h:outputText value="#{item.fenPeiMingXiId}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputText value="#{item.fenPeiBianHao}"/>
+                                                    </p:column>
+                                                    <p:column sortBy="#{item.wuZiId}">
+                                                        <h:outputText value="#{item.wuZiId}"/>
+                                                    </p:column>-->
+                        <p:column styleClass="tlt">
+                            <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                            <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.yuJiFenPeiShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.fenPeiShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.yiWanChengBeiHuoShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.jiHua.shenQingMingXing.xiangMu.xiangMuMing}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.suoShuCangKu.cangKuMing}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.jiHua.insUserInfo.nameZ}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.insDate}">
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+
+                <p:outputPanel id="fen_pei_ming_xi_panel" styleClass="Container100 Responsive100 fen_pei_ming_xi_panel">
+                    <p:outputPanel rendered="#{not empty ctrlBIZ0004.vm.fenPeiList}">
+                        <p:dataTable value="#{ctrlBIZ0004.vm.fenPeiList}"
+                                     var="item"
+                                     widgetVar="fenPeiList"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     styleClass="tct fenPeiMingXiTabel"
+                                     filterDelay="500"
+                                     rows="15"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="15, 30, 50">
+                            <f:facet name="header">
+                                已完成备货的分配一览
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <!--<p:column headerText="分配明细ID" styleClass="wd-p-4"/>-->
+                                    <!--<p:column headerText="分配编号" styleClass="wd-p-4"/>-->
+                                    <!--<p:column headerText="#{msg.wu_zi_id}" styleClass="wd-p-4"/>-->
+                                    <p:column headerText="#{msg.ju_ti_xing_hao}" styleClass="wd-p-10"
+                                              filterBy="#{item.shiti.wuZiMiaoShu}" filterMaxLength="50" filterMatchMode="contains"
+                                              sortBy="#{item.shiti.wuZiMiaoShu}"/>
+                                    <p:column headerText="预计分配数" styleClass="wd-p-4"/>
+                                    <p:column headerText="实际分配数" styleClass="wd-p-4"/>
+                                    <p:column headerText="已备货完成数" styleClass="wd-p-4"/>
+                                    <p:column headerText="已申请出库数" styleClass="wd-p-4"/>
+                                    <p:column headerText="本次出库数" styleClass="wd-p-4"/>
+                                    <p:column headerText="原材料出库" styleClass="wd-p-4"/>
+                                    <p:column headerText="备注" styleClass="wd-p-4"/>
+                                    <p:column headerText="#{msg.xiang_mu_ming}" styleClass="wd-p-5"
+                                              sortBy="#{item.jiHua.shenQingMingXing.xiangMu.xiangMuMing}" filterBy="#{item.jiHua.shenQingMingXing.xiangMu.xiangMuMing}" filterMatchMode="exact">
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('fenPeiList').filter()"  autoWidth="false">
+                                                <f:selectItem itemLabel="全部" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{ctrlBIZ0004.xiangMuList}" var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.xiangMuMing}" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:column>
+                                    <p:column headerText="#{msg.cang_ku_ming_cheng}" styleClass="wd-p-5"/>
+                                    <p:column headerText="申请人" styleClass="wd-p-6"  sortBy="#{item.jiHua.insUserInfo.nameZ}"
+                                              filterBy="#{item.jiHua.insUserInfo.nameZ}" filterMatchMode="contains">
+                                    </p:column>
+                                    <!--<p:column headerText="分配时间" styleClass="wd-p-8"/>-->
+                                    <p:column headerText="提前结束领货" styleClass="wd-p-4"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <!--                            <p:column>
+                                                            <h:outputText value="#{item.fenPeiMingXiId}"/>
+                                                        </p:column>
+                                                        <p:column>
+                                                            <h:outputText value="#{item.fenPeiBianHao}"/>
+                                                        </p:column>
+                                                        <p:column sortBy="#{item.wuZiId}">
+                                                            <h:outputText value="#{item.wuZiId}"/>
+                                                        </p:column>-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="guigegaiyao1" value="#{item.shiti.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao1" value="#{item.shiti.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yuJiFenPeiShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.fenPeiShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yiWanChengBeiHuoShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yiShenQingChuKuShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                            </p:column>
+                            <!--本次出库数-->
+                            <p:column styleClass="trt">
+                                <p:inputText value="#{item.benCiShu}" styleClass="trt">
+                                    <p:keyFilter regEx="/[\d\.]/"/>
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </p:inputText>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <p:selectBooleanCheckbox value="#{item.yuanCaiLiaoChuKu}" 
+                                                         rendered="#{item.jiHua.shenQingMingXing.xiangMu.guiJiXiangQuFenInt eq 4}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="直接入出库数：" rendered="#{item.zhiJieRuChuKu}"/>
+                                <h:outputText value="#{item.zhiJieRuChuKuShu}" rendered="#{item.zhiJieRuChuKu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{item.beiZhu}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.jiHua.shenQingMingXing.xiangMu.xiangMuMing}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.suoShuCangKu.cangKuMing}"/>
+                            </p:column>
+                            <!--                            <p:column>
+                                                            <h:outputText value="#{item.insDate}">
+                                                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                                                            </h:outputText>
+                                                        </p:column>-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.jiHua.insUserInfo.nameZ}"/>
+                            </p:column>
+                            <p:column styleClass="tct">
+                                <p:commandLink value="提前结束"
+                                               oncomplete="showErrorMsg();"
+                                               update="@(.chu_ku_shen_qing_panel, .fen_pei_ming_xi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               actionListener="#{ctrlBIZ0004.jieShuLingHuo(item)}"
+                                               process="@this">
+                                    <p:confirm header="提前结束领货" message="是否确定提前结束领货，尚未领取的物资将无法领取" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                        <div class="EmptyBox10"></div>
+                        <h:panelGrid columns="3" columnClasses="wd-f-150,wd-f-150," styleClass="wd-p-100">
+                            <p:calendar value="#{ctrlBIZ0004.vm.xiWangLingYongRi}"
+                                        readonlyInput="true"
+                                        placeholder="#{msg.label_startDate}"
+                                        mask="true" styleClass="tct"
+                                        pattern="#{bizConfig.dateFormat}"
+                                        required="true" size="12"
+                                        requiredMessage="#{ctrlBIZ0001.isRequiredMessage('希望领用日期')}"
+                                        converterMessage="#{ctrlBIZ0001.dateUnvalidMessage('希望领用日期')}"
+                                        locale="#{bizConfig.locale}"/>
+                            <p:commandButton value="申请出库"
+                                             actionListener="#{ctrlBIZ0004.shenQingChuKu()}"
+                                             icon="fa fa-check"
+                                             styleClass="White"
+                                             oncomplete="showErrorMsg();"
+                                             update="fen_pei_ming_xi_panel, chu_ku_shen_qing_panel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                            </p:commandButton>
+                            <h:outputText/>
+                        </h:panelGrid>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+
+        <p:outputPanel id="chu_ku_shen_qing_panel" styleClass="Container100 Responsive100 chu_ku_shen_qing_panel">
+            <p:outputPanel rendered="#{not empty ctrlBIZ0004.vm.chuKuShenQingList}">
+                <div class="Container100 Responsive100">
+                    <div class="Card ui-fluid">
+                        <div class="CardBizTopic">出库申请一览</div>
+                        <div class="SeparatorFull"></div>
+                        <p:dataTable value="#{ctrlBIZ0004.vm.chuKuShenQingList}"
+                                     var="item"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     rows="15"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="15, 30, 50"
+                                     styleClass="tct">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="撤销" styleClass="wd-p-2"/>
+                                    <p:column headerText="出库申请单号" styleClass="wd-p-3"/>
+                                    <p:column headerText="预计出库日期" styleClass="wd-p-4"/>
+                                    <!--<p:column headerText="申请明细ID" styleClass="wd-p-3"/>-->
+                                    <p:column headerText="#{msg.ju_ti_xing_hao}" styleClass="wd-p-10"/>
+                                    <p:column headerText="数量" styleClass="wd-p-3"/>
+                                    <p:column headerText="出库方式" styleClass="wd-p-3"/>
+                                    <p:column headerText="原材料出库" styleClass="wd-p-3"/>
+                                    <p:column headerText="申请人" styleClass="wd-p-4"/>
+                                    <p:column headerText="仓库" styleClass="wd-p-5"/>
+                                    <p:column headerText="状态" styleClass="wd-p-3"/>
+                                    <p:column headerText="备注" styleClass="wd-p-5"/>
+                                    <p:column headerText="申请时间" styleClass="wd-p-5"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column>
+                                <p:commandLink rendered="#{item.zhuangTai.value eq 0 or item.zhuangTai.value eq 4}"
+                                               oncomplete="showErrorMsg();"
+                                               update="@(.chu_ku_shen_qing_panel, .fen_pei_ming_xi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               actionListener="#{ctrlBIZ0004.cheXiaoShenQing(item)}"
+                                               process="@this"
+                                               styleClass="White">
+                                    <i class="fa fa-trash Fs18 Green"></i>
+                                    <p:confirm header="撤回申请" message="是否确定撤回申请" icon="ui-icon-alert" />
+                                </p:commandLink>
+                                <p:commandLink rendered="#{not(item.zhuangTai.value eq 0 or item.zhuangTai.value eq 4)}"
+                                               process="@none"
+                                               update="@none">
+                                    <i class="fa fa-ban Fs18 Red"></i>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.luLiId}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.chuKuRiQi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}" />
+                                </h:outputText>
+                            </p:column>
+                            <!--                            <p:column>
+                                                            <h:outputText value="#{item.yeWuId}"/>
+                                                        </p:column>-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="guigegaiyao" value="#{item.fenPeiMingXi.shiti.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao" value="#{item.fenPeiMingXi.shiti.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.shuLiang}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.chuKuFangShi.message}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.yuanCaiLiaoChuKu?'是':''}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.shenqingren.nameZ}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.cangKu.cangKuMing}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.zhuangTai.message}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.beiZhu}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.insDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:confirmDialog global="true" closeOnEscape="true">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+    </p:confirmDialog>
+</ui:composition>

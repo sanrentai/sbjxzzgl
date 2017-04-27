@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0017')}"/>
+                    <!--<h:outputText value="测试 > 仓管员报告(INV0017)" />-->
+                </h1>
+                <div class="SeparatorFull"></div>
+            </div>
+        </div>
+    </p:outputPanel>
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="Fs20 Black">
+                    <h:outputText value="库存现状" />
+                </h1>
+                <div class="SeparatorFull"></div>
+                <div class="Container100 Responsive100">
+                    <p:commandLink update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0002', 'inventory/')}">
+                        <h:outputText value="环山路仓库：" />
+                        <h:outputText value="物品总数15064件，" />
+                        <h:outputText value="总价值2823492.49元。" />
+                    </p:commandLink>
+                </div>
+                <div class="Container100 Responsive100">
+                    <p:commandLink update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0002', 'inventory/')}">
+                        <h:outputText value="太子河新城热原厂仓库：" />
+                        <h:outputText value="物品总数2004.56件，" />
+                        <h:outputText value="总价值69814.25元。" />
+                    </p:commandLink>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="Fs20 Black">
+                    <h:outputText value="入出库情况" />
+                </h1>
+                <div class="SeparatorFull"></div>
+                <div class="Container100 Responsive100 NoIndent">
+                    <p:chart type="bar" model="#{ctrlINV0017.barModel}" responsive="true"/>
+                </div>
+                <div class="Container50 Responsive100 NoIndent">
+                    <div class="Container100">
+                        <div class="Card">
+                            <p:chart type="pie" model="#{ctrlINV0017.pieModel1}" responsive="true" />
+                        </div>
+                    </div>
+                </div>
+                <div class="Container50 Responsive100 NoIndent">
+                    <div class="Container100">
+                        <div class="Card">
+                            <p:chart type="pie" model="#{ctrlINV0017.pieModel2}" responsive="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="Fs20 Black">
+                    <h:outputText value="入出库构成" />
+                </h1>
+                <div class="SeparatorFull"></div>
+                <div class="Container50 Responsive100 NoIndent">
+                    <div class="Container100">
+                        <div class="Card">
+                            <p:chart type="pie" model="#{ctrlINV0017.pieModel3}" responsive="true" />
+                        </div>
+                    </div>
+                </div>
+                <div class="Container50 Responsive100 NoIndent">
+                    <div class="Container100">
+                        <div class="Card">
+                            <p:chart type="pie" model="#{ctrlINV0017.pieModel4}" responsive="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="Fs20 Black">
+                    <h:outputText value="入库申请情况" />
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:commandLink update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0014', 'inventory/')}">
+                    <h:outputText value="入库申请34件物资，成功入库28件。" />
+                </p:commandLink>
+            </div>
+        </div>
+    </p:outputPanel>
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="Fs20 Black">
+                    <h:outputText value="物资去向分析" />
+                </h1>
+                <div class="SeparatorFull"></div>
+                <div class="Container50 Responsive100 NoIndent">
+                    <div class="Container100">
+                        <div class="Card">
+                            <p:chart type="pie" model="#{ctrlINV0017.pieModel5}" responsive="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="Fs20 Black">
+                    <h:outputText value="盘库报告"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:commandLink update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0012', 'inventory/')}">
+                    <h:outputText value="盘库2种物资，账面数量30个，在库29个，亏损1个价值150元，亏损原因（破损）。" />
+                </p:commandLink>
+            </div>
+        </div>
+    </p:outputPanel>
+
+</ui:composition>

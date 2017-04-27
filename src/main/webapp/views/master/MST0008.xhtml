@@ -1,0 +1,237 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0008')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0008.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{ctrlMST0008.statusEditing or ctrlMST0008.updateMode}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0008.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvGongYingShangList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{ctrlMST0008.statusEditing}">
+                        <div class="Container100 Responsive100">
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-70">
+                                <!--供应商公司名-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtGongSiMing" value="公司名称"/>
+<!--                                    <p:inputText id="txtGongSiMing" value="#{ctrlMST0008.vm.editingGongYingShang.gongSiMing}"
+                                                 required="true" requiredMessage="#{ctrlMST0008.isRequiredMessage('公司名')}"/>-->
+                                    <p:autoComplete id="txtGongSiMing" value="#{ctrlMST0008.vm.editingGongYingShang.gongSiMing}"
+                                                    completeMethod="#{ctrlChaKan.completeGongYingShang}"
+                                                    queryDelay="500"
+                                                    required="true"
+                                                    requiredMessage="#{ctrlMST0008.isRequiredMessage('公司名')}"/>
+                                </p:outputPanel>
+                                <!--提供服务类型-->
+                                <p:outputPanel>
+                                    <p:outputLabel value="提供服务类型"/>
+                                    <p:selectManyCheckbox value="#{ctrlMST0008.vm.editingGongYingShang.tiGongFuWuLeiXing}" layout="grid" columns="7">
+                                        <f:selectItems value="#{bizConfig.tiGongFuWuLeiXing}" var="leixing" itemLabel="#{leixing.message}" itemValue="#{leixing.value}" />
+                                    </p:selectManyCheckbox>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-70">
+                                <!--供应商略称-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBieCheng" value="略称"/>
+                                    <p:inputText id="txtBieCheng" value="#{ctrlMST0008.vm.editingGongYingShang.bieMing}"/>
+                                </p:outputPanel>
+                                <!--住址-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtDiZhi" value="地址"/>
+                                    <p:inputText id="txtDiZhi" value="#{ctrlMST0008.vm.editingGongYingShang.diZhi}"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-20,wd-p-20,wd-p-60">
+                                <!--购买方式-->
+<!--                                <p:outputPanel>
+                                    <p:outputLabel for="dllGouMaiFangShi" value="购买方式"/>
+                                    <p:selectOneMenu id="dllGouMaiFangShi" value="#{ctrlMST0008.vm.editingGongYingShang.gouMaiFangShi}" converter="javax.faces.Integer">
+                                        <f:selectItems value="#{ctrlMST0008.vm.gmfsList}" var="gmfs" itemValue="#{gmfs.fangShiCode}" itemLabel="#{gmfs.gouManFangShi}"/>
+                                    </p:selectOneMenu>
+                                </p:outputPanel>-->
+                                <!--电话-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtDianHua" value="电话"/>
+                                    <p:inputText id="txtDianHua" value="#{ctrlMST0008.vm.editingGongYingShang.dianHua}" maxlength="13">
+                                        <p:keyFilter regEx="/[\d-]/"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                                <!--邮编-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtYouBian" value="邮编"/>
+                                    <p:inputMask id="txtYouBian" value="#{ctrlMST0008.vm.editingGongYingShang.youBian}" mask="999-999"/>
+                                </p:outputPanel>
+                                <!--主页-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtWebPage" value="主页"/>
+                                    <p:inputText id="txtWebPage" value="#{ctrlMST0008.vm.editingGongYingShang.webPage}"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-70">
+                                <p:outputPanel>
+                                    <p:outputLabel id="lbl_email" value="邮箱地址" for="txtEmail"/>
+                                    <p:inputText id="txtEmail" value="#{ctrlMST0008.vm.editingGongYingShang.email}" maxlength="50" pt:msgKey="lbl_email">
+                                        <f:validator validatorId="EmailValidator"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBeiZhu" value="备注"/>
+                                    <p:inputText id="txtBeiZhu" value="#{ctrlMST0008.vm.editingGongYingShang.beiZhu}" maxlength="400"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlMST0008.onSaveGongYingShang}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea, toolbar, frmMain:toolbar" actionListener="#{ctrlMST0008.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+            <div class="Card">
+                <div class="CardBigTopic">供应商信息</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlMST0008.vm.gysList}" var="gys" lazy="true" cellSeparator="5"
+                             widgetVar="wvGongYingShangList"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="供应商一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <!--<p:column headerText="负责人" styleClass="wd-p-5"/>-->
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                            <p:column headerText="公司名" filterBy="#{gys.gongSiMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="邮编" rendered="false" styleClass="tct wd-p-10"/>
+                            <p:column headerText="电话" styleClass="tct wd-p-10"/>
+                            <p:column headerText="提供服务类型" styleClass="tct wd-p-30"/>
+                            <p:column headerText="地址" rendered="false" styleClass="tct wd-p-30"/>
+                            <p:column headerText="备注"/>
+                        </p:row>
+                    </p:columnGroup>
+<!--                    <p:column styleClass="tct">
+                        <p:rowToggler />
+                    </p:column>-->
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pnlInputArea, frmMain:toolbar" listener="#{ctrlMST0008.onEditGongYingShang(gys)}"/>
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true"
+                                    oncomplete="showErrorMsg();"
+                                    update="frmMain:pnlInputArea, frmMain:toolbar, frmMain:pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    listener="#{ctrlMST0008.onDeleteGongYingShang(gys)}"/>
+                            <i class="fa fa-trash Fs18 Red"></i>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                    </p:column>
+                    <!--公司名-->
+                    <p:column>
+                        <h:outputText value="#{gys.gongSiMing}"/>
+                    </p:column>
+                    <!--邮编-->
+                    <p:column rendered="false" styleClass="tct">
+                        <h:outputText value="#{gys.formatYouBian}"/>
+                    </p:column>
+                    <!--电话-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{gys.formatDianHua}"/>
+                    </p:column>
+                    <!--提供服务类型-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{gys.tiGongFuWuLeiXingString}"/>
+                    </p:column>
+                    <!--地址-->
+                    <p:column rendered="false">
+                        <h:outputText value="#{gys.diZhi}"/>
+                    </p:column>
+                    <!--备注-->
+                    <p:column>
+                        <h:outputText value="#{gys.beiZhu}"/>
+                    </p:column>
+                    <p:rowExpansion styleClass="PinkBack">
+                        <p:outputPanel styleClass="Container80 Responsive100">
+                            <p:panelGrid>
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="4">
+                                            <h:outputText value="负责人一览"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column styleClass="wd-p-10">
+                                            <h:outputText value="负责人名"/>
+                                        </p:column>
+                                        <p:column styleClass="wd-p-15">
+                                            <h:outputText value="电话"/>
+                                        </p:column>
+                                        <p:column styleClass="wd-p-20">
+                                            <h:outputText value="邮箱地址"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="备注"/>
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <ui:repeat value="#{gys.fuZeRenList}" var="fzr">
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputText value="#{fzr.fuZeRenMing}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{fzr.formatDianHua}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{fzr.email}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{fzr.beiZhu}"/>
+                                        </p:column>
+                                    </p:row>
+                                </ui:repeat>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:rowExpansion>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

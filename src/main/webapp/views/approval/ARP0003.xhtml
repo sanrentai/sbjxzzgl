@@ -1,0 +1,274 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <p:outputPanel id="shen_pi_panel" styleClass="Container100 NoIndent shen_pi_panel">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('ARP', 'ARP0003')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+                    <!--刷新画面按钮-->
+                    <p:commandButton value="刷新"
+                                     icon="fa fa-refresh"
+                                     styleClass="wd-p-10 White"
+                                     actionListener="#{ctrlARP0003.refreshList}"
+                                     process="@this"
+                                     update="shen_pi_panel"/>
+
+                    <h:outputText value="目前没有未审批的申请"
+                                  styleClass="font-size-20"
+                                  rendered="#{empty ctrlARP0003.vm.shenQingXiangXiList}" />
+
+                    <p:dataTable id="weishenpishenqingTable"
+                                 var="item"
+                                 value="#{ctrlARP0003.vm.shenQingXiangXiList}"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 rendered="#{not empty ctrlARP0003.vm.shenQingXiangXiList}"
+                                 styleClass="tct MarTop20"
+                                 rows="15"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="15, 30, 50">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="#{msg.shen_qing_bian_hao}" styleClass="wd-p-3"/>
+                                <p:column headerText="#{msg.shen_qing_ren}" styleClass="wd-p-5"/>
+                                <p:column headerText="#{msg.shen_qing_shi_jian}" styleClass="wd-p-4"/>
+                                <p:column headerText="参考总价" styleClass="wd-p-4"/>
+                                <p:column headerText="审批流程名" styleClass="wd-p-4"/>
+                                <p:column headerText="前回批复理由" styleClass="wd-p-5"/>
+                                <p:column headerText="查看" styleClass="wd-p-3"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column>
+                            <h:outputText value="#{item.jiHuaId}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.insUserInfo.nameZ}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.insDate}" >
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.zongJia}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.liuCheng.liuChengMing}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.lastPiFuLiYou}"/>
+                        </p:column>
+                        <p:column styleClass="search_button">
+                            <p:commandLink update="@(.mingXiList)"
+                                           process="@this"
+                                           oncomplete="PF('ming_xi_dialog').show()"
+                                           actionListener="#{ctrlARP0003.displayMingXi(item)}">
+                                <i class="fa fa-search Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </div>
+        </div>
+
+        <p:dialog header="申请明细一览"
+                  styleClass="wd-p-90"
+                  widgetVar="ming_xi_dialog"
+                  closeOnEscape="true"
+                  modal="true"
+                  showEffect="fade"
+                  hideEffect="fade"
+                  resizable="false">
+            <p:outputPanel styleClass="tct mingXiList">
+                <p:dataTable value="#{ctrlARP0003.vm.mingXiList}"
+                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                             sortBy="#{item.jiHuaId}"
+                             var="item">
+                    <f:facet name="header">
+                        <h:outputText value="单号：#{ctrlARP0003.vm.selectedShenQing.jiHuaId}" styleClass="fl Fs20"/>
+                        <h:outputText value="购买计划单" styleClass="Fs20"/>
+                        <span class="fr Fs20">
+                            <h:outputText value="申请人：#{ctrlARP0003.vm.selectedShenQing.insUserInfo.name}"/>
+                            <p:spacer width="20" height="1"/>
+                            申请日：<h:outputText value="#{ctrlARP0003.vm.selectedShenQing.insDate}">
+                                <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                            </h:outputText>
+                        </span>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <!--<p:column headerText="#{msg.shen_qing_ming_xi_bian_hao}" sortBy="#{item.jiHuaMingXiId}" styleClass="wd-p-3"/>-->
+                            <p:column headerText="#{msg.ju_ti_xing_hao}" styleClass="wd-p-10"/>
+                            <p:column headerText="申请购买数量" styleClass="wd-p-3"/>
+                            <p:column headerText="计划购买数量" styleClass="wd-p-3"/>
+                            <p:column headerText="参考单价" styleClass="wd-p-3"/>
+                            <p:column headerText="参考总价" styleClass="wd-p-3"/>
+                            <p:column headerText="备注" styleClass="wd-p-5"/>
+                            <p:column headerText="预计到货日" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.shen_qing_shi_jian}" styleClass="wd-p-6"/>
+                            <p:column headerText="物资申请数" styleClass="wd-p-3"/>
+                            <p:column headerText="归集项" styleClass="wd-p-5"/>
+                            <p:column headerText="库存数" styleClass="wd-p-3"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <!--                    <p:column>
+                                            <h:outputText value="#{item.jiHuaMingXiId}"/>
+                                        </p:column>-->
+                    <p:column styleClass="tlt">
+                        <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                        <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{item.shenQingGouMaiShu}">
+                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                        </h:outputText>
+                        <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{item.jiHuanGouManShu}">
+                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                        </h:outputText>
+                        <h:outputText value="#{item.shiti.wuZiDanWei.danWeiMing}"/>
+                    </p:column>
+                    <p:column sortBy="#{item.danJia}" styleClass="trt">
+                        <h:outputText value="#{item.danJia}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{item.totalPrice}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tlt">
+<!--                        <ui:repeat value="#{item.gouMaiShenQingList}"
+                                   var="shenqing">
+                            申请备注
+                            <h:outputText value="#{shenqing.fenPeiMingXi.jiHua.beiZhu}；"
+                                          rendered="#{not empty shenqing.fenPeiMingXi.jiHua.beiZhu}"/>
+                            分配备注
+                            <h:outputText value="#{shenqing.fenPeiMingXi.beiZhu}；"
+                                          rendered="#{not empty shenqing.fenPeiMingXi.beiZhu}"/>
+                        </ui:repeat>-->
+                        <!--申请备注-->
+                        <h:outputText value="#{item.wuZiShenQingBeiZhu}；" rendered="#{not empty item.wuZiShenQingBeiZhu}"/>
+                        <!--分配备注-->
+                        <h:outputText value="#{item.wuZiFenPeiBeiZhu}；" rendered="#{not empty item.wuZiFenPeiBeiZhu}"/>
+                        <!--采购计划备注-->
+                        <h:outputText value="#{item.beiZhu}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{item.daoHuoRiQi}" >
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{item.insDate}" >
+                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column colspan="3" style="padding: 0px!important;">
+                        <p:dataTable value="#{item.gouMaiShenQingList}"
+                                     var="shenqing"
+                                     styleClass="tct innerTable"
+                                     >
+                            <p:column styleClass="trt wd-f-100">
+                                <h:outputText value="#{shenqing.tiGongJiHua.jiHuaLingYongShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                                <h:outputText value="#{shenqing.shenQingShuLiang}" rendered="#{empty shenqing.tiGongJiHua}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="tlt wd-f-200">
+                                <h:outputText value="#{shenqing.tiGongJiHua.shenQingMingXing.xiangMu.xiangMuMing}">
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="trt wd-f-100">
+                                <h:outputText value="#{shenqing.kucun.kuCunShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+
+                    <p:summaryRow rendered="#{ctrlARP0003.vm.mingXiList.size() > 1}">
+                        <p:column colspan="5" styleClass="trt weight-font">
+                            <h:outputText value="总数:" />
+                        </p:column>
+                        <p:column styleClass="trt weight-font">
+                            <h:outputText value="#{ctrlARP0003.vm.totalCount}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="trt weight-font">
+                            <h:outputText value="总价:" />
+                        </p:column>
+                        <p:column styleClass="trt weight-font">
+                            <h:outputText value="#{ctrlARP0003.vm.selectedShenQing.zongJia}">
+                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:summaryRow>
+
+                    <f:facet name="footer">
+                        <p:inputTextarea id="piFuLiYou"
+                                         styleClass="wd-p-50"
+                                         placeholder="驳回与废止时，请填写批复理由"
+                                         rows="3"
+                                         cols="50"
+                                         value="#{ctrlARP0003.vm.piFuLiYou}" >
+                        </p:inputTextarea>
+                        <p:separator styleClass="border_clear"/>
+<!--                        <p:commandButton value="#{msg.tong_yi_shen_qing}"
+                                         actionListener="#{ctrlARP0003.tongYiShenQing}"
+                                         icon="fa fa-check"
+                                         styleClass="White wd-p-15"
+                                         oncomplete="showErrorMsg();"
+                                         update="@(.shen_pi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>-->
+                        <p:commandButton value="直接通过"
+                                         actionListener="#{ctrlARP0003.zhiJieTongGuo}"
+                                         icon="fa fa-check"
+                                         styleClass="White wd-p-15"
+                                         oncomplete="showErrorMsg();"
+                                         update="@(.shen_pi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>
+                        <p:commandButton value="交由上级审批" rendered="#{not ctrlARP0003.zuiZhongShenPi}"
+                                         actionListener="#{ctrlARP0003.tongYiShenQing}"
+                                         icon="fa fa-check"
+                                         styleClass="White wd-p-15"
+                                         oncomplete="showErrorMsg();"
+                                         update="@(.shen_pi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>
+                        <p:commandButton actionListener="#{ctrlARP0003.boHuiShenQing}"
+                                         value="#{msg.bo_hui_shen_qing}"
+                                         icon="fa fa-close"
+                                         styleClass="White wd-p-15"
+                                         oncomplete="showErrorMsg();"
+                                         update="@(.shen_pi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>
+                        <p:commandButton actionListener="#{ctrlARP0003.feiZhiShenQing}"
+                                         value="废止申请"
+                                         icon="fa fa-trash"
+                                         styleClass="White wd-p-15 RedButton"
+                                         oncomplete="showErrorMsg();"
+                                         update="@(.shen_pi_panel), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+            </p:outputPanel>
+        </p:dialog>
+    </p:outputPanel>
+</ui:composition>

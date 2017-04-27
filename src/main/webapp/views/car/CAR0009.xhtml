@@ -1,0 +1,516 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0009')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:tabView styleClass="Container100 Responsive100" id="tabview" activeIndex="#{ctrlCAR0009.vm.tabIndex}">
+                    <p:tab title="保养记录">
+                        <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <!--新建按钮-->
+                                    <p:commandButton value="新建" process="@this" actionListener="#{ctrlCAR0009.onStartEditing}"
+                                                     resetValues="true"
+                                                     update="pnlInputArea,toolbar" disabled="#{not empty ctrlCAR0009.vm.editingBaoYang}"/>
+                                    <!--刷新按钮-->
+                                    <p:commandButton value="刷新" process="@this" actionListener="#{ctrlCAR0009.onRefreshData}" 
+                                                     resetValues="true" oncomplete="PF('wvBaoYangList').clearFilters();"
+                                                     update="pngDetails"/>
+                                    <!--添加保养计划-->
+                                    <p:commandButton value="添加保养计划" process="@this ,baoYangInput" actionListener="#{ctrlCAR0009.tianJiaBaoYangJiHua()}"
+                                                     resetValues="true"
+                                                     oncomplete="showErrorMsg();"
+                                                     rendered="#{not empty ctrlCAR0009.vm.editingBaoYang}"
+                                                     update="baoYangJiHuaInput,toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel" 
+                                                     disabled="#{not empty ctrlCAR0009.vm.baoYangJiHua}"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </p:outputPanel>
+                        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                            <p:outputPanel id="baoYangInput" styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0009.vm.editingBaoYang}">
+                                <!--车辆-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="ceLiang" value="车辆"/>
+                                    <p:selectOneMenu id="ceLiang" value="#{ctrlCAR0009.vm.editingBaoYang.cheLiangId}" 
+                                                     required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('车辆')}"
+                                                     disabled="#{ctrlCAR0009.vm.flag}" >
+                                        <f:selectItem itemLabel="请选择车辆" itemValue=""/>
+                                        <f:selectItems value="#{ctrlCAR0009.vm.cheLiangList}" var="cheLiang" itemLabel="#{cheLiang.chePaiZhaoHaoMa}" itemValue="#{cheLiang.cheLiangId}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <!--经办人-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="yuanGongId" value="经办人"/>
+                                    <p:selectOneMenu id="yuanGongId" value="#{ctrlCAR0009.vm.editingBaoYang.yuanGongId}" 
+                                                     required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('经办人')}">
+                                        <f:selectItem itemLabel="请选择经办人" itemValue=""/>
+                                        <f:selectItems value="#{ctrlCAR0009.vm.yuanGongList}" var="yuanGong" itemLabel="#{yuanGong.nameZ}" itemValue="#{yuanGong.yuanGongId}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <!--开始时间-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="kaiShiShiJian" value="开始时间"/>
+                                    <p:calendar id="kaiShiShiJian" value="#{ctrlCAR0009.vm.editingBaoYang.kaiShiShiJian}"
+                                                readonlyInput="true"
+                                                mask="true" styleClass="tct"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlCAR0009.isRequiredMessage('开始时间')}"
+                                                converterMessage="#{ctrlCAR0009.dateUnvalidMessage('开始时间')}"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:panelGrid>
+                                <!--结束时间-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="jieShuShiJian" value="结束时间"/>
+                                    <p:calendar id="jieShuShiJian" value="#{ctrlCAR0009.vm.editingBaoYang.jieShuShiJian}"
+                                                readonlyInput="true"
+                                                mask="true" styleClass="tct"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlCAR0009.isRequiredMessage('结束时间')}"
+                                                converterMessage="#{ctrlCAR0009.dateUnvalidMessage('结束时间')}"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:panelGrid>
+                                <!--保养公司-->
+                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-60 NoPadding,wd-p-10">
+                                    <p:outputLabel for="baoYangGongSiId" value="保养公司"/>
+                                    <p:selectOneMenu id="baoYangGongSiId" value="#{ctrlCAR0009.vm.editingBaoYang.baoYangGongSiId}"
+                                                     styleClass="leiBieGuanLi"
+                                                     required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('保养公司')}">
+                                        <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing('BaoYangGongSi')}"
+                                                       var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandLink 
+                                        style="margin-right: 0px;"
+                                        actionListener="#{ctrlSystemConfig.newLeiBieGuanLi('BaoYangGongSi')}"
+                                        process="@this"
+                                        update="@(.add_fen_lei_xiang_mu)"
+                                        oncomplete="PF('add_fen_lei_xiang_mu').show();">
+                                        <i class="fa fa-plus Fs18 Green"></i>
+                                    </p:commandLink>
+                                </p:panelGrid>
+                                <!--保养项目-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="baoYangXiangMu" value="保养项目"/>
+                                    <p:inputText id="baoYangXiangMu" value="#{ctrlCAR0009.vm.editingBaoYang.baoYangXiangMu}" maxlength="400"
+                                                 required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('保养项目')}"/>
+                                </p:panelGrid>
+                                <!--保养费用-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="txtBaoYangFei" value="保养费用"/>
+                                    <p:inputNumber id="txtBaoYangFei" value="#{ctrlCAR0009.vm.editingBaoYang.baoYangFei}"
+                                                    style="text-align: right;"
+                                                 required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('保养费用')}"/>
+                                </p:panelGrid>
+                                <!--当前里程数-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="liChengShu" value="当前里程数"/>
+                                    <p:inputNumber id="liChengShu" value="#{ctrlCAR0009.vm.editingBaoYang.liChengShu}"  
+                                                    style="text-align: right;"
+                                                 required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('当前里程数')}"/>
+                                </p:panelGrid>
+                                <!--备注-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="beiZhu" value="备注"/>
+                                    <p:inputText id="beiZhu" value="#{ctrlCAR0009.vm.editingBaoYang.beiZhu}" maxlength="400"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                            <div class="SeparatorFull"></div>
+                            <!--保养计划-->
+                            <p:outputPanel id="baoYangJiHuaInput" styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0009.vm.baoYangJiHua}">
+                                <!--车辆-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="jihuaceLiang" value="车辆"/>
+                                    <p:selectOneMenu id="jihuaceLiang" value="#{ctrlCAR0009.vm.baoYangJiHua.cheLiangId}" 
+                                                     required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('车辆')}">
+                                        <f:selectItem itemLabel="请选择车辆" itemValue=""/>
+                                        <f:selectItems value="#{ctrlCAR0009.vm.cheLiangList}" var="cheLiang" itemLabel="#{cheLiang.chePaiZhaoHaoMa}" itemValue="#{cheLiang.cheLiangId}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <!--经办人-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="jiHuayuanGongId" value="经办人"/>
+                                    <p:selectOneMenu id="jiHuayuanGongId" value="#{ctrlCAR0009.vm.baoYangJiHua.yuanGongId}" 
+                                                     required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('经办人')}">
+                                        <f:selectItem itemLabel="请选择经办人" itemValue=""/>
+                                        <f:selectItems value="#{ctrlCAR0009.vm.yuanGongList}" var="yuanGong" itemLabel="#{yuanGong.nameZ}" itemValue="#{yuanGong.yuanGongId}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <!--下次日期-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="xiaCiRiQi" value="下次日期"/>
+                                    <p:calendar id="xiaCiRiQi" value="#{ctrlCAR0009.vm.baoYangJiHua.xiaCiRiQi}"
+                                                readonlyInput="true"
+                                                mask="true" styleClass="tct"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlCAR0009.isRequiredMessage('下次日期')}"
+                                                converterMessage="#{ctrlCAR0009.dateUnvalidMessage('下次日期')}"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:panelGrid>
+                                <!--下次里程数-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="xiaCiLiCheng" value="下次里程数"/>
+                                    <p:inputNumber id="xiaCiLiCheng" value="#{ctrlCAR0009.vm.baoYangJiHua.xiaCiLiCheng}"     
+                                                    style="text-align: right;"
+                                                   symbol="公里" symbolPosition="s"
+                                                   required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('下次里程数')}" />
+                                </p:panelGrid>
+                                <!--保养公司-->
+                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-60 NoPadding,wd-p-10">
+                                    <p:outputLabel for="JiHuabaoYangGongSiId" value="保养公司"/>
+                                    <p:selectOneMenu id="JiHuabaoYangGongSiId" value="#{ctrlCAR0009.vm.baoYangJiHua.baoYangGongSiId}"
+                                                     styleClass="leiBieGuanLi"
+                                                     required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('保养公司')}">
+                                        <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing('BaoYangGongSi')}"
+                                                       var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandLink 
+                                        style="margin-right: 0px;"
+                                        actionListener="#{ctrlSystemConfig.newLeiBieGuanLi('BaoYangGongSi')}"
+                                        process="@this"
+                                        update="@(.add_fen_lei_xiang_mu)"
+                                        oncomplete="PF('add_fen_lei_xiang_mu').show();">
+                                        <i class="fa fa-plus Fs18 Green"></i>
+                                    </p:commandLink>
+                                </p:panelGrid>
+                                <!--保养项目-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="JiHuabaoYangXiangMu" value="保养项目"/>
+                                    <p:inputText id="JiHuabaoYangXiangMu" value="#{ctrlCAR0009.vm.baoYangJiHua.baoYangXiangMu}" 
+                                                 required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('保养项目')}" />
+                                </p:panelGrid>
+                                <!--计划费用-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="jiHuaFeiYong" value="计划费用"/>
+                                    <p:inputNumber id="jiHuaFeiYong" value="#{ctrlCAR0009.vm.baoYangJiHua.jiHuaFeiYong}" 
+                                                   style="text-align: right;"
+                                                 required="true" requiredMessage="#{ctrlCAR0009.isRequiredMessage('计划费用')}" />
+                                </p:panelGrid>
+                                <!--备注-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="JiHuabeiZhu" value="备注"/>
+                                    <p:inputText id="JiHuabeiZhu" value="#{ctrlCAR0009.vm.baoYangJiHua.beiZhu}" maxlength="400"/>
+                                </p:panelGrid>
+                                <div class="SeparatorFull"></div>
+                            </p:outputPanel>
+                            <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0009.vm.editingBaoYang}">
+                                <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <p:commandButton value="保存" process="pnlInputArea"
+                                                     oncomplete="showErrorMsg();"
+                                                     update="pnlInputArea, pngDetails, baoYangJiHuaWeiZhiXingDetails, baoYangJiHuaYiZhiXingDetails, toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                     actionListener="#{ctrlCAR0009.onSaveBaoYang}"/>
+                                    <p:commandButton value="取消" process="@this" 
+                                                     update="pnlInputArea, toolbar" actionListener="#{ctrlCAR0009.onCancelEditing}"
+                                                     styleClass="RedButton"/>
+                                </p:panelGrid>
+                                <div class="SeparatorFull"></div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                            <p:dataTable value="#{ctrlCAR0009.vm.baoYangList}" var="baoYang" cellSeparator="5"
+                                         widgetVar="wvBaoYangList"
+                                         rows="10"
+                                         filterDelay="500"
+                                         style="word-break: keep-all!important"
+                                         paginator="true"
+                                         paginatorAlwaysVisible="false"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         emptyMessage="没有数据">
+                                <f:facet name="header">
+                                    <h:outputText value="保养信息一览"/>
+                                </f:facet>
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="编辑" styleClass="wd-p-5"/>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                        <p:column headerText="车辆" filterBy="#{baoYang.cheLiangId}" filterMatchMode="exact" sortBy="#{baoYang.cheLiangId}" styleClass="wd-p-10">
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('wvBaoYangList').filter()" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="选择车辆" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems value="#{ctrlCAR0009.vm.cheLiangList}" var="cheliang"
+                                                                   itemLabel="#{cheliang.cheLiangMingCheng}" itemValue="#{cheliang.cheLiangId}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:column>
+                                        <p:column headerText="开始时间" styleClass="tct wd-p-10" sortBy="#{baoYang.kaiShiShiJian}"/>
+                                        <p:column headerText="结束时间" styleClass="tct wd-p-10" sortBy="#{baoYang.jieShuShiJian}"/>
+                                        <p:column headerText="保养公司" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="里程数" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="保养项目" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="保养费用" styleClass="tct wd-p-5"/>
+                                        <p:column headerText="经办人" styleClass="tct wd-p-6" sortBy="#{baoYang.yuanGongId}"/>                                 
+                                        <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlCAR0009.onEditBaoYang(baoYang)}"
+                                                   process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                        <i class="fa fa-pencil Fs18 Blue"></i>
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlCAR0009.onDeleteBaoYang(baoYang)}"
+                                                   process="@this" 
+                                                   update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   oncomplete="showErrorMsg();">
+                                        <i class="fa fa-trash Fs18 Red"></i>
+                                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>
+                                <!--车辆-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYang.cheLiang.chePaiZhaoHaoMa}"/>
+                                </p:column>
+                                <!--开始时间-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{baoYang.kaiShiShiJian}">
+                                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--结束时间-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{baoYang.jieShuShiJian}">
+                                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--保养公司-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYang.baoYangGongSi.xiangMuMing}"/>
+                                </p:column>
+                                <!--公里数-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYang.liChengShu}">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--保养项目-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYang.baoYangXiangMu}"/>
+                                </p:column>
+                                <!--保养费用-->
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{baoYang.baoYangFei}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--经办人-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYang.yuanGong.nameZ}"/>
+                                </p:column>
+                                <!--备注-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYang.beiZhu}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                    </p:tab>
+                    <p:tab title="保养计划">
+                        <p:outputPanel id="baoYangJiHuaWeiZhiXingDetails" styleClass="Container100 Responsive100 pngDetails">
+                            <p:dataTable value="#{ctrlCAR0009.vm.baoYangJiHuaWeiZhiXingList}" var="baoYangJiHua" cellSeparator="5"
+                                         widgetVar="wvBaoYangJiHuaList"
+                                         rows="10"
+                                         filterDelay="500"
+                                         style="word-break: keep-all!important"
+                                         paginator="true"
+                                         paginatorAlwaysVisible="false"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         emptyMessage="没有数据">
+                                <f:facet name="header">
+                                    <h:outputText value="保养计划未执行一览"/>
+                                </f:facet>
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="执行" styleClass="wd-p-5"/>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                        <p:column headerText="车辆" filterBy="#{baoYangJiHua.cheLiangId}" filterMatchMode="exact" sortBy="#{baoYangJiHua.cheLiangId}" styleClass="wd-p-10">
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('wvBaoYangJiHuaList').filter()" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="选择车辆" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems value="#{ctrlCAR0009.vm.cheLiangList}" var="cheliang"
+                                                                   itemLabel="#{cheliang.cheLiangMingCheng}" itemValue="#{cheliang.cheLiangId}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:column>
+                                        <p:column headerText="计划日期" styleClass="tct wd-p-10" sortBy="#{baoYangJiHua.xiaCiRiQi}"/>
+                                        <p:column headerText="计划里程数" styleClass="tct wd-p-10" />
+                                        <p:column headerText="保养公司" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="保养项目" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="计划费用" styleClass="tct wd-p-5"/>
+                                        <p:column headerText="经办人" styleClass="tct wd-p-6" sortBy="#{baoYang.yuanGongId}"/>                                 
+                                        <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--执行-->
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlCAR0009.zhiXingBaoYangJiHua(baoYangJiHua)}"
+                                                   process="@this" update="@(.pnlInputArea), @(.toolbar), frmMain:tabview">
+                                        <i class="fa fa-pencil Fs18 Blue"></i>
+                                    </p:commandLink>
+                                </p:column>
+                                <!--删除-->
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlCAR0009.onDeleteBaoYangJiHua(baoYangJiHua)}"
+                                                   process="@this" 
+                                                   update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   oncomplete="showErrorMsg();">
+                                        <i class="fa fa-trash Fs18 Red"></i>
+                                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>
+                                <!--车辆-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.cheLiang.chePaiZhaoHaoMa}"/>
+                                </p:column>
+                                <!--计划日期-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{baoYangJiHua.xiaCiRiQi}">
+                                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--公里数-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.xiaCiLiCheng}">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--保养公司-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.baoYangGongSi.xiangMuMing}"/>
+                                </p:column>
+                                <!--保养项目-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.baoYangXiangMu}"/>
+                                </p:column>
+                                <!--保养费用-->
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{baoYangJiHua.jiHuaFeiYong}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--经办人-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.yuanGong.nameZ}"/>
+                                </p:column>
+                                <!--备注-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.beiZhu}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                        <p:outputPanel id="baoYangJiHuaYiZhiXingDetails" styleClass="Container100 Responsive100 pngDetails">
+                            <p:dataTable value="#{ctrlCAR0009.vm.baoYangJiHuaYiZhiXingList}" var="baoYangJiHua" cellSeparator="5"
+                                         widgetVar="wvBaoYangJiHuaList"
+                                         rows="10"
+                                         filterDelay="500"
+                                         style="word-break: keep-all!important"
+                                         paginator="true"
+                                         paginatorAlwaysVisible="false"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         emptyMessage="没有数据">
+                                <f:facet name="header">
+                                    <h:outputText value="保养计划已执行一览"/>
+                                </f:facet>
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="查看" styleClass="wd-p-5"/>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                        <p:column headerText="车辆" filterBy="#{baoYangJiHua.cheLiangId}" filterMatchMode="exact" sortBy="#{baoYangJiHua.cheLiangId}" styleClass="wd-p-10">
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('wvBaoYangJiHuaList').filter()" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="选择车辆" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems value="#{ctrlCAR0009.vm.cheLiangList}" var="cheliang"
+                                                                   itemLabel="#{cheliang.cheLiangMingCheng}" itemValue="#{cheliang.cheLiangId}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:column>
+                                        <p:column headerText="计划日期" styleClass="tct wd-p-10" sortBy="#{baoYangJiHua.xiaCiRiQi}"/>
+                                        <p:column headerText="计划里程数" styleClass="tct wd-p-10" />
+                                        <p:column headerText="保养公司" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="保养项目" styleClass="tct wd-p-10"/>
+                                        <p:column headerText="计划费用" styleClass="tct wd-p-5"/>
+                                        <p:column headerText="经办人" styleClass="tct wd-p-6" sortBy="#{baoYang.yuanGongId}"/>                                 
+                                        <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--执行-->
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlCAR0009.zhiXingBaoYangJiHua(baoYangJiHua)}"
+                                                   process="@this" update="@(.pnlInputArea), @(.toolbar), frmMain:tabview">
+                                        <i class="fa fa-pencil Fs18 Blue"></i>
+                                    </p:commandLink>
+                                </p:column>
+                                <!--删除-->
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlCAR0009.onDeleteBaoYangJiHua(baoYangJiHua)}"
+                                                   process="@this" 
+                                                   update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   oncomplete="showErrorMsg();">
+                                        <i class="fa fa-trash Fs18 Red"></i>
+                                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>
+                                <!--车辆-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.cheLiang.chePaiZhaoHaoMa}"/>
+                                </p:column>
+                                <!--计划日期-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{baoYangJiHua.xiaCiRiQi}">
+                                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--公里数-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.xiaCiLiCheng}">
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--保养公司-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.baoYangGongSi.xiangMuMing}"/>
+                                </p:column>
+                                <!--保养项目-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.baoYangXiangMu}"/>
+                                </p:column>
+                                <!--保养费用-->
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{baoYangJiHua.jiHuaFeiYong}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <!--经办人-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.yuanGong.nameZ}"/>
+                                </p:column>
+                                <!--备注-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{baoYangJiHua.beiZhu}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </p:tab>
+
+                </p:tabView>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

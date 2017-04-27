@@ -1,0 +1,167 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MET', 'MET0002')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:tabView value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing('NengYuanBiaoLeiXing')}" var="lx" styleClass="Container100 Responsive100">
+                    
+                    <p:tab title="#{lx.xiangMuMing}费月报表">
+                        <p:outputPanel id="pnlInputArea1" styleClass="Container100 Responsive100 ui-fluid">
+                            <div class="Container100 Responsive100">
+                                <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <p:outputLabel value="月份" styleClass="fr" style="float: right"/>
+                                    <p:selectOneMenu value="#{ctrlMET0002.vm.yueFen}">
+                                        <f:selectItems value="#{ctrlMET0002.vm.yueFenList}" var="yueFen" itemLabel="#{yueFen}" itemValue="#{yueFen}" />
+                                    </p:selectOneMenu>
+                                    <p:commandButton value="查看报表" process="@this pnlInputArea1"
+                                                     oncomplete="showErrorMsg();"
+                                                     update="pnlInputArea1, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                     actionListener="#{ctrlMET0002.chaKanYueBaoBiao(lx.serialId)}"/>
+                                    <p:commandLink actionListener="#{ctrlMET0002.doNothing()}" process="@this" update="@this"
+                                                   oncomplete="$('#printShuiFeiYueBao#{lx.serialId}').jqprint()">
+                                        <i class="fa fa-print Blue Fs20 Fleft">打印报表</i>
+                                    </p:commandLink>
+                                </p:panelGrid>
+
+                                <div id="printShuiFeiYueBao#{lx.serialId}">
+                                    <p:dataTable value="#{ctrlMET0002.vm.mapBiaoList.get(lx.serialId)}"
+                                                 var="item"
+                                                 id="baoBiao"
+                                                 widgetVar="baoBiao"
+                                                 styleClass="printTable tct"
+                                                 emptyMessage="没有数据">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink>
+                                                <h:outputText value="生成Excel"/>
+                                                <p:dataExporter type="xls" target="yueBaoBiao" fileName="yueBaoBiao" pageOnly="true"/>
+                                            </h:commandLink>
+                                        </f:facet>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{ctrlMET0002.vm.yueFen}华兴各换热站用#{lx.xiangMuMing}月报表"/>
+                                        </f:facet>
+                                        <p:columnGroup type="header">
+                                            <p:row>
+                                                <p:column headerText="序号" styleClass="wd-p-5"/>
+                                                <p:column headerText="换热站名称" styleClass="wd-p-10"/>
+                                                <p:column headerText="表号" styleClass="tct wd-p-10"  rendered="#{lx.xiangMuMing eq '水'}"/>
+                                                <p:column headerText="户号" styleClass="tct wd-p-10"  rendered="#{lx.xiangMuMing eq '电'}"/>
+                                                <p:column headerText="电表条码号" styleClass="tct wd-p-10"  rendered="#{lx.xiangMuMing eq '电'}"/>
+                                                <p:column headerText="供暖面积（㎡）" styleClass="tct wd-p-3"/>
+                                                <p:column headerText="单价" styleClass="tct wd-p-3"  rendered="#{lx.xiangMuMing eq '电'}"/>
+                                                <p:column headerText="倍率" styleClass="tct wd-p-3"  rendered="#{lx.xiangMuMing eq '电'}"/>
+                                                <p:column headerText="上月表数" styleClass="tct wd-p-5"/>
+                                                <p:column headerText="本月表数" styleClass="tct wd-p-5"/>
+                                                <p:column headerText="上月用量" styleClass="tct wd-p-5"/>
+                                                <p:column headerText="本月用量" styleClass="tct wd-p-5"/>
+                                                <p:column headerText="平均24小时用量（T）" styleClass="tct wd-p-10"/>
+                                                <p:column headerText="本月用#{lx.xiangMuMing}金额" styleClass="tct wd-p-10"/>
+                                                <p:column headerText="月单耗#{lx.xiangMuMing eq '水' ? 'T/㎡':'度/㎡' }" styleClass="tct wd-p-10"/>
+                                                <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                                            </p:row>
+                                        </p:columnGroup>
+                                        <!--序号-->
+                                        <p:column styleClass="tct">
+                                            <h:outputText value="#{item.jianKongDian.xuHao}"/>
+                                        </p:column>
+                                       <!--换热站名称-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.jianKongDian.mingCheng}"/>
+                                        </p:column>
+                                       <!--表号-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.biaoHao1}"/>
+                                        </p:column>
+                                       <p:column styleClass="tct" rendered="#{lx.xiangMuMing eq '电'}">
+                                           <h:outputText value="#{item.biaoHao2}"/>
+                                        </p:column>
+                                       <!--供暖面积（㎡）-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.jianKongDian.mianJi}">
+                                               <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--单价-->
+                                       <p:column styleClass="tct" rendered="#{lx.xiangMuMing eq '电'}">
+                                           <h:outputText value="#{item.danJia.danJia}">
+                                               <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--倍率-->
+                                       <p:column styleClass="tct" rendered="#{lx.xiangMuMing eq '电'}">
+                                           <h:outputText value="#{item.beiLv}"/>
+                                        </p:column>
+                                       <!--上月表数-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.getShangYueBiaoShu(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--本月表数-->
+                                       <p:column styleClass="tct">
+                                            <h:outputText value="#{item.getBenYueBiaoShu(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--上月用量（T）-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.getShangYueYongLiang(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--本月用量（T）-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.getBenYueYongLiang(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--平均24小时用量（T）-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.getPingJun24XiaoShiYongLiang(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber pattern="#,##0.##"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--本月用水金额（4.4元/T）-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.getBenYueJinE(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                           </h:outputText>
+                                        </p:column>
+                                       <!--本月购水量（T）-->
+<!--                                       <p:column styleClass="tct">
+                                            <h:outputText value="#{item}"/>
+                                        </p:column>-->
+                                       <!--月单耗T/㎡-->
+                                       <p:column styleClass="tct">
+                                           <h:outputText value="#{item.getYueDanHao(ctrlMET0002.vm.yueFen)}">
+                                               <f:convertNumber pattern="#,##0.####"/>
+                                           </h:outputText>
+                                        </p:column>
+                                        <!--备注-->
+                                        <p:column styleClass="tct">
+                                            <h:outputText value="#{item.beiZhu}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:tab>
+<!--                    <p:tab title="电费月报表"></p:tab>-->
+                </p:tabView>
+            </div>
+        </div>
+    </p:outputPanel>
+
+</ui:composition>

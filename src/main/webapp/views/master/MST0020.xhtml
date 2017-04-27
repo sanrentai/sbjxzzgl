@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0020')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:tabView styleClass="Container100 Responsive100">
+                    <p:tab title="单价记录">
+                        <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <!--新建按钮-->
+                                    <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0020.onStartEditing}"
+                                                     resetValues="true"
+                                                     update="pnlInputArea,toolbar" disabled="#{not empty ctrlMST0020.vm.editingDanJia}"/>
+                                    <!--刷新按钮-->
+                                    <p:commandButton value="刷新" process="@this" actionListener="#{ ctrlMST0020.onRefreshData}" 
+                                                     resetValues="true" oncomplete="PF('wvDanJiaList').clearFilters();"
+                                                     update="pngDetails"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </p:outputPanel>
+                        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                            <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlMST0020.vm.editingDanJia}">
+                                <!--名称-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="mingCheng" value="名称"/>
+                                    <p:inputText id="mingCheng" value="#{ctrlMST0020.vm.editingDanJia.mingCheng}" 
+                                                 required="true" requiredMessage="#{ctrlMST0020.isRequiredMessage('名称')}"
+                                                 maxlength="400" />
+                                </p:panelGrid>
+                                <!--类型-->
+                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-60 NoPadding,wd-p-10">
+                                    <p:outputLabel for="leiXing" value="类型"/>
+<!--                                    <p:inputText id="leiXing" value="#{ctrlMST0020.vm.editingDanJia.leiXing  }"
+                                                 required="true" requiredMessage="#{ctrlMST0020.isRequiredMessage('类型')}"
+                                                 maxlength="400"/>-->
+                                    <p:selectOneMenu id="leiXing" value="#{ctrlMST0020.vm.editingDanJia.leiXing}"
+                                                     styleClass="leiBieGuanLi"
+                                                     required="true" requiredMessage="#{ctrlMST0019.isRequiredMessage('类型111')}">
+                                        <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing('NengYuanBiaoLeiXing')}"
+                                                       var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandLink 
+                                        style="margin-right: 0px;"
+                                        actionListener="#{ctrlSystemConfig.newLeiBieGuanLi('NengYuanBiaoLeiXing')}"
+                                        process="@this"
+                                        update="@(.add_fen_lei_xiang_mu)"
+                                        oncomplete="PF('add_fen_lei_xiang_mu').show();">
+                                        <i class="fa fa-plus Fs18 Green"></i>
+                                    </p:commandLink>
+                                </p:panelGrid>
+                                <!--单价-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="danJia" value="单价"/>
+                                    <p:inputText id="danJia" value="#{ctrlMST0020.vm.editingDanJia.danJia}"
+                                                 required="true" requiredMessage="#{ctrlMST0020.isRequiredMessage('单价')}"
+                                                 maxlength="400"/>
+                                </p:panelGrid>
+                                <!--备注-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="beiZhu" value="备注"/>
+                                    <p:inputText id="beiZhu" value="#{ctrlMST0020.vm.editingDanJia.beiZhu}"
+                                                 maxlength="400"/>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <p:commandButton value="保存" process="pnlInputArea"
+                                                     oncomplete="showErrorMsg();"
+                                                     update="pnlInputArea, pngDetails, toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                     actionListener="#{ctrlMST0020.onSaveDanJia()}"/>
+                                    <p:commandButton value="取消" process="@this" 
+                                                     update="pnlInputArea, toolbar" actionListener="#{ctrlMST0020.onCancelEditing}"
+                                                     styleClass="RedButton"/>
+                                </p:panelGrid>
+
+
+                            </p:outputPanel>
+
+                            <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                                <p:dataTable value="#{ctrlMST0020.vm.danJiaList}" var="danJia" cellSeparator="5"
+                                             widgetVar="wvDanJiaList"
+                                             rows="10"
+                                             filterDelay="500"
+                                             style="word-break: keep-all!important"
+                                             paginator="true"
+                                             paginatorAlwaysVisible="false"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             emptyMessage="没有数据">
+                                    <f:facet name="header">
+                                        <h:outputText value="单价信息一览"/>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="编辑" styleClass="wd-p-3"/>
+                                            <p:column headerText="删除" styleClass="wd-p-3"/>
+                                            <p:column headerText="名称" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="类型" styleClass="tct wd-p-3"/>
+                                            <p:column headerText="单价" styleClass="tct wd-p-6"/>
+                                            <p:column headerText="创建人" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="创建时间" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <p:column styleClass="tct">
+                                        <p:commandLink actionListener="#{ctrlMST0020.onEditDanJia(danJia)}"
+                                                       process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                            <i class="fa fa-pencil Fs18 Blue"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <p:column styleClass="tct">
+                                        <p:commandLink actionListener="#{ctrlMST0020.onDeleteDanjia(danJia) }"
+                                                       process="@this" 
+                                                       update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       oncomplete="showErrorMsg();">
+                                            <i class="fa fa-trash Fs18 Red"></i>
+                                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--名称-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{danJia.mingCheng}"/>
+                                    </p:column>
+                                    <!--序号-->
+                                    <p:column styleClass="tct">
+                                        <h:outputText value="#{ danJia.leiBie.xiangMuMing}" />
+                                    </p:column>
+                                    <!--面积-->
+                                    <p:column styleClass="tct">
+                                        <h:outputText value="#{danJia.danJia}" >
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--创建人-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{danJia.insUserInfo.nameZ}"/>
+                                    </p:column>
+                                    <!--创建时间-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{danJia.insDate}">
+                                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--备注-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{danJia.beiZhu}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:tab>
+  
+                </p:tabView>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

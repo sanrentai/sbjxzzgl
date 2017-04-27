@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0017')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <!--                <p:tabView styleClass="Container100 Responsive100">
+                                    <p:tab title="年检记录">-->
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlCAR0017.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{not empty ctrlCAR0017.vm.editingCheNianJian}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlCAR0017.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvCheNianJianList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0017.vm.editingCheNianJian}">
+                        <!--车辆-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="ceLiang" value="车辆"/>
+                            <p:selectOneMenu id="ceLiang" value="#{ctrlCAR0017.vm.editingCheNianJian.cheLiangId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0017.isRequiredMessage('车辆')}"
+                                             disabled="#{not empty ctrlCAR0017.vm.editingCheNianJian.cheNianJianId}">
+                                <f:selectItem itemLabel="请选择车辆" itemValue=""/>
+                                <f:selectItems value="#{ctrlCAR0017.vm.cheLiangList}" 
+                                               var="cheLiang" itemLabel="#{cheLiang.chePaiZhaoHaoMa}" itemValue="#{cheLiang.cheLiangId}" />
+                                <p:ajax process="@this" update="jiHuaId"  listener="#{ctrlCAR0017.changeCheLiang(cheLiang.cheLiangId)}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--日期-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="shiJian" styleClass="NoPadding" value="日期"/>
+                            <p:calendar id="shiJian" value="#{ctrlCAR0017.vm.editingCheNianJian.riQi}"
+                                        readonlyInput="true"
+                                        mask="true" styleClass="tct NoPadding"
+                                        pattern="#{bizConfig.dateFormat}"
+                                        required="true" size="12"
+                                        requiredMessage="#{ctrlCAR0017.isRequiredMessage('日期')}"
+                                        converterMessage="#{ctrlCAR0017.dateUnvalidMessage('日期')}"
+                                        locale="#{bizConfig.locale}">
+                            </p:calendar>
+                        </p:panelGrid>
+                        <!--费用-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="feiYong" value="费用"/>
+                            <p:inputText id="feiYong" value="#{ctrlCAR0017.vm.editingCheNianJian.feiYong}"
+                                         required="true" requiredMessage="#{ctrlCAR0017.isRequiredMessage('费用')}"
+                                         maxlength="400"/>
+                        </p:panelGrid>
+                        <!--计划-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="jiHuaId" value="计划"/>
+                            <p:selectOneMenu id="jiHuaId" value="#{ctrlCAR0017.vm.editingCheNianJian.jiHuaId}" 
+                                             required="true" requiredMessage="#{ctrlCAR0017.isRequiredMessage('计划')}">
+                                <f:selectItem itemLabel="请选择计划" itemValue=""/>
+                                <f:selectItem itemLabel="无计划" itemValue="无计划"/>
+                                <f:selectItems value="#{ctrlCAR0017.vm.cheJiHuaList}" var="item" 
+                                               itemLabel="#{item.name}" itemValue="#{item.jiHuaId}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="保存" process="pnlInputArea"
+                                             oncomplete="showErrorMsg();"
+                                             update="pnlInputArea, pngDetails, toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             actionListener="#{ctrlCAR0017.onSaveCheNianJian}"/>
+                            <p:commandButton value="取消" process="@this" 
+                                             update="pnlInputArea, toolbar" actionListener="#{ctrlCAR0017.onCancelEditing}"
+                                             styleClass="RedButton"/>
+                        </p:panelGrid>
+
+
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                        <p:dataTable value="#{ctrlCAR0017.vm.cheNianJianList}" var="cheNianJian" cellSeparator="5"
+                                     widgetVar="wvCheNianJianList"
+                                     rows="10"
+                                     filterDelay="500"
+                                     style="word-break: keep-all!important"
+                                     paginator="true"
+                                     paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="没有数据">
+                            <f:facet name="header">
+                                <h:outputText value="年检信息一览"/>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="编辑" styleClass="wd-p-5"/>
+                                    <p:column headerText="删除" styleClass="wd-p-5"/>
+                                    <p:column headerText="车辆" filterBy="#{cheNianJian.cheLiangId}" filterMatchMode="exact" sortBy="#{cheNianJian.cheLiangId}" styleClass="wd-p-10">
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('wvCheNianJianList').filter()" filter="true" filterMatchMode="contains">
+                                                <f:selectItem itemLabel="选择车辆" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItems value="#{ctrlCAR0017.vm.cheLiangList}" var="cheliang"
+                                                               itemLabel="#{cheliang.cheLiangMingCheng}" itemValue="#{cheliang.cheLiangId}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:column>
+                                    <p:column headerText="日期" styleClass="tct wd-p-10" sortBy="#{cheNianJian.riQi}"/>
+                                    <p:column headerText="费用" styleClass="tct wd-p-5"/>
+                                    <p:column headerText="计划" styleClass="tct wd-p-20"/>
+                                    <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlCAR0017.onEditCheNianJian(cheNianJian)}"
+                                               process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                    <i class="fa fa-pencil Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlCAR0017.onDeleteCheNianJian(cheNianJian)}"
+                                               process="@this" 
+                                               update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               oncomplete="showErrorMsg();">
+                                    <i class="fa fa-trash Fs18 Red"></i>
+                                    <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                            <!--车辆-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{cheNianJian.cheLiang.chePaiZhaoHaoMa}"/>
+                            </p:column>
+                            <!--日期-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{cheNianJian.riQi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--费用-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{cheNianJian.feiYong}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--计划-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{cheNianJian.jiHua.name}" rendered="#{not empty cheNianJian.jiHua}"/>
+                                <h:outputText value="#{cheNianJian.jiHuaId}" rendered="#{empty cheNianJian.jiHua}"/>
+                            </p:column>
+                            <!--备注-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{cheNianJian.beiZhu}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <!--                    </p:tab>
+                                </p:tabView>-->
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

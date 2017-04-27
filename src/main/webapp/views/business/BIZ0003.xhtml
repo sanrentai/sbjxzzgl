@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('BIZ', 'BIZ0003')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="searchpanel" styleClass="Container100 Responsive100">
+                    <h:panelGrid columns="7" cellpadding="5">
+                        <p:outputLabel for="shenqingren"
+                                       value="#{msg.shen_qing_ren}" />
+                        <p:selectOneMenu id="shenqingren"
+                                         value="#{ctrlBIZ0003.vm.lazyModel.yuanGongId}">
+                            <f:selectItem itemLabel="全部员工" itemValue=""/>
+                            <f:selectItems value="#{ctrlBIZ0003.vm.yuanGongList}"
+                                           var="yuanGong"
+                                           itemLabel="#{yuanGong.nameZ}"
+                                           itemValue="#{yuanGong.yuanGongId}"/>
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel for="shenqingwupin"
+                                       value="#{msg.shen_qing_wu_pin}" />
+                        <p:autoComplete id="shenqingwupin"
+                                        value="#{ctrlBIZ0003.vm.wuPinMing}"
+                                        completeMethod="#{ctrlBIZ0003.searchWuPinMing}"/>
+
+                        <p:outputLabel for="shenqingriRange"
+                                       value="#{msg.shen_qing_shi_jian}" />
+                        <p:selectOneMenu id="shenqingriRange"
+                                         value="#{ctrlBIZ0003.vm.timeRange}"
+                                         styleClass="ui-panelgrid-blank select_width">
+                            <f:selectItem itemLabel="#{msg.wu_xian_zhi}"
+                                          itemValue="0"/>
+                            <f:selectItem itemLabel="#{ctrlBIZ0003.getTimeRangeMessage(msg.san_tian)}"
+                                          itemValue="3"/>
+                            <f:selectItem itemLabel="#{ctrlBIZ0003.getTimeRangeMessage(msg.yi_zhou)}"
+                                          itemValue="7"/>
+                            <f:selectItem itemLabel="#{ctrlBIZ0003.getTimeRangeMessage(msg.yi_ge_yue)}"
+                                          itemValue="30"/>
+                            <f:selectItem itemLabel="#{ctrlBIZ0003.getTimeRangeMessage(msg.ban_nian)}"
+                                          itemValue="183"/>
+                            <f:selectItem itemLabel="#{ctrlBIZ0003.getTimeRangeMessage(msg.yi_nian)}"
+                                          itemValue="365"/>
+                        </p:selectOneMenu>
+
+                        <p:commandButton actionListener="#{ctrlBIZ0003.search}"
+                                         icon="fa fa-search"
+                                         styleClass="White"
+                                         update="searchpanel"
+                                         value="#{msg.wzsq_button_search}"
+                                         process="searchpanel"/>
+                    </h:panelGrid>
+
+                    <p:dataTable value="#{ctrlBIZ0003.vm.lazyModel}"
+                                 var="item"
+                                 lazy="true"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 styleClass="tct"
+                                 rows="15"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="15, 30, 50">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="申请历史ID" sortBy="#{item.shenQingId}" styleClass="wd-p-4"/>
+                                <!--<p:column headerText="#{msg.shen_qing_ming_xi_bian_hao}" sortBy="#{item.mingXiId}" styleClass="wd-p-4"/>-->
+                                <!--<p:column headerText="#{msg.wu_zi_bian_hao}" sortBy="#{item.wuZiId}" styleClass="wd-p-4"/>-->
+                                <p:column headerText="#{msg.wu_zhi_miao_shu}" styleClass="wd-p-20"/>
+                                <p:column headerText="#{msg.shen_qing_shu_liang}" sortBy="#{item.shenQingShu}" styleClass="wd-p-5"/>
+                                <p:column headerText="#{msg.xiang_mu_ming}" sortBy="#{item.xiangMuId}" styleClass="wd-p-8"/>
+                                <p:column headerText="#{msg.shen_qing_shi_jian}" sortBy="#{item.insDate}" styleClass="wd-p-8"/>
+                                <p:column headerText="#{msg.shen_qing_ren}" styleClass="wd-p-5"/>
+                                <p:column headerText="#{msg.tiao_pei_zhuang_tai}" sortBy="#{item.tiaoPeiZhuangTai}" styleClass="wd-p-6"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column>
+                            <h:outputText value="#{item.shenQingId}"/>
+                        </p:column>
+<!--                        <p:column>
+                            <h:outputText value="#{item.mingXiId}"/>
+                        </p:column>-->
+<!--                        <p:column>
+                            <h:outputText value="#{item.wuZiId}"/>
+                        </p:column>-->
+                        <p:column styleClass="tlt">
+                            <h:outputText id="guigegaiyao" value="#{item.wuZiMiaoShu}"/>
+                            <p:tooltip position="top" for="guigegaiyao" value="#{item.shiTi.nameWithShuXingSummary}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.shenQingShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shiTi.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.xiangMuMing}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.insDate}">
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.shenQingRen}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.zhuangTai}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>

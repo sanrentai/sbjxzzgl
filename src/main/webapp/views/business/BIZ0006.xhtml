@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('BIZ', 'BIZ0006')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="outputpanel" styleClass="Container100 Responsive100">
+                    <h:panelGrid columns="5" cellpadding="5">
+                        <p:outputLabel for="guijixiang"
+                                       value="归集项"/>
+                        <p:selectOneMenu id="guijixiang"
+                                         value="#{ctrlBIZ0006.vm.selectedGuiJiXiangId}">
+                            <p:ajax listener="#{ctrlBIZ0006.changeGuiJiXiang()}" process="@this" update="outputpanel"/>
+                            <f:selectItems value="#{ctrlBIZ0006.vm.guiJiXiangList}"
+                                           var="guijixiang"
+                                           itemLabel="#{guijixiang.xiangMuMing}"
+                                           itemValue="#{guijixiang.xiangMuId}"/>
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel value="时间范围指定"/>
+                        
+                        <p:calendar id="txtStartDate" value="#{ctrlBIZ0006.vm.lazyModel.startDate}"
+                                    placeholder="开始日期"
+                                    mask="true" styleClass="tct"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    size="12"
+                                    converterMessage="#{ctrlBIZ0006.dateUnvalidMessage('开始日期')}"
+                                    locale="#{bizConfig.locale}">
+                            <p:ajax process="@this" event="dateSelect"
+                                    update="outputpanel"/>
+                            <p:ajax process="@this"
+                                    update="outputpanel"/>
+                        </p:calendar>
+                        
+                        <p:calendar id="txtEndDate" value="#{ctrlBIZ0006.vm.lazyModel.endDate}"
+                                    placeholder="结束日期"
+                                    mask="true" styleClass="tct"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    size="12"
+                                    converterMessage="#{ctrlBIZ0006.dateUnvalidMessage('结束日期')}"
+                                    locale="#{bizConfig.locale}">
+                            <p:ajax process="@this" event="dateSelect"
+                                    update="outputpanel"/>
+                            <p:ajax process="@this"
+                                    update="outputpanel"/>
+                        </p:calendar>
+                    </h:panelGrid>
+
+                    <p:dataTable value="#{ctrlBIZ0006.vm.lazyModel}"
+                                 var="item" widgetVar="datatable"
+                                 lazy="true"
+                                 filterDelay="500"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 styleClass="tct"
+                                 rows="15"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="15, 30, 50">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="#{msg.ju_ti_xing_hao}"
+                                          filterBy="#{item.shenQingMingXing.shiti.wuZiMiaoShu}" filterMaxLength="50" filterMatchMode="contains"
+                                          sortBy="#{item.shenQingMingXing.shiti.wuZiMiaoShu}" styleClass="wd-p-10"/>
+                                <p:column headerText="申请数" styleClass="wd-p-4"/>
+                                <p:column headerText="已分配数" styleClass="wd-p-4"/>
+                                <p:column headerText="已领取数" styleClass="wd-p-4"/>
+                                <p:column headerText="已归还数" styleClass="wd-p-4"/>
+                                <p:column headerText="申请人"
+                                          filterBy="#{item.insRep}" filterMatchMode="exact"
+                                          sortBy="#{item.insRep}" styleClass="wd-p-4">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('datatable').filter()" autoWidth="true">
+                                            <f:selectItem itemLabel="全部" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{ctrlBIZ0006.vm.selectedGuiJiXiang.fuZeRenList}"
+                                                           var="chengyuan"
+                                                           itemLabel="#{chengyuan.yuanGong.nameZ}"
+                                                           itemValue="#{chengyuan.pk.yuanGongId}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:column>
+                                <p:column headerText="状态" sortBy="#{item.zhuangTai}" styleClass="wd-p-5"/>
+                                <p:column headerText="申请提出时间" sortBy="#{item.insDate}" styleClass="wd-p-8"/>
+                                <!--<p:column headerText="最后更新时间" sortBy="#{item.updDate}" styleClass="wd-p-8"/>-->
+                                <p:column headerText="备注" styleClass="wd-p-10"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column styleClass="tlt">
+                            <h:outputText id="guigegaiyao" value="#{item.shenQingMingXing.shiti.wuZiMiaoShu}"/>
+                            <p:tooltip position="top" for="guigegaiyao" value="#{item.shenQingMingXing.shiti.nameWithShuXingSummary}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.jiHuaLingYongShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shenQingMingXing.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.yiFenPeiShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shenQingMingXing.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.shiJiLingYongShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shenQingMingXing.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{item.shiJiGuiHuanShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputText value="#{item.shenQingMingXing.shiti.wuZiDanWei.danWeiMing}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.insUserInfo.nameZ}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.zhuangTai.message}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.insDate}">
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                            </h:outputText>
+                        </p:column>
+<!--                        <p:column>
+                            <h:outputText value="#{item.updDate}">
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                            </h:outputText>
+                        </p:column>-->
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.beiZhu}"/>
+                        </p:column>
+                        
+                        <p:summaryRow listener="#{ctrlBIZ0006.onSummaryRow}" rendered="#{ctrlBIZ0006.vm.lazyModel.displaySummaryRow}">
+                            <p:column colspan="1" styleClass="trt">
+                                <h:outputText value="合计:" />
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{component.parent.parent.attributes.totalShenQingShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{component.parent.parent.attributes.totalFenPeiShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{component.parent.parent.attributes.totalLingQuShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{component.parent.parent.attributes.totalGuiHuanShu}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:summaryRow>
+                    </p:dataTable>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>

@@ -1,0 +1,477 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0003')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:tabView styleClass="Container100 Responsive100">
+                    <p:tab title="司机登记">
+                        <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <!--新建按钮-->
+                                    <p:commandButton value="新建" process="@this" actionListener="#{ctrlCAR0003.onStartEditing}"
+                                                     resetValues="true"
+                                                     update="pnlInputArea,toolbar" disabled="#{not empty ctrlCAR0003.vm.editingSiJi}"/>
+                                    <!--刷新按钮-->
+                                    <p:commandButton value="刷新" process="@this" actionListener="#{ctrlCAR0003.onRefreshData}" 
+                                                     resetValues="true" oncomplete="PF('wvSiJiList').clearFilters();"
+                                                     update="pngDetails"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </p:outputPanel>
+                        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                            <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlCAR0003.vm.editingSiJi}">
+                                <!--员工-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                             columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="yuanGongId" value="员工"/>
+                                    <p:selectOneMenu id="yuanGongId" value="#{ctrlCAR0003.vm.editingSiJi.yuanGongId}" >
+                                        <p:ajax process="@this" update="pnlInputArea" listener="#{ctrlCAR0003.onNeiBuYuanGong()}"></p:ajax>
+                                        <f:selectItem itemLabel="内部司机需要选择员工" itemValue="WBSJ"/>
+                                        <f:selectItems value="#{ctrlCAR0003.vm.yuanGongList}" var="yuanGong" itemLabel="#{yuanGong.nameZ}" itemValue="#{yuanGong.yuanGongId}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <!--姓名-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="siJi" value="姓名"/>
+                                    <p:inputText id="siJi" 
+                                                 value="#{ctrlCAR0003.vm.editingSiJi.xingMing}" 
+                                                 required="true" 
+                                                 requiredMessage="#{ctrlCAR0003.isRequiredMessage('姓名')}" 
+                                                 disabled="#{ctrlCAR0003.vm.shiFouNeiBuYuanGon}"
+                                                 maxlength="400"/>
+                                </p:panelGrid>
+                                <!--联系方式-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="lianXiFangShi" value="联系方式"/>
+                                    <p:inputText id="lianXiFangShi" value="#{ctrlCAR0003.vm.editingSiJi.lianXiFangShi}" required="true" requiredMessage="#{ctrlCAR0003.isRequiredMessage('联系方式')}" maxlength="400"/>
+                                </p:panelGrid>
+                                <!--驾驶证初次领取日期-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="jszChuCiLingQuRiQi" value="驾驶证初次领取日期"/>
+                                    <p:calendar id="jszChuCiLingQuRiQi" value="#{ctrlCAR0003.vm.editingSiJi.jszChuCiLingQuRiQi}"
+                                                readonlyInput="true"
+                                                navigator="true"
+                                                yearRange="c-50:c"
+                                                mask="true"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlCAR0003.isRequiredMessage('驾驶证初次领取日期')}"
+                                                converterMessage="#{ctrlCAR0003.dateUnvalidMessage('驾驶证初次领取日期')}"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:panelGrid>
+                                <!--驾驶证到期日期-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="kaiShiShiJian" value="驾驶证到期日期"/>
+                                    <p:calendar id="kaiShiShiJian" value="#{ctrlCAR0003.vm.editingSiJi.jszDaoQiRiQi}"
+                                                readonlyInput="true"
+                                                navigator="true"
+                                                yearRange="c-5:c+50"
+                                                mask="true"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlCAR0003.isRequiredMessage('驾驶证到期日期')}"
+                                                converterMessage="#{ctrlCAR0003.dateUnvalidMessage('驾驶证到期日期')}"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:panelGrid>
+                                <!--驾驶证发证机关-->
+                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                                             columnClasses="wd-p-30 NoPadding,wd-p-60 NoPadding,wd-p-10">
+                                    <p:outputLabel for="jszFaZhengJiGuan" value="驾驶证发证机关"/>
+                                    <p:selectOneMenu id="jszFaZhengJiGuan" value="#{ctrlCAR0003.vm.editingSiJi.jszFaZhengJiGuan}"
+                                                     styleClass="leiBieGuanLi"
+                                                     autoWidth="false"
+                                                     required="true" requiredMessage="#{ctrlCAR0003.isRequiredMessage('驾驶证发证机关')}">
+                                        <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing('JSZFZJG')}"
+                                                       var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandLink 
+                                        style="margin-right: 0px;"
+                                        actionListener="#{ctrlSystemConfig.newLeiBieGuanLi('JSZFZJG')}"
+                                        process="@this"
+                                        update="@(.add_fen_lei_xiang_mu)"
+                                        oncomplete="PF('add_fen_lei_xiang_mu').show();">
+                                        <i class="fa fa-plus Fs18 Green"></i>
+                                    </p:commandLink>
+                                </p:panelGrid>
+                                <!--身份证号-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="shenFenZheng" value="身份证号"/>
+                                    <p:inputText id="shenFenZheng" value="#{ctrlCAR0003.vm.editingSiJi.shenFenZheng}" required="true" requiredMessage="#{ctrlCAR0003.isRequiredMessage('身份证号')}" maxlength="400"/>
+                                </p:panelGrid>
+                                <!--准驾车型-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="zhunJiaCheXing" value="准驾车型"/>
+                                    <p:inputText id="zhunJiaCheXing" value="#{ctrlCAR0003.vm.editingSiJi.zhunJiaCheXing}" required="true" requiredMessage="#{ctrlCAR0003.isRequiredMessage('准驾车型')}" maxlength="400"/>
+                                </p:panelGrid>
+                                <!--准驾证号-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="zhuangTai" value="准驾证号"/>
+                                    <p:inputText id="zhuangTai" value="#{ctrlCAR0003.vm.editingSiJi.zhunJiaZhengHao}" maxlength="400"/>
+                                </p:panelGrid>
+                                <!--备注-->
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                    <p:outputLabel for="beiZhu" value="备注"/>
+                                    <p:inputText id="beiZhu" value="#{ctrlCAR0003.vm.editingSiJi.beiZhu}" maxlength="400"/>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <p:commandButton value="保存" process="pnlInputArea"
+                                                     oncomplete="showErrorMsg();"
+                                                     update="pnlInputArea, pngDetails, toolbar, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                     actionListener="#{ctrlCAR0003.onSaveSiJi}"/>
+                                    <p:commandButton value="取消" process="@this" 
+                                                     update="pnlInputArea, toolbar" actionListener="#{ctrlCAR0003.onCancelEditing}"
+                                                     styleClass="RedButton"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+
+                            <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                                <p:dataTable value="#{ctrlCAR0003.vm.siJiList}" var="siJi" cellSeparator="5"
+                                             widgetVar="wvSiJiList"
+                                             rows="10"
+                                             filterDelay="500"
+                                             paginator="true"
+                                             paginatorAlwaysVisible="false"
+                                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                             emptyMessage="没有数据">
+                                    <f:facet name="header">
+                                        <h:outputText value="司机信息一览"/>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                                            <p:column headerText="司机所属" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="姓名" styleClass="tct wd-p-10" sortBy="#{siJi.xingMing}"/>
+                                            <p:column headerText="驾驶证到期日期" styleClass="tct wd-p-10" sortBy="#{siJi.jszDaoQiRiQi}"/>
+                                            <p:column headerText="驾驶证初次领取日期" styleClass="tct wd-p-10" />
+                                            <p:column headerText="身份证号" styleClass="tct wd-p-10" sortBy="#{siJi.shenFenZheng}"/>
+                                            <p:column headerText="联系方式" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="准驾车型" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="准驾证号" styleClass="tct wd-p-5"/>
+                                            <p:column headerText="备注" styleClass="tct wd-p-20"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <p:column styleClass="tct">
+                                        <p:commandLink actionListener="#{ctrlCAR0003.onEditSiJi(siJi)}"
+                                                       process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                            <i class="fa fa-pencil Fs18 Blue"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <p:column styleClass="tct">
+                                        <p:commandLink actionListener="#{ctrlCAR0003.onDeleteSiJi(siJi)}"
+                                                       process="@this" 
+                                                       update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       oncomplete="showErrorMsg();">
+                                            <i class="fa fa-trash Fs18 Red"></i>
+                                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--司机所属-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{(siJi.yuanGongId == 'WBSJ') ? '外部司机' : '内部司机'}"/>
+                                    </p:column>
+                                    <!--姓名-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{siJi.xingMing}"/>
+                                    </p:column>
+                                    <!--驾驶证到期日期-->
+                                    <p:column styleClass="tct">
+                                        <h:outputText value="#{siJi.jszDaoQiRiQi}">
+                                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--驾驶证初次领取日期-->
+                                    <p:column styleClass="tct">
+                                        <h:outputText value="#{siJi.jszChuCiLingQuRiQi}">
+                                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--身份证号-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{siJi.shenFenZheng}"/>
+                                    </p:column>
+                                    <!--联系方式-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{siJi.lianXiFangShi}"/>
+                                    </p:column>
+                                    <!--准驾车型-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{siJi.zhunJiaCheXing}"/>
+                                    </p:column>
+                                    <!--准驾证号-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{siJi.zhunJiaZhengHao}"/>
+                                    </p:column>                                 
+                                    <!--司机状态-->
+                                    <!--                                    <p:column styleClass="tlt">
+                                                                            <h:outputText value="#{siJi.zhuangTai}"/>
+                                                                        </p:column>-->
+                                    <!--备注-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{siJi.beiZhu}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:tab>
+                    <!--                    <p:tab title="库存状况">
+                                            <p:outputPanel id="ku_cun_xiang_xi" styleClass="Container100 Responsive100">
+                                                <p:dataTable id="you_ku_cun_xiang_xi"
+                                                             value="#{ctrlCAR0003.vm.meiKuCunList}"
+                                                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                                             var="item"
+                                                             rows="15"
+                                                             filterDelay="500"
+                                                             paginatorAlwaysVisible="false"
+                                                             paginator="true"
+                                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                             styleClass="tct ku_cun_xiang_xi">
+                                                    <f:facet name="header">
+                                                        煤库库存信息
+                                                    </f:facet>
+                                                    <p:columnGroup type="header">
+                                                        <p:row>
+                                                            <p:column headerText="仓库" styleClass="wd-p-8"/>
+                                                            <p:column headerText="库房" styleClass="wd-p-8"/>
+                                                            <p:column headerText="货位" styleClass="wd-p-15"/>
+                                                            <p:column headerText="#{msg.wu_zi_id}" styleClass="wd-p-10"
+                                                                      filterBy="#{item.pk.wuZiId}" filterMaxLength="12"/>
+                                                            <p:column headerText="#{msg.wu_zhi_miao_shu}" filterBy="#{item.shiTi.wuZiMiaoShu}" filterMaxLength="50"/>
+                                                            <p:column headerText="#{msg.shu_liang}" styleClass="wd-p-10"/>
+                                                            <p:column headerText="#{msg.bei_zhu}" styleClass="wd-p-15"/>
+                                                            <p:column headerText="购买入库" styleClass="wd-p-10"/>
+                                                            <p:column headerText="调整货位" styleClass="wd-p-10"/>
+                                                        </p:row>
+                                                    </p:columnGroup>
+                                                    <p:column styleClass="tlt">
+                                                        <h:outputText value="#{item.huoWei.suoShuCangKu.cangKuMing}"/>
+                                                    </p:column>
+                                                    <p:column styleClass="tlt">
+                                                        <h:outputText value="#{item.huoWei.kuFang.kuFangMing}"/>
+                                                    </p:column>
+                                                                <p:column styleClass="tlt">
+                                                                    <h:outputText value="#{item.huoWei.huoWeiMiaoShu}"/>
+                                                                </p:column>
+                                                    <p:column  sortBy="#{item.pk.wuZiId}">
+                                                        <h:outputText value="#{item.pk.wuZiId}"/>
+                                                    </p:column>
+                                                    <p:column styleClass="tlt">
+                                                        <h:outputText id="guigegaiyao" value="#{item.shiTi.wuZiMiaoShu}"/>
+                                                        <p:tooltip for="guigegaiyao" value="#{item.shiTi.nameWithShuXingSummary}"/>
+                                                    </p:column>
+                                                    <p:column styleClass="trt">
+                                                        <h:outputText value="#{item.kuCunShu}">
+                                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                                        </h:outputText>
+                                                        <h:outputText value="#{item.shiTi.wuZiDanWei.danWeiMing}"/>
+                                                    </p:column>
+                                                    <p:column styleClass="tlt">
+                                                        <h:outputText value="#{item.beiZhu}"/>
+                                                    </p:column>
+                                                    <p:column styleClass="tct">
+                                                        <p:commandLink value="购买" actionListener="#{ctrlCAR0003.showZhiJieRuKuDialog(item)}"
+                                                                       process="@this"
+                                                                       update="@(.zhijierukuPanel)"
+                                                                       oncomplete="PF('zhijierukuDialog').show()"/>
+                                                    </p:column>
+                                                    <p:column styleClass="tct">
+                                                        <p:commandLink value="调整货位" actionListener="#{ctrlCAR0003.showTiaoZhenHuoWeiDialog(item)}"
+                                                                       process="@this"
+                                                                       update="@(.tiaozhenghuoweiPanel)"
+                                                                       oncomplete="PF('tiaozhenghuoweiDialog').show()"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:outputPanel>
+                    
+                                            <p:dialog header="调整货位"
+                                                      styleClass=""
+                                                      widgetVar="tiaozhenghuoweiDialog"
+                                                      closeOnEscape="true"
+                                                      modal="true"
+                                                      resizable="false">
+                                                <h:panelGrid id="tiaozhenghuoweiPanel" columns="2" styleClass="tiaozhenghuoweiPanel">
+                                                    <p:outputLabel value="物资"/>
+                                                    <h:outputText value="#{ctrlCAR0003.vm.selectedKuCun.shiTi.wuZiMiaoShu}"/>
+                    
+                                                    <p:outputLabel value="数量"/>
+                                                    <h:outputText value="#{ctrlCAR0003.vm.selectedKuCun.kuCunShu}">
+                                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                                    </h:outputText>
+                    
+                                                    <p:outputLabel for="yidongzhihuowei" value="移动至"/>
+                                                    <p:selectOneMenu id="yidongzhihuowei" value="#{ctrlCAR0003.vm.tiaoZheng.yiRuHuoWeiId}" required="true">
+                                                        <f:selectItems value="#{ctrlCAR0003.vm.selectedKuCun.huoWei.suoShuCangKu.huoWeiList}"
+                                                                       var="huowei"
+                                                                       itemLabel="#{huowei.kuFang.kuFangMing}"
+                                                                       itemValue="#{huowei.huoWeiId}"/>
+                                                    </p:selectOneMenu>
+                    
+                                                    <p:outputLabel for="yidongshuliang" value="移动数量"/>
+                                                    <p:inputText id="yidongshuliang" value="#{ctrlCAR0003.vm.tiaoZheng.yiDongShu}" styleClass="trt"
+                                                                 required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('移动数量')}" maxlength="13">
+                                                        <p:keyFilter regEx="/[\d\.]/"/>
+                                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                                    </p:inputText>
+                                                </h:panelGrid>
+                    
+                                                <p:commandButton value="移动"
+                                                                 actionListener="#{ctrlCAR0003.tiaoZhengHuoWei}"
+                                                                 process="@this, tiaozhenghuoweiPanel"
+                                                                 update="ku_cun_xiang_xi, @(.ku_cun_xiang_xi), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                                 oncomplete="showErrorMsg();PF('tiaozhenghuoweiDialog').hide();"/>
+                                            </p:dialog>
+                    
+                                            <p:dialog header="购买"
+                                                      styleClass=""
+                                                      widgetVar="zhijierukuDialog"
+                                                      closeOnEscape="true"
+                                                      modal="true"
+                                                      resizable="false">
+                                                <h:panelGrid id="zhijierukuPanel" columns="2" styleClass="zhijierukuPanel">
+                                                    <p:outputLabel for="huowei" value="库房"/>
+                                                    <p:selectOneMenu id="huowei"
+                                                                     required="true" requiredMessage="#{ctrlCAR0003.isRequiredMessage('库房')}" 
+                                                                     value="#{ctrlCAR0003.vm.zhiJieRuKuMingXi.pk.huoWeiId}">
+                                                        <f:selectItems value="#{ctrlCAR0003.vm.zhiJieRuKuMingXi.shenqing.cangKu.huoWeiList}"
+                                                                       var="huowei"
+                                                                       itemLabel="#{huowei.kuFang.kuFangMing}"
+                                                                       itemValue="#{huowei.huoWeiId}"/>
+                                                    </p:selectOneMenu>
+                    
+                                                    <p:outputLabel value="物资"/>
+                                                    <h:outputText value="#{ctrlCAR0003.vm.zhiJieRuKuMingXi.shenqing.shiti.wuZiMiaoShu}"/>
+                    
+                                                    <p:outputLabel for="shuliang" value="数量"/>
+                                                    <p:inputText id="shuliang" value="#{ctrlCAR0003.vm.zhiJieRuKuMingXi.shenqing.shuLiang}" styleClass="trt"
+                                                                 required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('数量')}" maxlength="13">
+                                                        <p:keyFilter regEx="/[\d\.]/"/>
+                                                    </p:inputText>
+                    
+                                                    <p:outputLabel for="danjia" value="单价"/>
+                                                    <p:inputNumber id="danjia"
+                                                                   value="#{ctrlCAR0003.vm.zhiJieRuKuMingXi.shenqing.danJia}" styleClass="trt-inputNumber" 
+                                                                   maxValue="99999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                                                                   required="true" requiredMessage="#{ctrlCAR0003.isRequiredMessage('单价')}" 
+                                                                   decimalPlaces="6">
+                                                    </p:inputNumber>
+                    
+                                                    <p:outputLabel value="备注"/>
+                                                    <p:inputText value="#{ctrlCAR0003.vm.zhiJieRuKuMingXi.shenqing.beiZhu}"/>
+                                                </h:panelGrid>
+                    
+                                                <p:commandButton value="直接入库"
+                                                                 actionListener="#{ctrlCAR0003.zhiJieRuKu}"
+                                                                 process="@this, zhijierukuPanel"
+                                                                 update="ku_cun_xiang_xi, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                                 oncomplete="showErrorMsg();PF('zhijierukuDialog').hide();"/>
+                                            </p:dialog>
+                                        </p:tab>-->
+                    <!--                    <p:tab title="司机统计">
+                                            <h:panelGrid columns="9" cellpadding="5" id="canShu">
+                                                <p:outputLabel value="时间范围 从"/>
+                                                <p:calendar id="txtStartDate" 
+                                                            value="#{ctrlCAR0003.vm.startDate}"
+                                                            placeholder="开始日期"
+                                                            disabled="#{ctrlCAR0003.vm.shiJianFanWei!='custom'}"
+                                                            mask="true" styleClass="tct"
+                                                            pattern="#{bizConfig.dateFormat}"
+                                                            required="true"
+                                                            requiredMessage="#{ctrlCAR0003.isRequiredMessage('开始日期')}"
+                                                            size="12"
+                                                            converterMessage="#{ctrlCAR0003.dateUnvalidMessage('开始日期')}"
+                                                            locale="#{bizConfig.locale}">
+                                                </p:calendar>
+                                                <p:outputLabel value="到"/>
+                                                <p:calendar id="txtEndDate" value="#{ctrlCAR0003.vm.endDate}"
+                                                            placeholder="结束日期"
+                                                            disabled="#{ctrlCAR0003.vm.shiJianFanWei!='custom'}"
+                                                            mask="true" styleClass="tct"
+                                                            pattern="#{bizConfig.dateFormat}"
+                                                            required="true"
+                                                            requiredMessage="#{ctrlCAR0003.isRequiredMessage('结束日期')}"
+                                                            size="12"
+                                                            converterMessage="#{ctrlCAR0003.dateUnvalidMessage('结束日期')}"
+                                                            locale="#{bizConfig.locale}">
+                                                </p:calendar>
+                                                <p:selectOneMenu id="shiJianFanWei" 
+                                                                 value="#{ctrlCAR0003.vm.shiJianFanWei}" 
+                                                                 style="width:125px">
+                                                    <p:ajax listener="#{ctrlCAR0003.changeRiQi}" process="@this" update="@this txtStartDate txtEndDate"/>
+                                                    <f:selectItem itemLabel="今天" itemValue="today" />
+                                                    <f:selectItem itemLabel="本周" itemValue="thisWeek" />
+                                                    <f:selectItem itemLabel="本月" itemValue="thisMonth" />
+                                                    <f:selectItem itemLabel="本季度" itemValue="thisSeason" />
+                                                    <f:selectItem itemLabel="自定义" itemValue="custom" />
+                                                </p:selectOneMenu>
+                                                刷新按钮
+                                                <p:commandButton value="刷新" process="@this canShu" actionListener="#{ctrlCAR0003.shuaXinSiJiTongJi}" 
+                                                                 resetValues="true" oncomplete="PF('wvSiJiTongJiList').clearFilters(); PAGE_COM.buttonShortCutKeyInvoke('frmMain:btnValidationPanel');"
+                                                                 update="siJiTongJi,   frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                                            </h:panelGrid>
+                                            <p:outputPanel id="pnlInputArea1" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                                                <p:outputPanel id="siJiTongJi" styleClass="Container100 Responsive100 pngDetails">
+                                                    <p:dataTable value="#{ctrlCAR0003.vm.siJiTongJiList}" var="siJi" cellSeparator="5"
+                                                                 widgetVar="wvSiJiTongJiList"
+                                                                 rows="10"
+                                                                 paginator="true"
+                                                                 paginatorAlwaysVisible="false"
+                                                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                                                 emptyMessage="没有数据">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="司机统计"/>
+                                                        </f:facet>
+                                                        <p:columnGroup type="header">
+                                                            <p:row>
+                                                                <p:column headerText="车辆" sortBy="#{siJi.xiangMuId}" styleClass="wd-p-10"/>
+                                                                <p:column headerText="煤库" sortBy="#{siJi.cangKuMing}" styleClass="wd-p-10"/>
+                                                                <p:column headerText="数量" styleClass="tct wd-p-10"/>
+                                                                <p:column headerText="总金额" styleClass="tct wd-p-10"/>
+                                                            </p:row>
+                                                        </p:columnGroup>
+                                                        车辆
+                                                        <p:column styleClass="tlt">
+                                                            <h:outputText value="#{siJi.xiangMuMing}"/>
+                                                        </p:column>
+                                                        仓库名
+                                                        <p:column styleClass="tlt">
+                                                            <h:outputText value="#{siJi.cangKuMing}"/>
+                                                        </p:column>
+                                                        数量
+                                                        <p:column styleClass="trt">
+                                                            <h:outputText value="#{siJi.siJiShu}">
+                                                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                                            </h:outputText>
+                                                        </p:column>
+                                                        总价
+                                                        <p:column styleClass="trt">
+                                                            <h:outputText value="#{siJi.zongJiE}">
+                                                                <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                                            </h:outputText>
+                                                        </p:column>
+                    
+                                                    </p:dataTable>
+                                                </p:outputPanel>
+                                            </p:outputPanel>
+                                        </p:tab>-->
+                </p:tabView>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

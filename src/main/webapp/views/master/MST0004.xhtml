@@ -1,0 +1,396 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0004')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0004.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{ctrlMST0004.statusEditing or ctrlMST0004.updateMode}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0004.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvYuanGongList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{ctrlMST0004.statusEditing}">
+                        <div class="Container30 Responsive100 tct">
+                            <p class="Heading6">
+                                <h:outputText value="#{ctrlMST0004.vm.editingYuanGong.yuanGongId}"/>
+                            </p>
+                            <p:fileUpload id="fileUpload"
+                                          label="选择" uploadLabel="上传" cancelLabel="取消" styleClass="hide"
+                                          auto="true" process="@this" update="imgProfilePhoto"
+                                          fileUploadListener="#{ctrlMST0004.onFileUploaded}"
+                                          invalidSizeMessage="最大只能上传4M以内的照片"
+                                          previewWidth="50"
+                                          mode="advanced" dragDropSupport="true"
+                                          widgetVar="fileUpload"
+                                          sizeLimit="4000000" allowTypes="/(\.|\/)(jpe?g|png)$/">
+                            </p:fileUpload>
+                            <!--照片-->
+                            <p:graphicImage id="imgProfilePhoto" value="#{ctrlMST0004.vm.editingYuanGong.compressedPictureURL}" styleClass="wd-p-60" 
+                                            onclick="$('input[type=file]').click();"/>
+                            <p class="Heading6">
+                                点击添加头像
+                            </p>
+                        </div>
+                        <div class="Container70 Responsive100">
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank">
+                                <!--姓-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtXing" value="姓"/>
+                                    <p:inputText id="txtXing" value="#{ctrlMST0004.vm.editingYuanGong.xing}"
+                                                 required="true" requiredMessage="#{ctrlMST0004.isRequiredMessage('姓')}"/>
+                                </p:outputPanel>
+                                <!--名-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtMing" value="名"/>
+                                    <p:inputText id="txtMing"  value="#{ctrlMST0004.vm.editingYuanGong.ming}"
+                                                 required="true" requiredMessage="#{ctrlMST0004.isRequiredMessage('名')}"/>
+                                </p:outputPanel>
+                                <p:outputPanel>
+                                    <p:outputLabel value="昵称"/>
+                                    <p:inputText value="#{ctrlMST0004.vm.editingYuanGong.bieMing}" maxlength="24"/>
+                                </p:outputPanel>
+                                <!--性别-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="ridSex" value="性别"/>
+                                    <p:selectOneRadio id="ridSex" value="#{ctrlMST0004.vm.editingYuanGong.xingBie}"
+                                                      required="true" requiredMessage="#{ctrlMST0004.isRequiredMessage('性别')}">
+                                        <f:selectItem itemLabel="男" itemValue="1"/>
+                                        <f:selectItem itemLabel="女" itemValue="0"/>
+                                    </p:selectOneRadio>
+                                </p:outputPanel>
+                                <!--出生日期-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBirthday" value="出生日期"/>
+                                    <p:calendar id="txtBirthday"
+                                                value="#{ctrlMST0004.vm.editingYuanGong.chuShengRiQi}"
+                                                required="true"
+                                                requiredMessage="#{ctrlMST0004.isRequiredMessage('出生日期')}"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                maxlength="10"
+                                                navigator="true"
+                                                yearRange="c-100:c+0"
+                                                locale="#{bizConfig.locale}"
+                                                converterMessage="#{ctrlCAR0003.dateUnvalidMessage('出生日期')}"
+                                                mask="true"/>
+                                </p:outputPanel>
+                                <!--身份证号码-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtShenFenZheng" value="身份证号码"/>
+                                    <p:inputText id="txtShenFenZheng" value="#{ctrlMST0004.vm.editingYuanGong.shenFenZheng}" required="true"
+                                                 requiredMessage="#{ctrlMST0004.isRequiredMessage('身份证号码')}"
+                                                 maxlength="18"/>
+                                </p:outputPanel>
+                                <!--邮箱地址-->
+                                <p:outputPanel>
+                                    <p:outputLabel id="lbl_email" value="邮箱地址" for="txtEmail"/>
+                                    <p:inputText id="txtEmail" value="#{ctrlMST0004.vm.editingYuanGong.email}" maxlength="50"
+                                                 pt:msgKey="lbl_email">
+                                        <f:validator validatorId="EmailValidator"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                                <!--邮编-->
+                                <p:outputPanel>
+                                    <p:outputLabel value="邮编"/>
+                                    <p:inputMask value="#{ctrlMST0004.vm.editingYuanGong.youBian}"
+                                                 mask="999-999"/>
+                                </p:outputPanel>
+                                <!--电话号码-->
+                                <p:outputPanel>
+                                    <p:outputLabel value="电话号码"/>
+                                    <p:inputText value="#{ctrlMST0004.vm.editingYuanGong.dianHua}" maxlength="11">
+                                        <p:keyFilter regEx="/[\d]/"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+
+                                <!--住址-->
+                                <p:outputPanel>
+                                    <p:outputLabel value="住址"/>
+                                    <p:inputText value="#{ctrlMST0004.vm.editingYuanGong.zhuZhi}" maxlength="200"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlMST0004.onSaveYuanGong}"/>
+                                <p:commandButton value="职位调整" process="@this" update="diaZhiWei" resetValues="true" 
+                                                 oncomplete="PF('wvZhiWei').show();" rendered="#{ctrlMST0004.updateMode}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea, toolbar, frmMain:toolbar" actionListener="#{ctrlMST0004.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <div class="CardBigTopic">员工信息</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlMST0004.vm.yuanGongList}"
+                             var="yg"
+                             lazy="true"
+                             cellSeparator="5"
+                             widgetVar="wvYuanGongList"
+                             paginatorAlwaysVisible="false"
+                             paginator="true"
+                             rows="10"
+                             filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="员工一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="职位" styleClass="wd-p-5"/>
+                            <p:column headerText="离职" styleClass="wd-p-5"/>
+                            <p:column headerText="员工ID" styleClass="wd-p-10"/>
+                            <p:column headerText="员工名" styleClass="wd-p-6" filterBy="#{yg.xing}" filterMaxLength="15" filterMatchMode="contains"/>
+                            <p:column headerText="性别" styleClass="wd-p-5"/>
+                            <p:column headerText="出生年月" styleClass="wd-p-8"/>
+                            <!--<p:column headerText="邮箱地址" styleClass="wd-p-15" filterBy="#{yg.email}" filterMaxLength="50" filterMatchMode="contains"/>-->
+                            <p:column headerText="电话号码" styleClass="wd-p-8" filterBy="#{yg.dianHua}" filterMaxLength="50" filterMatchMode="contains"/>
+<!--                            <p:column headerText="邮编" styleClass="wd-p-8"/>
+                            <p:column headerText="住址" filterBy="#{yg.zhuZhi}" filterMaxLength="200" filterStyleClass="wd-p-90" filterMatchMode="contains"/>-->
+                            <p:column headerText="部门名" styleClass="wd-p-10"/>
+                            <p:column headerText="职能名" styleClass="wd-p-10"/>
+                            <p:column headerText="上任日期" styleClass="wd-p-8"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <!--编辑-->
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pnlInputArea, frmMain:toolbar" listener="#{ctrlMST0004.onEditYuanGong(yg)}"/>
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <!--职位-->
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" update="frmMain:diaZhiWei" listener="#{ctrlMST0004.onEditYuanGong(yg)}" oncomplete="PF('wvZhiWei').show();"/>
+                            <i class="fa fa-graduation-cap Fs18 Green"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <!--离职-->
+                    <p:column styleClass="tct">
+                        <p:commandLink process="@this"
+                                    update="frmMain:pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    actionListener="#{ctrlMST0004.liZhi(yg)}"
+                                    oncomplete="showErrorMsg();">
+                            <p:confirm header="确认" message="确定要将员工(#{yg.nameZ})设置为离职状态么？" icon="ui-icon-alert" />
+                            <i class="fa fa-trash Fs18 Red"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <!--员工ID-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{yg.yuanGongId}"/>
+                    </p:column>
+                    <!--员工名-->
+                    <p:column styleClass="tct">
+                        <h:outputText id="lblYuanGongName" value="#{yg.name}" title="#{yg.bieMing}"/>
+                        <p:tooltip for="lblYuanGongName" rendered="#{yg.hasBieMing}"/>
+                    </p:column>
+                    <!--性别-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{yg.sexName}"/>
+                    </p:column>
+                    <!--出生年月-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{yg.chuShengRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--邮箱地址-->
+<!--                    <p:column>
+                        <h:outputText value="#{yg.email}"/>
+                    </p:column>-->
+                    <!--电话号码-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{yg.formatDianHua}"/>
+                    </p:column>
+                    <!--邮编-->
+<!--                    <p:column styleClass="tct">
+                        <h:outputText value="#{yg.formatYouBian}"/>
+                    </p:column>-->
+                    <!--住址-->
+<!--                    <p:column>
+                        <h:outputText value="#{yg.zhuZhi}"/>
+                    </p:column>-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{yg.yuanGongSuoShu.buMen.buMenMing}" rendered="#{not empty yg.yuanGongSuoShu}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{yg.yuanGongSuoShu.zhiNeng.zhiWuMing}" rendered="#{not empty yg.yuanGongSuoShu}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{yg.yuanGongSuoShu.pk.shangRenRq}" rendered="#{not empty yg.yuanGongSuoShu}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:dialog widgetVar="wvZhiWei" modal="true" closeOnEscape="true" width="800" height="500"
+              id="diaZhiWei" resizable="false" responsive="true"
+              closable="true" dynamic="true" fitViewport="true" minWidth="600" header="职位调整">
+        <p:ajax event="close" listener="#{ctrlMST0004.onCloseSuoShuDialog}" process="@this" resetValues="true"
+                oncomplete="PF('wvZhiWei').hide();"
+                immediate="true" update="pnlInputAreaDialog, msgShuSuo"/>
+
+        <div class="Card Container100 Responsive100 ui-fluid">
+            <div class="CardBigTopic">#{ctrlMST0004.vm.editingYuanGong.nameZ}</div>
+            <div class="SeparatorFull"></div>
+            <!--编集域-->
+            <p:outputPanel id="pnlInputAreaDialog">
+                <p:panelGrid columns="2" columnClasses="wd-p-50,wd-p-50" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:outputPanel>
+                        <p:outputLabel value="所属部门"/>
+                        <p:selectOneMenu value="#{ctrlMST0004.vm.editingSuoShu.buMen}" converter="BuMenConverter">
+                            <f:selectItems value="#{ctrlMST0004.vm.buMenList}" 
+                                           var="bm" itemValue="#{bm}"  itemLabel="#{bm.buMenMing}"/>
+                        </p:selectOneMenu>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:outputLabel value="职能"/>
+                        <p:selectOneMenu value="#{ctrlMST0004.vm.editingSuoShu.zhiNeng}" converter="ZhiNengConverter">
+                            <f:selectItems value="#{ctrlMST0004.vm.zhiNengList}"
+                                           var="zn" itemValue="#{zn}"  itemLabel="#{zn.zhiWuMing}"/>
+                        </p:selectOneMenu>
+                    </p:outputPanel>
+                </p:panelGrid>
+                <p:panelGrid columns="3" columnClasses="wd-p-30,wd-p-30,wd-p-40" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:outputPanel>
+                        <p:outputLabel value="上任时间"/>
+                        <p:calendar value="#{ctrlMST0004.vm.editingSuoShu.pk.shangRenRq}"
+                                    required="true" requiredMessage="#{ctrlMST0004.isRequiredMessage('上任时间')}"
+                                    pattern="#{bizConfig.dateFormat}" maxlength="10" mask="true" size="10"/>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:outputLabel value="卸任时间"/>
+                        <p:calendar id="txtXieRenRq" value="#{ctrlMST0004.vm.editingSuoShu.xieRenRq}"
+                                    required="true" requiredMessage="#{ctrlMST0004.isRequiredMessage('卸任时间')}"
+                                    pattern="#{bizConfig.dateFormat}" maxlength="10" mask="true" size="10"
+                                    disabled="#{ctrlMST0004.vm.editingSuoShu.zaiZhi}"/>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:outputLabel value="在任/卸任"/>
+                        <p:selectOneRadio value="#{ctrlMST0004.vm.editingSuoShu.zaiZhiZt}" styleClass="Fs12">
+                            <p:ajax process="@this" update="txtXieRenRq" />
+                            <f:selectItem itemLabel="在任" itemValue="1" />
+                            <f:selectItem itemLabel="卸任" itemValue="0" />
+                        </p:selectOneRadio>
+                    </p:outputPanel>
+                </p:panelGrid>
+            </p:outputPanel>
+            <!--按钮区域-->
+            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank Container40">
+                <p:commandButton value="保存" process="@this, pnlInputAreaDialog" update="pnlInputAreaDialog, msgShuSuo, dtSuoShu" actionListener="#{ctrlMST0004.onSaveSuoShu}"/>
+                <p:commandButton value="取消" styleClass="RedButton"
+                                 actionListener="#{ctrlMST0004.onCloseSuoShuDialog}" process="@this" resetValues="true"
+                                 oncomplete="PF('wvZhiWei').hide();"
+                                 immediate="true" update="pnlInputAreaDialog, msgShuSuo"/>
+            </p:panelGrid>
+            <p:outputPanel styleClass="Container60">
+                <p:messages id="msgShuSuo" showSummary="false" showDetail="true"/>
+            </p:outputPanel>
+
+            <div class="EmptyBox10"></div>
+            <p:dataTable id="dtSuoShu" value="#{ctrlMST0004.vm.suoShuList}" var="ss" emptyMessage="无数据">
+                <f:facet name="head">
+                    <h:outputText value="职员所属一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="删除" styleClass="wd-p-10"/>
+                        <p:column headerText="编辑" styleClass="wd-p-10"/>
+                        <p:column headerText="部门名" styleClass="wd-p-20"/>
+                        <p:column headerText="职位名" styleClass="wd-p-20"/>
+                        <p:column headerText="上任时间" styleClass="wd-p-15"/>
+                        <p:column headerText="卸任时间" styleClass="wd-p-15"/>
+                        <p:column headerText="在职状态"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tct">
+                    <p:commandLink rendered="#{ss.zaiZhi}">
+                        <p:ajax process="@this" resetValues="true"
+                                oncomplete="showErrorMsg();"
+                                update="frmMain:pnlInputAreaDialog, frmMain:dtSuoShu, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                listener="#{ctrlMST0004.onDeleteSuoShu(ss)}"/>
+                        <i class="fa fa-trash Fs18 Red"></i>
+                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                    </p:commandLink>
+                </p:column>
+                <p:column styleClass="tct">
+                    <p:commandLink rendered="#{ss.zaiZhi}">
+                        <p:ajax process="@this" resetValues="true" 
+                                update="frmMain:pnlInputAreaDialog" listener="#{ctrlMST0004.onEditSuoShu(ss)}"/>
+                        <i class="fa fa-pencil Fs18 Blue"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--部门名-->
+                <p:column styleClass="tct">
+                    <h:outputText value="#{ss.buMen.buMenMing}" />
+                </p:column>
+                <!--职位名-->
+                <p:column styleClass="tct">
+                    <h:outputText value="#{ss.zhiNeng.zhiWuMing}" />
+                </p:column>
+                <!--上任时间-->
+                <p:column styleClass="tct">
+                    <h:outputText value="#{ss.pk.shangRenRq}">
+                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                    </h:outputText>
+                </p:column>
+                <!--卸任时间-->
+                <p:column styleClass="tct">
+                    <h:outputText value="#{ss.xieRenRq}">
+                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                    </h:outputText>
+                </p:column>
+                <!--在任卸任状态-->
+                <p:column styleClass="tct">
+                    <h:outputText value="在任" rendered="#{ss.zaiZhi}" styleClass="Blue"/>
+                    <h:outputText value="卸任" rendered="#{not ss.zaiZhi}" styleClass="Red"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+
+    </p:dialog>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--物资基本信息-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container50 Responsive100">
+            <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Responsive100">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0001')}"/>
+                </h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+
+                <div class="Container100 Responsive100 ui-fluid NoIndent">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank">
+                        <!--新建-->
+                        <p:commandButton value="#{msg.button_new}" process="@this" update="pnlInputArea"
+                                         actionListener="#{ctrlMST0001.onNewButtonClick}"
+                                         disabled="#{ctrlMST0001.statusEditing}"/>
+                        <!--取消-->
+                        <p:commandButton value="#{msg.button_cancel}" process="@this" 
+                                         update="pnlInputArea" styleClass="Responsive100 BlueButton"
+                                         disabled="#{ctrlMST0001.statusInit}"
+                                         actionListener="#{ctrlMST0001.onCancelButtonClick}"/>
+                    </p:panelGrid>
+                </div>
+
+                <p:panelGrid id="pngInputArea" columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-20,wd-p-80">
+                    <!--品类ID-->
+<!--                    <p:outputLabel value="#{msg.pin_lei_id}"/>
+                    <p:outputLabel value="#{ctrlMST0001.insertMode ? '新建' : ctrlMST0001.vm.editingPinLei.pinLeiId}" styleClass="Red"/>-->
+                    <!--品类区分-->
+                    <p:outputLabel value="区分" for="btnPinleiQuFen"/>
+                    <p:selectOneButton id="btnPinleiQuFen" value="#{ctrlMST0001.vm.editingPinLei.pinLeiQf}"
+                                       disabled="#{not ctrlMST0001.statusEditing}">
+                        <f:selectItem itemValue="W" itemLabel="#{msg.wu_pin}"/>
+                        <f:selectItem itemValue="L" itemLabel="#{msg.lei_bie}"/>
+                        <!--<f:selectItem itemValue="J" itemLabel="#{msg.wu_pin_and_lei_bie}"/>-->
+                    </p:selectOneButton>
+                    <!--品类名-->
+                    <p:outputLabel value="名称" for="txtPinLeiName"/>
+                    <p:inputText id="txtPinLeiName" value="#{ctrlMST0001.vm.editingPinLei.pinLeiMing}" styleClass="wd-p-97" 
+                                 disabled="#{ctrlMST0001.statusInit}"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage(msg.pin_lei_ming)}"
+                                 maxlength="30">
+                    </p:inputText>
+                    <!--品类别名-->
+                    <p:outputLabel value="别名" for="txtPinleiBieMing"/>
+                    <p:inputText id="txtPinleiBieMing" value="#{ctrlMST0001.vm.editingPinLei.pinLeiBieMing}" styleClass="wd-p-97"
+                                 disabled="#{not ctrlMST0001.statusEditing}"
+                                 maxlength="30">
+                    </p:inputText>
+                </p:panelGrid>
+                <!--保存并继续-->
+                <p:commandButton value="#{msg.button_save_and_continue}"
+                                 actionListener="#{ctrlMST0001.onSavePinLei}"
+                                 styleClass="Fright GreenButton"
+                                 process="@this, pngInputArea"
+                                 oncomplete="showErrorMsg();"
+                                 update="@this, pngInputArea, dtPinLei, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                 disabled="#{not ctrlMST0001.statusEditing}"/>
+            </p:outputPanel>
+            <div class="EmptyBox10"></div>
+            <p:outputPanel id="pnlGuanXiTree" styleClass="Card pnlInputArea Responsive100">
+                <!--标题-->
+                <h1 class="CardBigTopic">所属关系</h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <!--树更新时的遮挡层-->
+<!--                <p:blockUI block="pnlGuanXiTree" trigger="btnOpenLevel">
+                    <p:graphicImage name="images/loadingRedia.gif"/>
+                </p:blockUI>-->
+                <!--展开层级-->
+<!--                <h:panelGrid columns="2">
+                    <p:outputLabel value="#{msg.open_level}" for="btnPinleiQuFen"/>
+                    <p:selectOneButton id="btnOpenLevel" converter="javax.faces.Integer" value="#{ctrlMST0001.vm.openLevel}">
+                        <p:ajax process="@this" update="treePinLeiGuanXi" listener="#{ctrlMST0001.onChangeLevel}"/>
+                        <f:selectItem itemLabel="1层"  itemValue="1"/>
+                        <f:selectItem itemLabel="3层"  itemValue="3"/>
+                        <f:selectItem itemLabel="5层"  itemValue="5"/>
+                        <f:selectItem itemLabel="10层" itemValue="10"/>
+                        <f:selectItem itemLabel="全部" itemValue="9999"/>
+                    </p:selectOneButton>
+                </h:panelGrid>-->
+
+                <p:treeTable id="treePinLeiGuanXi" value="#{ctrlMST0001.guanXiTree}"
+                             skipChildren="true" scrollable="true" scrollHeight="42W4"
+                             var="pinGX" nodeVar="node" styleClass="Responsive100" selectionMode="single">
+                    <p:ajax event="expand" listener="#{ctrlMST0001.onTreeNodeExpand}" process="@this" update="@this"/>
+                    <p:ajax event="collapse" process="@this" update="@this"/>
+                    <!--<p:ajax event="select" listener="#{ctrlMST0001.onTreeNodeSelected}" process="@this" update="@this"/>-->
+                    <!--品类别名-->
+                    <p:column headerText="#{msg.pin_lei_ming}">
+                        <h:outputText value="#{pinGX.pinLei.pinLeiMing}"/>
+                    </p:column>
+                    <!--品类区分-->
+                    <p:column headerText="#{msg.pin_lei_qu_fen}" styleClass="tct wd-p-20">
+                        <h:outputText value="#{pinGX.pinLei.pinLeiQfE.name}"/>
+                    </p:column>
+                    <!--是否显示金额-->
+                    <p:column headerText="是否显示金额" styleClass="tct wd-p-20">
+                        <p:selectBooleanCheckbox value="#{pinGX.pinLei.xianShiJinE}"
+                                                 rendered="#{pinGX.jieDianId ne 'GL0000000001'}">
+                            <p:ajax listener="#{ctrlMST0001.changeXianShiJinEFlag(pinGX)}"
+                                    process="@this"
+                                    update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    oncomplete="showErrorMsg();"/>
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+<!--                    <p:column headerText="修改所属关系" styleClass="tct wd-p-20">
+                        添加节点
+                        <p:commandLink rendered="#{not pinGX.pinLei.wupin}">
+                            <p:ajax process="@this" listener="#{ctrlMST0001.onAddTreeNode(pinGX,node)}" 
+                                    update="@(.pnlAddNode)" immediate="true"/>
+                            <i class="fa fa-pencil Fs16 Blue"></i>
+                        </p:commandLink>
+                    </p:column>-->
+                    <p:column headerText="删除所属关系" styleClass="tct wd-p-20">
+                        <p:commandLink process="@this"
+                                       actionListener="#{ctrlMST0001.deletePinLeiNode(node)}"
+                                       update="frmMain:treePinLeiGuanXi, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                       oncomplete="showErrorMsg();"
+                                       immediate="true"
+                                       rendered="#{pinGX.jieDianId ne 'GL0000000001'}">
+                            <i class="fa fa-close Red"/>
+                            <p:confirm header="删除" message="确定要删除吗?请注意:删除关系后将删除中的所有子关系,且无法恢复!!!" icon="ui-icon-alert" />
+                        </p:commandLink>
+                    </p:column>
+                </p:treeTable>
+            </p:outputPanel>
+        </div>
+        <div class="Container50  Responsive100">
+            <p:outputPanel id="pnlAddNode" styleClass="Card pnlInputArea Responsive100 pnlAddNode" style="min-height: 735px;">
+                <!--标题-->
+                <h1 class="CardBigTopic">#{msg.detail_area}</h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="digAddNode Container60 Responsive100">
+                    <p:toolbar rendered="#{ctrlMST0001.hasSelectedTreeNode}">
+                        <f:facet name="left">
+                            <p:commandButton value="关闭"
+                                             process="@this" update="pnlAddNode"
+                                             actionListener="#{ctrlMST0001.onNodeEditClose}"/>
+                        </f:facet>
+                    </p:toolbar>
+                    <p:messages showSummary="false" showDetail="true"  />
+                    <p:tree id="treeGuanXi" value="#{ctrlMST0001.targetRootTree}" var="pinGX" nodeVar="node"
+                            rendered="#{ctrlMST0001.hasSelectedTreeNode}"
+                            skipChildren="true" highlight="true"
+                            selectionMode="single"
+                            orientation="horizontal">
+                        <p:ajax event="select" process="@this" update="@this" listener="#{ctrlMST0001.onNodeSelect}" rendered="false" />
+                        <p:treeNode styleClass="SoftRedBack">
+                            <p:commandLink process="@this" actionListener="#{ctrlMST0001.onDeleteNode(node)}" update="@(.pnlAddNode)" immediate="true"
+                                           rendered="#{node.parent != null}">
+                                <i class="fa fa-close Red"/>
+                                <p:confirm header="删除" message="确定要删除吗?请注意:删除关系后将删除中的所有子关系,且无法恢复!!!" icon="ui-icon-alert" />
+                            </p:commandLink>
+                            <h:outputText value="#{pinGX.pinLei.pinLeiMing}" />
+                        </p:treeNode>
+                    </p:tree>
+                </p:outputPanel>
+                <p:outputPanel styleClass="#{ctrlMST0001.hasSelectedTreeNode ? 'Container40' : 'Container100'} Responsive100">
+                    <!--品类信息一览-->
+                    <p:dataTable value="#{ctrlMST0001.vm.pinLeiDetails}" var="pinLei" lazy="true"
+                                 paginator="true" rows="20"
+                                 filterDelay="500" filteredValue="#{ctrlMST0001.vm.filteredPinlei}"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 id="dtPinLei" widgetVar="dtPinLei"
+                                 emptyMessage="No Data">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column styleClass="tct wd-p-5" headerText="编辑"/>
+                                <p:column styleClass="tct wd-p-20" headerText="#{msg.pin_lei_ID}"/>
+                                <p:column styleClass="tct wd-p-40" headerText="#{msg.pin_lei_ming}"
+                                          filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                                <p:column styleClass="tct wd-p-5" headerText="删除" rendered="#{not ctrlMST0001.hasSelectedTreeNode}"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column styleClass="tct">
+                            <!--编辑-->
+                            <p:commandLink rendered="#{ctrlMST0001.hasSelectedTreeNode}">
+                                <p:ajax process="@this" update="@(.digAddNode, .fsDetail)" listener="#{ctrlMST0001.onSelectElementTrans2TargetNode(pinLei)}"/>
+                                <i class="fa fa-arrow-circle-o-left Fs18 Orange"></i>
+                            </p:commandLink>
+                            <!--编辑品类-->
+                            <p:commandLink process="@this" rendered="#{not ctrlMST0001.hasSelectedTreeNode}">
+                                <p:ajax process="@this" update="@(.pnlInputArea)" listener="#{ctrlMST0001.onEditPinLei(pinLei)}"/>
+                                <i class="fa fa-pencil Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                        <!--品类别名-->
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{pinLei.pinLeiId}"/>
+                        </p:column>
+                        <!--品类名称-->
+                        <p:column>
+                            <h:outputText value="#{pinLei.pinLeiMing}"/>
+                        </p:column>
+                        <!--删除-->
+                        <p:column styleClass="tct" rendered="#{not ctrlMST0001.hasSelectedTreeNode}">
+                            <p:commandLink process="@this">
+                                <p:ajax process="@this" listener="#{ctrlMST0001.onDeletePinLei(pinLei)}"
+                                        oncomplete="showErrorMsg();"
+                                        update="frmMain:dtPinLei, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                                <p:confirm header="确定" message="确定要删除吗?" icon="ui-icon-alert"/>
+                                <i class="fa fa-trash Fs18 Red"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                    <div class="EmptyBox10"></div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </div>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+    </p:outputPanel>
+</ui:composition>

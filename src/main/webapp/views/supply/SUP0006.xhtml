@@ -1,0 +1,312 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+                xmlns:f="http://xmlns.jcp.org/jsf/core" 
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+                xmlns:pe="http://primefaces.org/ui/extensions" 
+                xmlns:h="http://xmlns.jcp.org/jsf/html" 
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <!--采购支付计划-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('SUP', 'SUP0006')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:commandButton value="创建采购支付计划" process="@this" rendered="#{empty ctrlSUP0006.vm.editingZhiFu}"
+                                     update="pnlInputArea" actionListener="#{ctrlSUP0006.createZhiFuJiHua}"/>
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlSUP0006.vm.editingZhiFu}">
+<!--                        <div class="Container50 Responsive100">
+
+                        </div>-->
+                        <div class="Container100 Responsive100">
+                            <p:dataTable var="heTong"
+                                         value="#{ctrlSUP0006.vm.editingZhiFu.heTongList}"
+                                         rendered="#{not empty ctrlSUP0006.vm.editingZhiFu.heTongList}"
+                                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                         rows="10"
+                                         paginatorAlwaysVisible="false"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                                <f:facet name="header">
+                                    关联采购采购合同
+                                </f:facet>
+                                <p:columnGroup type="header" >
+                                    <p:row>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                        <p:column headerText="合同名称" styleClass="wd-p-15"/>
+                                        <p:column headerText="#{msg.gong_ying_shang}" styleClass="wd-p-10"/>
+                                        <p:column headerText="总价" styleClass="wd-p-8"/>
+                                        <p:column headerText="预付款" styleClass="wd-p-8"/>
+                                        <p:column headerText="供应商负责人" styleClass="wd-p-5"/>
+                                        <p:column headerText="合同创建人" styleClass="wd-p-5"/>
+                                        <p:column headerText="创建时间" styleClass="wd-p-10"/>
+                                        <p:column headerText="备注" styleClass="wd-p-10"/>
+                                    </p:row>
+                                </p:columnGroup> 
+                                <p:column styleClass="tct">
+                                    <p:commandLink update="frmMain:pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                   actionListener="#{ctrlSUP0006.deleteHeTongFromZhiFu(heTong)}"
+                                                   oncomplete="showErrorMsg();"
+                                                   process="@this">
+                                        <i class="fa fa-trash Fs18 Red"/>
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{heTong.heGongMingCheng}"/>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{heTong.gongYingShang.gongSiMing}"/>
+                                </p:column>
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{heTong.zongJia}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column styleClass="trt">
+                                    <h:outputText value="#{heTong.yuFuKuan}">
+                                        <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{heTong.yeWuYuan}"/>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{heTong.insUserInfo.nameZ}"/>
+                                </p:column>
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{heTong.insDate}">
+                                        <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{heTong.beiZhu}"/>
+                                </p:column>
+                            </p:dataTable>
+                            
+                            <p:outputPanel id="zhifumingxiTable">
+                                <div class="EmptyBox5"></div>
+                                <p:dataTable var="zhiFuMingXi"
+                                             value="#{ctrlSUP0006.vm.editingZhiFu.mingXiList}"
+                                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                             rows="10"
+                                             paginatorAlwaysVisible="false"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                                    <f:facet name="header">
+                                        支付计划
+                                    </f:facet>
+                                    <p:columnGroup type="header" >
+                                        <p:row>
+                                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                                            <p:column headerText="拆分" styleClass="wd-p-5"/>
+                                            <p:column headerText="预计支付款" styleClass="wd-p-8"/>
+                                            <p:column headerText="预计支付日" styleClass="wd-p-8"/>
+                                            <p:column headerText="是否预付款" styleClass="wd-p-5"/>
+                                            <p:column headerText="备注" styleClass="wd-p-10"/>
+                                        </p:row>
+                                    </p:columnGroup> 
+                                    <p:column styleClass="tct">
+                                        <p:commandLink update="frmMain:zhifumingxiTable, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       actionListener="#{ctrlSUP0006.deleteZhiFuMingXi(zhiFuMingXi)}"
+                                                       disabled="#{ctrlSUP0006.vm.editingZhiFu.mingXiList.size() eq 1}"
+                                                       oncomplete="showErrorMsg();"
+                                                       process="frmMain:zhifumingxiTable">
+                                            <i class="fa fa-trash Fs18 Red"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--拆分-->
+                                    <p:column styleClass="tct">
+                                        <p:commandLink update="frmMain:zhifumingxiTable, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                       actionListener="#{ctrlSUP0006.chaiFenZhiFuMingXi(zhiFuMingXi)}"
+                                                       oncomplete="showErrorMsg();"
+                                                       process="frmMain:zhifumingxiTable">
+                                            <i class="fa fa-plus Fs18 Blue"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--预计支付款-->
+                                    <p:column styleClass="trt">
+                                        <p:inputNumber id="zongJia" value="#{zhiFuMingXi.jiHuaZhiFu}"
+                                                       styleClass="trt-inputNumber"
+                                                       maxValue="999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                                                       required="true" requiredMessage="#{ctrlSUP0006.isRequiredMessage('预计支付款')}" 
+                                                       decimalPlaces="2">
+                                        </p:inputNumber>
+                                    </p:column>
+                                    <!--预计支付日-->
+                                    <p:column styleClass="tct">
+                                        <p:calendar value="#{zhiFuMingXi.jiHuaZhiFuRi}"
+                                                    readonlyInput="true" pages="3"
+                                                    mask="true" styleClass="tct"
+                                                    pattern="#{bizConfig.dateFormat}"
+                                                    required="true" size="12"
+                                                    requiredMessage="#{ctrlBIZ0001.isRequiredMessage('预计支付日')}"
+                                                    converterMessage="#{ctrlBIZ0001.dateUnvalidMessage('预计支付日')}"
+                                                    locale="#{bizConfig.locale}">
+                                        </p:calendar>
+                                    </p:column>
+                                    <!--是否预付款-->
+                                    <p:column styleClass="tct">
+                                        <p:selectBooleanCheckbox value="#{zhiFuMingXi.yuFu}"/>
+                                    </p:column>
+                                    <!--备注-->
+                                    <p:column styleClass="tct">
+                                        <p:inputTextarea autoResize="true" rows="1" value="#{zhiFuMingXi.beiZhu}" placeholder="备注"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlSUP0006.onSaveHeTong}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea" actionListener="#{ctrlSUP0006.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+                    
+                    <div class="EmptyBox5"></div>
+                    
+                    <p:outputPanel>
+                        <p:dataTable var="heTong"
+                                     value="#{ctrlSUP0006.vm.wuZhiFuHeTongList}"
+                                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                     rows="10"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                            <f:facet name="header">
+                                无支付计划采购合同一览
+                            </f:facet>
+                            <p:columnGroup type="header" >
+                                <p:row>
+                                    <p:column headerText="添加至采购合同" styleClass="wd-p-10"/>
+                                    <p:column headerText="合同名称" styleClass="wd-p-15"/>
+                                    <p:column headerText="#{msg.gong_ying_shang}" styleClass="wd-p-10"/>
+                                    <p:column headerText="总价" styleClass="wd-p-8"/>
+                                    <p:column headerText="预付款" styleClass="wd-p-8"/>
+                                    <p:column headerText="供应商负责人" styleClass="wd-p-5"/>
+                                    <p:column headerText="合同创建人" styleClass="wd-p-5"/>
+                                    <p:column headerText="创建时间" styleClass="wd-p-10"/>
+                                    <p:column headerText="备注" styleClass="wd-p-10"/>
+                                </p:row>
+                            </p:columnGroup> 
+                            <p:column styleClass="tct">
+                                <p:commandLink value="添加"
+                                               oncomplete="showErrorMsg();"
+                                               update="frmMain:pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               actionListener="#{ctrlSUP0006.addHeTongToZhiFu(heTong)}"
+                                               process="@this"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{heTong.heGongMingCheng}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{heTong.gongYingShang.gongSiMing}"/>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{heTong.zongJia}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{heTong.yuFuKuan}">
+                                    <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{heTong.yeWuYuan}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{heTong.insUserInfo.nameZ}"/>
+                            </p:column>
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{heTong.insDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{heTong.beiZhu}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <div class="CardBigTopic">采购支付计划一览</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable var="zhiFu"
+                             value="#{ctrlSUP0006.vm.zhiFuList}" 
+                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                             rows="10"
+                             paginatorAlwaysVisible="false"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                    <p:columnGroup type="header" >
+                        <p:row>
+                            <p:column headerText="查看详情" styleClass="wd-p-5"/>
+                            <p:column headerText="采购支付计划编号" styleClass="wd-p-10"/>
+                            <p:column headerText="计划支付" styleClass="wd-p-8"/>
+                            <p:column headerText="实际支付" styleClass="wd-p-8"/>
+                            <p:column headerText="计划创建人" styleClass="wd-p-5"/>
+                            <p:column headerText="创建时间" styleClass="wd-p-10"/>
+                            <p:column headerText="状态" styleClass="wd-p-10"/>
+                            <p:column headerText="备注" styleClass="wd-p-10"/>
+                        </p:row>
+                    </p:columnGroup> 
+                    <p:column styleClass="tct">
+                        <p:commandLink update="frmMain:pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                       actionListener="#{ctrlSUP0006.chaKanZhiFu(zhiFu)}"
+                                       process="@this">
+                            <i class="fa fa-search Fs18 Blue"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{zhiFu.caiGouZhiFuId}"/>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{zhiFu.jiHuaZhiFu}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{zhiFu.shiJiZhiFu}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{zhiFu.insUserInfo.nameZ}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{zhiFu.insDate}">
+                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{zhiFu.zhuangTai.message}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{zhiFu.beiZhu}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <!--确认画面-->
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

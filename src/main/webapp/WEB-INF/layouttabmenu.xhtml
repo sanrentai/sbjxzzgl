@@ -1,0 +1,94 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:po="http://primefaces.org/olympos">
+
+    <ul id="layout-tab-menu">
+        <li>
+            <!--<p:commandLink actionListener="#{ctrlMaster.setMoKuaiId('wuzi')}" process="@this" update="menu">-->
+            <a href="#" onclick="switchToWuZiMoKuai()" class="active" rel="layout-menu">
+                <i class="fa fa-cubes"></i>
+                <span class="layout-tab-menu-link-text"><span></span>物资管理模块</span>
+            </a>
+            <!--</p:commandLink>-->
+            <p:remoteCommand name="switchToWuZiMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('wuzi')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <li>
+            <a href="#" onclick="switchToCheLiangMoKuai()" rel="layout-menu">
+                <!--<p:commandLink actionListener="#{ctrlMaster.setMoKuaiId('cheliang')}" process="@this" update="menu">-->
+                    <i class="fa fa-car"></i>
+                    <span class="layout-tab-menu-link-text"><span></span>车辆管理模块</span>
+                <!--</p:commandLink>-->
+            </a>
+            <p:remoteCommand name="switchToCheLiangMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('cheliang')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <li>
+            <a href="#" onclick="switchToYongYouMoKuai()" rel="layout-menu">
+                <i class="myicon-oil" >
+                    <!--<p:graphicImage value="../resources/icon/oil.svg"/>-->
+                    <!--<svg style="width: 27px;height: 27px;margin-top: 12px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4256"><path d="M0 996.97952c0-30.99984 13.191552-44.79112 50.049304-52.32472L76 939.35056 80 506.253944C83.87576 86.609024 84.504944 72.481238 100.257456 51.390206 136.55224 2.795107 151.58752 0 376.69216 0 576.05464 0 582.35384 0.490019 608.08136 18 667.86736 58.689999 667.55264 57.33142 672 293.944904l4 212.813696 45.92888 9.1594c51.5444 10.279264 81.62848 33.299288 93.12504 71.2584 4.13504 13.652984 9.67736 64.89504 12.31632 113.87124C833.8656 821.59496 848.53456 864 883.73968 864 928.09016 864 944 805.01144 944 640.573744l0-109.242416-36.6504-35.665664c-65.76896-64.00192-70.87744-74.903912-75.52648-161.179816l-4.17696-77.514152-58.3812-60.208792c-48.09104-49.596496-57.93032-64.10936-55.82304-82.338608 1.84832-15.990168 8.88744-24.34312 25.3716-30.107488 22.02504-7.701961 26.60424-4.112424 132.49496 103.859976 60.32472 61.510712 119.70384 128.939784 131.9536 149.842384l22.27224 38.004728-3.4956 213.988056c-3.99104 244.310208-10.28328 278.985088-58.27176 321.119488-33.01528 28.98784-57.78288 36.58224-98.01368 30.05368C787.53728 928.4924 760.25672 869.89096 746.09064 684.1368 740.23864 607.402568 739.17472 603.985568 718.93608 596.92168 672.74968 580.801248 672 583.533832 672 768c0 128.0512 2.40064 169.14008 10 171.15936 56.72016 15.07144 57.9236 16.0864 60.46 50.98912L744.92 1024 372.46 1024 0 1024 0 996.97952zM521.37008 722.760096C539.56392 706.29488 540.12968 681.823064 522.76008 662.629928 510.92168 649.548584 495.1108 648 373.39 648 257.94608 648 235.03672 650.01192 222.62992 661.239904 204.43608 677.70512 203.87032 702.176936 221.23992 721.370072 233.07832 734.451416 248.8892 736 370.61 736 486.05392 736 508.96328 733.98808 521.37008 722.760096zm56-344C590.38328 366.983344 592 351.36052 592 237.390024 592 129.390144 589.91992 106.961368 578.76008 94.629928 566.62992 81.2262 549.33056 80 372.36008 80 232.79112 80 176.53656 82.663464 169.6 89.6c-13.49008 13.490088-13.49008 279.309912 0 292.8 6.93272 6.932696 62.88224 9.6 201.37008 9.6 167.21744 0 193.6432-1.69512 206.4-13.239904z" p-id="4257"></path></svg>-->
+                </i>
+                <span class="layout-tab-menu-link-text"><span></span>用油管理模块</span>
+            </a>
+            <p:remoteCommand name="switchToYongYouMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('yongyou')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <li>
+            <a href="#" onclick="switchToYongMeiMoKuai()" rel="layout-menu">
+                <i class="myicon-coal"></i>
+                <span class="layout-tab-menu-link-text"><span></span>用煤管理模块</span>
+            </a>
+            <p:remoteCommand name="switchToYongMeiMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('yongmei')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <li>
+            <a href="#" onclick="switchToWeiWaiMoKuai()" rel="layout-menu">
+                <i class="icon-add20"></i>
+                <span class="layout-tab-menu-link-text"><span></span>委外加工管理模块</span>
+            </a>
+            <p:remoteCommand name="switchToWeiWaiMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('weiwai')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <li>
+            <a href="#" onclick="switchToNengYuanMoKuai()" rel="layout-menu">
+                <!--<p:commandLink actionListener="#{ctrlMaster.setMoKuaiId('nengyuan')}" process="@this" update="menu">-->
+                    <i class="icon-power142"></i>
+                    <span class="layout-tab-menu-link-text"><span></span>能源管理模块</span>
+                <!--</p:commandLink>-->
+            </a>
+            <p:remoteCommand name="switchToNengYuanMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('nengyuan')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <li>
+            <a href="#" onclick="switchToSettingsMoKuai()" rel="layout-menu">
+                <!--<p:commandLink actionListener="#{ctrlMaster.setMoKuaiId('settings')}" process="@this" update="menu">-->
+                    <i class="icon-settings47"></i>
+                    <span class="layout-tab-menu-link-text"><span></span>系统维护模块</span>
+                <!--</p:commandLink>-->
+            </a>
+            <p:remoteCommand name="switchToSettingsMoKuai" actionListener="#{ctrlMaster.setMoKuaiId('settings')}" process="@this" update="menu" immediate="true"/>
+        </li>
+        
+        <!--<li><a href="#" rel="layout-settings"> <i class="icon-settings47"></i> <span class="layout-tab-menu-link-text"><span></span>系统维护</span> </a></li>-->
+        <!--        
+                <li><a href="#" rel="layout-messages"> <i class="icon-chat66"></i> <span class="layout-tab-menu-link-text"><span></span> Messages</span> </a></li>
+                <li><a href="#" rel="layout-settings"> <i class="icon-settings47"></i> <span class="layout-tab-menu-link-text"><span></span> Settings</span> </a></li>
+                <li><a href="#" rel="layout-tasks"> <i class="icon-travel17"></i> <span class="layout-tab-menu-link-text"><span></span> Tasks</span> </a></li>
+                <li><a href="#" rel="layout-users"> <i class="icon-male238"></i> <span class="layout-tab-menu-link-text"><span></span> Active Users</span> </a></li>
+                <li><a href="#" rel="layout-files"> <i class="icon-arrow66"></i> <span class="layout-tab-menu-link-text"><span></span> Cloud Files</span> </a></li>
+                <li><a href="#" rel="layout-todos"> <i class="icon-clipboard88"></i> <span class="layout-tab-menu-link-text"><span></span> My TODOs</span> </a></li>
+                <li><a href="#" rel="layout-events"> <i class="icon-event9"></i> <span class="layout-tab-menu-link-text"><span></span> My Events</span> </a></li>
+                <li><a href="#" rel="layout-addressbook"> <i class="icon-emails5"></i> <span class="layout-tab-menu-link-text"><span></span> My Address Book</span> </a></li>
+        -->
+    </ul>
+    
+    <ui:include src="layoutmenu.xhtml"/>
+    
+    <!--<ui:include src="othertabsubmenus.xhtml"/>-->
+
+</ui:composition>

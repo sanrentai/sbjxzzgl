@@ -1,0 +1,308 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('WAI', 'WAI0001')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent toolbar">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建委外加工" process="@this" actionListener="#{ctrlWAI0001.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{not empty ctrlWAI0001.vm.editingWeiWaiJiaGong}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlWAI0001.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvWeiWaiJiaGongList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlWAI0001.vm.editingWeiWaiJiaGong}">
+                        <div class="Container100 Responsive100">
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank">
+                                <!--采购项-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="caiGouJiHuaMingXi" value="采购项"/>
+                                    <p:selectOneMenu id="caiGouJiHuaMingXi" value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.caiGouJiHuaMingXiId}"
+                                                     autoWidth="false" filter="true" filterMatchMode="contains"
+                                                     required="true"
+                                                     requiredMessage="#{ctrlWAI0001.isRequiredMessage('采购项')}">
+                                        <p:ajax process="@this" update="yuJiJiaGongShuLiang bom" listener="#{ctrlWAI0001.changeCaiGouJiHuaMingXi}"/>
+                                        <f:selectItem itemLabel="请选择采购项" itemValue="" />
+                                        <f:selectItems value="#{ctrlWAI0001.vm.jiHuaMingXiList}" var="jiHuaMingXi"
+                                                       itemLabel="#{jiHuaMingXi.title}" itemValue="#{jiHuaMingXi.jiHuaMingXiId}" />
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <!--预计加工数量-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="yuJiJiaGongShuLiang" value="预计加工数量"/>
+                                    <p:inputText id="yuJiJiaGongShuLiang" value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.yuJiShuLiang}"
+                                                 required="true"
+                                                 requiredMessage="#{ctrlWAI0001.isRequiredMessage('预计加工数量')}">
+                                        <p:ajax process="@this" update="wuLiaoList" listener="#{ctrlWAI0001.updateWuLiaoList}"/>
+                                        <p:keyFilter regEx="/[\d\.]/"/>
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                                <!--加工商-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="companyName" value="加工商"/>
+                                    <p:selectOneMenu id="companyName" value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.gongYingShangId}"
+                                                     required="true"
+                                                     requiredMessage="#{ctrlWAI0001.isRequiredMessage('加工商')}">
+                                        <f:selectItems value="#{ctrlWAI0001.vm.gongYingShangList}" var="gongYingShang"
+                                                       itemLabel="#{gongYingShang.gongSiMing}" itemValue="#{gongYingShang.gongYingShangId}" />
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <!--BOM-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="bom" value="bom"/>
+                                    <p:selectOneMenu id="bom" value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.bomId}"
+                                                     required="true"
+                                                     requiredMessage="#{ctrlWAI0001.isRequiredMessage('bom')}">
+                                        <p:ajax process="@this" update="wuLiaoList" listener="#{ctrlWAI0001.changeBom()}"/>
+                                        <f:selectItem itemLabel="请选择BOM" itemValue=""/>
+                                        <f:selectItems value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.shiti.bomList}" var="bom"
+                                                           itemLabel="#{bom.wuLiaoMing}" itemValue="#{bom.wuLiaoId}" />
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <!--预计开始加工日-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="yuJiKaiShiJiaGongRi" value="预计开始加工日"/>
+                                    <p:calendar id="yuJiKaiShiJiaGongRi"
+                                                value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.yuJiKaiShiRi}"
+                                                readonlyInput="true"
+                                                placeholder="预计开始加工日"
+                                                mask="true"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                size="12"
+                                                navigator="true"
+                                                required="true"
+                                                requiredMessage="#{ctrlWAI0001.isRequiredMessage('预计开始加工日')}"
+                                                converterMessage="#{ctrlWAI0001.dateUnvalidMessage('预计开始加工日')}"
+                                                title="必须输入预计开始加工日"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:outputPanel>
+                                <!--预计到货日-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="yuJiDaoHuoRi" value="预计到货日"/>
+                                    <p:calendar id="yuJiDaoHuoRi"
+                                                value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.yuJiDaoHuoRi}"
+                                                readonlyInput="true"
+                                                placeholder="预计到货日"
+                                                mask="true"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                size="12"
+                                                navigator="true"
+                                                required="true"
+                                                requiredMessage="#{ctrlWAI0001.isRequiredMessage('预计到货日')}"
+                                                converterMessage="#{ctrlWAI0001.dateUnvalidMessage('预计到货日')}"
+                                                title="必须输入预计到货日"
+                                                locale="#{bizConfig.locale}">
+                                    </p:calendar>
+                                </p:outputPanel>
+                                <!--仓库-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="cangku" value="仓库"/>
+                                    <p:selectOneMenu value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.cangKuId}"
+                                                     id="cangku"
+                                                     required="true"
+                                                     requiredMessage="#{ctrlWAI0001.isRequiredMessage(msg.cang_ku)}">
+                                        <f:selectItems value="#{ctrlWAI0001.vm.cangKuList}"
+                                                       var="cangKu"
+                                                       itemLabel="#{cangKu.cangKuMing}"
+                                                       itemValue="#{cangKu.cangKuId}"/>
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <!--审批人-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="shenPiRen" value="审批人"/>
+                                    <p:selectOneMenu id="shenPiRen" value="#{ctrlWAI0001.vm.shenPiRenId}"
+                                                     filter="true" filterMatchMode="contains"
+                                                     required="true"
+                                                     requiredMessage="#{ctrlWAI0001.isRequiredMessage('审批人')}">
+                                        <f:selectItems value="#{ctrlWAI0001.vm.yuanGongList}" var="yuanGong"
+                                                       itemLabel="#{yuanGong.nameZ}" itemValue="#{yuanGong.yuanGongId}" />
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                                <!--备注-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBeiZhu" value="备注"/>
+                                    <p:inputText id="txtBeiZhu" value="#{ctrlWAI0001.vm.editingWeiWaiJiaGong.beiZhu}" maxlength="400"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:outputPanel id="wuLiaoList">
+                                <p:dataTable value="#{ctrlWAI0001.vm.wuLiaoQingDanList}"
+                                             id="wvWuLiaoList"
+                                             var="qingDan" 
+                                             cellSeparator="5"
+                                             widgetVar="wvWuLiaoList"
+                                             rendered="#{not empty ctrlWAI0001.vm.wuLiaoQingDanList}"
+                                             emptyMessage="没有数据">
+                                    <f:facet name="header">
+                                        <h:outputText value="物料清单"/>
+                                    </f:facet>
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="我方供货" styleClass="wd-p-5"/>
+                                            <p:column headerText="原材料" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="成品与原料比例" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="需要数量" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="申请数量" styleClass="tct wd-p-10"/>
+                                            <p:column headerText="申请理由" styleClass="tct wd-p-10"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <!--删除-->
+                                    <!--                                <p:column styleClass="tct">
+                                                                        <p:commandLink actionListener="#{ctrlWAI0001.onDeleteWuLiaoQingDan(qingDan)}"
+                                                                                       process="@this" 
+                                                                                       update="@(.wuLiao), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                                                       oncomplete="showErrorMsg();">
+                                                                            <i class="fa fa-trash Fs18 Red"></i>
+                                                                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                                                        </p:commandLink>
+                                                                    </p:column>-->
+
+                                    <!--我方供货-->
+                                    <p:column styleClass="tct">
+                                        <p:selectBooleanCheckbox value="#{qingDan.selected}"/>
+                                    </p:column>
+                                    <!--物资-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText value="#{qingDan.shiti.wuZiMiaoShu}" />  
+                                    </p:column>
+                                    <!--成品与原料比例-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="1:#{qingDan.shuLiang.stripTrailingZeros().toPlainString()}" />
+                                    </p:column>
+                                    <!--需要数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{qingDan.shuLiang * ctrlWAI0001.vm.editingWeiWaiJiaGong.yuJiShuLiang}" >
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--申请数量-->
+                                    <p:column styleClass="tct">
+                                        <p:inputText value="#{qingDan.shenQingShuLiang}">
+                                            <p:keyFilter regEx="/[\d\.]/"/>
+                                        </p:inputText>
+                                    </p:column>
+                                    <!--申请理由-->
+                                    <p:column styleClass="tct">
+                                        <p:inputText value="#{qingDan.tmpBeiZhu}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="提交" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlWAI0001.onSaveWeiWaiJiaGong()}"/>
+                                <p:commandButton value="取消" process="@this"
+                                                 update="pnlInputArea, toolbar" actionListener="#{ctrlWAI0001.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+                        <p:dataTable value="#{ctrlWAI0001.vm.weiWaiJiaGongList}"
+                                     var="item"
+                                     widgetVar="wvWeiWaiJiaGongList"
+                                     rows="10"
+                                     filterDelay="500"
+                                     paginator="true"
+                                     paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="没有数据">
+                            <f:facet name="header">
+                                <h:outputText value="委外加工任务一览"/>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="编辑" styleClass="wd-p-5"/>
+                                    <p:column headerText="删除" styleClass="wd-p-5"/>
+                                    <p:column headerText="加工商" styleClass="tct wd-p-15"/>
+                                    <p:column headerText="加工物资" styleClass="tct wd-p-15"/>
+                                    <p:column headerText="加工数量" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="BOM" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="预计时间" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="创建时间" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="备注" styleClass="tct wd-p-10"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlWAI0001.onEditWeiWaiJiaGong(item)}"
+                                               process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                    <i class="fa fa-pencil Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{ctrlWAI0001.onDeleteWeiWaiJiaGong(item)}"
+                                               rendered="#{not systemConfig.mainDb}"
+                                               process="@this" 
+                                               update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               oncomplete="showErrorMsg();">
+                                    <i class="fa fa-trash Fs18 Red"></i>
+                                    <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                            <!--加工商-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.gongYingShang.gongSiMing}"/>
+                            </p:column>
+                            <!--加工物资-->
+                            <p:column styleClass="tlt">
+                                <h:outputText id="guigegaiyao" value="#{item.shiti.wuZiMiaoShu}"/>
+                                <p:tooltip position="top" for="guigegaiyao" value="#{item.shiti.nameWithShuXingSummary}"/>
+                            </p:column>
+                            <!--加工数量-->
+                            <p:column styleClass="trt">
+                                <h:outputText value="#{item.yuJiShuLiang}">
+                                    <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--BOM-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.bom.wuLiaoMing}"/>
+                            </p:column>
+                            <!--预计时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.yuJiDaoHuoRi}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--创建时间-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{item.insDate}">
+                                    <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                                </h:outputText>
+                            </p:column>
+                            <!--备注-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{item.beiZhu}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

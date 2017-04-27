@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--支付登记-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Responsive100">
+            <!--标题-->
+            <h1 class="CardBigTopic Purple">
+                <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0015')}"/>
+            </h1>
+            <!--无敌分割线-->
+            <div class="SeparatorFull"></div>
+
+            <p:panelGrid id="pngInputArea" columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+                
+                <p:outputPanel>
+                    <p:outputLabel value="金额" for="jine"/>
+                    <p:inputText id="jine" value="#{ctrlMST0015.vm.entity.amount}" styleClass="wd-p-97"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage('金额')}">
+                    </p:inputText>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel>
+                    <p:outputLabel value="类型" for="leixing"/>
+                    <p:inputText id="leixing" value="#{ctrlMST0015.vm.entity.typeBill}" styleClass="wd-p-97"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage('类型')}">
+                    </p:inputText>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel>
+                    
+                    <p:outputLabel value="项目号" for="xiangmuhao"/>
+                    <p:inputText id="xiangmuhao" value="#{ctrlMST0015.vm.entity.xiangMuHao}" styleClass="wd-p-97"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage('项目号')}">
+                    </p:inputText>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel>
+                    
+                    <p:outputLabel value="实际支付日" for="shijizhifuri"/>
+                    <p:calendar id="shijizhifuri" value="#{ctrlMST0015.vm.entity.happenedOn}"
+                                    readonlyInput="true" pages="1"
+                                    placeholder="实际支付日"
+                                    mask="true" styleClass="tct"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    required="true" size="12"
+                                    requiredMessage="#{ctrlMST0015.isRequiredMessage('实际支付日')}"
+                                    converterMessage="#{ctrlMST0015.dateUnvalidMessage('实际支付日')}"
+                                    locale="#{bizConfig.locale}">
+                        </p:calendar>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel>
+                    
+                    <p:outputLabel value="是否代付" for="shifoudaifu"/>
+                    <p:selectBooleanCheckbox id="shifoudaifu" value="#{ctrlMST0015.vm.entity.daiFu}">
+                        <p:ajax process="@this" update="@(.shifoudaifu)"/>
+                    </p:selectBooleanCheckbox>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel styleClass="shifoudaifu">
+                        <p:outputPanel rendered="#{not ctrlMST0015.vm.entity.daiFu}">
+                    <p:outputLabel value="支出账户" for="zhichuzhanghu" styleClass="shifoudaifu"/>
+                    <p:inputText id="zhichuzhanghu" value="#{ctrlMST0015.vm.entity.accountCodePayment}" styleClass="wd-p-97 shifoudaifu"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage('支出账户')}">
+                    </p:inputText>
+                    </p:outputPanel>
+                    
+                        <p:outputPanel rendered="#{ctrlMST0015.vm.entity.daiFu}">
+                    <p:outputLabel value="代付人" for="daifuren" styleClass="shifoudaifu"/>
+                    <p:inputText id="daifuren" value="#{ctrlMST0015.vm.entity.payerName}" styleClass="wd-p-97 shifoudaifu"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage('代付人')}">
+                    </p:inputText>
+                    </p:outputPanel>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel>
+                    <p:outputLabel value="是否有发票"/>
+                    <p:selectBooleanCheckbox value="#{ctrlMST0015.vm.entity.faPiao}">
+                        <p:ajax process="@this" update="@(.fapiaokaijufangshi)"/>
+                    </p:selectBooleanCheckbox>
+                    </p:outputPanel>
+                    
+                    <p:outputPanel styleClass="fapiaokaijufangshi">
+                    <p:outputLabel value="发票开具方式" for="fapiaokaijufangshi" rendered="#{ctrlMST0015.vm.entity.faPiao}" styleClass="fapiaokaijufangshi"/>
+                    <p:inputText id="fapiaokaijufangshi" value="#{ctrlMST0015.vm.entity.faPiaoKaiJuFangShi}"
+                                 styleClass="wd-p-97 fapiaokaijufangshi" rendered="#{ctrlMST0015.vm.entity.faPiao}"
+                                 required="true" requiredMessage="#{ctrlMST0001.isRequiredMessage('发票开具方式')}">
+                    </p:inputText>
+                    </p:outputPanel>
+                </p:panelGrid>
+
+            <!--保存并继续-->
+            <p:commandButton value="保存"
+                             actionListener="#{ctrlMST0015.onSave}"
+                             styleClass="Fright GreenButton"
+                             process="@this, pngInputArea"
+                             oncomplete="showErrorMsg();"
+                             update="@this, pngInputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+        </p:outputPanel>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+    </p:outputPanel>
+</ui:composition>

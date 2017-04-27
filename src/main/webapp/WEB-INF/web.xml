@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <!--产品阶段-->
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+        <!--<param-value>Production</param-value>-->
+    </context-param>
+    <!--皮肤-->
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>olympos</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/primefaces-olympos.taglib.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
+    <!--    <filter>
+        <filter-name>Character Encoding Filter</filter-name>
+        <filter-class>org.primefaces.olympos.filter.CharacterEncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Character Encoding Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>-->
+    <!--WEB 字体-->
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--右键点击菜单-->
+    <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--Primefaces日历时间时区修正-->
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--文件上传路径-->
+    <context-param>
+        <param-name>uploadDirectory</param-name>
+        <!--真实环境-->
+        <!--<param-value>/var/webapps/material/upload</param-value>-->
+        <!--Mac 本地测试环境-->
+        <!--<param-value>/Users/andysilver/Pictures/material/upload</param-value>-->
+        <!--<param-value>/Users/dataotao/Pictures/material/upload</param-value>-->
+        <!--Window-->
+        <param-value>C:\tmp\material\upload</param-value>
+        <!--<param-value>D:\tmp\material\upload</param-value>-->
+    </context-param>
+    <!--文件上传配置-->
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>native</param-value>
+    </context-param>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
+    <!--JSF基础配置-->
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <!--日志配置-->
+    <servlet>
+        <servlet-name>Log4jConfig</servlet-name>
+        <servlet-class>cn.tst.sbjxzzglxt.common.Log4jConfig</servlet-class>
+        <!--开发环境-->
+        <init-param>
+            <param-name>log4j.dev.config</param-name>
+            <param-value>/WEB-INF/log4j.dev.properties</param-value>
+        </init-param>
+        <!--运行环境-->
+        <init-param>
+            <param-name>log4j.prod.config</param-name>
+            <param-value>/WEB-INF/log4j.prod.properties</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!--Session 超时时间 默认1个小时-->
+    <session-config>
+        <session-timeout>
+            60
+        </session-timeout>
+        <cookie-config>
+            <name>sb_coding</name>
+        </cookie-config>
+    </session-config>
+    <!--开始画面-->
+    <welcome-file-list>
+        <welcome-file>views/index.xhtml</welcome-file>
+        <welcome-file>login.xhtml</welcome-file>
+    </welcome-file-list>
+    <!--错误页面配置-->
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/views/login.xhtml?faces-redirect=true</location>
+    </error-page>
+    <!--找不到页面-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/views/error/404.xhtml</location>
+    </error-page>
+    <!--没有访问权限-->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/views/error/403.xhtml</location>
+    </error-page>
+    <!--服务器异常-->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/views/error/500.xhtml</location>
+    </error-page>
+    <!--Mine  编译时防止Web字体警告 START-->
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/font-sfnt</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot?#iefix</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exosemibold</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exobolditalic</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exomedium</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exoregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#fontawesomeregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <!--Mine  编译时防止Web字体警告 END-->
+</web-app>

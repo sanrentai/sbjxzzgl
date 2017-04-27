@@ -1,0 +1,206 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--采购计划一览-->
+    <p:outputPanel id="pnlInputArea" styleClass="Card ui-fluid pnlInputArea Responsive100">
+        <!--标题-->
+        <h1 class="CardBigTopic Purple">
+            <h:outputText value="#{ctrlMaster.createPageTitle('SUP', 'SUP0002')}"/>
+        </h1>
+        <!--无敌分割线-->
+        <div class="SeparatorFull"></div>
+
+        <p:outputPanel styleClass="Container70 Responsive100">
+            <p:dataTable id="jiHuaYiLan"
+                         var="jiHua"
+                         value="#{ctrlSUP0002.vm.caiGouJiHuaYiLan}"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                         styleClass="tct jiHuaYiLan">
+                <p:columnGroup type="header" >
+                    <p:row>
+                        <p:column headerText="归集项" styleClass="wd-p-10"/>
+                        <p:column headerText="规格概要" styleClass="wd-p-10"/>
+                        <p:column headerText="采购数量" styleClass="wd-p-5"/>
+                        <p:column headerText="计划到货日期" styleClass="wd-p-5"/>
+                        <p:column headerText="备注" styleClass="wd-p-8"/>
+                        <p:column headerText="选择" styleClass="wd-p-3"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--归集项-->
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{ctrlSUP0002.getXiangMuByCaiGouJiHua(jiHua)}"/>
+                </p:column>
+                <!--规格概要-->
+                <p:column styleClass="tlt">
+                    <h:outputText id="guigegaiyao" value="#{jiHua.shiti.wuZiMiaoShu}"/>
+                    <p:tooltip position="top" for="guigegaiyao" value="#{jiHua.shiti.nameWithShuXingSummary}"/>
+                </p:column>
+                <!--采购数量-->
+                <p:column styleClass="trt">
+                    <h:outputText value="#{jiHua.jiHuanGouManShu}">
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </h:outputText>
+                    <h:outputLabel value=" #{jiHua.shiti.wuZiDanWei.danWeiMing}" />
+                </p:column>
+                <!--计划到货日期-->
+                <p:column>
+                    <h:outputText value="#{jiHua.daoHuoRiQi}" >
+                        <f:convertDateTime pattern="#{bizConfig.dateFormat}" />   
+                    </h:outputText>
+                </p:column>
+                <p:column styleClass="tlt">
+<!--                    <ui:repeat value="#{jiHua.gouMaiShenQingList}"
+                               var="shenqing">
+                        申请备注
+                        <h:outputText value="#{shenqing.fenPeiMingXi.jiHua.beiZhu}；"
+                                      rendered="#{not empty shenqing.fenPeiMingXi.jiHua.beiZhu}"/>
+                        分配备注
+                        <h:outputText value="#{shenqing.fenPeiMingXi.beiZhu}；"
+                                      rendered="#{not empty shenqing.fenPeiMingXi.beiZhu}"/>
+                    </ui:repeat>-->
+                    <!--申请备注-->
+                    <h:outputText value="#{jiHua.wuZiShenQingBeiZhu}；" rendered="#{not empty jiHua.wuZiShenQingBeiZhu}"/>
+                    <!--分配备注-->
+                    <h:outputText value="#{jiHua.wuZiFenPeiBeiZhu}；" rendered="#{not empty jiHua.wuZiFenPeiBeiZhu}"/>
+                    <!--采购计划备注-->
+                    <h:outputText value="#{jiHua.beiZhu}"/>
+                </p:column>
+                <p:column styleClass="tct">
+                    <p:selectBooleanCheckbox value="#{jiHua.selected}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+
+        <p:outputPanel styleClass="Container30 Responsive100">
+            <p:dataTable id="caiGouYuanYiLan"
+                         var="caiGouYuan"
+                         value="#{ctrlSUP0002.vm.caiGouYuanList}"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                         rowKey="#{caiGouYuan.yuanGongId}" 
+                         selection="#{ctrlSUP0002.vm.selectedCaiGouYuan}"
+                         styleClass="tct">
+                <p:columnGroup type="header" >
+                    <p:row>
+                        <p:column headerText="采购员" styleClass="wd-p-5"/>
+                        <p:column headerText="当前采购任务数" styleClass="wd-p-5"/>
+                        <!--<p:column headerText="当前状态" styleClass="wd-p-5"/>-->
+                    </p:row>
+                </p:columnGroup>
+                <p:column  selectionMode="single" styleClass="tlt">
+                    <h:outputText value="#{caiGouYuan.nameZ}"/>
+                </p:column>
+                <p:column styleClass="trt">
+                    <h:outputText value="#{caiGouYuan.dangQianRenWuShu}"/>
+                </p:column>
+                <!--                <p:column styleClass="tct">
+                                    T.B.D
+                                </p:column>-->
+            </p:dataTable>
+        </p:outputPanel>
+
+        <p:outputPanel styleClass="trt Container100 Responsive100">
+            <p:commandButton value="分配"
+                             style="width: 100px!important"
+                             actionListener="#{ctrlSUP0002.fenPei()}"
+                             oncomplete="showErrorMsg();"
+                             process="@this, caiGouYuanYiLan, jiHuaYiLan"
+                             update="@this, jiHuaYiLan, editingJiHua, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+        </p:outputPanel>
+    </p:outputPanel>
+
+    <p:outputPanel id="editingJiHua" styleClass="editingJiHua">
+        <p:outputPanel rendered="#{not empty ctrlSUP0002.vm.editingJiHuaMap}" styleClass="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <div class="CardBizTopic">已分配采购计划</div>
+                <div class="SeparatorFull"></div>
+                <ui:repeat value="#{ctrlSUP0002.vm.editingJiHuaList}" var="entry">
+                    <p:dataTable value="#{entry.value}"
+                                 var="jiHua"
+                                 styleClass="tct">
+                        <p:columnGroup type="header" >
+                            <p:row>
+                                <p:column headerText="#{entry.key.nameZ}" colspan="5" styleClass="tlt"/>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="规格概要" styleClass="wd-p-15"/>
+                                <p:column headerText="采购数量" styleClass="wd-p-5"/>
+                                <p:column headerText="计划到货日期" styleClass="wd-p-5"/>
+                                <p:column headerText="备注" styleClass="wd-p-8"/>
+                                <p:column headerText="撤销" styleClass="wd-p-3"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--规格概要-->
+                        <p:column styleClass="tlt">
+                            <h:outputText id="guigegaiyao" value="#{jiHua.shiti.wuZiMiaoShu}"/>
+                            <p:tooltip position="top" for="guigegaiyao" value="#{jiHua.shiti.nameWithShuXingSummary}"/>
+                        </p:column>
+                        <!--采购数量-->
+                        <p:column styleClass="trt">
+                            <h:outputText value="#{jiHua.jiHuanGouManShu}">
+                                <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                            </h:outputText>
+                            <h:outputLabel value=" #{jiHua.shiti.wuZiDanWei.danWeiMing}" />
+                        </p:column>
+                        <!--计划到货日期-->
+                        <p:column>
+                            <h:outputText value="#{jiHua.daoHuoRiQi}" >
+                                <f:convertDateTime pattern="#{bizConfig.dateFormat}" />   
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <!--申请备注-->
+                            <h:outputText value="#{jiHua.wuZiShenQingBeiZhu}；" rendered="#{not empty jiHua.wuZiShenQingBeiZhu}"/>
+                            <!--分配备注-->
+                            <h:outputText value="#{jiHua.wuZiFenPeiBeiZhu}；" rendered="#{not empty jiHua.wuZiFenPeiBeiZhu}"/>
+                            <!--采购计划备注-->
+                            <h:outputText value="#{jiHua.beiZhu}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlSUP0002.cheXiaoJiHua(entry.key, jiHua)}"
+                                           process="@this"
+                                           update="@(.editingJiHua, .jiHuaYiLan)">
+                                <i class="fa fa-reply Fs18 Red"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </ui:repeat>
+
+                <p:outputPanel styleClass="trt">
+                    <!--提交-->
+                    <p:commandButton value="提交"
+                                     process="editingJiHua" 
+                                     update="frmMain:editingJiHua, frmMain:pnlInputArea, frmMain:ovPnlValidation,
+                                     frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                     icon="fa fa-check"
+                                     oncomplete="showErrorMsg();"
+                                     style="width: 100px!important"
+                                     styleClass="White"
+                                     actionListener="#{ctrlSUP0002.tiJiao}">
+                    </p:commandButton>
+                    <!--撤销-->
+                    <p:commandButton value="撤销"
+                                     process="@this" 
+                                     update="frmMain:editingJiHua, frmMain:pnlInputArea, frmMain:ovPnlValidation,
+                                     frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                     icon="fa fa-trash"
+                                     oncomplete="showErrorMsg();"
+                                     styleClass="White RedButton"
+                                     style="width: 100px!important"
+                                     actionListener="#{ctrlSUP0002.cheXiao}">
+                        <p:confirm header="是否确定撤销" message="撤销后所有编辑中的数据都将丢失"/>
+                    </p:commandButton>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+
+
+    <!--确认画面-->
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MET', 'MET0001')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+
+                <p:outputPanel styleClass="Container100 Responsive100">
+                    <p:panelGrid columns="5"
+                                 layout="grid"
+                                 styleClass="ui-panelgrid-blank"
+                                 columnClasses="wd-p-10,wd-p-20,wd-p-10,wd-p-20,wd-p-15,wd-p-10"
+                                 id="setting">
+                        <p:outputLabel for="biaoLeiXing" styleClass="fr" value="抄表类型" />
+                        <p:selectOneMenu id="biaoLeiXing" autoWidth="false"
+                                         styleClass="biaoLeiXing"
+                                         value="#{ctrlMET0001.vm.biaoLeiXing}">
+                            <f:selectItems value="#{ctrlSystemConfig.vm.getLeiBieByFenLeiMing('NengYuanBiaoLeiXing')}"
+                                           var="xiangMu" itemLabel="#{xiangMu.xiangMuMing}" itemValue="#{xiangMu.serialId}"/>
+                        </p:selectOneMenu>
+                        <!--                        <p:outputLabel value="抄表月份" for="yueFen" styleClass="fr" style="float: right"/>
+                                                <p:selectOneMenu value="#{ctrlMET0001.vm.yueFen}" id="yueFen">
+                                                    <f:selectItems value="#{ctrlMET0001.vm.yueFenList}" var="yueFen" itemLabel="#{yueFen}" itemValue="#{yueFen}" />
+                                                </p:selectOneMenu>-->
+                        <p:outputLabel value="抄表日期" for="chaoBiaoRiQi" styleClass="fr" style="float: right"/>
+                        <p:calendar id="chaoBiaoRiQi" value="#{ctrlMET0001.vm.chaoBiaoRiQi}"
+                                                readonlyInput="true"
+                                                placeholder="抄表日期"
+                                                mask="true" styleClass="tct wd-f-100"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlMET0001.isRequiredMessage('抄表日期')}"
+                                                converterMessage="#{ctrlMET0001.dateUnvalidMessage('抄表日期')}"
+                                                title="抄表日期"
+                                                locale="#{bizConfig.locale}" />
+
+                        <p:commandButton id="xinJianChaoBiao"
+                                         value="新建抄表"
+                                         styleClass="xinJianChaoBiao"
+                                         actionListener="#{ctrlMET0001.xinJianChaoBiao()}"
+                                         disabled="#{not empty ctrlMET0001.vm.chaoBiaoList}"
+                                         process="setting, @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, chao_biao_panel, @this"/>
+                        <p:outputLabel />
+                    </p:panelGrid>
+                </p:outputPanel>
+                <p:outputPanel id="chao_biao_panel" styleClass="Container100 Responsive100 chao_biao_panel">
+
+                    <p:panel header="新建抄表：#{ctrlMET0001.vm.yueFen}"
+                             toggleable="true"
+                             rendered="#{not empty ctrlMET0001.vm.chaoBiaoList}"
+                             styleClass="clearfix"
+                             toggleSpeed="500">
+                        <f:facet name="actions">
+                            <p:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+                                           actionListener="#{ctrlMET0001.quXiao}"
+                                           process="@this"
+                                           update="@(.chao_biao_panel, .biaoLeiXing, .xinJianChaoBiao)">
+                                <i class="fa fa-close Red" />
+                            </p:commandLink>
+                        </f:facet>
+
+                        <p:outputPanel id="dtChaoBiao" styleClass="Container99 Responsive100 dtChaoBiao" >
+                            <!--明细编辑行-->
+                            <p:dataTable id="dtshenqingmingxi" value="#{ctrlMET0001.vm.chaoBiaoList}"
+                                         rendered="#{not empty ctrlMET0001.vm.chaoBiaoList}"
+                                         style="word-break: keep-all"
+                                         var="item">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="序号" styleClass="wd-p-5"/>
+                                        <p:column headerText="换热站名称" styleClass="wd-p-10"/>
+                                        <p:column headerText="表号" styleClass="wd-p-10"/>
+                                        <p:column headerText="上次抄表日期" styleClass="wd-p-10"/>
+                                        <p:column headerText="上次表数" styleClass="wd-p-8"/>
+                                        <p:column headerText="本次表数" styleClass="wd-p-8"/>
+                                        <p:column headerText="备注" styleClass="wd-p-15"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--序号-->
+                                <p:column>
+                                    <h:outputText value="#{item.biao.jianKongDian.xuHao}"/>
+                                </p:column>
+                                <!--换热站名称-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{item.biao.jianKongDian.mingCheng}"/>
+                                </p:column>
+                                <!--表号-->
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{item.biao.biaoHao1}"/>
+                                </p:column>
+                                <!--上次抄表日期-->
+                                <p:column styleClass="tct wd-f-100">
+                                    <p:calendar id="scDate" value="#{item.scDate}"
+                                                readonlyInput="true"
+                                                placeholder="上次抄表日期"
+                                                mask="true" styleClass="tct wd-f-100"
+                                                pattern="#{bizConfig.dateFormat}"
+                                                required="true" size="12"
+                                                requiredMessage="#{ctrlMET0001.isRequiredMessage('上次抄表日期')}"
+                                                converterMessage="#{ctrlMET0001.dateUnvalidMessage('上次抄表日期')}"
+                                                title="上次抄表日期"
+                                                locale="#{bizConfig.locale}" />
+                                </p:column>
+                                <!--上次表数-->
+                                <p:column>
+                                    <p:inputText value="#{item.scShuLiang}" styleClass="trt">
+                                        <p:keyFilter regEx="/[\d\.]/"/>
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </p:inputText>
+                                </p:column>
+                                <!--本次表数-->
+                                <p:column>
+                                    <p:inputText value="#{item.bcShuLiang}" styleClass="trt">
+                                        <p:keyFilter regEx="/[\d\.]/"/>
+                                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                    </p:inputText>
+                                </p:column>
+                                <!--备注-->
+                                <p:column>
+                                    <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{item.beiZhu}" placeholder="备注"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </p:panel>
+                    <div class="EmptyBox5"></div>
+
+                    <p:panelGrid columns="5"
+                                 layout="grid"
+                                 rendered="#{not empty ctrlMET0001.vm.chaoBiaoList}"
+                                 styleClass="ui-panelgrid-blank MarTop10"
+                                 columnClasses="wd-p-30,wd-p-30,wd-p-60,wd-p-30,wd-p-30">
+                        <p:outputPanel />
+                        <p:outputPanel />
+                        <p:outputPanel />
+                        <!--提交申请按钮-->
+                        <p:commandButton value="保存"
+                                         actionListener="#{ctrlMET0001.baoCun()}"
+                                         process="@(.dtChaoBiao), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, chao_biao_panel, biaoLeiXing, xinJianChaoBiao"/>
+                    </p:panelGrid>
+                </p:outputPanel>
+
+            </div>
+        </div>
+    </p:outputPanel>
+
+</ui:composition>

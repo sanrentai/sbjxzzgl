@@ -1,0 +1,182 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0014')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0014.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,toolbar" disabled="#{not empty ctrlMST0014.vm.editingCheLiang}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0014.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvCheLiangList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlMST0014.vm.editingCheLiang}">
+                        <div class="Container100 Responsive100">
+                            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-30,wd-p-20,wd-p-20">
+                                <!--车辆名-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtGongSiMing" value="车辆名称"/>
+                                    <p:inputText id="txtGongSiMing" value="#{ctrlMST0014.vm.editingCheLiang.cheLiangMingCheng}"
+                                                 required="true" requiredMessage="#{ctrlMST0014.isRequiredMessage('车辆名称')}"/>
+                                </p:outputPanel>
+                                <!--车辆类型-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="cheLiangLeiXing" value="车辆类型"/>
+                                    <p:selectOneRadio id="cheLiangLeiXing" value="#{ctrlMST0014.vm.editingCheLiang.leiXing}"
+                                                  required="true" requiredMessage="#{ctrlMST0014.isRequiredMessage('车辆类型')}">
+                                        <p:ajax process="@this" update="lblLiCheng"/>
+                                        <f:selectItems value="#{bizConfig.cheLiangLeiXing}" var="leixing" itemLabel="#{leixing.message}" itemValue="#{leixing}" />
+                                    </p:selectOneRadio>
+                                </p:outputPanel>
+                                <!--里程-->
+                                <p:outputPanel>
+                                    <p:outputLabel id="lblLiCheng" for="txtLiCheng" value="当前#{ctrlMST0014.vm.editingCheLiang.leiXing.value eq 0 ? '里程' : '小时数'}"/>
+                                    <p:inputText id="txtLiCheng" value="#{ctrlMST0014.vm.editingCheLiang.liCheng}" styleClass="trt"
+                                                 required="true" requiredMessage="#{ctrlMST0014.isRequiredMessage('当前里程')}">
+                                        <p:keyFilter regEx="/[\d]/"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                                <!--油箱容量-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtYouXiangRongLiang" value="油箱容量"/>
+                                    <p:inputText id="txtYouXiangRongLiang" value="#{ctrlMST0014.vm.editingCheLiang.youXiangRongLiang}" styleClass="trt"
+                                                 required="true" requiredMessage="#{ctrlMST0014.isRequiredMessage('油箱容量')}">
+                                        <p:keyFilter regEx="/[\d]/"/>
+                                    </p:inputText>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-20,wd-p-20,wd-p-60">
+                                <!--使用油-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="dllShiYongYou" value="使用油"/>
+                                    <p:selectOneMenu id="dllShiYongYou" value="#{ctrlMST0014.vm.editingCheLiang.wuZiId}"
+                                                     required="true" requiredMessage="#{ctrlMST0014.isRequiredMessage('使用油')}">
+                                        <f:selectItems value="#{ctrlMST0014.vm.youList}" var="you" itemLabel="#{you.wuZiMiaoShu}" itemValue="#{you.wuZiBianHao}"/>
+                                    </p:selectOneMenu>
+                                </p:outputPanel>
+                                <!--司机-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtDianHua" value="司机"/>
+                                    <p:inputText id="txtDianHua" value="#{ctrlMST0014.vm.editingCheLiang.siJi}" maxlength="10"/>
+                                </p:outputPanel>
+                                <!--备注-->
+                                <p:outputPanel>
+                                    <p:outputLabel for="txtBeiZhu" value="备注"/>
+                                    <p:inputText id="txtBeiZhu" value="#{ctrlMST0014.vm.editingCheLiang.beiZhu}" maxlength="400"/>
+                                </p:outputPanel>
+                            </p:panelGrid>
+                            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:commandButton value="保存" process="pnlInputArea"
+                                                 oncomplete="showErrorMsg();"
+                                                 update="pnlInputArea, pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 actionListener="#{ctrlMST0014.onSaveCheLiang()}"/>
+                                <p:commandButton value="取消" process="@this" 
+                                                 update="pnlInputArea, toolbar, frmMain:toolbar" actionListener="#{ctrlMST0014.onCancelEditing}"
+                                                 styleClass="RedButton"/>
+                            </p:panelGrid>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </p:outputPanel>
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+            <div class="Card">
+                <div class="CardBigTopic">车辆信息</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlMST0014.vm.cheLiangList}" var="cheLiang" cellSeparator="5"
+                             widgetVar="wvCheLiangList"
+                             rows="10"
+                             filterDelay="500"
+                             paginator="true"
+                             paginatorAlwaysVisible="false"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="车辆一览"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                            <p:column headerText="车辆名" filterBy="#{cheLiang.cheLiangMingCheng}" filterMaxLength="20" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="车辆类型" styleClass="tct wd-p-10"/>
+                            <p:column headerText="初始里程" styleClass="tct wd-p-10"/>
+                            <p:column headerText="当前里程" styleClass="tct wd-p-10"/>
+                            <p:column headerText="使用油" styleClass="tct wd-p-10"/>
+                            <p:column headerText="司机" styleClass="tct wd-p-10"/>
+                            <p:column headerText="备注"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true" 
+                                    update="frmMain:pnlInputArea, frmMain:toolbar" listener="#{ctrlMST0014.onEditCheLiang(cheLiang)}"/>
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink>
+                            <p:ajax process="@this" resetValues="true"
+                                    oncomplete="showErrorMsg();"
+                                    update="frmMain:pnlInputArea, frmMain:toolbar, frmMain:pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                    listener="#{ctrlMST0014.onDeleteCheLiang(cheLiang)}"/>
+                            <i class="fa fa-trash Fs18 Red"></i>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                    </p:column>
+                    <!--车辆名-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.cheLiangMingCheng}"/>
+                    </p:column>
+                    <!--车辆类型-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{cheLiang.leiXing.message}"/>
+                    </p:column>
+                    <!--初始里程-->
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{cheLiang.liCheng}"/>
+                    </p:column>
+                    <!--当前里程-->
+                    <p:column styleClass="trt">
+                        <h:outputText value="#{cheLiang.dangQianLiCheng}"/>
+                    </p:column>
+                    <!--使用油-->
+                    <p:column styleClass="tct">
+                        <h:outputText id="guigegaiyao" value="#{cheLiang.shiTi.wuZiMiaoShu}"/>
+                        <p:tooltip position="top" for="guigegaiyao" value="#{cheLiang.shiTi.nameWithShuXingSummary}"/>
+                    </p:column>
+                    <!--司机-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{cheLiang.siJi}"/>
+                    </p:column>
+                    <!--备注-->
+                    <p:column>
+                        <h:outputText value="#{cheLiang.beiZhu}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:outputPanel>
+    
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>

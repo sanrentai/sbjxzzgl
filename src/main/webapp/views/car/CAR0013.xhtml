@@ -1,0 +1,185 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('CAR', 'CAR0013')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+
+                    <p:dataTable value="#{ctrlCAR0013.vm.lazyModel}"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                                 var="item"
+                                 styleClass="tct"
+                                 lazy="true"
+                                 rows="15"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="15, 30, 50">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="#{msg.shen_qing_bian_hao}" styleClass="wd-p-3"/>
+                                <p:column headerText="#{msg.shen_qing_ren}" styleClass="wd-p-5"/>
+                                <p:column headerText="#{msg.shen_qing_shi_jian}" styleClass="wd-p-4"/>
+                                <p:column headerText="审批流程名" styleClass="wd-p-4"/>
+                                <p:column headerText="#{msg.shen_pi_zhuang_tai}" styleClass="wd-p-5"/>
+                                <p:column headerText="查看明细" styleClass="wd-p-3"/>
+                                <p:column headerText="查看审批历史" styleClass="wd-p-3"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column>
+                            <h:outputText value="#{item.yongCheShenQingId}"/>
+                        </p:column>
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{item.shenQingRen.nameZ}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.insDate}" >
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{item.liuCheng.liuChengMing}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{item.zhuangTai.message}"/>
+                        </p:column>
+                        <p:column styleClass="search_button">
+                            <p:commandLink update="@(.mingXiList)"
+                                           process="@this"
+                                           oncomplete="PF('ming_xi_dialog').show()"
+                                           actionListener="#{ctrlCAR0013.selectLuLi(item)}">
+                                <i class="fa fa-search Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column styleClass="search_button">
+                            <p:commandLink update="@(.shenPiXiangXi)"
+                                           process="@this"
+                                           oncomplete="PF('shen_pi_dialog').show()"
+                                           actionListener="#{ctrlCAR0013.selectLuLi(item)}">
+                                <i class="fa fa-search Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+
+    <p:dialog header="#{msg.gai_shen_qing_ming_xi_de_shen_pi_lv_li}"
+              styleClass="wd-p-75"
+              widgetVar="shen_pi_dialog"
+              closeOnEscape="true"
+              modal="true"
+              resizable="false">
+        <p:commandLink process="@this" update="@this" type="button" onclick="$('#printDiv').jqprint()">
+            <i class="fa fa-print Blue Fs40 Fright" style="margin-top: -5px;"/>
+        </p:commandLink>
+        <p:outputPanel styleClass="shenPiXiangXi MarTop30">
+            <div id="printDiv">
+                <p:dataTable value="#{ctrlCAR0013.vm.selectedLuLi.shenPiList}"
+                             emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                             styleClass="printTable tct"
+                             var="item">
+                    <f:facet name="header">
+                        <h:outputText value="单号：#{ctrlCAR0013.vm.selectedLuLi.yongCheShenQingId}" styleClass="fl Fs20"/>
+                        <h:outputText value="用车申请审批历史单" styleClass="Fs20"/>
+                        <span class="fr Fs20">
+                            <h:outputText value="申请人：#{ctrlCAR0013.vm.selectedLuLi.insUserInfo.name}"/>
+                            <p:spacer width="20" height="1"/>
+                            申请日：<h:outputText value="#{ctrlCAR0013.vm.selectedLuLi.insDate}">
+                                <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                            </h:outputText>
+                        </span>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="#{msg.shen_pi_ji_bie}" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.shen_pi_ren}" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.shen_pi_ri}" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.shen_pi_jie_guo}" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.pi_fu_li_you}" styleClass="wd-p-5"/>
+                            <p:column headerText="#{msg.bei_zhu}" styleClass="wd-p-5"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{item.pk.shenPiJiBie}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{item.shenQingRen.nameZ}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{item.shenPiRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{item.shenPiJieGuo.message}"/>
+                    </p:column>
+                    <p:column styleClass="tlt"> 
+                        <h:outputText value="#{item.piFuLiYou}"/>
+                    </p:column>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{item.beiZhu}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+    </p:dialog>
+
+    <p:dialog header="申请明细一览"
+              styleClass="wd-p-60"
+              widgetVar="ming_xi_dialog"
+              closeOnEscape="true"
+              modal="true"
+              showEffect="fade"
+              hideEffect="fade"
+              resizable="false">
+        <p:outputPanel styleClass="tct mingXiList">
+            <p:dataTable value="#{ctrlCAR0013.vm.selectedLuLi.yongCheShenQingMingXiList}"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}"
+                         var="item">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="#{msg.shen_qing_ming_xi_bian_hao}" sortBy="#{item.shenQingMingXiId}" styleClass="wd-p-3"/>
+                        <p:column headerText="车辆分类" styleClass="wd-p-10"/>
+                        <p:column headerText="#{msg.shen_qing_shu_liang}" styleClass="wd-p-3"/>
+                        <p:column headerText="用车辆数" styleClass="wd-p-3"/>
+                        <p:column headerText="希望用车日期" styleClass="wd-p-3"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column>
+                    <h:outputText value="#{item.shenQingMingXiId}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{item.xiangXiFenLei.xiangMuMing}"/>
+                </p:column>
+                <p:column styleClass="trt">
+                    <h:outputText value="#{item.yongCheShuLiang}">
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </h:outputText>
+                     <h:outputText value="#{item.yongCheDanWei}"/>
+                </p:column>
+                <p:column styleClass="trt">
+                    <h:outputText value="#{item.liangShu}">
+                        <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                    </h:outputText>
+                     <h:outputText value="辆"/>
+                </p:column>
+                <p:column sortBy="#{item.shiYongRiQi}">
+                    <h:outputText value="#{item.shiYongRiQi}" >
+                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </p:dialog>
+</ui:composition>

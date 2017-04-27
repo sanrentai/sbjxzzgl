@@ -1,0 +1,220 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Card">
+            <!--标题-->
+            <h1 class="CardBigTopic Purple">
+                <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0006')}"/>
+            </h1>
+            <!--无敌分割线-->
+            <div class="SeparatorFull"></div>
+            <p:outputPanel id="pnlSelectArea" styleClass="Container30 Responsive100">
+                <p:panelGrid styleClass="wd-p-100">
+                    <f:facet name="header">
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="仓库一览"/>
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                    <p:row>
+                        <p:column style="padding: 0px;">
+                            <p:tree id="treeCK" value="#{ctrlINV0006.canKuTree}" var="v" selectionMode="single" selection="#{ctrlINV0006.selectedNode}"
+                                    styleClass="wd-p-100">
+                                <p:ajax event="select" process="treeCK" update="frmMain:pnlInputArea" listener="#{ctrlINV0006.onNodeSelect}"  />
+
+                                <!--根节点-->
+                                <p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                    <h:outputText value="#{v}"/>
+                                </p:treeNode>
+
+                                <!--仓库-->
+                                <p:treeNode type="T_CK" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                    <h:outputText value="#{v.cangKuMing}"/>
+                                </p:treeNode>
+
+                                <!--库房-->
+                                <p:treeNode type="T_KF" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                    <h:outputText value="#{v.kuFangMing}"/>
+                                </p:treeNode>
+
+                                <!--货位-->
+                                <p:treeNode type="T_HW">
+                                    <h:outputText value="#{v.huoWeiMiaoShu}"/>
+                                </p:treeNode>
+                            </p:tree>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:outputPanel>
+            <p:outputPanel id="pnlInputArea" styleClass="Container70 Responsive100">
+                <p:toolbar styleClass="Container100">
+                    <f:facet name="left">
+                        <p:commandButton value="新增仓库" process="@this" update="pnlInputArea" actionListener="#{ctrlINV0006.onAddTargetData('T_CK')}" 
+                                         styleClass="NavyButton" disabled="#{ctrlINV0006.statusEditing}"/>
+                        <p:commandButton value="新增库房" process="@this" update="pnlInputArea" actionListener="#{ctrlINV0006.onAddTargetData('T_KF')}" 
+                                         styleClass="AquaButton" disabled="#{ctrlINV0006.statusEditing}"/>
+                        <p:commandButton value="新增货位" process="@this" update="pnlInputArea" actionListener="#{ctrlINV0006.onAddTargetData('T_HW')}" 
+                                         styleClass="BlueButton" disabled="#{ctrlINV0006.statusEditing}"/>
+                    </f:facet>
+                </p:toolbar>
+                <div class="ui-fluid">
+                    <!--仓库详细信息-->
+                    <p:outputPanel id="pnlCangku" styleClass="Container100 Responsive100" rendered="#{ctrlINV0006.vm.editingCangKu != null}">
+                        <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30">
+                            <p:outputPanel>
+                                <p:outputLabel value="仓库ID: "/>
+                                <h:outputText value="新增仓库" rendered="#{ctrlINV0006.insertMode}" styleClass="Red" />
+                                <h:outputText value="#{ctrlINV0006.vm.editingCangKu.cangKuId}" rendered="#{ctrlINV0006.updateMode}" styleClass="Blue"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+
+                        <p:panelGrid layout="grid" columns="3" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-20,wd-p-50">
+                            <p:outputPanel>
+                                <p:outputLabel value="仓库名" for="txtCangKuMing"/>
+                                <p:inputText id="txtCangKuMing" value="#{ctrlINV0006.vm.editingCangKu.cangKuMing}"
+                                             maxlength="40"
+                                             required="true" requiredMessage="#{ctrlINV0006.isRequiredMessage('仓库名')}"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="编号" />
+                                <p:inputText value="#{ctrlINV0006.vm.editingCangKu.cangKuBianHao}" maxlength="10"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="地址" />
+                                <p:inputText value="#{ctrlINV0006.vm.editingCangKu.suoZaiDi}" maxlength="200"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <div class="EmptyBox10"></div>
+                        <p:panelGrid layout="grid" columns="5" styleClass="ui-panelgrid-blank" >
+                            <p:commandButton value="保存" process="pnlCangku" actionListener='#{ctrlINV0006.onSaveData("T_CK")}'
+                                             oncomplete="showErrorMsg();"
+                                             update="@this, pnlInputArea, frmMain:treeCK, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                            <p:commandButton value="取消" process="@this" update="pnlInputArea" styleClass="RedButton" actionListener="#{ctrlINV0006.onCancelEdit}"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+
+                    <!--库房详细信息-->
+                    <p:outputPanel id="pnlKuFang" styleClass="Container100 Responsive100" rendered="#{ctrlINV0006.vm.editingKuFang != null}">
+
+                        <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30">
+                            <p:outputPanel>
+                                <p:outputLabel value="库房ID: "/>
+                                <h:outputText value="新增库房" rendered="#{ctrlINV0006.insertMode}" styleClass="Red" />
+                                <h:outputText value="#{ctrlINV0006.vm.editingKuFang.kuFangId}" rendered="#{ctrlINV0006.updateMode}" styleClass="Blue"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+
+                        <p:panelGrid layout="grid" columns="3" styleClass="ui-panelgrid-blank" columnClasses="wd-p-20,wd-p-20,wd-p-20,wd-p-20,wd-p-20">
+                            <p:outputPanel>
+                                <p:outputLabel value="仓库"/>
+                                <p:selectOneMenu value="#{ctrlINV0006.vm.editingKuFang.suoShuCangKuId}" filter="true" disabled="#{ctrlINV0006.updateMode}">
+                                    <f:selectItems value="#{ctrlINV0006.vm.cangKuList}" var="ck" itemValue="#{ck.cangKuId}" itemLabel="#{ck.cangKuMing}"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="库房名" for="txtKuFangMing"/>
+                                <p:inputText id="txtKuFangMing" value="#{ctrlINV0006.vm.editingKuFang.kuFangMing}"
+                                             maxlength="40"
+                                             required="true" requiredMessage="#{ctrlINV0006.isRequiredMessage('库房名')}"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="库房编号" />
+                                <p:inputText value="#{ctrlINV0006.vm.editingKuFang.kuFangBianHao}" maxlength="10"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="电话" />
+                                <p:inputText value="#{ctrlINV0006.vm.editingKuFang.dianHua}" maxlength="11"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="备注" />
+                                <p:inputText value="#{ctrlINV0006.vm.editingKuFang.beiZhu}" maxlength="200"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <div class="EmptyBox10"></div>
+                        <p:panelGrid layout="grid" columns="5" styleClass="ui-panelgrid-blank" >
+                            <p:commandButton value="保存" process="pnlKuFang" actionListener='#{ctrlINV0006.onSaveData("T_KF")}'
+                                             oncomplete="showErrorMsg();"
+                                             update="@this, pnlInputArea, frmMain:treeCK, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                            <p:commandButton value="取消" process="@this" update="pnlInputArea" styleClass="RedButton" actionListener="#{ctrlINV0006.onCancelEdit}"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+
+                    <!--货位详细信息-->
+                    <p:outputPanel id="pnlHuoWei" styleClass="Container100 Responsive100" rendered="#{ctrlINV0006.vm.editingHuoWei != null}">
+
+                        <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30">
+                            <p:outputPanel>
+                                <p:outputLabel value="货位ID: "/>
+                                <h:outputText value="新增货位" rendered="#{ctrlINV0006.insertMode}" styleClass="Red" />
+                                <h:outputText value="#{ctrlINV0006.vm.editingHuoWei.huoWeiId}" rendered="#{ctrlINV0006.updateMode}" styleClass="Blue"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+
+                        <p:panelGrid layout="grid" columns="5" styleClass="ui-panelgrid-blank" columnClasses="wd-p-20,wd-p-20,wd-p-30,wd-p-15,wd-p-15">
+                            <p:outputPanel>
+                                <p:outputLabel for="ddlHuoWeiSuoShuCangKu" value="仓库"/>
+                                <p:selectOneMenu id="ddlHuoWeiSuoShuCangKu" value="#{ctrlINV0006.vm.editingHuoWei.suoShuCangKu}" filter="true" converter="CangKuConverter"
+                                                 required="true" requiredMessage="#{ctrlINV0006.isRequiredMessage('仓库')}" disabled="#{ctrlINV0006.updateMode}">
+                                    <p:ajax process="@this" update="ddlHuoWeiSuoShuKuFang"/>
+                                    <f:selectItem itemValue="#{null}" itemLabel="请选择仓库"/>
+                                    <f:selectItems value="#{ctrlINV0006.vm.cangKuList}" var="ck" itemValue="#{ck}" itemLabel="#{ck.cangKuMing}"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="库房" for="ddlHuoWeiSuoShuKuFang"/>
+                                <p:selectOneMenu id="ddlHuoWeiSuoShuKuFang" value="#{ctrlINV0006.vm.editingHuoWei.suoShuKuFangId}" filter="true"
+                                                 required="true" requiredMessage="#{ctrlINV0006.isRequiredMessage('库房')}" disabled="#{ctrlINV0006.updateMode}">
+                                    <f:selectItem itemValue="" itemLabel="请选择库房"/>
+                                    <f:selectItems value="#{ctrlINV0006.vm.editingHuoWei.suoShuCangKu.kuFangList}" 
+                                                   var="kf" itemValue="#{kf.kuFangId}" itemLabel="#{kf.kuFangMing}"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="货位描述" for="txtHuoWeiMiaoShu"/>
+                                <p:inputText id="txtHuoWeiMiaoShu" value="#{ctrlINV0006.vm.editingHuoWei.huoWeiMiaoShu}"
+                                             maxlength="40"
+                                             required="true" requiredMessage="#{ctrlINV0006.isRequiredMessage('货位描述')}"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="货位编号" />
+                                <p:inputText value="#{ctrlINV0006.vm.editingHuoWei.huoWeiBianHao}" maxlength="10"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="行号" for="txtHuoWeiHangHao"/>
+                                <p:spinner id="txtHuoWeiHangHao" value="#{ctrlINV0006.vm.editingHuoWei.hangHao}" stepFactor="1" min="0" max="999999" maxlength="6"/>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <p:outputLabel value="列号" for="txtHuoWeiLieHao"/>
+                                <p:spinner id="txtHuoWeiLieHao" value="#{ctrlINV0006.vm.editingHuoWei.lieHao}" stepFactor="1" min="0" max="999999" maxlength="6"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <div class="EmptyBox10"></div>
+                        <p:panelGrid layout="grid" columns="5" styleClass="ui-panelgrid-blank" >
+                            <p:commandButton value="保存" process="pnlHuoWei" actionListener='#{ctrlINV0006.onSaveData("T_HW")}'
+                                             oncomplete="showErrorMsg();"
+                                             update="@this, pnlInputArea, frmMain:treeCK, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                            <p:commandButton value="取消" process="@this" update="pnlInputArea" styleClass="RedButton" actionListener="#{ctrlINV0006.onCancelEdit}"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <!--仓库树点击右键菜单-->
+        <p:contextMenu for="treeCK" nodeType="T_HW">
+            <p:menuitem value="删除" icon="fa fa-trash" styleClass="Red" actionListener="#{ctrlINV0006.onDeleteNode('T_HW')}">
+                <p:confirm header="确定" message="确定要删除吗?" icon="ui-icon-alert"/>
+            </p:menuitem>
+        </p:contextMenu>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+    </p:outputPanel>
+</ui:composition>

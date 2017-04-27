@@ -1,0 +1,260 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--物资属性信息-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100">
+            <p:outputPanel styleClass="Card Container100 Responsive100">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0002')}"/>
+                </h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSelectPinLei" value="选择物品" type="button"/>
+                            <p:commandButton value="取消" process="@this" actionListener="#{ctrlMST0002.onCancelEditing}"
+                                             styleClass="RedButton"
+                                             update="pnlShuXingSelect, pnlShuXingSelectDetail"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+                <p:overlayPanel for="btnSelectPinLei" widgetVar="wvPinLeiList">                    
+                    <p:dataTable value="#{ctrlMST0002.vm.pinLeiDetails}" var="pinLei" lazy="true"
+                                 paginator="true" rows="10" styleClass="wd-f-300"
+                                 filterDelay="500" filteredValue="#{ctrlMST0002.vm.filteredPinlei}"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 id="dtPinLei" widgetVar="dtPinLei"
+                                 emptyMessage="No Data">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column styleClass="tct" headerText="#{msg.button_edit}"/>
+                                <p:column styleClass="tct wd-p-45" headerText="#{msg.pin_lei_ming}"
+                                          filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                                <p:column styleClass="tct wd-p-30" headerText="属性信息"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column styleClass="tct">
+                            <p:commandLink process="@this" actionListener="#{ctrlMST0002.onPinLeiSelect(pinLei.pinLeiId)}"
+                                           update="frmMain:pnlShuXingSelect"
+                                           oncomplete="PF('wvPinLeiList').hide();"
+                                           styleClass="lnkSelectPinLei">
+                                <i class="fa fa-pencil Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                        <!--品类名称-->
+                        <p:column>
+                            <h:outputText value="#{pinLei.pinLeiMing}"/>
+                        </p:column>
+                        <!--品类区分-->
+                        <p:column styleClass="tct no-padding ui-panelgrid-blank" style="padding: 0px!important;">
+                            <h:outputText value="无属性" rendered="#{empty pinLei.wuPinShuXingList}" styleClass="Red"/> 
+                            <p:dataTable value="#{pinLei.wuPinShuXingList}" var="sx"
+                                         rendered="#{not empty pinLei.wuPinShuXingList}" styleClass="innerTable">
+                                <p:column>
+                                    <h:outputText value="#{sx.shuXing.shuXingMing}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+                    </p:dataTable>
+                </p:overlayPanel>
+            </p:outputPanel>
+        </div>
+        <div class="Container100 Responsive100">
+            <p:outputPanel id="pnlShuXingSelect" styleClass="Container50 Responsive100">
+                <p:outputPanel styleClass="Card Container100 Responsive100" rendered="#{ctrlMST0002.statusEditing}">
+                    <!--标题-->
+                    <h1 class="CardBigTopic">属性基本信息</h1>
+                    <!--无敌分割线-->
+                    <div class="SeparatorFull"></div>
+                    <div class="Container100 Responsive100 ui-fluid">
+                        <div class="Container100 tct">
+                            <h1>
+                                <h:outputText value="#{ctrlMST0002.vm.selectedPinLei.pinLeiMing}" styleClass="Blue"/>
+                            </h1>
+                        </div>
+                        <p:panelGrid columns="2" rendered="#{not ctrlMST0002.vm.noPinLeiSelected}"
+                                     layout="grid" columnClasses="wd-p-70,wd-p-30" styleClass="ui-panelgrid-blank">
+                            <p:outputPanel>
+                                <p:outputLabel for="txtShuXingMing" value="属性名"/>
+                                <p:selectOneMenu id="txtShuXingMing" value="#{ctrlMST0002.vm.inputShuXingMing}" editable="true" styleClass="ht-f-30 Fs16"
+                                                 required="true" requiredMessage="#{ctrlMST0002.isRequiredMessage('属性名')}">
+                                    <f:selectItem itemLabel="" itemValue="" />
+                                    <f:selectItems value="#{ctrlMST0002.vm.shuXingList}" var="sx" itemLabel="#{sx.shuXingMing}" itemValue="#{sx.shuXingId}"/>
+                                </p:selectOneMenu>
+                            </p:outputPanel>
+                            <!--添加-->
+                            <p:commandButton process="@parent" styleClass="MarTop20"
+                                             oncomplete="showErrorMsg();"
+                                             update="@parent, dtShuXingSelection, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             value="添加" actionListener="#{ctrlMST0002.onAddProperty}" />
+                        </p:panelGrid>
+                    </div>
+                    <div class="Container100 Responsive100">
+                        <!--属性构成-->
+                        <p:dataTable id="dtShuXingSelection" styleClass="dtShuXingSelection"
+                                     value="#{ctrlMST0002.vm.selectedPinLei.wuPinShuXingList}" var="sxSelect"
+                                     rendered="#{not ctrlMST0002.vm.noPinLeiSelected}"
+                                     editable="true">
+
+                            <!--开始行确定-->
+                            <p:ajax event="rowEdit" listener="#{ctrlMST0002.onShuXingRowConfirmEdit(sxSelect)}"
+                                    oncomplete="showErrorMsg();"
+                                    process="@this" update="@this, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage"/>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="删除" styleClass="wd-p-8"/>
+                                    <p:column headerText="编辑" styleClass="wd-p-15"/>
+                                    <p:column headerText="属性名" styleClass=""/>
+                                    <p:column headerText="列举类别" styleClass="wd-p-40"/>
+                                    <p:column headerText="展开" styleClass="wd-p-8"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <!--删除-->
+                            <p:column styleClass="tct">
+                                <p:commandLink styleClass="lnkDeleteShuXing"
+                                               disabled="#{ctrlMST0002.vm.expanding}"
+                                               oncomplete="showErrorMsg();"
+                                               process="@this" update="frmMain:pnlShuXingSelect, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                               actionListener="#{ctrlMST0002.onLieJuDeleted(sxSelect)}">
+                                    <i class="fa fa-trash Fs18 Red"></i>
+                                    <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                            <!--修改-->
+                            <p:column styleClass="tct">
+                                <p:rowEditor rendered="#{not ctrlMST0002.vm.expanding}"/>
+                            </p:column>
+                            <!--属性名-->
+                            <p:column>
+                                <h:outputText value="#{sxSelect.shuXing.shuXingMing}"/>
+                            </p:column>
+                            <!--列举类别-->
+                            <p:column styleClass="tct">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{sxSelect.lieJuTeXingByEnum.message}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:selectOneButton value="#{sxSelect.lieJuTeXing}">
+                                            <f:selectItem itemValue="0" itemLabel="可数"/>
+                                            <f:selectItem itemValue="1" itemLabel="列举"/>
+                                            <f:selectItem itemValue="2" itemLabel="描述性"/>
+                                        </p:selectOneButton>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <!--展开-->
+                            <p:column styleClass="tct">
+                                <p:commandLink process="@this" actionListener="#{ctrlMST0002.onShuXingRowExpanded(sxSelect)}" 
+                                               update="frmMain:pnlShuXingSelect, frmMain:pnlShuXingSelectDetail"
+                                               resetValues="true"
+                                               styleClass="lnkSelectPinLeiDetail">
+                                    <i class="fa fa-arrow-circle-o-right Fs18 Green"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                    <div class="EmptyBox5"></div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:outputPanel id="pnlShuXingSelectDetail" styleClass="Container50 Responsive100">
+                <p:outputPanel styleClass="Card NoIndent PosRelative" rendered="#{ctrlMST0002.vm.expanding and ctrlMST0002.statusEditing}">
+                    <!--收起按钮-->
+                    <div class="PosAbsolute" style="top: 10px;right: 10px;">
+                        <p:commandLink process="@this" actionListener="#{ctrlMST0002.onCloseShuXingDetailPanel}" 
+                                       update="dtShuXingSelection ,pnlShuXingSelectDetail"
+                                       title="收起">
+                            <i class="fa fa-close Fs20 Red"></i>
+                        </p:commandLink>
+                    </div>
+                    <!--标题-->
+                    <h1 class="CardBigTopic">
+                        属性列举值信息
+                    </h1>
+                    <!--无敌分割线-->
+                    <div class="SeparatorFull"></div>
+                    <div class="Container100 ui-fluid">
+                        <h2>
+                            <!--物品名-->
+                            <h:outputText value="物品名-" styleClass="Gray"/>
+                            <h:outputText value="#{ctrlMST0002.vm.selectedPinLei.pinLeiMing}" styleClass="Fs18"/> 
+                            <span> </span>
+                            <!--<i class="fa fa-fire Fs20 Purple"></i>-->
+                            <p:spacer width="5"/>
+                            <!--属性名-->
+                            <h:outputText value="属性名-" styleClass="Gray"/>
+                            <h:outputText value="#{ctrlMST0002.vm.selectedWuZiShuXing.shuXing.shuXingMing}" styleClass="Fs18"/>
+                            <span> </span>
+                            <!--<i class="fa fa-fire Fs20 Purple"></i>-->
+                            <p:spacer width="5"/>
+                        </h2>
+                        <p:panelGrid styleClass="ui-panelgrid-blank" layout="grid" columns="3" columnClasses="wd-p-60,wd-p-20,wd-p-20">
+                            <!--属性值输入框-->
+                            <p:inputText id="txtShuXingZhi"
+                                         value="#{ctrlMST0002.vm.editingShuXingLieJuZhi.shuXingZhi}" placeholder="属性值" styleClass="txtShuXingZhi"
+                                         maxlength="40" 
+                                         required="true" requiredMessage="#{ctrlMST0002.isRequiredMessage('属性值')}"/>
+                            <!--保存按钮-->
+                            <p:commandButton id="btnSaveShuXingLieJuZhi"
+                                             styleClass="btnSaveShuXingLieJuZhi"
+                                             value="#{ctrlMST0002.vm.shuXingLieJuZhiEditing ? '更新' : '追加' }" 
+                                             process="@this, txtShuXingZhi"
+                                             oncomplete="showErrorMsg();"
+                                             update="@this,txtShuXingZhi,dtShuXingLieJuZhi , frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             resetValues="true"
+                                             actionListener="#{ctrlMST0002.onSaveShuXingLieJuZhi}"/>
+                            <!--重置按钮-->
+                            <p:commandButton value="重置" process="@this"
+                                             update="txtShuXingZhi, btnSaveShuXingLieJuZhi, dtShuXingLieJuZhi" styleClass="RedButton White"
+                                             resetValues="true"
+                                             actionListener="#{ctrlMST0002.onCancelShuXingLieJuZhi}"/>
+                        </p:panelGrid>
+                    </div>
+                    <div class="Container100 ui-fluid">
+                        <p:dataTable id="dtShuXingLieJuZhi" value="#{ctrlMST0002.vm.selectedWuZiShuXing.shuXingLieJuZhiList}" var="sz">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="删除" styleClass="wd-p-15"/>
+                                    <p:column headerText="编辑" styleClass="wd-p-15"/>
+                                    <p:column headerText="属性值" styleClass=""/>
+                                </p:row>
+                            </p:columnGroup>
+                            <!--删除-->
+                            <p:column styleClass="tct wd-p-15">
+                                <p:commandLink process="@this" actionListener="#{ctrlMST0002.onShuXingLieJuRowDelete(sz)}"
+                                               disabled="#{ctrlMST0002.vm.shuXingLieJuZhiEditing}"
+                                               oncomplete="showErrorMsg();"
+                                               update="@this, frmMain:txtShuXingZhi ,frmMain:dtShuXingLieJuZhi, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel">
+                                    <i class="fa fa-trash Fs18 Red"></i>
+                                    <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </p:column>
+                            <!--编辑-->
+                            <p:column styleClass="tct wd-p-15">
+                                <p:commandLink process="@this" actionListener="#{ctrlMST0002.onShuXingLieJuRowEdit(sz)}"
+                                               update="@this,frmMain:btnSaveShuXingLieJuZhi ,frmMain:txtShuXingZhi ,frmMain:dtShuXingLieJuZhi">
+                                    <i class="fa fa-pencil Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                            <!--属性值-->
+                            <p:column>
+                                <h:outputText value="#{sz.shuXingZhi}"/>          
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+        </div>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+    </p:outputPanel>
+</ui:composition>

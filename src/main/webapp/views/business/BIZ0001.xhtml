@@ -1,0 +1,356 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('BIZ', 'BIZ0001')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel styleClass="Container100 Responsive100">
+                    <p:panelGrid columns="5"
+                                 layout="grid"
+                                 styleClass="ui-panelgrid-blank"
+                                 columnClasses="wd-p-30,wd-p-30,wd-p-60,wd-p-30,wd-p-30">
+                        <p:selectOneMenu id="projectList" autoWidth="false"
+                                         styleClass="projectList"
+                                         value="#{ctrlBIZ0001.vm.addedProject}">
+                            <f:selectItems value="#{ctrlBIZ0001.vm.projectList}"
+                                           var="project"
+                                           itemLabel="#{project.xiangMuMing}"
+                                           itemValue="#{project.xiangMuId}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton id="addProjectButton"
+                                         value="添加项目"
+                                         styleClass="addProjectButton"
+                                         actionListener="#{ctrlBIZ0001.tianJiaShiYongXiangMu()}"
+                                         disabled="#{empty ctrlBIZ0001.vm.projectList or not empty ctrlBIZ0001.vm.selectedProjectList}"
+                                         process="projectList, @(.dtShenQing), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, @this"/>
+                        <!--选择草稿-->
+                        <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+                                         value="草稿与驳回申请"
+                                         style="width: 200px!important"
+                                         actionListener="#{ctrlBIZ0001.updateDummyShenQing()}"
+                                         process="@this"
+                                         update="dummyShenQingList"
+                                         oncomplete="PF('dummyShenQingList').show()">
+                        </p:commandButton>
+                        <!--提交申请按钮-->
+                        <p:commandButton value="#{msg.button_tijiaoshenqing}"
+                                         actionListener="#{ctrlBIZ0001.tiJiaoShenQing()}"
+                                         process="@(.dtShenQing), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, addProjectButton"/>
+                        <!--存为草稿按钮-->
+                        <p:commandButton value="#{msg.button_cunweicaogao}"
+                                         actionListener="#{ctrlBIZ0001.cunWeiCaoGao()}"
+                                         process="@(.dtShenQing), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, addProjectButton"/>
+                    </p:panelGrid>
+                </p:outputPanel>
+                <p:outputPanel id="shen_pi_panel" styleClass="Container100 Responsive100 shen_pi_panel">
+                    <ui:repeat value="#{ctrlBIZ0001.vm.selectedProjectList}"
+                               var="project">
+                        <p:panel header="领用项目：#{project.xiangMuMing}"
+                                 toggleable="true"
+                                 styleClass="clearfix"
+                                 toggleSpeed="500">
+                            <f:facet name="actions">
+                                <p:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+                                               actionListener="#{ctrlBIZ0001.cheXiaoXiangMu(project)}"
+                                               process="@this"
+                                               update="@(.shen_pi_panel, .projectList, .addProjectButton)">
+                                    <i class="fa fa-close Red" />
+                                </p:commandLink>
+                                <p:commandLink style="margin-left: 50px"
+                                               value="选择物资"
+                                               actionListener="#{ctrlBIZ0001.vm.setCurrentProject(project.xiangMuId)}"
+                                               process="@this"
+                                               update="@(.ovlPinleiList)"
+                                               oncomplete="PF('ovlPinleiList').show('#{component.clientId}');">
+                                    <h:outputText styleClass="fa fa-windows Fs18" />
+                                </p:commandLink>
+                            </f:facet>
+
+                            <p:outputPanel id="dtShenQing" styleClass="Container99 Responsive100 dtShenQing" >
+                                <!--明细编辑行-->
+                                <p:dataTable id="dtshenqingmingxi" value="#{ctrlBIZ0001.vm.shenQingMingXiMap[project.xiangMuId]}"
+                                             rendered="#{not empty ctrlBIZ0001.vm.shenQingMingXiMap.get(project.xiangMuId)}"
+                                             style="word-break: keep-all"
+                                             var="sq">
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                                            <p:column headerText="是否合领" styleClass="wd-p-5"/>
+                                            <!--<p:column headerText="物资编号" styleClass="wd-p-10"/>-->
+                                            <p:column headerText="规格概要" styleClass="wd-p-15"/>
+                                            <p:column headerText="单位" styleClass="wd-p-5"/>
+<!--                                            <p:column headerText="添加领用计划" styleClass="wd-p-5"/>
+                                            <p:column headerText="删除" style="width: 58px"/>-->
+                                            <p:column headerText="申请数量" style="width: 108px"/>
+                                            <p:column headerText="希望领用日" style="width: 108px"/>
+                                            <p:column headerText="希望领取处" style="width: 158px"/>
+                                            <p:column headerText="备注"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <!--删除-->
+                                    <p:column styleClass="tct">
+                                        <p:commandLink styleClass="lnkDelete"
+                                                       process="@(.dtShenQing)"
+                                                       update="@(.dtShenQing)"
+                                                       actionListener="#{ctrlBIZ0001.deleteShenQingMingXi(project.xiangMuId, sq)}">
+                                            <i class="fa fa-trash Fs18 Red"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <!--是否合领-->
+                                    <p:column styleClass="tct">
+                                        <p:selectBooleanCheckbox value="#{sq.yiQiLingYong}">
+                                            <p:ajax listener="#{ctrlBIZ0001.updateHeLing(sq)}"
+                                                    process="@(.dtShenQing)"
+                                                    update="@(.dtShenQing)"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <!--物资编号-->
+<!--                                    <p:column styleClass="tct">
+                                        <h:outputText value="#{sq.shiti.wuZiBianHao}"/>
+                                    </p:column>-->
+                                    <!--物资名称-->
+                                    <p:column>
+                                        <h:outputText id="guigegaiyao" value="#{sq.shiti.wuZiMiaoShu}"/>
+                                        <p:tooltip position="top" for="guigegaiyao" value="#{sq.shiti.nameWithShuXingSummary}"/>
+                                    </p:column>
+                                    <!--单位-->
+                                    <p:column styleClass="tct">
+                                        <h:outputText value="#{sq.shiti.wuZiDanWei.danWeiMing}"/>
+                                    </p:column>
+                                    <!--添加领用计划-->
+<!--                                    <p:column styleClass="tct">
+                                        <p:commandLink disabled="#{sq.yiQiLingYong}">
+                                            <p:ajax process="@(.dtShenQing)"
+                                                    listener="#{ctrlBIZ0001.addShiYongJiHua(sq)}" 
+                                                    update="@(.dtShenQing)"/>
+                                            <i class="fa fa-plus Fs16 Green"></i>
+                                        </p:commandLink>
+                                    </p:column>-->
+                                    <!--领用计划信息-->
+                                    <p:column colspan="5" styleClass="no-padding" style="padding: 0px!important;">
+                                        <p:panelGrid styleClass="innerTable" >
+                                            <ui:repeat step="1" value="#{sq.jihuaList}" var="jh" varStatus="index">
+                                                <p:row>
+                                                    <!--删除-->
+<!--                                                    <p:column styleClass="tct wd-f-50">
+                                                        <p:commandLink styleClass="lnkDelete"
+                                                                       process="@(.dtShenQing)"
+                                                                       update="@(.dtShenQing)"
+                                                                       actionListener="#{ctrlBIZ0001.deleteShiYongJiHua(project.xiangMuId, sq, index.index)}">
+                                                            <i class="fa fa-trash Fs18 Red"></i>
+                                                        </p:commandLink>
+                                                    </p:column>-->
+                                                    <!--申请数量-->
+                                                    <p:column styleClass="wd-f-100">
+                                                        <p:spinner min="#{sq.shiti.zuiXiaoDanWei}" max="9999999"
+                                                                   stepFactor="#{sq.shiti.zuiXiaoDanWei}" size="7"
+                                                                   style="width: 100px!important"
+                                                                   value="#{jh.jiHuaLingYongShu}">
+                                                        </p:spinner>
+                                                    </p:column>
+                                                    <!--希望领用日期-->
+                                                    <p:column styleClass="tct wd-f-100">
+                                                        <p:calendar id="txtStartDate" value="#{jh.pk.jiHuaLingYongRiQi}"
+                                                                    readonlyInput="true" pages="3"
+                                                                    placeholder="希望领用日期"
+                                                                    mask="true" styleClass="tct wd-f-100"
+                                                                    pattern="#{bizConfig.dateFormat}"
+                                                                    required="true" size="12"
+                                                                    requiredMessage="#{ctrlBIZ0001.isRequiredMessage(msg.label_startDate)}"
+                                                                    converterMessage="#{ctrlBIZ0001.dateUnvalidMessage(msg.label_startDate)}"
+                                                                    title="必须输入希望领用日期"
+                                                                    locale="#{bizConfig.locale}">
+                                                            <p:ajax listener="#{ctrlBIZ0001.changeXiWangLingHuoRi(jh)}"
+                                                                    process="@(.dtShenQing)"
+                                                                    update="@(.dtShenQing)"/>
+                                                        </p:calendar>
+                                                    </p:column>
+                                                    <!--希望领取处-->
+                                                    <p:column styleClass="tct wd-f-150">
+                                                        <p:selectOneMenu value="#{jh.jiHuaGongHuoChu}"
+                                                                         required="true"
+                                                                         requiredMessage="#{ctrlBIZ0001.isRequiredMessage('希望领取处')}"
+                                                                         autoWidth="true">
+                                                            <f:selectItems value="#{sq.shiti.cangKuList}"
+                                                                           var="cangKu" 
+                                                                           itemLabel="#{cangKu.cangKuMing}"
+                                                                           itemValue="#{cangKu.cangKuId}"/>
+                                                        </p:selectOneMenu>
+                                                    </p:column>
+                                                    <!--用途-->
+                                                    <p:column>
+                                                        <!--<p:inputText value="#{jh.beiZhu}" placeholder="备注"/>-->
+                                                        <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{jh.beiZhu}" placeholder="备注"/>
+                                                    </p:column>
+                                                </p:row>
+                                            </ui:repeat>
+                                        </p:panelGrid>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:panel>
+                        <div class="EmptyBox5"></div>
+                    </ui:repeat>
+                    <p:panelGrid columns="5"
+                                 layout="grid"
+                                 rendered="#{not empty ctrlBIZ0001.vm.selectedProjectList}"
+                                 styleClass="ui-panelgrid-blank MarTop10"
+                                 columnClasses="wd-p-30,wd-p-30,wd-p-60,wd-p-30,wd-p-30">
+                        <p:outputPanel />
+                        <p:outputPanel />
+                        <p:outputPanel />
+                        <!--提交申请按钮-->
+                        <p:commandButton value="#{msg.button_tijiaoshenqing}"
+                                         actionListener="#{ctrlBIZ0001.tiJiaoShenQing()}"
+                                         process="@(.dtShenQing), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, addProjectButton"/>
+                        <!--存为草稿按钮-->
+                        <p:commandButton value="#{msg.button_cunweicaogao}"
+                                         actionListener="#{ctrlBIZ0001.cunWeiCaoGao()}"
+                                         process="@(.dtShenQing), @this"
+                                         oncomplete="showErrorMsg();"
+                                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel, shen_pi_panel, projectList, addProjectButton"/>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+
+    <p:outputPanel>
+        <!--草稿与驳回申请-->
+        <p:dialog id="dummyShenQingList" styleClass="dummyShenQingList"
+                  widgetVar="dummyShenQingList" closeOnEscape="true">
+            <p:dataTable value="#{ctrlBIZ0001.vm.dummyShenQingList}"
+                         var="item"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         styleClass="bg-c-row-odd wd-f-800 tct dummyShenQingList"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="编辑" styleClass="wd-p-3"/>
+                        <p:column headerText="删除" styleClass="wd-p-3"/>
+                        <p:column headerText="#{msg.shen_qing_bian_hao}" styleClass="wd-p-3"/>
+                        <p:column headerText="#{msg.shen_qing_ren}" styleClass="wd-p-5"/>
+                        <p:column headerText="#{msg.shen_qing_shi_jian}" styleClass="wd-p-4"/>
+                        <p:column headerText="状态" styleClass="wd-p-4"/>
+                        <p:column headerText="备注" styleClass="wd-p-5"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--编辑-->
+                <p:column styleClass="tct">
+                    <p:commandLink styleClass="lnkSelect"
+                                   oncomplete="PF('dummyShenQingList').hide()"
+                                   process="@this"
+                                   update="@(.NoIndent)"
+                                   actionListener="#{ctrlBIZ0001.selectCaoGao(item)}">
+                        <i class="fa fa-pencil Fs18 Green"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--删除-->
+                <p:column styleClass="tct">
+                    <p:commandLink styleClass="lnkDelete"
+                                   process="@this"
+                                   update="@(.dummyShenQingList)"
+                                   actionListener="#{ctrlBIZ0001.deleteCaoGao(item)}">
+                        <i class="fa fa-trash Fs18 Red"></i>
+                    </p:commandLink>
+                </p:column>
+                
+                <p:column>
+                    <h:outputText value="#{item.shenQingId}"/>
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{item.shenqingren.nameZ}"/>
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{item.insDate}" >
+                        <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                    </h:outputText>
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{item.zhuangTai.message}"/>
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{item.beiZhu}"/>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+
+        <!--品类候选值-->
+        <p:dialog widgetVar="ovlPinleiList"
+                  styleClass="ovlPinleiList"
+                  resizable="false"
+                  showHeader="false"
+                  closeOnEscape="true">
+            <p:commandLink value="[关闭 X]" process="@this" update="@this" onclick="PF('ovlPinleiList').hide();"/>
+            <p:dataTable value="#{ctrlBIZ0001.vm.pinLeiDetails}"
+                         var="pinLei" lazy="true"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="dtPinLei" widgetVar="dtPinLei"
+                         styleClass="bg-c-row-odd wd-f-700"
+                         scrollable="true"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column styleClass="tct wd-p-30" headerText="物品名"
+                                  filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                        <p:column headerText="选择" style="width: 58px!important;"/>
+                        <!--<p:column headerText="物资编号" style="width: 108px!important;"/>-->
+                        <p:column headerText="规格概要" style="width: 208px!important;"/>
+                        <p:column headerText="规格/型号"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--物品名-->
+                <p:column>
+                    <h:outputText value="#{pinLei.pinLeiMing}"/>
+                </p:column>
+                <!--物资-->
+                <p:column colspan="4" styleClass="no-padding" style="padding: 0px!important;">
+                    <p:dataTable value="#{pinLei.keYongWuZi}"
+                                 var="stwz"
+                                 rendered="#{not empty pinLei.keYongWuZi}"
+                                 styleClass="innerTable">
+                        <p:column styleClass="tct wd-f-50">
+                            <p:selectBooleanCheckbox value="#{stwz.selected}" >
+                                <p:ajax process="@(.dtShenQing), @this"
+                                        listener="#{ctrlBIZ0001.changeWuZiSelection(stwz)}"
+                                        update="@(.shen_pi_panel, .dtShenQing)"/>
+                            </p:selectBooleanCheckbox>
+                        </p:column>
+<!--                        <p:column styleClass="wd-f-100 tct" >
+                            <h:outputText value="#{stwz.wuZiBianHao}"/>
+                        </p:column>-->
+                        <p:column styleClass="wd-f-200" >
+                            <h:outputText value="#{stwz.wuZiMiaoShu}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{stwz.shuXingSummary}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </p:outputPanel>
+</ui:composition>

@@ -1,0 +1,529 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100">
+            <div class="Card">
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0010')}"/>
+                </h1>
+                <div class="SeparatorFull"></div>
+                <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <!--新建按钮-->
+                            <p:commandButton value="新建" process="@this" actionListener="#{ctrlMST0010.onStartEditing}"
+                                             resetValues="true"
+                                             update="pnlInputArea,pnlInputArea2,toolbar" disabled="#{ctrlMST0010.statusEditing or ctrlMST0010.updateMode}"/>
+                            <!--刷新按钮-->
+                            <p:commandButton value="刷新" process="@this" actionListener="#{ctrlMST0010.onRefreshData}" 
+                                             resetValues="true" oncomplete="PF('wvXiangMuZiList').clearFilters();"
+                                             update="pngDetails"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:outputPanel>
+            </div>            
+        </p:outputPanel>
+
+        <p:outputPanel id="pnlInputArea2" styleClass="Container100 Responsive100">
+            <!--项目编辑区域-->
+            <p:outputPanel id="pnlInputAreaGongCheng" styleClass="Container100 Responsive100 NoIndent ui-fluid" rendered="#{false or ctrlMST0010.statusEditing}">
+                <div class="Card">
+                    <div class="CardBizTopic">编辑归集项</div>
+                    <div class="SeparatorFull"></div>
+                    <!--归集项区分-->
+                    <p:outputLabel for="guijixiangqufen" value="归集项区分"/>
+                    <p:selectOneButton id="guijixiangqufen"
+                                       value="#{ctrlMST0010.vm.editingXiangMu.guiJiXiangQuFenInt}"
+                                       required="true"
+                                       requiredMessage="#{ctrlMST0011.isRequiredMessage('归集项区分')}">
+                        <f:selectItems value="#{bizConfig.guiJiXiangQuFen}"
+                                       var="quFen"
+                                       itemLabel="#{quFen.message}"
+                                       itemValue="#{quFen.value}" />
+                        <p:ajax listener="#{ctrlMST0010.changeQuFen}"
+                                process="@this"
+                                update="pnlInputArea2 ovlWuGuiJiYuanGongList ovlWuGuiJiBuMenList"/>
+                    </p:selectOneButton>
+                    
+                    <!--工程项目-->
+                    <p:outputPanel>
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-50,wd-p-50">
+                            <!--归集项名-->
+                            <p:outputPanel>
+                                <p:outputLabel for="guijixiangming" value="归集项名"/>
+                                <p:inputText id="guijixiangming" value="#{ctrlMST0010.vm.editingXiangMu.xiangMuMing}" maxlength="20"
+                                             required="true" requiredMessage="#{ctrlMST0010.isRequiredMessage('归集项名')}"/>
+                                
+                                <p:commandButton id="xuanzeyuangong" value="选择员工"
+                                                 actionListener="#{ctrlMST0010.changeQuFen}"
+                                                 process="@this"
+                                                 update="ovlWuGuiJiYuanGongList"
+                                                 rendered="#{ctrlMST0010.vm.editingXiangMu.guiJiXiangQuFenInt == 2}"
+                                                 oncomplete="PF('ovlWuGuiJiYuanGongList').show();"/>
+                                <p:commandButton id="xuanzebumen" value="选择部门"
+                                                 actionListener="#{ctrlMST0010.changeQuFen}"
+                                                 process="@this"
+                                                 update="ovlWuGuiJiBuMenList"
+                                                 rendered="#{ctrlMST0010.vm.editingXiangMu.guiJiXiangQuFenInt == 3}"
+                                                 oncomplete="PF('ovlWuGuiJiBuMenList').show();"/>
+                            </p:outputPanel>
+                            <!--概要-->
+                            <p:outputPanel>
+                                <p:outputLabel value="概要"/>
+                                <p:inputText value="#{ctrlMST0010.vm.editingXiangMu.xiangMuGaiYao}" maxlength="200"/>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank">
+                            <!--计划开始日-->
+                            <p:outputPanel rendered="#{ctrlMST0010.vm.editingXiangMu.guiJiXiangQuFenInt == 1}">
+                                <p:outputLabel id="lbl_ji_hua_kai_shi_ri" value="#{msg.lbl_ji_hua_kai_shi_ri}"/>
+                                <p:calendar id="txtJiHuaKaiShiRi" value="#{ctrlMST0010.vm.editingXiangMu.jiHuaKaiShiRq}" navigator="true" maxlength="10"
+                                            converterMessage="#{ctrlMST0010.dateUnvalidMessage(msg.lbl_ji_hua_kai_shi_ri)}"
+                                            mask="true" pattern="#{bizConfig.dateFormat}"/>
+                            </p:outputPanel>
+                            <!--计划结束日-->
+                            <p:outputPanel rendered="#{ctrlMST0010.vm.editingXiangMu.guiJiXiangQuFenInt == 1}">
+                                <p:outputLabel id="lbl_ji_hua_jie_shu_ri" value="#{msg.lbl_ji_hua_jie_shu_ri}"/>
+                                <p:calendar id="txtJiHuaJieShuRi" value="#{ctrlMST0010.vm.editingXiangMu.jiHuaJieShuRq}" navigator="true" maxlength="10"
+                                            pt:msgKey="lbl_ji_hua_kai_shi_ri,lbl_ji_hua_jie_shu_ri" pt:startDateId="txtJiHuaKaiShiRi"
+                                            converterMessage="#{ctrlMST0010.dateUnvalidMessage(msg.lbl_ji_hua_jie_shu_ri)}"
+                                            mask="true" pattern="#{bizConfig.dateFormat}">
+                                    <f:validator validatorId="DateRangeValidator"/>
+                                </p:calendar>
+                            </p:outputPanel>
+                            <!--实际开始日-->
+                            <p:outputPanel>
+                                <p:outputLabel id="lbl_shi_ji_kai_shi_ri" value="#{msg.lbl_shi_ji_kai_shi_ri}"/>
+                                <p:calendar id="txtShiJiKaiShiRi" value="#{ctrlMST0010.vm.editingXiangMu.shiJiKaiShiRq}" navigator="true" maxlength="10"
+                                            converterMessage="#{ctrlMST0010.dateUnvalidMessage(msg.lbl_shi_ji_kai_shi_ri)}"
+                                            mask="true" pattern="#{bizConfig.dateFormat}"/>
+                            </p:outputPanel>
+                            <!--实际结束日-->
+                            <p:outputPanel>
+                                <p:outputLabel id="lbl_shi_ji_jie_shu_ri" value="#{msg.lbl_shi_ji_jie_shu_ri}"/>
+                                <p:calendar id="txtShiJiJieShuRi" value="#{ctrlMST0010.vm.editingXiangMu.shiJiJieShuRq}" navigator="true" maxlength="10"
+                                            pt:msgKey="lbl_shi_ji_kai_shi_ri,lbl_shi_ji_jie_shu_ri" pt:startDateId="txtJiHuaKaiShiRi"
+                                            converterMessage="#{ctrlMST0010.dateUnvalidMessage(msg.lbl_shi_ji_jie_shu_ri)}"
+                                            mask="true" pattern="#{bizConfig.dateFormat}">
+                                    <f:validator validatorId="DateRangeValidator"/>
+                                </p:calendar>
+                            </p:outputPanel>
+
+                        </p:panelGrid>
+                        
+<!--                        <p:outputPanel>
+                            <p:outputLabel value="提供服务类型"/>
+                            <p:selectManyCheckbox value="#{ctrlMST0008.vm.editingGongYingShang.tiGongFuWuLeiXing}" layout="grid" columns="6">
+                                <f:selectItems value="#{bizConfig.tiGongFuWuLeiXing}" var="leixing" itemLabel="#{leixing.message}" itemValue="#{leixing.value}" />
+                            </p:selectManyCheckbox>
+                        </p:outputPanel>-->
+                    </p:outputPanel>
+                    
+                    <!--员工项目-->
+<!--                    <p:outputPanel rendered="#{ctrlMST0010.vm.editingXiangMu.guiJiXiangQuFenInt == 2}">
+                        
+                    </p:outputPanel>-->
+                    
+                    <!--部门项目-->
+                    
+                    <!--成员编辑区域-->
+                    <p:outputPanel id="pnlInputAreaFuZeRen" styleClass="Container100 Responsive100 NoIndent ui-fluid pnlInputAreaFuZeRen" rendered="#{ctrlMST0010.statusEditing}">
+                        <div class="Card">
+                            <div class="CardBizTopic">成员一览
+                                <p:commandButton id="btnSelectYuanGong" value="添加成员" style="width: 200px!important"
+                                                 process="@this"
+                                                 actionListener="#{ctrlMST0010.onStartChooseYuanGong}"
+                                                 update="ovlYuanGongList"
+                                                 oncomplete="PF('ovlYuanGongList').show();"/>
+                            </div>
+                            <div class="SeparatorFull"></div>
+                            <h:outputText value="尚未添加成员" styleClass="Red Fs18" rendered="#{empty ctrlMST0010.vm.editingXiangMu.fuZeRenList}"/>
+                            <p:dataTable value="#{ctrlMST0010.vm.editingXiangMu.fuZeRenList}"
+                                         var="fzr"
+                                         rendered="#{not empty ctrlMST0010.vm.editingXiangMu.fuZeRenList}">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="删除" styleClass="wd-p-10" />
+                                        <p:column headerText="员工名" styleClass="wd-p-20" />
+                                        <p:column headerText="上任日期" styleClass="wd-p-15" />
+                                        <p:column headerText="卸任日期" styleClass="wd-p-15" />
+                                        <p:column headerText="申请物品权限" styleClass="wd-p-10" />
+                                        <p:column headerText="审批权限" styleClass="wd-p-10" />
+                                        <!--<p:column headerText="在职状态" />-->
+                                        <p:column headerText="是否负责人" styleClass="wd-p-10" />
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--删除-->
+                                <p:column styleClass="tct">
+                                    <p:commandLink process="@this"
+                                                   update="@(.pnlInputAreaFuZeRen)"
+                                                   actionListener="#{ctrlMST0010.onDeleteFuZeRens(fzr)}">
+                                        <i class="fa fa-trash Fs16 Red"/>
+                                    </p:commandLink>
+                                </p:column>
+                                <!--员工名-->
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{fzr.yuanGong.nameZ}"/>
+                                </p:column>
+                                <!--上任日期-->
+                                <p:column styleClass="tct">
+                                    <p:calendar id="txtShangRenRiQi" value="#{fzr.shangRenRq}" mask="true" pattern="#{bizConfig.dateFormat}"
+                                                required="true" requiredMessage="#{ctrlMST0010.isRequiredMessage(msg.shang_ren_ri_qi)}"
+                                                maxlength="10"
+                                                converterMessage="#{ctrlMST0010.dateUnvalidMessage(msg.shang_ren_ri_qi)}"/>
+                                </p:column>
+                                <!--卸任日期-->
+                                <p:column styleClass="tct">
+                                    <p:calendar id="txtXieRenRq" value="#{fzr.xieRenRq}" mask="true" pattern="#{bizConfig.dateFormat}"
+                                                pt:msgKey="shang_ren_ri_qi,xie_ren_ri_qi" pt:startDateId="txtShangRenRiQi"
+                                                maxlength="10"
+                                                converterMessage="#{ctrlMST0010.dateUnvalidMessage(msg.xie_ren_ri_qi)}">
+                                        <f:validator validatorId="DateRangeValidator"/>
+                                    </p:calendar>
+                                </p:column>
+                                <!--申请物品权限-->
+                                <p:column styleClass="tct">
+                                    <p:selectBooleanCheckbox value="#{fzr.shenQingWuZi}"/>
+                                </p:column>
+                                <!--审批权限-->
+                                <p:column styleClass="tct">
+                                    <p:selectBooleanCheckbox value="#{fzr.shenPiQuanXian}"/>
+                                </p:column>
+                                <!--在职状态-->
+<!--                                <p:column styleClass="tct">
+                                    <h:outputText value="#{fzr.zeRenZhuangTai.message}"/>
+                                </p:column>-->
+                                <!--是否负责人-->
+                                <p:column styleClass="tct">
+                                    <p:selectBooleanCheckbox value="#{fzr.fuZeRen}">
+                                        <p:ajax listener="#{ctrlMST0010.changeFuZeRen(fzr)}" process="@(.pnlInputAreaFuZeRen)" update="@(.pnlInputAreaFuZeRen)"/>
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="EmptyBox5"></div>
+                    </p:outputPanel>
+                    
+                    <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="保存" process="pnlInputArea,pnlInputArea2"
+                                         oncomplete="showErrorMsg();"
+                                         update="pnlInputArea, pnlInputArea2,pngDetails, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{ctrlMST0010.onSaveGongCheng}"/>
+                        <p:commandButton value="取消" process="@this" 
+                                         update="pnlInputArea, pnlInputArea2, toolbar, frmMain:toolbar" actionListener="#{ctrlMST0010.onCancelEditing}"
+                                         styleClass="RedButton"/>
+                    </p:panelGrid>
+                    <div class="EmptyBox5"></div>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+            <div class="Card">
+                <div class="CardBigTopic">归集项信息一览</div>
+                <div class="SeparatorFull"></div>
+                <div class="EmptyBox10"></div>
+                <p:dataTable value="#{ctrlMST0010.vm.gongChengXiangMuList}" var="xm" lazy="true" cellSeparator="5"
+                             widgetVar="wvXiangMuZiList"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="归集项一览：工程"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5" />
+                            <p:column headerText="工程名" filterBy="#{xm.xiangMuMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="计划开始日" styleClass="wd-p-10" />
+                            <p:column headerText="计划结束日" styleClass="wd-p-10"/>
+                            <p:column headerText="实际开始日" styleClass="wd-p-10"/>
+                            <p:column headerText="实际结束日" styleClass="wd-p-10"/>
+                            <p:column headerText="概要" />
+                            <p:column headerText="删除" styleClass="wd-p-5" />
+                        </p:row>
+                    </p:columnGroup>
+                    <!--编辑-->
+                    <p:column styleClass="tct">
+                        <p:commandLink process="@this" actionListener="#{ctrlMST0010.onSelectXiangMu(xm)}"
+                                       update="frmMain:pnlInputArea,frmMain:pnlInputArea2" resetValues="true">
+                            <i class="fa fa-pencil Fs16" />
+                        </p:commandLink>
+                    </p:column>
+
+                    <!--项目名-->
+                    <p:column>
+                        <h:outputText value="#{xm.xiangMuMing}"/>
+                    </p:column>
+                    <!--计划开始日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.jiHuaKaiShiRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--计划结束日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.jiHuaJieShuRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--实际开始日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.shiJiKaiShiRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--实际结束日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.shiJiJieShuRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--项目概要-->
+                    <p:column>
+                        <h:outputText value="#{xm.xiangMuGaiYao}"/>
+                    </p:column>
+                    <!--删除-->
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlMST0010.deleteXiangMu(xm)}" process="@this" update="@(.pngDetails)">
+                            <p:confirm header="删除归集项" message="是否确认删除该归集项"/>
+                            <i class="fa fa-trash Red Fs16" />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable value="#{ctrlMST0010.vm.yuanGongXiangMuList}" var="xm" lazy="true" cellSeparator="5"
+                             widgetVar="ygXiangMuZiList"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="归集项一览：员工"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5" />
+                            <p:column headerText="员工名" filterBy="#{xm.xiangMuMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="实际开始日" styleClass="wd-p-10"/>
+                            <p:column headerText="实际结束日" styleClass="wd-p-10"/>
+                            <p:column headerText="概要" />
+                            <p:column headerText="删除" styleClass="wd-p-5" />
+                        </p:row>
+                    </p:columnGroup>
+                    <!--编辑-->
+                    <p:column styleClass="tct">
+                        <p:commandLink process="@this" actionListener="#{ctrlMST0010.onSelectXiangMu(xm)}"
+                                       update="frmMain:pnlInputArea,frmMain:pnlInputArea2" resetValues="true">
+                            <i class="fa fa-pencil Fs16" />
+                        </p:commandLink>
+                    </p:column>
+
+                    <!--项目名-->
+                    <p:column>
+                        <h:outputText value="#{xm.xiangMuMing}"/>
+                    </p:column>
+                    <!--实际开始日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.shiJiKaiShiRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--实际结束日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.shiJiJieShuRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--项目概要-->
+                    <p:column>
+                        <h:outputText value="#{xm.xiangMuGaiYao}"/>
+                    </p:column>
+                    <!--删除-->
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlMST0010.deleteXiangMu(xm)}" process="@this" update="@(.pngDetails)">
+                            <p:confirm header="删除归集项" message="是否确认删除该归集项"/>
+                            <i class="fa fa-trash Red Fs16" />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable value="#{ctrlMST0010.vm.buMenXiangMuList}" var="xm" lazy="true" cellSeparator="5"
+                             widgetVar="bmXiangMuZiList"
+                             paginator="true" rows="10" filterDelay="500"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="归集项一览：部门"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5" />
+                            <p:column headerText="部门名" filterBy="#{xm.xiangMuMing}" filterMaxLength="15" filterMatchMode="contains" styleClass="wd-p-20"/>
+                            <p:column headerText="实际开始日" styleClass="wd-p-10"/>
+                            <p:column headerText="实际结束日" styleClass="wd-p-10"/>
+                            <p:column headerText="概要" />
+                            <p:column headerText="删除" styleClass="wd-p-5" />
+                        </p:row>
+                    </p:columnGroup>
+                    <!--编辑-->
+                    <p:column styleClass="tct">
+                        <p:commandLink process="@this" actionListener="#{ctrlMST0010.onSelectXiangMu(xm)}"
+                                       update="frmMain:pnlInputArea,frmMain:pnlInputArea2" resetValues="true">
+                            <i class="fa fa-pencil Fs16" />
+                        </p:commandLink>
+                    </p:column>
+
+                    <!--项目名-->
+                    <p:column>
+                        <h:outputText value="#{xm.xiangMuMing}"/>
+                    </p:column>
+                    <!--实际开始日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.shiJiKaiShiRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--实际结束日-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{xm.shiJiJieShuRq}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--项目概要-->
+                    <p:column>
+                        <h:outputText value="#{xm.xiangMuGaiYao}"/>
+                    </p:column>
+                    <!--删除-->
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlMST0010.deleteXiangMu(xm)}" process="@this" update="@(.pngDetails)">
+                            <p:confirm header="删除归集项" message="是否确认删除该归集项"/>
+                            <i class="fa fa-trash Red Fs16" />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </p:outputPanel>
+
+        <p:overlayPanel id="ovlYuanGongList" for="btnSelectYuanGong" widgetVar="ovlYuanGongList" styleClass="Container30">
+            <p:dataTable value="#{ctrlMST0010.vm.yuanGongList}" var="yg" lazy="true" cellSeparator="5"
+                         widgetVar="wvYuanGongList"
+                         paginator="true" rows="10" filterDelay="500"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="No Data">
+                <f:facet name="header">
+                    <h:outputText value="员工一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="选择" styleClass="wd-p-10"/>
+                        <p:column headerText="用户ID" styleClass="wd-p-20"/>
+                        <p:column headerText="用户名" filterBy="#{yg.xing}" filterMaxLength="15" filterMatchMode="contains"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--选择-->
+                <p:column styleClass="tct">
+                    <p:commandLink>
+                        <p:ajax process="@this" resetValues="true"
+                                listener="#{ctrlMST0010.onSelectYuanGong(yg)}"
+                                update="frmMain:pnlInputArea,frmMain:pnlInputAreaFuZeRen
+                                frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                oncomplete="showErrorMsg();"/>
+                        <i class="fa fa-pencil Fs18 Blue"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--员工ID-->
+                <p:column styleClass="tct">
+                    <p:outputLabel rendered="#{not yg.existsLoginUser}">
+                        <i class="icon-cross47 Red Fs16" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{yg.loginInfo.loginId}" rendered="#{yg.existsLoginUser}"/>
+                </p:column>
+                <!--员工名-->
+                <p:column>
+                    <h:outputText value="#{yg.nameZ}"/>
+                </p:column>
+            </p:dataTable>
+        </p:overlayPanel>
+        
+        <p:overlayPanel for="xuanzeyuangong" widgetVar="ovlWuGuiJiYuanGongList" styleClass="Container30">
+            <p:dataTable id="ovlWuGuiJiYuanGongList" value="#{ctrlMST0010.vm.wuGuiJiYuanGongList}" var="yg" cellSeparator="5"
+                         widgetVar="wvYuanGongList"
+                         paginator="true" rows="10" filterDelay="500"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="No Data">
+                <f:facet name="header">
+                    <h:outputText value="员工一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="选择" styleClass="wd-p-10"/>
+                        <p:column headerText="用户ID" styleClass="wd-p-20"/>
+                        <p:column headerText="用户名" filterBy="#{yg.xing}" filterMaxLength="15" filterMatchMode="contains"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--选择-->
+                <p:column styleClass="tct">
+                    <p:commandLink>
+                        <p:ajax process="@this" resetValues="true"
+                                listener="#{ctrlMST0010.selectWuGuiJiYuanGong(yg)}"
+                                update="frmMain:pnlInputArea2,frmMain:pnlInputArea,frmMain:pnlInputAreaFuZeRen
+                                frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                oncomplete="PF('ovlWuGuiJiYuanGongList').hide();showErrorMsg();"/>
+                        <i class="fa fa-pencil Fs18 Blue"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--员工ID-->
+                <p:column styleClass="tct">
+                    <p:outputLabel rendered="#{not yg.existsLoginUser}">
+                        <i class="icon-cross47 Red Fs16" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{yg.loginInfo.loginId}" rendered="#{yg.existsLoginUser}"/>
+                </p:column>
+                <!--员工名-->
+                <p:column>
+                    <h:outputText value="#{yg.nameZ}"/>
+                </p:column>
+            </p:dataTable>
+        </p:overlayPanel>
+        
+        <p:overlayPanel for="xuanzebumen" widgetVar="ovlWuGuiJiBuMenList" styleClass="Container30">
+            <p:dataTable id="ovlWuGuiJiBuMenList" value="#{ctrlMST0010.vm.wuGuiJiBuMenList}" var="bm" cellSeparator="5"
+                         widgetVar="wvBuMenList"
+                         paginator="true" rows="10" filterDelay="500"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="No Data">
+                <f:facet name="header">
+                    <h:outputText value="部门一览"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="选择" styleClass="wd-p-10"/>
+                        <p:column headerText="部门ID" styleClass="wd-p-20"/>
+                        <p:column headerText="部门名" filterBy="#{bm.buMenMing}" filterMaxLength="15" filterMatchMode="contains"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--选择-->
+                <p:column styleClass="tct">
+                    <p:commandLink>
+                        <p:ajax process="@this" resetValues="true"
+                                listener="#{ctrlMST0010.selectWuGuiJiBuMen(bm)}"
+                                update="frmMain:pnlInputArea2,frmMain:pnlInputArea,frmMain:pnlInputAreaFuZeRen
+                                frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                oncomplete="PF('ovlWuGuiJiBuMenList').hide();showErrorMsg();"/>
+                        <i class="fa fa-pencil Fs18 Blue"></i>
+                    </p:commandLink>
+                </p:column>
+                <!--部门ID-->
+                <p:column styleClass="tct">
+                    <p:outputLabel value="#{bm.buMenId}"/>
+                </p:column>
+                <!--部门名-->
+                <p:column>
+                    <h:outputText value="#{bm.buMenMing}"/>
+                </p:column>
+            </p:dataTable>
+        </p:overlayPanel>
+    </p:outputPanel>
+</ui:composition>

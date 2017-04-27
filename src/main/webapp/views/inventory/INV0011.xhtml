@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <!--物资申请受理-->
+    <p:outputPanel id="wuzishouliPanel" styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Responsive100">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <h:outputText value="#{ctrlMaster.createPageTitle('INV', 'INV0011')}"/>
+                </h1>
+                <!--无敌分割线-->
+                <div class="SeparatorFull"></div>
+                <p:outputPanel>
+                    <!--刷新画面按钮-->
+                    <p:commandButton value="刷新"
+                                     icon="fa fa-refresh"
+                                     styleClass="wd-p-10 White"
+                                     actionListener="#{ctrlINV0011.refreshList}"
+                                     process="@this"
+                                     update="wuzishouliPanel"/>
+
+                    <h:outputText value="目前没有未受理的物资申请"
+                                  styleClass="font-size-20"
+                                  rendered="#{empty ctrlINV0011.vm.shenQingLuLiList}" />
+
+                    <p:dataTable id="wuzishenqingData"
+                                 value="#{ctrlINV0011.vm.shenQingLuLiList}"
+                                 rendered="#{not empty ctrlINV0011.vm.shenQingLuLiList}"
+                                 var="item"
+                                 lazy="true"
+                                 rows="15"
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="15, 30, 50"
+                                 styleClass="tct MarTop20">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="详细信息" styleClass="wd-p-10"/>
+                                <p:column headerText="#{msg.shen_qing_bian_hao}" styleClass="wd-p-20"/>
+                                <p:column headerText="#{msg.shen_qing_ren}" />
+                                <p:column headerText="#{msg.shen_qing_shi_jian}" styleClass="wd-p-20"/>
+                                <p:column headerText="受理" styleClass="wd-p-10"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--详细信息-->
+                        <p:column>
+                            <p:rowToggler/>
+                        </p:column>
+                        <!--申请编号-->
+                        <p:column>
+                            <h:outputText value="#{item.shenQingId}"/>
+                        </p:column>
+                        <!--申请人-->
+                        <p:column>
+                            <h:outputText value="#{item.shenqingren.nameZ}"/>
+                        </p:column>
+                        <!--申请时间-->
+                        <p:column>
+                            <h:outputText value="#{item.shenQingRiQi}">
+                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                            </h:outputText>
+                        </p:column>
+                        <!--受理-->
+                        <p:column>
+                            <p:commandLink update="frmMain:wuzishouliPanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                           process="@this"
+                                           oncomplete="showErrorMsg();"
+                                           value="#{msg.que_ren}"
+                                           actionListener="#{ctrlINV0011.queRenShouLi(item)}">
+                            </p:commandLink>
+                        </p:column>
+
+                        <!--物资申请明细-->
+                        <p:rowExpansion>
+                            <p:outputPanel styleClass="wd-p-100">
+                                <p:dataTable id="wuzishenqingData"
+                                             value="#{item.mingXiList}"
+                                             var="mingxi"
+                                             lazy="true"
+                                             rows="5"
+                                             paginatorAlwaysVisible="false"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="15, 30, 50"
+                                             styleClass="tct">
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column headerText="#{msg.shen_qing_ming_xi_bian_hao}" styleClass="wd-p-15"/>
+                                            <p:column headerText="#{msg.wu_pin_ming_cheng}"  styleClass="wd-p-30"/>
+                                            <p:column headerText="#{msg.xiang_mu_ming}" styleClass="wd-p-15"/>
+                                            <p:column headerText="#{msg.shen_qing_shu_liang}" styleClass="wd-p-15"/>
+                                            <p:column headerText="#{msg.shen_qing_li_you}"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <!--申请明细编号-->
+                                    <p:column>
+                                        <h:outputText value="#{mingxi.mingXiId}"/>
+                                    </p:column>
+                                    <!--物品名称-->
+                                    <p:column styleClass="tlt">
+                                        <h:outputText id="guigegaiyao" value="#{mingxi.shiti.wuZiMiaoShu}"/>
+                                        <p:tooltip position="top" for="guigegaiyao" value="#{mingxi.shiti.nameWithShuXingSummary}"/>
+                                    </p:column>
+                                    <!--项目名称-->
+                                    <p:column>
+                                        <h:outputText value="#{mingxi.xiangMu.xiangMuMing}"/>
+                                    </p:column>
+                                    <!--申请数量-->
+                                    <p:column styleClass="trt">
+                                        <h:outputText value="#{mingxi.shenQingShu}">
+                                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--申请理由-->
+                                    <p:column>
+                                        <h:outputText value="#{mingxi.shenQingLiYou}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:outputPanel>
+        </div>
+    </p:outputPanel>
+</ui:composition>

@@ -1,0 +1,649 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!--物资基本信息-->
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <p:outputPanel id="pnlInputArea" styleClass="Card pnlInputArea Container100 Responsive100">
+                <p:outputPanel>
+                    <!--标题-->
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="#{ctrlMaster.createPageTitle('MST', 'MST0012')}"/>
+                    </h1>
+                    <!--无敌分割线-->
+                    <div class="Separator"></div>
+
+                    <p:outputPanel id="leftpanel" styleClass="#{not empty ctrlMST0012.vm.editingShiTi ? 'Container50' : 'Container100'} leftpanel">
+
+                        <h:panelGrid columns="3" columnClasses="wd-f-100,">
+                            <p:outputLabel value="操作选择" for="caozuoxuanze"/>
+                            <p:selectOneRadio id="caozuoxuanze" value="#{ctrlMST0012.vm.caoZuo}">
+                                <p:ajax listener="#{ctrlMST0012.changeCaoZuo()}" process="@this" update="pnlInputArea"/>
+                                <f:selectItem itemLabel="新建物资" itemValue="1" />
+                                <f:selectItem itemLabel="修改已有物资或调整规格细分" itemValue="2" />
+                            </p:selectOneRadio>
+                            <p:outputPanel rendered="#{not ctrlMST0012.vm.xinJianWuZi}">
+                                <p:commandButton id="btnSelectPinLei" value="选择物品"
+                                                 actionListener="#{ctrlMST0012.doNothing()}"
+                                                 process="@this"
+                                                 update="ovlPinleiList1"
+                                                 oncomplete="PF('ovlPinleiList1').show('#{component.clientId}')"/>
+                            </p:outputPanel>
+                        </h:panelGrid>
+
+                        <!--无敌分割线-->
+                        <div class="Separator"></div>
+
+                        <h:panelGrid columns="4" columnClasses="wd-f-100,,wd-f-100,">
+                            <!--品类名-->
+                            <p:outputLabel value="物资名称" for="txtPinLeiName"/>
+                            <p:inputText id="txtPinLeiName" value="#{ctrlMST0012.vm.selectedPinLei.pinLeiMing}" styleClass="wd-p-97"
+                                         required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('物资名称')}"
+                                         maxlength="30">
+                            </p:inputText>
+                            <!--品类别名-->
+                            <p:outputLabel value="　　　别名" for="txtPinleiBieMing"/>
+                            <p:inputText id="txtPinleiBieMing" value="#{ctrlMST0012.vm.selectedPinLei.pinLeiBieMing}" styleClass="wd-p-97"
+                                         maxlength="30">
+                            </p:inputText>
+                        </h:panelGrid>
+
+                        <!--无敌分割线-->
+                        <div class="Separator"></div>
+                        归属类别
+                        <p:commandButton value="新建分类维度" 
+                                         style="margin-left: 10px"
+                                         actionListener="#{ctrlMST0012.newJiBenFenLei()}" process="@this" update="@this"
+                                         oncomplete="PF('newPinLeiDialog').show()"/>
+
+                        <p:dataTable id="jibenguileiTable"
+                                     value="#{ctrlMST0012.vm.jiBenGuiLeiList}"
+                                     var="jibenguilei"
+                                     paginatorAlwaysVisible="false"
+                                     paginator="true" rows="5"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     styleClass="tct jibenguileiTable">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="有效" styleClass="wd-p-5"/>
+                                    <p:column headerText="分类维度" styleClass="wd-p-10"/>
+                                    <p:column headerText="分类" styleClass="wd-p-10"/>
+                                    <p:column headerText="选择" styleClass="wd-p-5"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <!--有效-->
+                            <p:column>
+                                <p:selectBooleanCheckbox value="#{jibenguilei.selected}" >
+                                    <p:ajax process="@this"
+                                            listener="#{ctrlMST0012.doNothing()}"
+                                            update="@(.jibenguileiTable)"/>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <!--分类维度名-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{jibenguilei.pinLei.pinLeiMing}"/>
+                            </p:column>
+                            <!--分类名-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{jibenguilei.selectedChild.pinLei.pinLeiMing}"/>
+                            </p:column>
+                            <!--选择-->
+                            <p:column>
+                                <p:commandLink value="选择"
+                                                 actionListener="#{ctrlMST0012.showFenLeiList(jibenguilei)}"
+                                                 process="@this"
+                                                 update="@(.ovlFenLeiList)"
+                                                 oncomplete="PF('ovlFenLeiList').show()"/>
+                            </p:column>
+                        </p:dataTable>
+
+                        <!--无敌分割线-->
+                        <div class="Separator"></div>
+
+                        <p:outputPanel id="shuxingPanel" styleClass="shuxingPanel MarTop10" rendered="#{true or not empty ctrlMST0012.vm.selectedPinLei}">
+                            <h:outputText value="规格定义"/>
+                            <p:commandButton value="添加规格"
+                                             style="margin-left: 10px"
+                                             actionListener="#{ctrlMST0012.addShuXing}"
+                                             process="shuxingPanel"
+                                             update="shuxingPanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"/>
+                            <p:dataTable value="#{ctrlMST0012.vm.wuPinShuXingList}"
+                                         var="shuxing"
+                                         styleClass="tct"
+                                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="规格名" styleClass="wd-p-10"/>
+                                        <p:column headerText="单位" styleClass="wd-p-5"/>
+                                        <p:column headerText="是否必须" styleClass="wd-p-5"/>
+                                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <p:column styleClass="tct">
+                                    <p:inputText value="#{shuxing.shuXingMing}"
+                                                 required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('规格名')}">
+                                        <p:ajax listener="#{ctrlMST0012.doNothing()}" process="@this" update="@(.guigezhipanel)"/>
+                                    </p:inputText>
+                                </p:column>
+                                <p:column styleClass="tct">
+                                    <p:inputText value="#{shuxing.danWei}" size="9"/>
+                                </p:column>
+                                <p:column styleClass="tct">
+                                    <p:selectBooleanCheckbox value="#{shuxing.isBiXu}">
+                                        <p:ajax listener="#{ctrlMST0012.doNothing()}" process="@this" update="@(.guigezhipanel)"/>
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlMST0012.vm.wuPinShuXingList.remove(shuxing)}"
+                                                   process="@this"
+                                                   update="@(.shuxingPanel, .guigezhipanel)">
+                                        <i class="fa fa-trash Red Fs18"/>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <p:outputPanel styleClass="trt">
+                            <p:commandButton value="确认"
+                                             actionListener="#{ctrlMST0012.onSavePinLei}"
+                                             process="leftpanel"
+                                             update="leftpanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"/>
+                            <p:commandButton value="确认并新增细分规格"
+                                             actionListener="#{ctrlMST0012.savePinLeiAndDisplayShiTi()}"
+                                             process="leftpanel"
+                                             update="leftpanel, rightpanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             oncomplete="showErrorMsg();"/>
+                        </p:outputPanel>
+
+                        <!--无敌分割线-->
+                        <div class="Separator"></div>
+
+                        <p:dataTable id="xifenguigeTable"
+                                     value="#{ctrlMST0012.vm.selectedPinLei.shiTiWuZi}"
+                                     var="shiti"
+                                     rendered="#{not empty ctrlMST0012.vm.selectedPinLei.shiTiWuZi}"
+                                     emptyMessage="该物资目前没有细分规格"
+                                     styleClass="tct xifenguigeTable">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="已有细分规格" colspan="4"/>
+                                </p:row>
+                                <p:row>
+                                    <p:column headerText="细分规格描述" styleClass="wd-p-10"/>
+                                    <p:column headerText="规格" styleClass="wd-p-10"/>
+                                    <!--<p:column headerText="入库" styleClass="wd-p-3"/>-->
+                                    <p:column headerText="禁用该物资" styleClass="wd-p-3"/>
+                                    <p:column headerText="查看" styleClass="wd-p-3"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{shiti.wuZiMiaoShu}"/>
+                            </p:column>
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{shiti.shuXingSummary}"/>
+                            </p:column>
+<!--                            <p:column styleClass="tct">
+                                <p:commandLink value="入库"
+                                               actionListener="#{ctrlMST0012.showZhiJieRuKuDialog(shiti)}"
+                                               process="@this"
+                                               update="@(.zhijierukuPanel)"
+                                               oncomplete="PF('zhijierukuDialog').show()"/>
+                            </p:column>-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="已禁用" rendered="#{shiti.deleted}"/>
+                                <p:commandLink value="禁用"
+                                               rendered="#{not shiti.deleted}"
+                                               actionListener="#{ctrlMST0012.deleteShiTi(shiti)}"
+                                               process="@this"
+                                               update="@(.xifenguigeTable)"/>
+                            </p:column>
+                            <p:column styleClass="tct">
+                                <p:commandLink value="详细"
+                                                 actionListener="#{ctrlMST0012.selectShiTi(shiti)}"
+                                                 process="@this"
+                                                 update="@(.leftpanel, .rightpanel)"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="rightpanel" styleClass="Container50 Responsive100 rightpanel">
+                        <p:outputPanel rendered="#{not empty ctrlMST0012.vm.editingShiTi}">
+                            <p:commandButton value="新增细分规格"
+                                             actionListener="#{ctrlMST0012.newShiTiWuZi}"
+                                             process="@this"
+                                             update="rightpanel"/>
+                            
+                            <h:outputText value="当前是#{ctrlMST0012.vm.editingShiTi.wuZiBianHao eq null ? '新建' : '修改' }模式"/>
+
+                            <p:panelGrid columns="2" layout="grid" columnClasses="wd-p-20" styleClass="ui-panelgrid-blank">
+                                <!--物资描述-->
+                                <p:outputLabel value="物资描述" for="txtWuZiMiaoShu"/>
+                                <p:inputText id="txtWuZiMiaoShu" value="#{ctrlMST0012.vm.editingShiTi.wuZiMiaoShu}" styleClass="wd-f-300"
+                                             required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('物资描述')}"
+                                             maxlength="30"/>
+                                <!--单位-->
+                                <p:outputLabel value="单位" for="ddlDanWei"/>
+                                <table style="border-collapse:collapse;border-spacing:0px;border: 0;">
+                                    <tr>
+                                        <td>
+                                            <p:selectOneMenu id="ddlDanWei" value="#{ctrlMST0012.vm.editingShiTi.danWei}"
+                                                             converter="javax.faces.Integer" filter="true" filterMatchMode="contains"
+                                                             styleClass="wd-f-100">
+                                                <f:selectItems value="#{ctrlMST0012.vm.danWeiList}"  var="dw" itemValue="#{dw.danWeiId}" itemLabel="#{dw.danWeiMing}"/>
+                                            </p:selectOneMenu>
+                                        </td>
+                                        <td>
+                                            <p:commandButton value="添加新单位" styleClass="wd-f-200"
+                                                             process="@this"
+                                                             update="@this"
+                                                             actionListener="#{ctrlMST0012.createDanWei}"
+                                                             oncomplete="PF('createDanWeiDialog').show();"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!--内部编号-->
+<!--                                <p:outputLabel value="内部编号" for="txtNeiBuBianHao"/>
+                                <p:inputText id="txtNeiBuBianHao" value="#{ctrlMST0012.vm.editingShiTi.neiBuBianHao}"
+                                             styleClass="wd-f-300"
+                                             maxlength="10"/>-->
+                                <!--最小单位-->
+                                <p:outputLabel value="最小单位" for="numZuiXiaoDanWei"/>
+                                <p:inputText id="numZuiXiaoDanWei"
+                                             maxlength="9"
+                                             styleClass="trt"
+                                             required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('最小单位')}"
+                                             value="#{ctrlMST0012.vm.editingShiTi.zuiXiaoDanWei}"
+                                             converterMessage="#{ctrlMST0012.isMustAboveDouble('最小单位', 0.001)}"
+                                             validatorMessage="#{ctrlMST0012.isMustAboveDouble('最小单位', 0.001)}">
+                                    <f:validateDoubleRange minimum="0.001" maximum="999999999"/>
+                                </p:inputText>
+                                <!--采购周期-->
+                                <p:outputLabel value="采购周期" for="numCaiGouZhouQi"/>
+                                <p:outputPanel>
+                                    <p:inputNumber id="numCaiGouZhouQi" value="#{ctrlMST0012.vm.editingShiTi.caiGouZhouQi}"
+                                                   styleClass="wd-f-300 trt-inputNumber" maxValue="365"
+                                                   maxlength="3" decimalPlaces="0"
+                                                   required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('采购周期')}"/>天 
+                                </p:outputPanel>
+                                <!--物资类型-->
+                                <p:outputLabel value="物资类型" for="wuZiLeiXing"/>
+                                <p:selectOneRadio id="wuZiLeiXing" value="#{ctrlMST0012.vm.editingShiTi.leiXing}"
+                                                  required="true" requiredMessage="#{ctrlMST0003.isRequiredMessage('物资类型')}">
+                                    <f:selectItems value="#{bizConfig.wuZiLeiXing}" var="leixing" itemLabel="#{leixing.message}" itemValue="#{leixing}" />
+                                </p:selectOneRadio>
+                            </p:panelGrid>
+
+                            规格值
+                            <h:panelGrid id="guigezhipanel" style="margin-left: 5px"
+                                         columns="2" styleClass="guigezhipanel">
+                                <!--<ui:repeat value="#{ctrlMST0012.vm.wuPinShuXingList}" var="shuxing">-->
+                                <c:forEach items="#{ctrlMST0012.vm.wuPinShuXingList}" var="shuxing" >
+                                    <p:outputLabel value="#{shuxing.shuXingMing}" for="shuxingzhi" styleClass="wd-f-100"/>
+                                    <p:inputText id="shuxingzhi" value="#{shuxing.shuXingZhi}"
+                                                 required="#{shuxing.isBiXu}"
+                                                 requiredMessage="#{ctrlMST0012.isRequiredMessage(shuxing.shuXingMing)}"
+                                                 maxlength="20"/>
+                                    </c:forEach>
+                                    <!--<i class="EmptyBox5"/>-->
+                                <!--</ui:repeat>-->
+                            </h:panelGrid>
+                            
+                            <!--无敌分割线-->
+                            <div class="Separator"></div>
+                            
+                            供应商设置
+                            <p:commandButton value="添加供应商"
+                                             oncomplete="PF('gongyingshangDialog').show()"
+                                             actionListener="#{ctrlMST0012.doNothing()}"
+                                             process="@this"
+                                             update="gongyingshangDialog"/>
+                            <p:dataTable id="gongyingshangTable" value="#{ctrlMST0012.vm.currentGongYingShangList}"
+                                         var="gongyingshang" styleClass="gongyingshangTable"
+                                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="供应商名" styleClass="wd-p-10"/>
+                                        <p:column headerText="删除" styleClass="wd-p-4"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{gongyingshang.gongSiMing}"/>
+                                </p:column>
+                                <p:column styleClass="tct">
+                                    <p:commandLink actionListener="#{ctrlMST0012.vm.currentGongYingShangList.remove(gongyingshang)}"
+                                                   process="@this" update="@(.gongyingshangTable)">
+                                        <i class="fa fa-trash Red Fs16"/>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+
+                            <!--无敌分割线-->
+                            <div class="Separator"></div>
+                            
+                            储存仓库设置
+                            <p:commandButton value="更多"
+                                             actionListener="#{ctrlMST0012.doNothing()}"
+                                             process="@this"
+                                             disabled="true"
+                                             update="rightpanel"/>
+                            <p:dataTable value="#{ctrlMST0012.vm.cangKuList}"
+                                         var="cangKu"
+                                         selection="#{ctrlMST0012.vm.selectedCangKuList}"
+                                         rowKey="#{cangKu.cangKuId}"
+                                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="仓库ID" styleClass="wd-p-4"/>
+                                        <p:column headerText="仓库名" styleClass="wd-p-10"/>
+                                        <p:column selectionMode="multiple" styleClass="wd-p-2"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <p:column styleClass="tct">
+                                    <h:outputText value="#{cangKu.cangKuId}"/>
+                                </p:column>
+                                <p:column styleClass="tlt">
+                                    <h:outputText value="#{cangKu.cangKuMing}"/>
+                                </p:column>
+                                <p:column styleClass="tct" selectionMode="multiple"/>
+                            </p:dataTable>
+
+                            <p:outputPanel styleClass="trt">
+                                <p:commandButton value="确认"
+                                                 actionListener="#{ctrlMST0012.saveShiTi}"
+                                                 process="rightpanel"
+                                                 update="leftpanel, rightpanel, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                                 oncomplete="showErrorMsg();"/>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </div>
+
+        <!--品类候选值-->
+        <p:overlayPanel id="ovlPinleiList1" widgetVar="ovlPinleiList1" styleClass="ovlPinleiList1" >
+            <p:dataTable value="#{ctrlMST0012.vm.wuPinDetails}"
+                         var="pinLei" lazy="true"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="dtPinLei" widgetVar="dtPinLei"
+                         styleClass="bg-c-row-odd wd-f-300"
+                         scrollable="true"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="选择" style="width: 38px;"/>
+                        <p:column styleClass="tct wd-p-70" headerText="物品名"
+                                  filterBy="#{pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tct">
+                    <p:commandLink actionListener="#{ctrlMST0012.selectPinLei(pinLei)}"
+                                   process="@this"
+                                   update="@(.pnlInputArea)"
+                                   oncomplete="PF('ovlPinleiList1').hide('#{component.clientId}')">
+                        <i class="fa fa-pencil Blue"/>
+                    </p:commandLink>
+                </p:column>
+                <!--物品名-->
+                <p:column>
+                    <h:outputText value="#{pinLei.pinLeiMing}"/>
+                </p:column>
+            </p:dataTable>
+        </p:overlayPanel>
+
+        <p:dialog id="newPinLeiDialog"
+                  header="添加分类维度"
+                  widgetVar="newPinLeiDialog"
+                  closeOnEscape="true"
+                  width="300"
+                  styleClass="newPinLeiDialog">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-60">
+                <!--分类名-->
+                <p:outputLabel value="名称" for="PinLeiName"/>
+                <p:inputText id="PinLeiName" value="#{ctrlMST0012.vm.editingPinLei.pinLeiMing}" styleClass="wd-p-97"
+                             required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('名称')}"
+                             maxlength="30">
+                </p:inputText>
+                <!--分类别名-->
+                <p:outputLabel value="别名" for="PinleiBieMing"/>
+                <p:inputText id="PinleiBieMing" value="#{ctrlMST0012.vm.editingPinLei.pinLeiBieMing}" styleClass="wd-p-97"
+                             maxlength="30">
+                </p:inputText>
+            </p:panelGrid>
+
+            <!--保存-->
+            <p:commandButton value="保存"
+                             actionListener="#{ctrlMST0012.onSaveFenLei}"
+                             styleClass="Fright GreenButton"
+                             process="newPinLeiDialog"
+                             oncomplete="showErrorMsg();PF('newPinLeiDialog').hide();"
+                             update="jibenguileiTable, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+        </p:dialog>
+    </p:outputPanel>
+
+    <!--品类候选值-->
+    <p:dialog id="ovlFenLeiList" header="请选择所属分类" closeOnEscape="true"
+              widgetVar="ovlFenLeiList" styleClass="ovlFenLeiList" >
+
+        <p:outputPanel id="addfenleipanel">
+            <p:commandButton value="新建分类"
+                             actionListener="#{ctrlMST0012.newFenLei}"
+                             process="addfenleipanel"
+                             update="addfenleipanel"/>
+
+            <i class="EmptyBox5"/>
+            <p:outputPanel rendered="#{ctrlMST0012.addFenLeiMode}">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-60">
+                    <!--分类名-->
+                    <p:outputLabel value="名称" for="FenLeiName"/>
+                    <p:inputText id="FenLeiName" value="#{ctrlMST0012.vm.editingPinLei.pinLeiMing}" styleClass="wd-p-97"
+                                 required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('名称')}"
+                                 maxlength="30">
+                    </p:inputText>
+                    <!--分类别名-->
+                    <p:outputLabel value="别名" for="FenleiBieMing"/>
+                    <p:inputText id="FenleiBieMing" value="#{ctrlMST0012.vm.editingPinLei.pinLeiBieMing}" styleClass="wd-p-97"
+                                 maxlength="30">
+                    </p:inputText>
+                </p:panelGrid>
+                <p:commandButton value="保存"
+                                 actionListener="#{ctrlMST0012.onSaveFenLei}"
+                                 process="addfenleipanel"
+                                 oncomplete="showErrorMsg();"
+                                 update="addfenleipanel, fenLeiList, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <p:dataTable value="#{ctrlMST0012.vm.fenLeiList}"
+                     id="fenLeiList"
+                     var="leibie"
+                     paginatorAlwaysVisible="false"
+                     paginator="true"
+                     rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     styleClass="bg-c-row-odd"
+                     scrollable="true"
+                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column headerText="选择" style="width: 38px;"/>
+                    <p:column styleClass="tct wd-p-70" headerText="分类名"
+                              filterBy="#{leibie.pinLei.pinLeiMing}" filterMaxLength="10" filterMatchMode="contains"/>
+                </p:row>
+            </p:columnGroup>
+            <p:column styleClass="tct">
+                <p:commandLink value="选择" actionListener="#{ctrlMST0012.changeFenLeiSelection(leibie)}"
+                               process="@this"
+                               oncomplete="PF('ovlFenLeiList').hide()"
+                               update="@(.jibenguileiTable)"/>
+            </p:column>
+            <!--物品名-->
+            <p:column>
+                <h:outputText value="#{leibie.pinLei.pinLeiMing}"/>
+            </p:column>
+        </p:dataTable>
+    </p:dialog>
+    
+    <!--供应商-->
+    <p:dialog id="gongyingshangDialog" header="请选择供应商" closeOnEscape="true"
+              widgetVar="gongyingshangDialog" styleClass="gongyingshangDialog" >
+
+<!--        <p:outputPanel id="addfenleipanel">
+            <p:commandButton value="新建分类"
+                             actionListener="#{ctrlMST0012.newFenLei}"
+                             process="addfenleipanel"
+                             update="addfenleipanel"/>
+
+            <i class="EmptyBox5"/>
+            <p:outputPanel rendered="#{ctrlMST0012.addFenLeiMode}">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="wd-p-30,wd-p-60">
+                    公司名
+                    <p:outputLabel value="名称" for="gongsiming"/>
+                    <p:inputText id="gongsiming" value="#{ctrlMST0012.vm.editingPinLei.pinLeiMing}" styleClass="wd-p-97"
+                                 required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('名称')}"
+                                 maxlength="30">
+                    </p:inputText>
+                </p:panelGrid>
+                <p:commandButton value="保存"
+                                 actionListener="#{ctrlMST0012.onSaveFenLei}"
+                                 process="addfenleipanel"
+                                 oncomplete="showErrorMsg();"
+                                 update="addfenleipanel, fenLeiList, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+            </p:outputPanel>
+        </p:outputPanel>-->
+
+        <p:dataTable value="#{ctrlMST0012.vm.gongYingShangList}"
+                     var="gongyingshang"
+                     paginatorAlwaysVisible="false"
+                     paginator="true"
+                     rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     styleClass="bg-c-row-odd"
+                     scrollable="true"
+                     emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column headerText="选择" style="width: 38px;"/>
+                    <p:column styleClass="tct wd-p-20" headerText="供应商名"
+                              filterBy="#{gongyingshang.gongSiMing}" filterMaxLength="20" filterMatchMode="contains"/>
+                    <p:column headerText="邮编" styleClass="tct wd-p-10"/>
+                    <p:column headerText="电话" styleClass="tct wd-p-15"/>
+                    <p:column headerText="地址" styleClass="tct wd-p-30"/>
+                    <p:column headerText="备注"/>
+                </p:row>
+            </p:columnGroup>
+            <p:column styleClass="tct">
+                <p:selectBooleanCheckbox value="#{gongyingshang.selected}" >
+                    <p:ajax process="@this"
+                            listener="#{ctrlMST0012.changeGongYingShangSelection(gongyingshang)}"
+                            update="@(.gongyingshangTable)"/>
+                </p:selectBooleanCheckbox>
+            </p:column>
+            <!--供应商名-->
+            <p:column>
+                <h:outputText value="#{gongyingshang.gongSiMing}"/>
+            </p:column>
+            <!--邮编-->
+            <p:column styleClass="tct">
+                <h:outputText value="#{gongyingshang.formatYouBian}"/>
+            </p:column>
+            <!--电话-->
+            <p:column styleClass="tct">
+                <h:outputText value="#{gongyingshang.formatDianHua}"/>
+            </p:column>
+            <!--地址-->
+            <p:column>
+                <h:outputText value="#{gongyingshang.diZhi}"/>
+            </p:column>
+            <!--备注-->
+            <p:column>
+                <h:outputText value="#{gongyingshang.beiZhu}"/>
+            </p:column>
+        </p:dataTable>
+
+        <p:commandButton value="确定" actionListener="#{ctrlMST0012.doNothing()}"
+                         process="@this"
+                         oncomplete="PF('gongyingshangDialog').hide()"
+                         update="@this"/>
+    </p:dialog>
+    
+    <p:dialog header="直接入库"
+              styleClass=""
+              widgetVar="zhijierukuDialog"
+              closeOnEscape="true"
+              modal="true"
+              resizable="false">
+        <h:panelGrid id="zhijierukuPanel" columns="2" styleClass="zhijierukuPanel">
+            <p:outputLabel for="cangku" value="仓库"/>
+            <p:selectOneMenu id="cangku"
+                             required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('仓库')}" 
+                             value="#{ctrlMST0012.vm.zhiJieRuKuMingXi.shenqing.cangKuId}">
+                <p:ajax listener="#{ctrlMST0012.selectCangKu}" process="@this" update="huowei"/>
+                <f:selectItems value="#{ctrlMST0012.vm.cangKuList}"
+                               var="cangku"
+                               itemLabel="#{cangku.cangKuMing}"
+                               itemValue="#{cangku.cangKuId}"/>
+            </p:selectOneMenu>
+
+            <p:outputLabel for="huowei" value="货位"/>
+            <p:selectOneMenu id="huowei"
+                             required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('货位')}" 
+                             value="#{ctrlMST0012.vm.zhiJieRuKuMingXi.pk.huoWeiId}">
+                <f:selectItems value="#{ctrlMST0012.vm.zhiJieRuKuMingXi.shenqing.cangKu.huoWeiList}"
+                               var="huowei"
+                               itemLabel="#{huowei.huoWeiMiaoShu}"
+                               itemValue="#{huowei.huoWeiId}"/>
+            </p:selectOneMenu>
+
+            <p:outputLabel for="shuliang" value="数量"/>
+            <p:inputText id="shuliang" value="#{ctrlMST0012.vm.zhiJieRuKuMingXi.shenqing.shuLiang}" styleClass="trt"
+                         required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('数量')}" maxlength="13">
+                <p:keyFilter regEx="/[\d\.]/"/>
+            </p:inputText>
+
+            <p:outputLabel for="danjia" value="单价"/>
+            <p:inputNumber id="danjia"
+                           value="#{ctrlMST0012.vm.zhiJieRuKuMingXi.shenqing.danJia}" styleClass="trt-inputNumber" 
+                           maxValue="99999999999.99" minValue="0.00" emptyValue="0" thousandSeparator=","
+                           required="true" requiredMessage="#{ctrlMST0012.isRequiredMessage('单价')}" 
+                           decimalPlaces="6">
+            </p:inputNumber>
+
+            <p:outputLabel value="备注"/>
+            <p:inputText value="#{ctrlMST0012.vm.zhiJieRuKuMingXi.shenqing.beiZhu}"/>
+        </h:panelGrid>
+
+        <p:commandButton value="直接入库"
+                         actionListener="#{ctrlMST0012.zhiJieRuKu}"
+                         process="@this, zhijierukuPanel"
+                         update="frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                         oncomplete="showErrorMsg();PF('zhijierukuDialog').hide();"/>
+    </p:dialog>
+    
+    <p:dialog id="createDanWeiDialog" styleClass="createDanWeiDialog"
+              widgetVar="createDanWeiDialog" closeOnEscape="true">
+        <h:panelGrid columns="3" cellpadding="5">
+            <p:outputLabel for="danweiming" value="单位名"/>
+            <p:inputText id="danweiming" value="#{ctrlMST0012.vm.editingDanWei.danWeiMing}"
+                         required="true"
+                         requiredMessage="#{ctrlMST0012.isRequiredMessage('单位名')}"/>
+            <p:commandButton value="保存"
+                             actionListener="#{ctrlMST0012.saveDanWei}"
+                             process="@this, createDanWeiDialog"
+                             update="ddlDanWei, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                             oncomplete="showErrorMsg();PF('createDanWeiDialog').hide();"/>
+        </h:panelGrid>
+    </p:dialog>
+
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
+        <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+        <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+    </p:confirmDialog>
+</ui:composition>
