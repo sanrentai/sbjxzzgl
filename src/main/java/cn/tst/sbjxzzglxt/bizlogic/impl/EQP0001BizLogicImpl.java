@@ -1,0 +1,56 @@
+package cn.tst.sbjxzzglxt.bizlogic.impl;
+
+import java.util.List;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
+import cn.tst.sbjxzzglxt.common.SepE;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.service.impl.LTEquipBasicFacade;
+import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
+import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
+
+/**
+ * 仓库信息业务逻辑实现类
+ *
+ * @author ps_xy@pscp.co.jp
+ */
+@Stateless
+public class EQP0001BizLogicImpl extends BaseBizLogic implements EQP0001BizLogic {
+
+    @EJB
+    private LTEquipBasicFacade eqpService;
+
+    @Override
+    public void loadEQP0001ViewModel(EQP0001ViewModel vm) {
+        List<LTEquipBasic> LTEquipBasicList = eqpService.findByCId((long) 0);
+        vm.setEquipBasicList(LTEquipBasicList);
+        
+    }
+
+    @Override
+    public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, EQP0001ViewModel vm) {
+
+        ExecuteResult result = new ExecuteResult(mode);
+        LTEquipBasic target = new LTEquipBasic();
+        try {
+            switch (mode) {
+                case INSERT:
+                    eqpService.create(target);
+                    break;
+                case UPDATE:
+                    eqpService.edit(target);
+                    break;
+                case DELETE:
+                    eqpService.forceRemove(target);
+                    break;
+            }
+            result.setSuccess(true);
+        } catch (Exception e) {
+            result.anylizeException(e);
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+}

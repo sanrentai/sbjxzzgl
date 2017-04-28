@@ -157,9 +157,9 @@ public final class SepC {
     public static final class MoKuaiCategory {
 
         /**
-         * 物资管理
+         * 设备管理
          */
-        public static final String WU_ZI = "wuzi";
+        public static final String EQP = "equipment";
         /**
          * 车辆管理
          */
@@ -195,6 +195,10 @@ public final class SepC {
          * 申请使用
          */
         public static final String BIZ = "BIZ";
+        /**
+         * 设备
+         */
+        public static final String EQP = "EQP";
         /**
          * 审核
          */
@@ -681,12 +685,19 @@ public final class SepC {
          * 抄表月报表
          */
         public static final String MET0002 = "ctrlMET0002";
+
+        public static final String EQP0001 = "ctrlEQP0001";
     }
 
     /**
      * 品类关系根元素Code
      */
     public static final String PIN_LEI_GUAN_XI_ROOT = "GL0000000001";
+
+    /**
+     * 设备根元素Code
+     */
+    public static final String EQP_ROOT = "0";
 
     /**
      * 分类：油 用于车辆

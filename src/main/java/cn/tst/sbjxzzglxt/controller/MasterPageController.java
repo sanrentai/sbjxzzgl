@@ -34,10 +34,10 @@ public class MasterPageController extends BusinessBaseController {
     @EJB
     private MasterPageBizLogic bizLogic;
 
-    private String moKuaiId = SepC.MoKuaiCategory.WU_ZI;
+    private String moKuaiId = SepC.MoKuaiCategory.EQP;
     private String selectedFunctionId;        //选中的菜单项目ID
     private String contentURL;                //加载画面的URL
-    private MenuModel wuZiMenuModel;              //菜单模型
+    private MenuModel eqpMenuModel;              //菜单模型
     private MenuModel cheLiangMenuModel;
     private MenuModel nengYuanMenuModel;
     private MenuModel yongYouMenuModel;
@@ -55,8 +55,8 @@ public class MasterPageController extends BusinessBaseController {
 
     public MenuModel getMenus() {
         switch (this.moKuaiId) {
-            case SepC.MoKuaiCategory.WU_ZI:
-                return wuZiMenuModel;
+            case SepC.MoKuaiCategory.EQP:
+                return eqpMenuModel;
             case SepC.MoKuaiCategory.CHE_LIANG:
                 return cheLiangMenuModel;
             case SepC.MoKuaiCategory.NENG_YUAN:
@@ -70,9 +70,9 @@ public class MasterPageController extends BusinessBaseController {
             case SepC.MoKuaiCategory.SETTINGS:
                 return settingsMenuModel;
             default:
-                return wuZiMenuModel;
+                return eqpMenuModel;
         }
-//        return wuZiMenuModel;
+//        return eqpMenuModel;
     }
 
     public MenuModel getCheLiangMenuModel() {
@@ -112,7 +112,7 @@ public class MasterPageController extends BusinessBaseController {
     private void createMenu() {
 
         ///创建Menu模型
-        this.wuZiMenuModel = new DefaultMenuModel();
+        this.eqpMenuModel = new DefaultMenuModel();
         this.cheLiangMenuModel = new DefaultMenuModel();
         this.nengYuanMenuModel = new DefaultMenuModel();
         this.settingsMenuModel = new DefaultMenuModel();
@@ -129,7 +129,7 @@ public class MasterPageController extends BusinessBaseController {
             .sorted((v1, v2) -> Integer.compare(v1.getKey().getPaixu(), v2.getKey().getPaixu()))
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (v1, v2) -> v1, LinkedHashMap::new));
 
-        convertMapToMenu(SepC.MoKuaiCategory.WU_ZI, groupByMenus, wuZiMenuModel);
+        convertMapToMenu(SepC.MoKuaiCategory.EQP, groupByMenus, eqpMenuModel);
         convertMapToMenu(SepC.MoKuaiCategory.CHE_LIANG, groupByMenus, cheLiangMenuModel);
         convertMapToMenu(SepC.MoKuaiCategory.YONG_YOU, groupByMenus, yongYouMenuModel);
         convertMapToMenu(SepC.MoKuaiCategory.YONG_MEI, groupByMenus, yongMeiMenuModel);
@@ -137,7 +137,7 @@ public class MasterPageController extends BusinessBaseController {
         convertMapToMenu(SepC.MoKuaiCategory.NENG_YUAN, groupByMenus, nengYuanMenuModel);
         convertMapToMenu(SepC.MoKuaiCategory.SETTINGS, groupByMenus, settingsMenuModel);
 
-        System.out.println(this.wuZiMenuModel);
+        System.out.println(this.eqpMenuModel);
     }
     
     private void convertMapToMenu(String moKuaiId, Map<MstCaiDan, List<MstCaiDanXiangMu>> groupByMenus, MenuModel menuModel) {
@@ -146,6 +146,9 @@ public class MasterPageController extends BusinessBaseController {
             final String pageFunctionPath;
 
             switch (k.getCaidanId()) {
+                case "EQP":
+                    pageFunctionPath = "equipment/";
+                    break;
                 case "BIZ":
                     pageFunctionPath = "business/";
                     break;
@@ -218,137 +221,6 @@ public class MasterPageController extends BusinessBaseController {
         });
     }
     
-    /**
-     * 物资申请审批
-     */
-    public void showARP0001(){
-        transfer2Page("ARP0001", "approval/");
-        setShowGZT(true);
-    }
-    
-    /*
-    购买申请审批
-    */
-    public void showARP0002(){
-        transfer2Page("ARP0002", "approval/");
-        setShowGZT(true);
-    }
-    
-    /**
-     * 采购计划审批
-     */
-    public void showARP0003(){
-        transfer2Page("ARP0003", "approval/");
-        setShowGZT(true);
-    }
-    /**
-     * 采购支付计划审批
-     */
-    public void showARP0009(){
-        transfer2Page("ARP0009", "approval/");
-        setShowGZT(true);
-    }
-    
-    /**
-     * 物资申请受理
-     */
-    public void showINV0011(){
-        transfer2Page("INV0011", "inventory/");
-        setShowGZT(true);
-    }
-    /**
-     * 物资调配
-     */
-    public void showINV0001(){
-        transfer2Page("INV0001", "inventory/");
-        setShowGZT(true);
-    }
-    
-    /**
-     * 备货确认
-     */
-    public void showINV0007(){
-        transfer2Page("INV0007", "inventory/");
-        setShowGZT(true);
-    }
-
-    /**
-     * 购买申请一栏
-     */
-    public void showINV0008(){
-        transfer2Page("INV0008", "inventory/");
-        setShowGZT(true);
-    }
-    /**
-     * 采购计划制定
-     */
-    public void showSUP0001(){
-        transfer2Page("SUP0001", "supply/");
-        setShowGZT(true);
-    }
-    /**
-     * 分配采购任务
-     */
-    public void showSUP0002(){
-        transfer2Page("SUP0002", "supply/");
-        setShowGZT(true);
-    }
-    /**
-     * 采购计划执行
-     */
-    public void showSUP0003(){
-        transfer2Page("SUP0003", "supply/");
-        setShowGZT(true);
-    }
-    /**
-     * 物资入库
-     */
-    public void showINV0004(){
-        transfer2Page("INV0004", "inventory/");
-        setShowGZT(true);
-    }
-    /**
-     * 物资出库
-     */
-    public void showINV0005(){
-        transfer2Page("INV0005", "inventory/");
-        setShowGZT(true);
-    }
-    /**
-     * 物资调拨申请受理
-     */
-    public void showINV0009(){
-        transfer2Page("INV0009", "inventory/");
-        setShowGZT(true);
-    }
-    /**
-     * 物资申请
-     */
-    public void showBIZ0001(){
-        transfer2Page("BIZ0001", "business/");
-        setShowGZT(true);
-    }
-    /**
-     * 请求领货
-     */
-    public void showBIZ0004(){
-        transfer2Page("BIZ0004", "business/");
-        setShowGZT(true);
-    }
-
-    /**
-     * 是否显示工作台
-    */
-    private boolean showGZT;
-
-    
-    public boolean getShowGZT() {
-        return showGZT;
-    }
-
-    public void setShowGZT(boolean showGZT) {
-        this.showGZT = showGZT;
-    }
     /**
      * Ajax页面跳转
      *
