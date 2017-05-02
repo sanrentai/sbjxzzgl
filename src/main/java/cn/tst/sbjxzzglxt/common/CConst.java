@@ -207,6 +207,7 @@ public class CConst {
         {"DatCheNianJian", "CNJ", "5"},
         {"DatCheJiHua", "CJH", "5"},
         {"DatWzJinDuXiangXi", "JD", "10"},
-        {"MstNyDanJia", "DJ", "4"}
+        {"MstNyDanJia", "DJ", "4"},
+        {"LTEquipBasic", "", "6"}
     };
 }

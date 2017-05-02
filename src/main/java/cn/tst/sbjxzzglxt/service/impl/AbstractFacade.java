@@ -133,14 +133,14 @@ public abstract class AbstractFacade<T extends BaseEntity> {
      * @param entity
      * @return
      */
-    public T create(T entity) {
+    public void create(T entity) {
 //        am.getLoginInfo().getYuanGong().getYuangongRoleList()
         EntityManager em = getEntityManager();
         entity.setCreateInfo(am.getLoginInfo().getYuanGong().getYuanGongId());
         em.persist(entity);
         em.flush();
 //        em.clear();
-        return (T) keyIdReset(entity);
+//        return (T) keyIdReset(entity);
     }
 
     /**

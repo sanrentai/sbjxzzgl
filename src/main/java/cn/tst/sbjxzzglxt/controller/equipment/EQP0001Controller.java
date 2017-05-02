@@ -12,7 +12,7 @@ import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import java.util.Set;
-import org.apache.commons.lang.StringUtils;
+import java.util.UUID;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -63,7 +63,7 @@ public class EQP0001Controller extends BusinessBaseController {
         this.selectedNode = event.getTreeNode();
 
         ///是否为邮件菜单点击事件
-        this.onStartNodeEditing();
+//        this.onStartNodeEditing();
     }
 
     /**
@@ -91,7 +91,13 @@ public class EQP0001Controller extends BusinessBaseController {
     }
 
     public void onAddTargetData() {
-
+        vm.setEditingEquipBasic(new LTEquipBasic());
+        if (selectedNode == null) {
+            vm.getEditingEquipBasic().setcId(new Long(SepC.EQP_ROOT));
+        } else {
+            LTEquipBasic l = (LTEquipBasic) selectedNode.getData();
+            vm.getEditingEquipBasic().setcId(l.getId());
+        }
     }
 
     /**
@@ -100,10 +106,12 @@ public class EQP0001Controller extends BusinessBaseController {
     public void onCancelEdit() {
 
         ///初始化状态
-        this.switchStatus2Init();
-
+//        this.switchStatus2Init();
         ///无模式
-        this.switchEditMode2None();
+//        this.switchEditMode2None();
+        vm.setEditingEquipBasic(null);
+        selectedNode = null;
+        createEqpTree();
     }
 
     /**
@@ -111,26 +119,17 @@ public class EQP0001Controller extends BusinessBaseController {
      *
      * @param type 更新对象
      */
-    public void onSaveData(String type) {
+    public void onSaveData() {
 
-        SepE.ExecuteMode mode = null;
+        SepE.ExecuteMode mode = this.vm.getEditingEquipBasic().getId() == null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
 
-        ExecuteResult result = null;
+        ExecuteResult result = this.bizLogic.onSaveEquipment(mode, vm);
 
         this.addMessage(result.createMessage());
 
-        ///执行成功
         if (result.isSuccess()) {
-
-            ///无模式
-            this.switchEditMode2None();
-
-            ///出事状态
-            this.switchStatus2Init();
-
-            ///更新仓库一栏
-            this.bizLogic.loadEQP0001ViewModel(vm);
-            this.createEqpTree();
+            onCancelEdit();
         }
     }
 
@@ -143,11 +142,13 @@ public class EQP0001Controller extends BusinessBaseController {
     private void createEqpTree() {
         
         ///根节点
-        equipTree = new DefaultTreeNode(T_ROOT, "设备", null);
+        equipTree = new DefaultTreeNode("Root", null);
         for (LTEquipBasic item : vm.getEquipBasicList()) {
-            this.createRelationTree(equipTree, item);
+            TreeNode subNode = new DefaultTreeNode(item, equipTree);
+            subNode.setExpanded(false);
+            this.createRelationTree(subNode, item);
         }
-        
+
     }
 
     /**
@@ -227,6 +228,5 @@ public class EQP0001Controller extends BusinessBaseController {
     public TreeNode getSelectedNode() {
         return selectedNode;
     }
-    
-    
+
 }

@@ -20,8 +20,7 @@ public class LTEquipBasicFacade extends AbstractFacade<LTEquipBasic> {
 
     public List<LTEquipBasic> findByCId(Long cId) {
         Query query = getEntityManager().createNamedQuery("LTEquipBasic.findByCId");
-        
-                query.setParameter("delFlg", SepE.Flag.NO.getValue());
+        query.setParameter("delFlg", SepE.Flag.NO.getValue());
         query.setParameter("cId", cId);
         return query.getResultList();
     }

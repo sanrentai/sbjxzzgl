@@ -13,6 +13,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -44,8 +46,7 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
     @Size(max = 250)
@@ -96,20 +97,20 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         this.id = id;
     }
 
+    public Long getcId() {
+        return cId;
+    }
+
+    public void setcId(Long cId) {
+        this.cId = cId;
+    }
+
     public String getENmae() {
         return eNmae;
     }
 
     public void setENmae(String eNmae) {
         this.eNmae = eNmae;
-    }
-
-    public Long getCId() {
-        return cId;
-    }
-
-    public void setCId(Long cId) {
-        this.cId = cId;
     }
 
     public String getENum() {

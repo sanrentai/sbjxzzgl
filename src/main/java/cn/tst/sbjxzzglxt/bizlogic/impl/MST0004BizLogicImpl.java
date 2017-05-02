@@ -105,7 +105,7 @@ public class MST0004BizLogicImpl extends BaseBizLogic implements MST0004BizLogic
             switch (mode) {
                 case INSERT:
                     ///插入数据
-                    obj = this.yuanGongService.create(obj);
+                    this.yuanGongService.create(obj);
                     break;
                 case UPDATE:
                     this.yuanGongService.edit(obj);
