@@ -687,6 +687,8 @@ public final class SepC {
         public static final String MET0002 = "ctrlMET0002";
 
         public static final String EQP0001 = "ctrlEQP0001";
+
+        public static final String EQP0002 = "ctrlEQP0002";
     }
 
     /**

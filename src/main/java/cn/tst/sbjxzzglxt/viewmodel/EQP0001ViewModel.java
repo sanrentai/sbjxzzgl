@@ -2,6 +2,7 @@ package cn.tst.sbjxzzglxt.viewmodel;
 
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import org.primefaces.model.TreeNode;
 
 /**
  * 仓库管理
@@ -14,6 +15,16 @@ public class EQP0001ViewModel extends BaseViewModel {
     private LTEquipBasic selectedEquipBasic;
     private LTEquipBasic editingEquipBasic;
     private LTEquipBasic rootEqp;
+    
+    private TreeNode equipTreeRoot;
+
+    public TreeNode getEquipTreeRoot() {
+        return equipTreeRoot;
+    }
+
+    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
+        this.equipTreeRoot = equipTreeRoot;
+    }
 
     public List<LTEquipBasic> getEquipBasicList() {
         return equipBasicList;
