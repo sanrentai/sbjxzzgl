@@ -2,6 +2,8 @@ package cn.tst.sbjxzzglxt.viewmodel;
 
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
+import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
 
 /**
  * 仓库管理
@@ -10,10 +12,15 @@ import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
  */
 public class EQP0001ViewModel extends BaseViewModel {
 
+    private List<LTEquipProperty> equipPropertyList;
     private List<LTEquipBasic> equipBasicList;
     private LTEquipBasic selectedEquipBasic;
     private LTEquipBasic editingEquipBasic;
     private LTEquipBasic rootEqp;
+
+    private LTEquipProRule editingEquipProRule;
+    ///新建参数
+    private LTEquipProperty editingEquipProperty;
 
     public List<LTEquipBasic> getEquipBasicList() {
         return equipBasicList;
@@ -45,6 +52,30 @@ public class EQP0001ViewModel extends BaseViewModel {
 
     public void setRootEqp(LTEquipBasic rootEqp) {
         this.rootEqp = rootEqp;
+    }
+
+    public LTEquipProRule getEditingEquipProRule() {
+        return editingEquipProRule;
+    }
+
+    public void setEditingEquipProRule(LTEquipProRule editingEquipProRule) {
+        this.editingEquipProRule = editingEquipProRule;
+    }
+
+    public LTEquipProperty getEditingEquipProperty() {
+        return editingEquipProperty;
+    }
+
+    public void setEditingEquipProperty(LTEquipProperty editingEquipProperty) {
+        this.editingEquipProperty = editingEquipProperty;
+    }
+
+    public List<LTEquipProperty> getEquipPropertyList() {
+        return equipPropertyList;
+    }
+
+    public void setEquipPropertyList(List<LTEquipProperty> equipPropertyList) {
+        this.equipPropertyList = equipPropertyList;
     }
 
 }

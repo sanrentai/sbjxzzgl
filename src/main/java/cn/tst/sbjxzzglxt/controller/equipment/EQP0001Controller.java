@@ -9,10 +9,16 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
+import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -62,6 +68,8 @@ public class EQP0001Controller extends BusinessBaseController {
 
         this.selectedNode = event.getTreeNode();
 
+        vm.setSelectedEquipBasic((LTEquipBasic) selectedNode.getData());
+
         ///是否为邮件菜单点击事件
 //        this.onStartNodeEditing();
     }
@@ -95,9 +103,14 @@ public class EQP0001Controller extends BusinessBaseController {
         if (selectedNode == null) {
             vm.getEditingEquipBasic().setcId(new Long(SepC.EQP_ROOT));
         } else {
-            LTEquipBasic l = (LTEquipBasic) selectedNode.getData();
-            vm.getEditingEquipBasic().setcId(l.getId());
+//            LTEquipBasic l = (LTEquipBasic) selectedNode.getData();
+//            vm.getEditingEquipBasic().setcId(l.getId());
+            vm.getEditingEquipBasic().setcId(vm.getSelectedEquipBasic().getId());
         }
+    }
+
+    public void onAddPorperty() {
+        vm.setEditingEquipProperty(new LTEquipProperty());
     }
 
     /**
@@ -133,6 +146,38 @@ public class EQP0001Controller extends BusinessBaseController {
         }
     }
 
+    public void onSaveProperty() {
+
+        SepE.ExecuteMode mode = this.vm.getEditingEquipProperty().getId() == null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
+
+        ExecuteResult result = this.bizLogic.onSaveProperty(mode, vm);
+
+        this.addMessage(result.createMessage());
+
+        if (result.isSuccess()) {
+            vm.setEditingEquipProperty(null);
+        }
+    }
+
+    public void changeCanShuSelection(LTEquipProperty item) {
+        LTEquipBasic selectedEquipBasic = vm.getSelectedEquipBasic();
+        if (selectedEquipBasic.getEquipProRuleList() == null) {
+            selectedEquipBasic.setEquipProRuleList(new ArrayList<>());
+        } else {
+            
+            LTEquipProRule newProRule = new LTEquipProRule();
+            newProRule.setENum(vm.getSelectedEquipBasic().getENum());
+            newProRule.setPId(item.getId());
+            newProRule.setEquipProperty(item);
+            selectedEquipBasic.getEquipProRuleList().add(newProRule);
+        }
+    }
+
+    public void onDeleteCanShu(LTEquipProRule row) {
+        vm.getSelectedEquipBasic().getEquipProRuleList().remove(row);
+    }
+
     //*****************************************************************
     //                        私有函数定义
     //*****************************************************************
@@ -140,7 +185,7 @@ public class EQP0001Controller extends BusinessBaseController {
      * 创建仓库树
      */
     private void createEqpTree() {
-        
+
         ///根节点
         equipTree = new DefaultTreeNode("Root", null);
         for (LTEquipBasic item : vm.getEquipBasicList()) {

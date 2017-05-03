@@ -29,7 +29,8 @@
                                     styleClass="wd-p-100">
 <!--                            <p:tree id="treeCK" value="#{ctrlEQP0001.equipTree}" var="v" 
                                     styleClass="wd-p-100">-->
-                                <p:ajax event="select" process="treeCK" update="frmMain:pnlInputArea" listener="#{ctrlEQP0001.onNodeSelect}"  />
+                                <p:ajax event="select" process="treeCK" 
+                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0001.onNodeSelect}"  />
 
                                 <!--根节点-->
                                 <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
@@ -41,18 +42,70 @@
                     </p:row>
                 </p:panelGrid>
             </p:outputPanel>
-<!--            <p:outputPanel id="pnlInputArea" styleClass="Container70 Responsive100">
-                <p:toolbar styleClass="Container100">
-                    <f:facet name="left">
-                        <p:commandButton value="新增仓库" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddTargetData('T_CK')}" 
-                                         styleClass="NavyButton" disabled="#{ctrlEQP0001.statusEditing}"/>
-                    </f:facet>
-                </p:toolbar>
-            </p:outputPanel>-->
+            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
+                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic}">
+                    <!--设备编号-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="OENum" value="设备编号"/>
+                        <p:inputText id="OENum" value="#{ctrlEQP0001.vm.selectedEquipBasic.ENum}" 
+                                     disabled="true"
+                                     maxlength="400" />
+                    </p:panelGrid>
+                    <!--设备名-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="OENmae" value="设备名"/>
+                        <p:inputText id="OENmae" value="#{ctrlEQP0001.vm.selectedEquipBasic.ENmae}" 
+                                     disabled="true"
+                                     maxlength="400" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-100 NoPadding">
+                        <p:commandButton value="选择参数" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddPorperty}" 
+                                         disabled="#{ctrlEQP0001.statusEditing}"/>
+                    </p:panelGrid>
+                </p:outputPanel>
+                <p:outputPanel id="canShu" styleClass="Container100 Responsive100 canShu">
+                    <p:dataTable value="#{ctrlEQP0001.vm.selectedEquipBasic.equipProRuleList}" var="canShu" 
+                                 cellSeparator="5"
+                                 widgetVar="wvWuLiaoList"
+                                 rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic.equipProRuleList}"
+                                 emptyMessage="没有数据">
+                        <f:facet name="header">
+                            <h:outputText value="设备参数"/>
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column headerText="删除" styleClass="wd-p-5"/>
+                                <p:column headerText="参数名" styleClass="tct wd-p-10"/>
+                                <p:column headerText="参数值" styleClass="tct wd-p-10"/>
+                            </p:row>
+                        </p:columnGroup>
+                        <!--删除-->
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlEQP0001.onDeleteCanShu(canShu)}"
+                                           process="@this" 
+                                           update="@(.canShu), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                           oncomplete="showErrorMsg();">
+                                <i class="fa fa-trash Fs18 Red"></i>
+                                <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                            </p:commandLink>
+                        </p:column>
+                        <!--参数名-->
+                        <p:column>
+                            <h:outputText value="#{canShu.equipProperty.PNmae}" />  
+                        </p:column>
+                        <!--参数值-->
+                        <p:column>
+                            <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{canShu.PVal}" placeholder="备注"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:outputPanel>
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
                 <p:toolbar styleClass="Container100">
                     <f:facet name="left">
                         <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddTargetData}" 
+                                         styleClass="NavyButton" disabled="#{ctrlEQP0001.statusEditing}"/>
+                        <p:commandButton value="新建参数" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddPorperty}" 
                                          styleClass="NavyButton" disabled="#{ctrlEQP0001.statusEditing}"/>
                     </f:facet>
                 </p:toolbar>
@@ -82,9 +135,114 @@
                                          styleClass="RedButton"/>
                     </p:panelGrid>
                 </p:outputPanel>
+                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0001.vm.editingEquipProperty}">
+                    <!--参数名-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="PNmae" value="参数名"/>
+                        <p:inputText id="PNmae" value="#{ctrlEQP0001.vm.editingEquipProperty.PNmae}" 
+                                     required="true" requiredMessage="#{ctrlEQP0001.isRequiredMessage('参数名')}"
+                                     maxlength="400" />
+                    </p:panelGrid>
+                    <!--字段类型-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="PType" value="字段类型"/>
+                        <p:inputText id="PType" value="#{ctrlEQP0001.vm.editingEquipProperty.PType}" 
+                                     maxlength="400" />
+                    </p:panelGrid>
+                    <!--默认值-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="PDefault" value="默认值"/>
+                        <p:inputText id="PDefault" value="#{ctrlEQP0001.vm.editingEquipProperty.PDefault}" 
+                                     maxlength="400" />
+                    </p:panelGrid>
+                    <!--字段说明-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="PSm" value="字段说明"/>
+                        <p:inputText id="PSm" value="#{ctrlEQP0001.vm.editingEquipProperty.PSm}" 
+                                     maxlength="400" />
+                    </p:panelGrid>
+                    <!--是否为空-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="PEmpt" value="是否为空"/>
+                        <p:selectOneButton id="PEmpt" value="#{ctrlEQP0001.vm.editingEquipProperty.PEmpt}">
+                            <f:selectItem itemLabel="是" itemValue="1" />
+                            <f:selectItem itemLabel="否" itemValue="0" />
+                        </p:selectOneButton>
+                    </p:panelGrid>
+                    <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                        <p:commandButton value="保存" process="pnlInputArea"
+                                         oncomplete="showErrorMsg();"
+                                         update="pnlInputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{ctrlEQP0001.onSaveProperty}"/>
+                        <p:commandButton value="取消" process="@this" 
+                                         update="pnlInputArea, frmMain:pnlSelectArea" actionListener="#{ctrlEQP0001.onCancelEdit}"
+                                         styleClass="RedButton"/>
+                    </p:panelGrid>
+                </p:outputPanel>
             </p:outputPanel>
         </p:outputPanel>
-
+        <p:dialog widgetVar="ovlPinleiList"
+                  styleClass="ovlPinleiList"
+                  resizable="false"
+                  showHeader="false"
+                  closeOnEscape="true">
+            <p:dataTable value="#{ctrlEQP0001.vm.equipPropertyList}"
+                         var="canShu" lazy="true"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="dtPinLei" widgetVar="dtPinLei"
+                         styleClass="bg-c-row-odd wd-f-700"
+                         scrollable="true"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column styleClass="tct wd-p-30" headerText="参数名"
+                                  filterBy="#{canShu.PNmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                        <p:column headerText="选择" styleClass="tct wd-p-10"/>
+                        <p:column headerText="类型" styleClass="tct wd-p-30"/>
+                        <p:column headerText="默认值" styleClass="tct wd-p-30"/>
+                        <p:column headerText="说明" styleClass="tct wd-p-30"/>
+                        <p:column headerText="是否为空" styleClass="tct wd-p-30"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--参数名-->
+                <p:column>
+                    <h:outputText value="#{canShu.PNmae}"/>
+                </p:column>
+                <!--选择-->
+                <p:column styleClass="tct wd-f-50">
+                    <p:selectBooleanCheckbox value="#{canShu.selected}" >
+                        <!--                        <p:ajax process="@(.pnlOutputArea), @this"
+                                                        listener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
+                                                        oncomplete="PF('ovlPinleiList').hide()"
+                                                        update="@()"/>
+                                            </p:selectBooleanCheckbox>-->
+                        <p:commandLink value="选择"
+                                       process="@this"
+                                       actionListener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
+                                       oncomplete="PF('ovlPinleiList').hide()"
+                                       update="@(.WuLiaoInputArea)">
+                        </p:commandLink>
+                </p:column>
+                <!--类型-->
+                <p:column styleClass="wd-f-200" >
+                    <h:outputText value="#{canShu.PType}"/>
+                </p:column>
+                <!--默认值-->
+                <p:column>
+                    <h:outputText value="#{canShu.PDefault}"/>
+                </p:column>
+                <!--说明-->
+                <p:column>
+                    <h:outputText value="#{canShu.PSm}"/>
+                </p:column>
+                <!--是否为空-->
+                <p:column>
+                    <h:outputText value="#{canShu.PEmpt eq 0? '否':'是'}"/>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
             <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
             <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>

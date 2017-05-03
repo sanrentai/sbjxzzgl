@@ -26,5 +26,14 @@ public interface EQP0001BizLogic {
      * @return 実行結果
      */
     ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, EQP0001ViewModel vm);
+    
+        /**
+     * 保存设备
+     *
+     * @param mode  执行模式
+     * @param vm 视图
+     * @return 実行結果
+     */
+    ExecuteResult onSaveProperty(SepE.ExecuteMode mode, EQP0001ViewModel vm);
 
 }
