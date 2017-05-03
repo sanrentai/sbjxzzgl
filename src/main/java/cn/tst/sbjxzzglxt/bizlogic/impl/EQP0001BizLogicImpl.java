@@ -8,8 +8,12 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
+import cn.tst.sbjxzzglxt.entity.MstBuMen;
+import cn.tst.sbjxzzglxt.entity.MstYuanGong;
 import cn.tst.sbjxzzglxt.service.impl.LTEquipBasicFacade;
 import cn.tst.sbjxzzglxt.service.impl.LTEquipPropertyFacade;
+import cn.tst.sbjxzzglxt.service.impl.MstBuMenFacade;
+import cn.tst.sbjxzzglxt.service.impl.MstYuanGongFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import java.util.UUID;
@@ -24,15 +28,24 @@ public class EQP0001BizLogicImpl extends BaseBizLogic implements EQP0001BizLogic
 
     @EJB
     private LTEquipBasicFacade eqpService;
-    
+
     @EJB
     private LTEquipPropertyFacade propertyDao;
+
+    @EJB
+    private MstYuanGongFacade yuanGongDao;
+
+    @EJB
+    private MstBuMenFacade buMenDao;
 
     @Override
     public void loadEQP0001ViewModel(EQP0001ViewModel vm) {
         List<LTEquipBasic> LTEquipBasicList = eqpService.findByCId(new Long(SepC.EQP_ROOT));
         vm.setEquipBasicList(LTEquipBasicList);
-
+        List<MstYuanGong> yuanGongList = yuanGongDao.findAll();
+        vm.setYuanGongList(yuanGongList);
+        List<MstBuMen> buMenList = buMenDao.findAll();
+        vm.setBuMenList(buMenList);
     }
 
     @Override

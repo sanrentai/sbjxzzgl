@@ -69,6 +69,9 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     @Column(name = "an_zhuang_shi_jian")
     @Temporal(TemporalType.TIMESTAMP)
     private Date anZhuangShiJian;
+    @Column(name = "shi_yong_shi_jian")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date shiYongShiJian;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "zong_zhi_liang")
     private BigDecimal zongZhiLiang;
@@ -483,6 +486,14 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
 
     public void setYingYongFuZheRenId(String yingYongFuZheRenId) {
         this.yingYongFuZheRenId = yingYongFuZheRenId;
+    }
+
+    public Date getShiYongShiJian() {
+        return shiYongShiJian;
+    }
+
+    public void setShiYongShiJian(Date shiYongShiJian) {
+        this.shiYongShiJian = shiYongShiJian;
     }
 
 }

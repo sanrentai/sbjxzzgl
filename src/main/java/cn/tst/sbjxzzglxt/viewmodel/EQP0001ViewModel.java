@@ -4,6 +4,8 @@ import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
 import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
+import cn.tst.sbjxzzglxt.entity.MstBuMen;
+import cn.tst.sbjxzzglxt.entity.MstYuanGong;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -15,9 +17,12 @@ public class EQP0001ViewModel extends BaseViewModel {
 
     private List<LTEquipProperty> equipPropertyList;
     private List<LTEquipBasic> equipBasicList;
+    private List<LTEquipBasic> selectEquipBasicList;
     private LTEquipBasic selectedEquipBasic;
     private LTEquipBasic editingEquipBasic;
     private LTEquipBasic rootEqp;
+    private List<MstYuanGong> yuanGongList;
+    private List<MstBuMen> buMenList;
 
     private LTEquipProRule editingEquipProRule;
     ///新建参数
@@ -87,6 +92,30 @@ public class EQP0001ViewModel extends BaseViewModel {
 
     public void setEquipPropertyList(List<LTEquipProperty> equipPropertyList) {
         this.equipPropertyList = equipPropertyList;
+    }
+
+    public List<MstYuanGong> getYuanGongList() {
+        return yuanGongList;
+    }
+
+    public void setYuanGongList(List<MstYuanGong> yuanGongList) {
+        this.yuanGongList = yuanGongList;
+    }
+
+    public List<MstBuMen> getBuMenList() {
+        return buMenList;
+    }
+
+    public void setBuMenList(List<MstBuMen> buMenList) {
+        this.buMenList = buMenList;
+    }
+
+    public List<LTEquipBasic> getSelectEquipBasicList() {
+        return selectEquipBasicList;
+    }
+
+    public void setSelectEquipBasicList(List<LTEquipBasic> selectEquipBasicList) {
+        this.selectEquipBasicList = selectEquipBasicList;
     }
 
 }

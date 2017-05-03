@@ -63,6 +63,11 @@ public class EQP0001Controller extends BusinessBaseController {
         this.selectedNode = event.getTreeNode();
 
         vm.setSelectedEquipBasic((LTEquipBasic) selectedNode.getData());
+        vm.setSelectEquipBasicList(new ArrayList());
+        vm.getSelectEquipBasicList().add(vm.getSelectedEquipBasic());
+        for (LTEquipBasic item : vm.getSelectedEquipBasic().getChildren()) {
+            vm.getSelectEquipBasicList().add(item);
+        }
 
         ///是否为邮件菜单点击事件
 //        this.onStartNodeEditing();
@@ -122,9 +127,16 @@ public class EQP0001Controller extends BusinessBaseController {
     }
 
     /**
+     * 取消树选择
+     */
+    public void onCancelShuXuanZhe() {
+        vm.setSelectedEquipBasic(null);
+        selectedNode = null;
+    }
+
+    /**
      * 保存数据
      *
-     * @param type 更新对象
      */
     public void onSaveData() {
 
@@ -159,7 +171,7 @@ public class EQP0001Controller extends BusinessBaseController {
         if (selectedEquipBasic.getEquipProRuleList() == null) {
             selectedEquipBasic.setEquipProRuleList(new ArrayList<>());
         } else {
-            
+
             LTEquipProRule newProRule = new LTEquipProRule();
             newProRule.setENum(vm.getSelectedEquipBasic().getENum());
             newProRule.setPId(item.getId());
@@ -177,6 +189,7 @@ public class EQP0001Controller extends BusinessBaseController {
     //*****************************************************************
     /**
      * 创建仓库树
+     *
      * @param equipBasicList 传人设备列表
      * @return 返回设备树
      */

@@ -19,6 +19,11 @@
                         <p:row>
                             <p:column>
                                 <h:outputText value="设备一览"/>
+                                <p:commandLink actionListener="#{ctrlEQP0001.onCancelEdit}"
+                                               styleClass="fr"
+                                               process="@this" update="frmMain:pnlSelectArea">
+                                    <i class="fa fa-star-o Fs18 Blue"></i>
+                                </p:commandLink>
                             </p:column>
                         </p:row>
                     </f:facet>
@@ -43,70 +48,245 @@
                 </p:panelGrid>
             </p:outputPanel>
             <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
-                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic}">
+                <p:dataTable value="#{ctrlEQP0001.vm.selectEquipBasicList}" var="equip"
+                             widgetVar="wvYongMeiList"
+                             rows="10"
+                             filterDelay="500"
+                             style="word-break: keep-all!important"
+                             paginator="true"
+                             paginatorAlwaysVisible="false"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                             emptyMessage="没有数据">
+                    <f:facet name="header">
+                        <h:outputText value="用车记录"/>
+                    </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
+                            <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
+                            <p:column headerText="上级设备" styleClass="tct wd-p-10" sortBy="#{equip.riQi}"/>
+                            <p:column headerText="设备编号" styleClass="tct wd-p-5"/>
+                            <p:column headerText="制造国别" styleClass="tct wd-p-5"/>
+                            <p:column headerText="型号" styleClass="tct wd-p-5"/>
+                            <p:column headerText="规格" styleClass="tct wd-p-5"/>
+                            <p:column headerText="生产商" styleClass="tct wd-p-8"/>
+                            <p:column headerText="进场日期" styleClass="tct wd-p-8"/>
+                            <p:column headerText="出场日期" styleClass="tct wd-p-8"/>
+                            <p:column headerText="安装地点" styleClass="tct wd-p-8"/>
+                            <p:column headerText="安装时间" styleClass="tct wd-p-8"/>
+                            <p:column headerText="使用时间" styleClass="tct wd-p-8"/>
+                            <p:column headerText="总重量" styleClass="tct wd-p-8"/>
+                            <p:column headerText="质保日期" styleClass="tct wd-p-8"/>
+                            <p:column headerText="报废日期" styleClass="tct wd-p-8"/>
+                            <p:column headerText="外形尺寸" styleClass="tct wd-p-8"/>
+                            <p:column headerText="性能描述" styleClass="tct wd-p-8"/>
+                            <p:column headerText="信息附件" styleClass="tct wd-p-8"/>
+                            <p:column headerText="购置方式" styleClass="tct wd-p-8"/>
+                            <p:column headerText="购置日期" styleClass="tct wd-p-8"/>
+                            <p:column headerText="资产原值" styleClass="tct wd-p-8"/>
+                            <p:column headerText="购入负责人" styleClass="tct wd-p-8"/>
+                            <p:column headerText="应用部门" styleClass="tct wd-p-8"/>
+                            <p:column headerText="应用负责人" styleClass="tct wd-p-8"/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlEQP0001.onEditEquip(equip)}"
+                                       process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlEQP0001.onDeleteEquip(equip)}"
+                                       process="@this" 
+                                       update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                       oncomplete="showErrorMsg();">
+                            <i class="fa fa-trash Fs18 Red"></i>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                    </p:column>
+                    <!--设备名称-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{equip.ENmae}"/>
+                    </p:column>
+                    <!--上级设备-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{equip.parent.ENmae}"/>
+                    </p:column>
                     <!--设备编号-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="OENum" value="设备编号"/>
-                        <p:inputText id="OENum" value="#{ctrlEQP0001.vm.selectedEquipBasic.ENum}" 
-                                     disabled="true"
-                                     maxlength="400" />
-                    </p:panelGrid>
-                    <!--设备名-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="OENmae" value="设备名"/>
-                        <p:inputText id="OENmae" value="#{ctrlEQP0001.vm.selectedEquipBasic.ENmae}" 
-                                     disabled="true"
-                                     maxlength="400" />
-                    </p:panelGrid>
-                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-100 NoPadding">
-                        <p:commandButton value="选择参数" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddPorperty}" 
-                                         disabled="#{ctrlEQP0001.statusEditing}"/>
-                    </p:panelGrid>
-                </p:outputPanel>
-                <p:outputPanel id="canShu" styleClass="Container100 Responsive100 canShu">
-                    <p:dataTable value="#{ctrlEQP0001.vm.selectedEquipBasic.equipProRuleList}" var="canShu" 
-                                 cellSeparator="5"
-                                 widgetVar="wvWuLiaoList"
-                                 rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic.equipProRuleList}"
-                                 emptyMessage="没有数据">
-                        <f:facet name="header">
-                            <h:outputText value="设备参数"/>
-                        </f:facet>
-                        <p:columnGroup type="header">
-                            <p:row>
-                                <p:column headerText="删除" styleClass="wd-p-5"/>
-                                <p:column headerText="参数名" styleClass="tct wd-p-10"/>
-                                <p:column headerText="参数值" styleClass="tct wd-p-10"/>
-                            </p:row>
-                        </p:columnGroup>
-                        <!--删除-->
-                        <p:column styleClass="tct">
-                            <p:commandLink actionListener="#{ctrlEQP0001.onDeleteCanShu(canShu)}"
-                                           process="@this" 
-                                           update="@(.canShu), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                           oncomplete="showErrorMsg();">
-                                <i class="fa fa-trash Fs18 Red"></i>
-                                <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-                            </p:commandLink>
-                        </p:column>
-                        <!--参数名-->
-                        <p:column>
-                            <h:outputText value="#{canShu.equipProperty.PNmae}" />  
-                        </p:column>
-                        <!--参数值-->
-                        <p:column>
-                            <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{canShu.PVal}" placeholder="备注"/>
-                        </p:column>
-                    </p:dataTable>
-                </p:outputPanel>
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.ENum}"/>
+                    </p:column>
+                    <!--制造国别-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.zhiZhaoGuoBie}"/>
+                    </p:column>
+                    <!--型号-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.xingHao}"/>
+                    </p:column>
+                    <!--规格-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.guiGe}"/>
+                    </p:column>
+                    <!--生产商-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.shengCanShang}"/>
+                    </p:column>
+                    <!--进场日期-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.jinCangRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--出场日期-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.chuCangRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--安装地点-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.anZhuangDiDian}"/>
+                    </p:column>
+                    <!--安装时间-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.anZhuangShiJian}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--使用时间-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.shiYongShiJian}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--总重量-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.zongZhiLiang}">
+                            <f:convertNumber pattern="#{bizConfig.numberFormatPattern}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--质保日期-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.zhiBaoRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--报废日期-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.baoFeiRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--外形尺寸-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.waiGuanChiCun}"/>
+                    </p:column>
+                    <!--性能描述-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.xingNengMiaoShu}"/>
+                    </p:column>
+                    <!--信息附件-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.xinXiFuJian}"/>
+                    </p:column>
+                    <!--购置方式-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.gouZhiFangShi}"/>
+                    </p:column>
+                    <!--购置日期-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.gouZhiRiQi}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--资产原值-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.zhiChanYuanZhi}">
+                            <f:convertNumber currencySymbol="" type="currency" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <!--购入负责人-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.gouRuFuZheRenId}"/>
+                    </p:column>
+                    <!--应用部门-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.yingYongBuMenId}"/>
+                    </p:column>
+                    <!--应用负责人-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.yingYongFuZheRenId}"/>
+                    </p:column>
+                </p:dataTable>
+<!--                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic}">
+            设备编号
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                <p:outputLabel for="OENum" value="设备编号"/>
+                <p:inputText id="OENum" value="#{ctrlEQP0001.vm.selectedEquipBasic.ENum}" 
+                             disabled="true"
+                             maxlength="400" />
+            </p:panelGrid>
+            设备名
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                <p:outputLabel for="OENmae" value="设备名"/>
+                <p:inputText id="OENmae" value="#{ctrlEQP0001.vm.selectedEquipBasic.ENmae}" 
+                             disabled="true"
+                             maxlength="400" />
+            </p:panelGrid>
+            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-100 NoPadding">
+                <p:commandButton value="选择参数" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddPorperty}" 
+                                 disabled="#{ctrlEQP0001.statusEditing}"/>
+            </p:panelGrid>
+        </p:outputPanel>
+        <p:outputPanel id="canShu" styleClass="Container100 Responsive100 canShu">
+            <p:dataTable value="#{ctrlEQP0001.vm.selectedEquipBasic.equipProRuleList}" var="canShu" 
+                         cellSeparator="5"
+                         widgetVar="wvWuLiaoList"
+                         rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic.equipProRuleList}"
+                         emptyMessage="没有数据">
+                <f:facet name="header">
+                    <h:outputText value="设备参数"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="删除" styleClass="wd-p-5"/>
+                        <p:column headerText="参数名" styleClass="tct wd-p-10"/>
+                        <p:column headerText="参数值" styleClass="tct wd-p-10"/>
+                    </p:row>
+                </p:columnGroup>
+                删除
+                <p:column styleClass="tct">
+                    <p:commandLink actionListener="#{ctrlEQP0001.onDeleteCanShu(canShu)}"
+                                   process="@this" 
+                                   update="@(.canShu), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                   oncomplete="showErrorMsg();">
+                        <i class="fa fa-trash Fs18 Red"></i>
+                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                    </p:commandLink>
+                </p:column>
+                参数名
+                <p:column>
+                    <h:outputText value="#{canShu.equipProperty.PNmae}" />  
+                </p:column>
+                参数值
+                <p:column>
+                    <p:inputTextarea autoResize="true" rows="1" maxlength="100" value="#{canShu.PVal}" placeholder="备注"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>-->
             </p:outputPanel>
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
                 <p:toolbar styleClass="Container100">
                     <f:facet name="left">
                         <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddTargetData}" 
                                          styleClass="NavyButton" disabled="#{ctrlEQP0001.statusEditing}"/>
-                        <p:commandButton value="新建参数" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddPorperty}" 
-                                         styleClass="NavyButton" disabled="#{ctrlEQP0001.statusEditing}"/>
+<!--                        <p:commandButton value="取消" process="@this" 
+                                         update="pnlInputArea, frmMain:pnlSelectArea" actionListener="#{ctrlEQP0001.onCancelEdit}"
+                                         styleClass="RedButton"/>-->
+<!--                        <p:commandButton value="新建参数" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0001.onAddPorperty}" 
+                                         styleClass="NavyButton" disabled="#{ctrlEQP0001.statusEditing}"/>-->
                     </f:facet>
                 </p:toolbar>
                 <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0001.vm.editingEquipBasic}">
@@ -123,6 +303,165 @@
                         <p:inputText id="ENmae" value="#{ctrlEQP0001.vm.editingEquipBasic.ENmae}" 
                                      required="true" requiredMessage="#{ctrlEQP0001.isRequiredMessage('设备名')}"
                                      maxlength="400" />
+                    </p:panelGrid>
+                    <!--制造国别-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="zhiZhaoGuoBie" value="制造国别"/>
+                        <p:inputText id="zhiZhaoGuoBie" value="#{ctrlEQP0001.vm.editingEquipBasic.zhiZhaoGuoBie}"/>
+                    </p:panelGrid>
+                    <!--型号-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="xingHao" value="型号"/>
+                        <p:inputText id="xingHao" value="#{ctrlEQP0001.vm.editingEquipBasic.xingHao}"/>
+                    </p:panelGrid>
+                    <!--规格-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="guiGe" value="规格"/>
+                        <p:inputText id="guiGe" value="#{ctrlEQP0001.vm.editingEquipBasic.guiGe}"/>
+                    </p:panelGrid>
+                    <!--生产商-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="shengCanShang" value="生产商"/>
+                        <p:inputText id="shengCanShang" value="#{ctrlEQP0001.vm.editingEquipBasic.shengCanShang}"/>
+                    </p:panelGrid>
+                    <!--进场日期-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="jinCangRiQi" value="进场日期"/>
+                        <p:calendar id="jinCangRiQi" value="#{ctrlEQP0001.vm.editingEquipBasic.jinCangRiQi}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+                    </p:panelGrid>
+                    <!--出场日期-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="chuCangRiQi" value="出场日期"/>
+                        <p:calendar id="chuCangRiQi" value="#{ctrlEQP0001.vm.editingEquipBasic.chuCangRiQi}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+
+                    </p:panelGrid>
+                    <!--安装地点-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="anZhuangDiDian" value="安装地点"/>
+                        <p:inputText id="anZhuangDiDian" value="#{ctrlEQP0001.vm.editingEquipBasic.anZhuangDiDian}"/>
+                    </p:panelGrid>
+                    <!--安装时间-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="anZhuangShiJian" value="安装时间"/>
+                        <p:calendar id="anZhuangShiJian" value="#{ctrlEQP0001.vm.editingEquipBasic.anZhuangShiJian}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+                    </p:panelGrid>
+                    <!--使用时间-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="shiYongShiJian" value="使用时间"/>
+                        <p:calendar id="shiYongShiJian" value="#{ctrlEQP0001.vm.editingEquipBasic.shiYongShiJian}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+                    </p:panelGrid>
+                    <!--总质量-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="zongZhiLiang" value="总质量"/>
+                        <p:inputText id="zongZhiLiang" value="#{ctrlEQP0001.vm.editingEquipBasic.zongZhiLiang}">
+                            <p:keyFilter regEx="/[\d]/"/>
+                        </p:inputText>
+                    </p:panelGrid>
+                    <!--质保日期-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="zhiBaoRiQi" value="质保日期"/>
+                        <p:calendar id="zhiBaoRiQi" value="#{ctrlEQP0001.vm.editingEquipBasic.zhiBaoRiQi}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+                    </p:panelGrid>
+                    <!--报废日期-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="baoFeiRiQi" value="报废日期"/>
+                        <p:calendar id="baoFeiRiQi" value="#{ctrlEQP0001.vm.editingEquipBasic.baoFeiRiQi}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+                    </p:panelGrid>
+                    <!--外形尺寸-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="waiGuanChiCun" value="外形尺寸"/>
+                        <p:inputText id="waiGuanChiCun" value="#{ctrlEQP0001.vm.editingEquipBasic.waiGuanChiCun}"/>
+                    </p:panelGrid>
+                    <!--性能描述-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="xingNengMiaoShu" value="性能描述"/>
+                        <p:inputText id="xingNengMiaoShu" value="#{ctrlEQP0001.vm.editingEquipBasic.xingNengMiaoShu}"/>
+                    </p:panelGrid>
+                    <!--信息附件-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="xinXiFuJian" value="信息附件"/>
+                        <p:inputText id="xinXiFuJian" value="#{ctrlEQP0001.vm.editingEquipBasic.xinXiFuJian}"/>
+                    </p:panelGrid>
+                    <!--购置方式-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="gouZhiFangShi" value="购置方式"/>
+                        <p:inputText id="gouZhiFangShi" value="#{ctrlEQP0001.vm.editingEquipBasic.gouZhiFangShi}"/>
+                    </p:panelGrid>
+                    <!--购置日期-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="gouZhiRiQi" value="购置日期"/>
+                        <p:calendar id="gouZhiRiQi" value="#{ctrlEQP0001.vm.editingEquipBasic.gouZhiRiQi}"
+                                    readonlyInput="true"
+                                    mask="true" styleClass="tct NoPadding"
+                                    pattern="#{bizConfig.dateFormat}"
+                                    locale="#{bizConfig.locale}" />
+                    </p:panelGrid>
+                    <!--资产原值-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="zhiChanYuanZhi" value="资产原值"/>
+                        <p:inputText id="zhiChanYuanZhi" value="#{ctrlEQP0001.vm.editingEquipBasic.zhiChanYuanZhi}">
+                            <p:keyFilter regEx="/[\d]/"/>
+                        </p:inputText>
+                    </p:panelGrid>
+                    <!--购入负责人-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="gouRuFuZheRenId" value="购入负责人"/>
+                        <p:selectOneMenu id="gouRuFuZheRenId" value="#{ctrlEQP0001.vm.editingEquipBasic.gouRuFuZheRenId}"
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="请选购入负责人" itemValue="" />
+                            <f:selectItems value="#{ctrlEQP0001.vm.yuanGongList}"
+                                           var="item"
+                                           itemLabel="#{item.nameZ}"
+                                           itemValue="#{item.yuanGongId}" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <!--应用部门-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="yingYongBuMenId" value="应用部门"/>
+                        <p:selectOneMenu id="yingYongBuMenId" value="#{ctrlEQP0001.vm.editingEquipBasic.yingYongBuMenId}"
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="请选应用部门" itemValue="" />
+                            <f:selectItems value="#{ctrlEQP0001.vm.buMenList}"
+                                           var="buMen"
+                                           itemLabel="#{buMen.buMenMing}"
+                                           itemValue="#{buMen.buMenId}" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <!--应用负责人-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="yingYongFuZheRenId" value="应用负责人"/>
+                        <p:selectOneMenu id="yingYongFuZheRenId" value="#{ctrlEQP0001.vm.editingEquipBasic.yingYongFuZheRenId}"
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItem itemLabel="请选应用负责人" itemValue="" />
+                            <f:selectItems value="#{ctrlEQP0001.vm.yuanGongList}"
+                                           var="item"
+                                           itemLabel="#{item.nameZ}"
+                                           itemValue="#{item.yuanGongId}" />
+                        </p:selectOneMenu>
                     </p:panelGrid>
 
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
@@ -213,17 +552,17 @@
                 <!--选择-->
                 <p:column styleClass="tct wd-f-50">
                     <p:selectBooleanCheckbox value="#{canShu.selected}" >
-                        <!--                        <p:ajax process="@(.pnlOutputArea), @this"
-                                                        listener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
-                                                        oncomplete="PF('ovlPinleiList').hide()"
-                                                        update="@()"/>
-                                            </p:selectBooleanCheckbox>-->
-                        <p:commandLink value="选择"
-                                       process="@this"
-                                       actionListener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
-                                       oncomplete="PF('ovlPinleiList').hide()"
-                                       update="@(.WuLiaoInputArea)">
-                        </p:commandLink>
+                        <p:ajax process="@(.pnlOutputArea), @this"
+                                listener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
+                                oncomplete="PF('ovlPinleiList').hide()"
+                                update="@()"/>
+                    </p:selectBooleanCheckbox>
+                    <p:commandLink value="选择"
+                                   process="@this"
+                                   actionListener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
+                                   oncomplete="PF('ovlPinleiList').hide()"
+                                   update="@(.WuLiaoInputArea)">
+                    </p:commandLink>
                 </p:column>
                 <!--类型-->
                 <p:column styleClass="wd-f-200" >
