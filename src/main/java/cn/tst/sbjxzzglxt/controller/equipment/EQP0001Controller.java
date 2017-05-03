@@ -97,6 +97,27 @@ public class EQP0001Controller extends BusinessBaseController {
 
     }
 
+    public void onEditEquip(LTEquipBasic row) {
+        vm.setEditingEquipBasic(row);
+    }
+
+    public void onDeleteEquip(LTEquipBasic row) {
+        ///删除模式
+        SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
+        vm.setEditingEquipBasic(row);
+
+        ///执行更新
+        ExecuteResult result = this.bizLogic.onSaveEquipment(mode, vm);
+
+        if (result.isSuccess()) {
+            putInfoMessage("删除成功");
+
+            onCancelEdit();
+        } else {
+            putErrorMessage("删除失败");
+        }
+    }
+
     public void onAddTargetData() {
         vm.setEditingEquipBasic(new LTEquipBasic());
         if (selectedNode == null) {

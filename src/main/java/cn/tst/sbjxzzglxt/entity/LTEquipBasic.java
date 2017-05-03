@@ -8,6 +8,7 @@ package cn.tst.sbjxzzglxt.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -18,6 +19,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -107,7 +109,6 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     @Size(max = 10)
     @Column(name = "ying_yong_fu_zhe_ren_id")
     private String yingYongFuZheRenId;
-
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -294,7 +295,10 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
 
     ///父节点
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "C_ID", insertable = false, updatable = false)
+    @JoinColumns({
+        @JoinColumn(name = "C_ID", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", insertable = false, updatable = false)
+    })
     private LTEquipBasic parent;
 
     ///子节点
@@ -310,7 +314,7 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     }
 
     public Set<LTEquipBasic> getChildren() {
-        return children;
+        return this.children;
     }
 
     public void setChildren(Set<LTEquipBasic> children) {

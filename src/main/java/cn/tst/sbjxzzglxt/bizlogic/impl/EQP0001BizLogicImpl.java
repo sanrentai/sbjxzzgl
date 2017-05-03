@@ -16,7 +16,7 @@ import cn.tst.sbjxzzglxt.service.impl.MstBuMenFacade;
 import cn.tst.sbjxzzglxt.service.impl.MstYuanGongFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
-import java.util.UUID;
+import org.apache.log4j.Logger;
 
 /**
  * 仓库信息业务逻辑实现类
@@ -26,6 +26,7 @@ import java.util.UUID;
 @Stateless
 public class EQP0001BizLogicImpl extends BaseBizLogic implements EQP0001BizLogic {
 
+    private static final Logger LOG = Logger.getLogger(EQP0001BizLogicImpl.class.getName());
     @EJB
     private LTEquipBasicFacade eqpService;
 
@@ -63,7 +64,16 @@ public class EQP0001BizLogicImpl extends BaseBizLogic implements EQP0001BizLogic
                     eqpService.edit(target);
                     break;
                 case DELETE:
-                    eqpService.remove(target);
+                    LOG.info("删除开始");
+                    if (target.getChildren() == null || target.getChildren().isEmpty()) {
+                        LOG.info("正要删除");
+                        eqpService.remove(target);
+                    } else {
+                        LOG.info("删除失败");
+                        result.setSuccess(false);
+                        return result;
+                    }
+                    LOG.info("删除结束");
                     break;
             }
             result.setSuccess(true);

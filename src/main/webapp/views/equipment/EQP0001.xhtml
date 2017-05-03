@@ -21,7 +21,7 @@
                                 <h:outputText value="设备一览"/>
                                 <p:commandLink actionListener="#{ctrlEQP0001.onCancelEdit}"
                                                styleClass="fr"
-                                               process="@this" update="frmMain:pnlSelectArea">
+                                               process="@this" update="frmMain:pnlInputArea, frmMain:pnlOutputArea">
                                     <i class="fa fa-star-o Fs18 Blue"></i>
                                 </p:commandLink>
                             </p:column>
@@ -31,7 +31,7 @@
                         <p:column style="padding: 0px;">
                             <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
                                     selectionMode="single" selection="#{ctrlEQP0001.selectedNode}"
-                                    styleClass="wd-p-100">
+                                    styleClass="wd-p-100" animate="true">
 <!--                            <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
                                     styleClass="wd-p-100">-->
                                 <p:ajax event="select" process="treeCK" 
@@ -62,8 +62,6 @@
                     </f:facet>
                     <p:columnGroup type="header">
                         <p:row>
-                            <p:column headerText="编辑" styleClass="wd-p-5"/>
-                            <p:column headerText="删除" styleClass="wd-p-5"/>
                             <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
                             <p:column headerText="上级设备" styleClass="tct wd-p-10" sortBy="#{equip.riQi}"/>
                             <p:column headerText="设备编号" styleClass="tct wd-p-5"/>
@@ -88,23 +86,10 @@
                             <p:column headerText="购入负责人" styleClass="tct wd-p-8"/>
                             <p:column headerText="应用部门" styleClass="tct wd-p-8"/>
                             <p:column headerText="应用负责人" styleClass="tct wd-p-8"/>
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
                         </p:row>
                     </p:columnGroup>
-                    <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{ctrlEQP0001.onEditEquip(equip)}"
-                                       process="@this" update="@(.pnlInputArea), @(.toolbar)">
-                            <i class="fa fa-pencil Fs18 Blue"></i>
-                        </p:commandLink>
-                    </p:column>
-                    <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{ctrlEQP0001.onDeleteEquip(equip)}"
-                                       process="@this" 
-                                       update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                       oncomplete="showErrorMsg();">
-                            <i class="fa fa-trash Fs18 Red"></i>
-                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-                        </p:commandLink>
-                    </p:column>
                     <!--设备名称-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{equip.ENmae}"/>
@@ -218,6 +203,23 @@
                     <!--应用负责人-->
                     <p:column styleClass="tct">
                         <h:outputText value="#{equip.yingYongFuZheRenId}"/>
+                    </p:column>
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlEQP0001.onEditEquip(equip)}"
+                                       process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                            <i class="fa fa-pencil Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <!--删除按钮-->
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{ctrlEQP0001.onDeleteEquip(equip)}"
+                                       process="@this" 
+                                       rendered="#{empty equip.children}"
+                                       update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                       oncomplete="showErrorMsg();">
+                            <i class="fa fa-trash Fs18 Red"></i>
+                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>
 <!--                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0001.vm.selectedEquipBasic}">
