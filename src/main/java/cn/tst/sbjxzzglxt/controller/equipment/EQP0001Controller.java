@@ -15,10 +15,7 @@ import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -33,9 +30,6 @@ import org.primefaces.model.TreeNode;
 public class EQP0001Controller extends BusinessBaseController {
 
     private final String T_ROOT = "T_ROOT";
-
-    ///设备Tree
-    private TreeNode equipTree;
 
     ///选中的节点
     private TreeNode selectedNode;
@@ -55,7 +49,7 @@ public class EQP0001Controller extends BusinessBaseController {
         this.bizLogic.loadEQP0001ViewModel(vm);
 
         ///初始化设备树
-        this.createEqpTree();
+        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
     }
 
     //*****************************************************************
@@ -124,7 +118,7 @@ public class EQP0001Controller extends BusinessBaseController {
 //        this.switchEditMode2None();
         vm.setEditingEquipBasic(null);
         selectedNode = null;
-        createEqpTree();
+        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
     }
 
     /**
@@ -183,17 +177,18 @@ public class EQP0001Controller extends BusinessBaseController {
     //*****************************************************************
     /**
      * 创建仓库树
+     * @param equipBasicList 传人设备列表
+     * @return 返回设备树
      */
-    private void createEqpTree() {
-
+    static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
         ///根节点
-        equipTree = new DefaultTreeNode("Root", null);
-        for (LTEquipBasic item : vm.getEquipBasicList()) {
-            TreeNode subNode = new DefaultTreeNode(item, equipTree);
+        DefaultTreeNode result = new DefaultTreeNode("Root", null);
+        for (LTEquipBasic item : equipBasicList) {
+            TreeNode subNode = new DefaultTreeNode(item, result);
             subNode.setExpanded(false);
-            this.createRelationTree(subNode, item);
+            createRelationTree(subNode, item);
         }
-
+        return result;
     }
 
     /**
@@ -202,8 +197,8 @@ public class EQP0001Controller extends BusinessBaseController {
      * @param node 品类关系节点
      * @param data 节点数据
      */
-    private void createRelationTree(TreeNode node, LTEquipBasic data) {
-        this.createRelationTree(node, data, false);
+    static private void createRelationTree(TreeNode node, LTEquipBasic data) {
+        createRelationTree(node, data, false);
     }
 
     /**
@@ -213,7 +208,7 @@ public class EQP0001Controller extends BusinessBaseController {
      * @param data 节点数据
      * @param isNeedExpand 节点是否展开
      */
-    private void createRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
+    static private void createRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
 
         ///取得当前节点的所有子节点
         Set<LTEquipBasic> children = data.getChildren();
@@ -240,7 +235,7 @@ public class EQP0001Controller extends BusinessBaseController {
 //                        }
 //                    }
                     ///递归展
-                    this.createRelationTree(subNode, c, isNeedExpand);
+                    createRelationTree(subNode, c, isNeedExpand);
 
                 }
             });
@@ -256,14 +251,6 @@ public class EQP0001Controller extends BusinessBaseController {
 
     public void setVm(EQP0001ViewModel vm) {
         this.vm = vm;
-    }
-
-    public TreeNode getEquipTree() {
-        return equipTree;
-    }
-
-    public void setEquipTree(TreeNode equipTree) {
-        this.equipTree = equipTree;
     }
 
     public void setSelectedNode(TreeNode selectedNode) {

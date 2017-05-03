@@ -24,10 +24,10 @@
                     </f:facet>
                     <p:row>
                         <p:column style="padding: 0px;">
-                            <p:tree id="treeCK" value="#{ctrlEQP0001.equipTree}" var="v" 
+                            <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
                                     selectionMode="single" selection="#{ctrlEQP0001.selectedNode}"
                                     styleClass="wd-p-100">
-<!--                            <p:tree id="treeCK" value="#{ctrlEQP0001.equipTree}" var="v" 
+<!--                            <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
                                     styleClass="wd-p-100">-->
                                 <p:ajax event="select" process="treeCK" 
                                         update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0001.onNodeSelect}"  />
