@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -320,5 +322,30 @@ public class LTEquipProRule implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipProRule[ id=" + id + " ]";
     }
-    
+
+    @ManyToOne
+    @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false)
+    private LTEquipBasic equip;
+
+    public LTEquipBasic getEquip() {
+        return equip;
+    }
+
+    public void setEquip(LTEquipBasic equip) {
+        this.equip = equip;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "P_ID", referencedColumnName = "P_ID", insertable = false, updatable = false)
+    private LTEquipProperty equipProperty;
+
+    public LTEquipProperty getEquipProperty() {
+        return equipProperty;
+    }
+
+    public void setEquipProperty(LTEquipProperty equipProperty) {
+        this.equipProperty = equipProperty;
+    }
+
+
 }

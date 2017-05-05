@@ -9,11 +9,13 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
+import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -60,6 +62,13 @@ public class EQP0001Controller extends BusinessBaseController {
 
         this.selectedNode = event.getTreeNode();
 
+        vm.setSelectedEquipBasic((LTEquipBasic) selectedNode.getData());
+        vm.setSelectEquipBasicList(new ArrayList());
+        vm.getSelectEquipBasicList().add(vm.getSelectedEquipBasic());
+        for (LTEquipBasic item : vm.getSelectedEquipBasic().getChildren()) {
+            vm.getSelectEquipBasicList().add(item);
+        }
+
         ///是否为邮件菜单点击事件
 //        this.onStartNodeEditing();
     }
@@ -88,14 +97,40 @@ public class EQP0001Controller extends BusinessBaseController {
 
     }
 
+    public void onEditEquip(LTEquipBasic row) {
+        vm.setEditingEquipBasic(row);
+    }
+
+    public void onDeleteEquip(LTEquipBasic row) {
+        ///删除模式
+        SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
+        vm.setEditingEquipBasic(row);
+
+        ///执行更新
+        ExecuteResult result = this.bizLogic.onSaveEquipment(mode, vm);
+
+        if (result.isSuccess()) {
+            putInfoMessage("删除成功");
+
+            onCancelEdit();
+        } else {
+            putErrorMessage("删除失败");
+        }
+    }
+
     public void onAddTargetData() {
         vm.setEditingEquipBasic(new LTEquipBasic());
         if (selectedNode == null) {
             vm.getEditingEquipBasic().setcId(new Long(SepC.EQP_ROOT));
         } else {
-            LTEquipBasic l = (LTEquipBasic) selectedNode.getData();
-            vm.getEditingEquipBasic().setcId(l.getId());
+//            LTEquipBasic l = (LTEquipBasic) selectedNode.getData();
+//            vm.getEditingEquipBasic().setcId(l.getId());
+            vm.getEditingEquipBasic().setcId(vm.getSelectedEquipBasic().getId());
         }
+    }
+
+    public void onAddPorperty() {
+        vm.setEditingEquipProperty(new LTEquipProperty());
     }
 
     /**
@@ -113,9 +148,16 @@ public class EQP0001Controller extends BusinessBaseController {
     }
 
     /**
+     * 取消树选择
+     */
+    public void onCancelShuXuanZhe() {
+        vm.setSelectedEquipBasic(null);
+        selectedNode = null;
+    }
+
+    /**
      * 保存数据
      *
-     * @param type 更新对象
      */
     public void onSaveData() {
 
@@ -131,11 +173,46 @@ public class EQP0001Controller extends BusinessBaseController {
         }
     }
 
+    public void onSaveProperty() {
+
+        SepE.ExecuteMode mode = this.vm.getEditingEquipProperty().getId() == null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
+
+        ExecuteResult result = this.bizLogic.onSaveProperty(mode, vm);
+
+        this.addMessage(result.createMessage());
+
+        if (result.isSuccess()) {
+            vm.setEditingEquipProperty(null);
+        }
+    }
+
+    public void changeCanShuSelection(LTEquipProperty item) {
+        LTEquipBasic selectedEquipBasic = vm.getSelectedEquipBasic();
+        if (selectedEquipBasic.getEquipProRuleList() == null) {
+            selectedEquipBasic.setEquipProRuleList(new ArrayList<>());
+        } else {
+
+            LTEquipProRule newProRule = new LTEquipProRule();
+            newProRule.setENum(vm.getSelectedEquipBasic().getENum());
+            newProRule.setPId(item.getId());
+            newProRule.setEquipProperty(item);
+            selectedEquipBasic.getEquipProRuleList().add(newProRule);
+        }
+    }
+
+    public void onDeleteCanShu(LTEquipProRule row) {
+        vm.getSelectedEquipBasic().getEquipProRuleList().remove(row);
+    }
+
     //*****************************************************************
     //                        私有函数定义
     //*****************************************************************
     /**
      * 创建仓库树
+     *
+     * @param equipBasicList 传人设备列表
+     * @return 返回设备树
      */
     static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
         ///根节点
