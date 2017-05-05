@@ -5,20 +5,22 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.SepE.RecordType;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -50,7 +52,25 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipNotes.findByUpdDate", query = "SELECT l FROM LTEquipNotes l WHERE l.updDate = :updDate")
     , @NamedQuery(name = "LTEquipNotes.findByDelFlg", query = "SELECT l FROM LTEquipNotes l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipNotes.findByVersion", query = "SELECT l FROM LTEquipNotes l WHERE l.version = :version")})
-public class LTEquipNotes implements Serializable {
+public class LTEquipNotes extends BaseEntity implements Serializable {
+
+    @Column(name = "T_Type")
+    private Integer tType;
+
+    @Column(name = "State")
+    private Integer state;
+
+    @Column(name = "Edit_User")
+    private Long editUser;
+    @Column(name = "DangQianBaoYangRiQi")
+    @Temporal(TemporalType.DATE)
+    private Date dangQianBaoYangRiQi;
+    @Column(name = "XiaCiBaoYangRiQi")
+    @Temporal(TemporalType.DATE)
+    private Date xiaCiBaoYangRiQi;
+    @Size(max = 255)
+    @Column(name = "YiLiuWenTi")
+    private String yiLiuWenTi;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -60,8 +80,6 @@ public class LTEquipNotes implements Serializable {
     @Size(max = 250)
     @Column(name = "E_Num")
     private String eNum;
-    @Column(name = "T_Type")
-    private Long tType;
     @Column(name = "Del_YN")
     private Integer delYN;
     @Column(name = "Del_Date")
@@ -69,8 +87,6 @@ public class LTEquipNotes implements Serializable {
     private Date delDate;
     @Column(name = "Del_User")
     private Long delUser;
-    @Column(name = "State")
-    private Integer state;
     @Column(name = "State_Date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date stateDate;
@@ -84,52 +100,28 @@ public class LTEquipNotes implements Serializable {
     @Column(name = "Edit_Date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date editDate;
-    @Column(name = "Edit_User")
-    private Long editUser;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "ins_rep")
-    private String insRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ins_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insDate;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "upd_rep")
-    private String updRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "upd_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "del_flg")
-    private Character delFlg;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "version")
-    private int version;
+
+    public String geteNum() {
+        return eNum;
+    }
+
+    public void seteNum(String eNum) {
+        this.eNum = eNum;
+    }
+
+    public Integer getTType() {
+        return tType;
+    }
+
+    public void setTType(Integer tType) {
+        this.tType = tType;
+    }
 
     public LTEquipNotes() {
     }
 
     public LTEquipNotes(Long id) {
         this.id = id;
-    }
-
-    public LTEquipNotes(Long id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.delFlg = delFlg;
-        this.version = version;
     }
 
     public Long getId() {
@@ -146,14 +138,6 @@ public class LTEquipNotes implements Serializable {
 
     public void setENum(String eNum) {
         this.eNum = eNum;
-    }
-
-    public Long getTType() {
-        return tType;
-    }
-
-    public void setTType(Long tType) {
-        this.tType = tType;
     }
 
     public Integer getDelYN() {
@@ -178,14 +162,6 @@ public class LTEquipNotes implements Serializable {
 
     public void setDelUser(Long delUser) {
         this.delUser = delUser;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
     }
 
     public Date getStateDate() {
@@ -228,62 +204,6 @@ public class LTEquipNotes implements Serializable {
         this.editDate = editDate;
     }
 
-    public Long getEditUser() {
-        return editUser;
-    }
-
-    public void setEditUser(Long editUser) {
-        this.editUser = editUser;
-    }
-
-    public String getInsRep() {
-        return insRep;
-    }
-
-    public void setInsRep(String insRep) {
-        this.insRep = insRep;
-    }
-
-    public Date getInsDate() {
-        return insDate;
-    }
-
-    public void setInsDate(Date insDate) {
-        this.insDate = insDate;
-    }
-
-    public String getUpdRep() {
-        return updRep;
-    }
-
-    public void setUpdRep(String updRep) {
-        this.updRep = updRep;
-    }
-
-    public Date getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Date updDate) {
-        this.updDate = updDate;
-    }
-
-    public Character getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Character delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -308,5 +228,61 @@ public class LTEquipNotes implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipNotes[ id=" + id + " ]";
     }
+
+    public Date getDangQianBaoYangRiQi() {
+        return dangQianBaoYangRiQi;
+    }
+
+    public void setDangQianBaoYangRiQi(Date dangQianBaoYangRiQi) {
+        this.dangQianBaoYangRiQi = dangQianBaoYangRiQi;
+    }
+
+    public Date getXiaCiBaoYangRiQi() {
+        return xiaCiBaoYangRiQi;
+    }
+
+    public void setXiaCiBaoYangRiQi(Date xiaCiBaoYangRiQi) {
+        this.xiaCiBaoYangRiQi = xiaCiBaoYangRiQi;
+    }
+
+    public String getYiLiuWenTi() {
+        return yiLiuWenTi;
+    }
+
+    public void setYiLiuWenTi(String yiLiuWenTi) {
+        this.yiLiuWenTi = yiLiuWenTi;
+    }
+
+    public Long getEditUser() {
+        return editUser;
+    }
+
+    public void setEditUser(Long editUser) {
+        this.editUser = editUser;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
     
+    public String getRecordType() {
+        RecordType type = RecordType.create(this.getTType());
+        return type.getString();
+    }
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false)
+    private  LTEquipBasic equip;
+
+    public LTEquipBasic getEquip() {
+        return equip;
+    }
+
+    public void setEquip(LTEquipBasic equip) {
+        this.equip = equip;
+    }
 }

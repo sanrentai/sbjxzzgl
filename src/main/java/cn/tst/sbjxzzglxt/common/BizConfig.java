@@ -354,4 +354,8 @@ public class BizConfig implements Serializable {
     public SepE.NengYuanBiaoZhuangTai[] getNengYuanBiaoZhuangTai() {
         return SepE.NengYuanBiaoZhuangTai.values();
     }
+    
+    public SepE.RecordType[] getRecordTypes() {
+        return SepE.RecordType.values();
+    }
 }

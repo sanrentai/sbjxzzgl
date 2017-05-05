@@ -2994,4 +2994,42 @@ public class SepE {
             }
         }
     }
+
+    public enum RecordType {
+        FIX(0),
+        MAINTAIN(1);
+        private int value;
+
+        RecordType(int value) {
+            this.value = value;
+        }
+
+        public static RecordType create(int value) {
+            switch (value) {
+                case 0:
+                    return FIX;
+                case 1:
+                    return MAINTAIN;
+            }
+            return null;
+        }
+
+        public String getString() {
+            switch (this) {
+                case FIX:
+                    return "维修";
+                case MAINTAIN:
+                    return "保养";
+            }
+            return "维修";
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+    }
 }

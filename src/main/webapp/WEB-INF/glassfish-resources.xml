@@ -22,4 +22,5 @@
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/K_Kangp" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool"/>
     <jdbc-resource enabled="true" jndi-name="java:app/K_Kangp" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool"/>
+    <jdbc-resource enabled="true" jndi-name="java:app/SQLServer" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool"/>
 </resources>

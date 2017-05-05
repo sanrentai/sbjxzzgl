@@ -2,6 +2,10 @@ package cn.tst.sbjxzzglxt.viewmodel;
 
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
+import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
+import cn.tst.sbjxzzglxt.entity.MstBuMen;
+import cn.tst.sbjxzzglxt.entity.MstYuanGong;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -11,10 +15,18 @@ import org.primefaces.model.TreeNode;
  */
 public class EQP0001ViewModel extends BaseViewModel {
 
+    private List<LTEquipProperty> equipPropertyList;
     private List<LTEquipBasic> equipBasicList;
+    private List<LTEquipBasic> selectEquipBasicList;
     private LTEquipBasic selectedEquipBasic;
     private LTEquipBasic editingEquipBasic;
     private LTEquipBasic rootEqp;
+    private List<MstYuanGong> yuanGongList;
+    private List<MstBuMen> buMenList;
+
+    private LTEquipProRule editingEquipProRule;
+    ///新建参数
+    private LTEquipProperty editingEquipProperty;
     
     private TreeNode equipTreeRoot;
 
@@ -56,6 +68,54 @@ public class EQP0001ViewModel extends BaseViewModel {
 
     public void setRootEqp(LTEquipBasic rootEqp) {
         this.rootEqp = rootEqp;
+    }
+
+    public LTEquipProRule getEditingEquipProRule() {
+        return editingEquipProRule;
+    }
+
+    public void setEditingEquipProRule(LTEquipProRule editingEquipProRule) {
+        this.editingEquipProRule = editingEquipProRule;
+    }
+
+    public LTEquipProperty getEditingEquipProperty() {
+        return editingEquipProperty;
+    }
+
+    public void setEditingEquipProperty(LTEquipProperty editingEquipProperty) {
+        this.editingEquipProperty = editingEquipProperty;
+    }
+
+    public List<LTEquipProperty> getEquipPropertyList() {
+        return equipPropertyList;
+    }
+
+    public void setEquipPropertyList(List<LTEquipProperty> equipPropertyList) {
+        this.equipPropertyList = equipPropertyList;
+    }
+
+    public List<MstYuanGong> getYuanGongList() {
+        return yuanGongList;
+    }
+
+    public void setYuanGongList(List<MstYuanGong> yuanGongList) {
+        this.yuanGongList = yuanGongList;
+    }
+
+    public List<MstBuMen> getBuMenList() {
+        return buMenList;
+    }
+
+    public void setBuMenList(List<MstBuMen> buMenList) {
+        this.buMenList = buMenList;
+    }
+
+    public List<LTEquipBasic> getSelectEquipBasicList() {
+        return selectEquipBasicList;
+    }
+
+    public void setSelectEquipBasicList(List<LTEquipBasic> selectEquipBasicList) {
+        this.selectEquipBasicList = selectEquipBasicList;
     }
 
 }
