@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -53,26 +54,26 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipError.findByUpdDate", query = "SELECT l FROM LTEquipError l WHERE l.updDate = :updDate")
     , @NamedQuery(name = "LTEquipError.findByDelFlg", query = "SELECT l FROM LTEquipError l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipError.findByVersion", query = "SELECT l FROM LTEquipError l WHERE l.version = :version")})
-public class LTEquipError implements Serializable {
+public class LTEquipError extends BaseEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+    @Size(max = 50)
     @Column(name = "E_Num")
-    private Long eNum;
-    @Size(max = 250)
+    private String eNum;
     @Column(name = "Err_Num")
-    private String errNum;
+    private Integer errNum;
     @Size(max = 50)
     @Column(name = "Err_Title")
     private String errTitle;
     @Size(max = 200)
     @Column(name = "Err_Way")
     private String errWay;
+    @Size(max = 200)
     @Column(name = "Err_Type")
-    private Long errType;
+    private String errType;
     @Column(name = "Del_YN")
     private Integer delYN;
     @Column(name = "Del_Date")
@@ -97,50 +98,16 @@ public class LTEquipError implements Serializable {
     private Date editDate;
     @Column(name = "Edit_User")
     private Long editUser;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "ins_rep")
-    private String insRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ins_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insDate;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "upd_rep")
-    private String updRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "upd_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "del_flg")
-    private Character delFlg;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "version")
-    private int version;
+    @Column(name = "FluctMax")
+    private Integer fluctMax;
+    @Column(name = "FluctMin")
+    private Integer fluctMin;
 
     public LTEquipError() {
     }
 
     public LTEquipError(Long id) {
         this.id = id;
-    }
-
-    public LTEquipError(Long id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.delFlg = delFlg;
-        this.version = version;
     }
 
     public Long getId() {
@@ -151,19 +118,19 @@ public class LTEquipError implements Serializable {
         this.id = id;
     }
 
-    public Long getENum() {
+    public String getENum() {
         return eNum;
     }
 
-    public void setENum(Long eNum) {
+    public void setENum(String eNum) {
         this.eNum = eNum;
     }
 
-    public String getErrNum() {
+    public Integer getErrNum() {
         return errNum;
     }
 
-    public void setErrNum(String errNum) {
+    public void setErrNum(Integer errNum) {
         this.errNum = errNum;
     }
 
@@ -183,11 +150,11 @@ public class LTEquipError implements Serializable {
         this.errWay = errWay;
     }
 
-    public Long getErrType() {
+    public String getErrType() {
         return errType;
     }
 
-    public void setErrType(Long errType) {
+    public void setErrType(String errType) {
         this.errType = errType;
     }
 
@@ -271,52 +238,20 @@ public class LTEquipError implements Serializable {
         this.editUser = editUser;
     }
 
-    public String getInsRep() {
-        return insRep;
+    public Integer getFluctMax() {
+        return fluctMax;
     }
 
-    public void setInsRep(String insRep) {
-        this.insRep = insRep;
+    public void setFluctMax(Integer fluctMax) {
+        this.fluctMax = fluctMax;
     }
 
-    public Date getInsDate() {
-        return insDate;
+    public Integer getFluctMin() {
+        return fluctMin;
     }
 
-    public void setInsDate(Date insDate) {
-        this.insDate = insDate;
-    }
-
-    public String getUpdRep() {
-        return updRep;
-    }
-
-    public void setUpdRep(String updRep) {
-        this.updRep = updRep;
-    }
-
-    public Date getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Date updDate) {
-        this.updDate = updDate;
-    }
-
-    public Character getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Character delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
+    public void setFluctMin(Integer fluctMin) {
+        this.fluctMin = fluctMin;
     }
 
     @Override
@@ -343,5 +278,5 @@ public class LTEquipError implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipError[ id=" + id + " ]";
     }
-    
+
 }

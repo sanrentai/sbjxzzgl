@@ -618,3 +618,6 @@ ul{
     overflow-y: visible;
     max-height: 70vh;
 }
+.ui-right{
+    float:right;
+}

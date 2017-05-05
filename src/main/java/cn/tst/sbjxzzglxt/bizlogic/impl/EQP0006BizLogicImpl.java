@@ -4,12 +4,16 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
+import cn.tst.sbjxzzglxt.bizlogic.EQP0006BizLogic;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.service.impl.LTEquipBasicFacade;
+import cn.tst.sbjxzzglxt.service.impl.LTEquipErrorFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
+import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
 import java.util.UUID;
 
 /**
@@ -18,43 +22,49 @@ import java.util.UUID;
  * @author ps_xy@pscp.co.jp
  */
 @Stateless
-public class EQP0001BizLogicImpl extends BaseBizLogic implements EQP0001BizLogic {
+public class EQP0006BizLogicImpl extends BaseBizLogic implements EQP0006BizLogic {
 
     @EJB
-    private LTEquipBasicFacade eqpService;
+    private LTEquipErrorFacade equipError;
 
     @Override
-    public void loadEQP0001ViewModel(EQP0001ViewModel vm) {
-        List<LTEquipBasic> LTEquipBasicList = eqpService.findByCId(new Long(SepC.EQP_ROOT));
-        vm.setEquipBasicList(LTEquipBasicList);
+    public void loadEQP0006ViewModel(EQP0006ViewModel vm) {
+         List<LTEquipError> equip = equipError.findAll();
+         vm.setEquipErrorList(equip);
         
     }
 
     @Override
-    public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, EQP0001ViewModel vm) {
+    public ExecuteResult onSaveEquipError(SepE.ExecuteMode mode, EQP0006ViewModel vm) {
 
         ExecuteResult result = new ExecuteResult(mode);
-        LTEquipBasic target = vm.getEditingEquipBasic();
+        LTEquipError target = vm.getEquipError();
         try {
             switch (mode) {
                 case INSERT:
 //                    target.setId(UUID.randomUUID().toString());
-                    eqpService.create(target);
+                    equipError.create(target);
                     break;
                 case UPDATE:
-                    eqpService.edit(target);
+                    equipError.edit(target);
                     break;
                 case DELETE:
-                    eqpService.remove(target);
+                    equipError.remove(target);
                     break;
             }
             result.setSuccess(true);
-            vm.setEquipBasicList(eqpService.findByCId(new Long(SepC.EQP_ROOT)));
+         
         } catch (Exception e) {
             result.anylizeException(e);
             result.setSuccess(false);
         }
         return result;
     }
+
+   
+
+   
+
+
 
 }

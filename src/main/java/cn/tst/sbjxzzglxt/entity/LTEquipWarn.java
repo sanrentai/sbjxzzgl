@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "LTEquipWarn.findAll", query = "SELECT l FROM LTEquipWarn l")
     , @NamedQuery(name = "LTEquipWarn.findById", query = "SELECT l FROM LTEquipWarn l WHERE l.id = :id")
-    , @NamedQuery(name = "LTEquipWarn.findByEId", query = "SELECT l FROM LTEquipWarn l WHERE l.eId = :eId")
+    , @NamedQuery(name = "LTEquipWarn.findByEId", query = "SELECT l FROM LTEquipWarn l WHERE l.eId = :eId AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipWarn.findByTTitle", query = "SELECT l FROM LTEquipWarn l WHERE l.tTitle = :tTitle")
     , @NamedQuery(name = "LTEquipWarn.findByTContent", query = "SELECT l FROM LTEquipWarn l WHERE l.tContent = :tContent")
     , @NamedQuery(name = "LTEquipWarn.findByTDate", query = "SELECT l FROM LTEquipWarn l WHERE l.tDate = :tDate")
-    , @NamedQuery(name = "LTEquipWarn.findByTTyoe", query = "SELECT l FROM LTEquipWarn l WHERE l.tTyoe = :tTyoe")
+    , @NamedQuery(name = "LTEquipWarn.findByTTyoe", query = "SELECT l FROM LTEquipWarn l WHERE l.tTyoe = :tTyoe AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipWarn.findByXhYn", query = "SELECT l FROM LTEquipWarn l WHERE l.xhYn = :xhYn")
     , @NamedQuery(name = "LTEquipWarn.findByDCont", query = "SELECT l FROM LTEquipWarn l WHERE l.dCont = :dCont")
     , @NamedQuery(name = "LTEquipWarn.findByDelYN", query = "SELECT l FROM LTEquipWarn l WHERE l.delYN = :delYN")
@@ -55,7 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipWarn.findByUpdDate", query = "SELECT l FROM LTEquipWarn l WHERE l.updDate = :updDate")
     , @NamedQuery(name = "LTEquipWarn.findByDelFlg", query = "SELECT l FROM LTEquipWarn l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipWarn.findByVersion", query = "SELECT l FROM LTEquipWarn l WHERE l.version = :version")})
-public class LTEquipWarn implements Serializable {
+public class LTEquipWarn extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -104,34 +104,7 @@ public class LTEquipWarn implements Serializable {
     private Date editDate;
     @Column(name = "Edit_User")
     private Long editUser;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "ins_rep")
-    private String insRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ins_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insDate;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "upd_rep")
-    private String updRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "upd_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "del_flg")
-    private Character delFlg;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "version")
-    private int version;
+    
 
     public LTEquipWarn() {
     }
@@ -140,15 +113,7 @@ public class LTEquipWarn implements Serializable {
         this.id = id;
     }
 
-    public LTEquipWarn(Long id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.delFlg = delFlg;
-        this.version = version;
-    }
+    
 
     public Long getId() {
         return id;
@@ -292,54 +257,6 @@ public class LTEquipWarn implements Serializable {
 
     public void setEditUser(Long editUser) {
         this.editUser = editUser;
-    }
-
-    public String getInsRep() {
-        return insRep;
-    }
-
-    public void setInsRep(String insRep) {
-        this.insRep = insRep;
-    }
-
-    public Date getInsDate() {
-        return insDate;
-    }
-
-    public void setInsDate(Date insDate) {
-        this.insDate = insDate;
-    }
-
-    public String getUpdRep() {
-        return updRep;
-    }
-
-    public void setUpdRep(String updRep) {
-        this.updRep = updRep;
-    }
-
-    public Date getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Date updDate) {
-        this.updDate = updDate;
-    }
-
-    public Character getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Character delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 
     @Override
