@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.viewmodel;
+package cn.tst.sbjxzzglxt.controller.equipment;
 
 /**
  *
- * @author Aaron-PC-i3-4130
+ * @author Administrator
  */
-public class EQP0002ViewModel extends EQP0001ViewModel {
+public class Car {
+
+    public Car(String y25YIH5, String fiat, int i, String black, int i0, boolean b) {
+    }
     
 }

@@ -322,6 +322,18 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         this.children = children;
     }
 
+    @OneToMany(mappedBy = "equipBasic", fetch = FetchType.LAZY)
+    private List<LTEquipFitting> equipFittingList;
+
+    public List<LTEquipFitting> getEquipFittingList() {
+        return equipFittingList;
+    }
+
+    public void setEquipFittingList(List<LTEquipFitting> equipFittingList) {
+        this.equipFittingList = equipFittingList;
+    }
+    
+    
     @OneToMany(mappedBy = "equip", fetch = FetchType.LAZY)
     private List<LTEquipProRule> equipProRuleList;
 

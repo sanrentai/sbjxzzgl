@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -33,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LTEquipFitting.findAll", query = "SELECT l FROM LTEquipFitting l")
     , @NamedQuery(name = "LTEquipFitting.findById", query = "SELECT l FROM LTEquipFitting l WHERE l.id = :id")
     , @NamedQuery(name = "LTEquipFitting.findByPNmae", query = "SELECT l FROM LTEquipFitting l WHERE l.pNmae = :pNmae")
-    , @NamedQuery(name = "LTEquipFitting.findByENum", query = "SELECT l FROM LTEquipFitting l WHERE l.eNum = :eNum")
+    , @NamedQuery(name = "LTEquipFitting.findByENum", query = "SELECT l FROM LTEquipFitting l WHERE l.eNum = :eNum AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipFitting.findByPNum", query = "SELECT l FROM LTEquipFitting l WHERE l.pNum = :pNum")
     , @NamedQuery(name = "LTEquipFitting.findByDelYN", query = "SELECT l FROM LTEquipFitting l WHERE l.delYN = :delYN")
     , @NamedQuery(name = "LTEquipFitting.findByDelDate", query = "SELECT l FROM LTEquipFitting l WHERE l.delDate = :delDate")
@@ -51,7 +53,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipFitting.findByUpdDate", query = "SELECT l FROM LTEquipFitting l WHERE l.updDate = :updDate")
     , @NamedQuery(name = "LTEquipFitting.findByDelFlg", query = "SELECT l FROM LTEquipFitting l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipFitting.findByVersion", query = "SELECT l FROM LTEquipFitting l WHERE l.version = :version")})
-public class LTEquipFitting implements Serializable {
+public class LTEquipFitting extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -91,34 +93,30 @@ public class LTEquipFitting implements Serializable {
     private Date editDate;
     @Column(name = "Edit_User")
     private Long editUser;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "ins_rep")
-    private String insRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ins_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insDate;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "upd_rep")
-    private String updRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "upd_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "del_flg")
-    private Character delFlg;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "version")
-    private int version;
+
+    public String getpNmae() {
+        return pNmae;
+    }
+
+    public void setpNmae(String pNmae) {
+        this.pNmae = pNmae;
+    }
+
+    public String geteNum() {
+        return eNum;
+    }
+
+    public void seteNum(String eNum) {
+        this.eNum = eNum;
+    }
+
+    public String getpNum() {
+        return pNum;
+    }
+
+    public void setpNum(String pNum) {
+        this.pNum = pNum;
+    }
 
     public LTEquipFitting() {
     }
@@ -133,7 +131,6 @@ public class LTEquipFitting implements Serializable {
         this.insDate = insDate;
         this.updRep = updRep;
         this.updDate = updDate;
-        this.delFlg = delFlg;
         this.version = version;
     }
 
@@ -249,54 +246,6 @@ public class LTEquipFitting implements Serializable {
         this.editUser = editUser;
     }
 
-    public String getInsRep() {
-        return insRep;
-    }
-
-    public void setInsRep(String insRep) {
-        this.insRep = insRep;
-    }
-
-    public Date getInsDate() {
-        return insDate;
-    }
-
-    public void setInsDate(Date insDate) {
-        this.insDate = insDate;
-    }
-
-    public String getUpdRep() {
-        return updRep;
-    }
-
-    public void setUpdRep(String updRep) {
-        this.updRep = updRep;
-    }
-
-    public Date getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Date updDate) {
-        this.updDate = updDate;
-    }
-
-    public Character getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Character delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -320,6 +269,18 @@ public class LTEquipFitting implements Serializable {
     @Override
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipFitting[ id=" + id + " ]";
+    }
+    
+    @ManyToOne
+    @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false)
+    private LTEquipBasic equipBasic;
+
+    public LTEquipBasic getEquipBasic() {
+        return equipBasic;
+    }
+
+    public void setEquipBasic(LTEquipBasic equipBasic) {
+        this.equipBasic = equipBasic;
     }
     
 }

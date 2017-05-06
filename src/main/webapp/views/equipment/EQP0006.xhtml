@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Card">
+            <!--标题-->
+            <h1 class="CardBigTopic Purple">
+                <h:outputText value="#{ctrlMaster.createPageTitle('EQP', 'EQP0006')}"/>
+            </h1>
+            <!--无敌分割线-->
+            <div class="SeparatorFull"></div>
+            
+        </p:outputPanel>
+    </p:outputPanel>
+
+            <p:panelGrid id="equipfault" columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                <p:outputLabel for="equip" value="设备名称"/>
+<!--                <p:inputText id="equip" value="#{ctrlEQP0006.vm.equipError.ENum}" />-->
+                <p:selectOneMenu id="equip" value="#{ctrlEQP0006.vm.equipError.ENum}" 
+                required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('设备名称')}">
+                    <f:selectItem itemLabel="请选择设备名称" itemValue=""/>
+                    <f:selectItems value="#{ctrlEQP0006.vm.equipErrorList}" var="equipErrorList" itemLabel="#{equipErrorList.ENum}" itemValue="#{equipErrorList.ENum}" />
+                 </p:selectOneMenu>
+                            
+                <p:outputLabel for="faultNnumber" value="故障编号"/><p:inputText id="faultNnumber" value="#{ctrlEQP0006.vm.equipError.errNum}" />
+                <p:outputLabel for="faultTitle" value="故障标题"/><p:inputText id="faultTitle" value="#{ctrlEQP0006.vm.equipError.errTitle}" />
+                <p:outputLabel for="faultType" value="故障类型"/><p:inputText id="faultType" value="#{ctrlEQP0006.vm.equipError.errType}" />
+                <p:outputLabel for="waveUpperLimit" value="波动上限"/><p:inputText id="waveUpperLimit" value="#{ctrlEQP0006.vm.equipError.fluctMax}" />
+                <p:outputLabel for="waveLowerLimit" value="波动下限"/><p:inputText id="waveLowerLimit" value="#{ctrlEQP0006.vm.equipError.fluctMin}" />
+                <p:outputLabel for="waveLowerLimit" value="解决方案"/> <p:inputTextarea value="#{ctrlEQP0006.vm.equipError.errWay}" style="overflow:scroll"/>   
+                <p:commandButton value="保存" process="equipfault"
+                                         oncomplete="showErrorMsg();"
+                                         update="equipfault, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{ctrlEQP0006.onSaveData}"/>
+                <p:commandButton value="取消" process="equipfault" 
+                                         update="equipfault" actionListener="#{ctrlEQP0001.onCancelEdit}"
+                                         styleClass="RedButton"/>
+<!--                <p:commandButton value="保存" process="equipfault"
+                                         update="equipfault"
+                                         actionListener="#{ctrlEQP0006.onSaveData}"
+                                         styleClass="RedButton"/>
+                <p:commandButton value="取消" process="equipfault" 
+                                         update="equipfault" actionListener="#{ctrlEQP0006.onCancelEdit}"
+                                         styleClass="RedButton"/>-->
+            </p:panelGrid>
+           
+</ui:composition>
