@@ -5,6 +5,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
+import cn.tst.sbjxzzglxt.bizlogic.impl.EQP0001BizLogicImpl;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
@@ -16,6 +17,7 @@ import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.apache.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -28,6 +30,8 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 @Named(SepC.ControllerID.EQP0001)
 public class EQP0001Controller extends BusinessBaseController {
+
+    private static final Logger LOG = Logger.getLogger(EQP0001Controller.class.getName());
 
     private final String T_ROOT = "T_ROOT";
 
@@ -246,7 +250,7 @@ public class EQP0001Controller extends BusinessBaseController {
 
         ///取得当前节点的所有子节点
         Set<LTEquipBasic> children = data.getChildren();
-
+        
         ///如果存在子节点
         if (children != null && !children.isEmpty()) {
             ///遍历所有子节点
@@ -254,7 +258,7 @@ public class EQP0001Controller extends BusinessBaseController {
 
                 ///当前节点ID
                 String currentNodeId = c.getId().toString();
-
+                
                 ///如果不是根节点,怎创建子节点
                 if (!SepC.EQP_ROOT.equals(currentNodeId)) {
                     TreeNode subNode = new DefaultTreeNode(c, node);

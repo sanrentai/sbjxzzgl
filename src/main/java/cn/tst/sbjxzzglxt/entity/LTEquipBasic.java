@@ -296,13 +296,14 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     ///父节点
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
-        @JoinColumn(name = "C_ID", insertable = false, updatable = false),
-        @JoinColumn(name = "del_flg", insertable = false, updatable = false)
+        @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
+//    @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
     private LTEquipBasic parent;
 
     ///子节点
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
     private Set<LTEquipBasic> children;
 
     public LTEquipBasic getParent() {
