@@ -6,27 +6,18 @@
 package cn.tst.sbjxzzglxt.controller.equipment;
 
 import cn.tst.sbjxzzglxt.bizlogic.EQP0007BizLogic;
-import cn.tst.sbjxzzglxt.bizlogic.impl.EQP0001BizLogicImpl;
-import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0007ViewModel;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -82,5 +73,9 @@ public class EQP0007Controller extends BusinessBaseController {
 
     public void onCancelEdit() {
         this.switchStatus2Init();
+    }
+    
+    public void setCurrentEquipment(LTEquipBasic equipment) {
+        vm.setCurrentEquipment(equipment);
     }
 }

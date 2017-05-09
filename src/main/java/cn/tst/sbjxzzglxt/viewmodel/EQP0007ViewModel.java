@@ -19,6 +19,8 @@ public class EQP0007ViewModel extends BaseViewModel {
     
     private List<LTEquipBasic> equipmentList;
     
+    private LTEquipBasic currentEquipment;
+    
     private List<LTEquipGraphic> selectEquipGraphicList;
     
     private UploadedFile file;
@@ -53,5 +55,13 @@ public class EQP0007ViewModel extends BaseViewModel {
 
     public void setSelectEquipGraphicList(List<LTEquipGraphic> selectEquipGraphicList) {
         this.selectEquipGraphicList = selectEquipGraphicList;
+    }
+
+    public LTEquipBasic getCurrentEquipment() {
+        return currentEquipment;
+    }
+
+    public void setCurrentEquipment(LTEquipBasic currentEquipment) {
+        this.currentEquipment = currentEquipment;
     }
 }

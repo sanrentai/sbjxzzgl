@@ -512,5 +512,4 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setShiYongShiJian(Date shiYongShiJian) {
         this.shiYongShiJian = shiYongShiJian;
     }
-
 }

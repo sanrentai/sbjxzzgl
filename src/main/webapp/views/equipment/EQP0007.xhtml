@@ -17,6 +17,35 @@
                                  styleClass="NavyButton" disabled="#{ctrlEQP0007.statusEditing}"/>
             </f:facet>
         </p:toolbar>
+        <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea">
+            <p:dataTable value="#{ctrlEQP0007.vm.selectEquipGraphicList}" var="graphic"
+                         widgetVar="wvYongMeiList"
+                         rows="10"
+                         filterDelay="500"
+                         style="word-break: keep-all!important"
+                         paginator="true"
+                         paginatorAlwaysVisible="false"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="没有数据">
+                <f:facet name="header">
+                    <h:outputText value="文档及图片管理"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
+                        <p:column headerText="图文名称" styleClass="tct wd-p-8"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{graphic.equipment.ENmae}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{graphic.FOriginalName}">
+                        <!--<p:ajax event="mouseover" listener="#{ctrlEQP0007.onMouseOverFileName}"></p:ajax>-->
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
         <p:outputPanel styleClass="Container100 Responsive100 NoIndent" rendered="#{ctrlEQP0007.statusEditing}">
             <p:outputPanel styleClass="Container70 Responsive100 tct">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
@@ -31,9 +60,12 @@
                 </p:panelGrid>
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                     <p:outputLabel for="Equipment" value="所属设备："></p:outputLabel>
-                    <p:selectOneMenu id="Equipment" value="#{ctrlEQP0007.vm.equipGraphicEntityInEdit.ENum}">
+                    <p:commandButton id="Equipment" value="选择设备" type="button" onclick="PF('deviceSelectDialog').show();">
+
+                    </p:commandButton>
+<!--                    <p:selectOneMenu id="Equipment" value="#{ctrlEQP0007.vm.equipGraphicEntityInEdit.ENum}">
                         <f:selectItems value="#{ctrlEQP0007.vm.equipmentList}" var="equipment" itemLabel="#{equipment.ENmae}" itemValue="#{equipment.ENum}"></f:selectItems>
-                    </p:selectOneMenu>
+                    </p:selectOneMenu>-->
                 </p:panelGrid>
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                     <p:outputLabel for="FileName" value="图文名称："></p:outputLabel>
@@ -52,34 +84,29 @@
                 </p:panelGrid>
             </p:outputPanel>
         </p:outputPanel>
-        <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea">
-            <p:dataTable value="#{ctrlEQP0007.vm.selectEquipGraphicList}" var="graphic"
-                         widgetVar="wvYongMeiList"
-                         rows="20"
-                         filterDelay="500"
-                         style="word-break: keep-all!important"
-                         paginator="true"
-                         paginatorAlwaysVisible="false"
-                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                         emptyMessage="没有数据">
-                <f:facet name="header">
-                    <h:outputText value="用车记录"/>
-                </f:facet>
-                <p:columnGroup type="header">
-                    <p:row>
-                        <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
-                        <p:column headerText="图文名称" styleClass="tct wd-p-8"/>
-                    </p:row>
-                </p:columnGroup>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{graphic.equipment.ENmae}"/>
-                </p:column>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{graphic.FOriginalName}">
-                        <!--<p:ajax event="mouseover" listener="#{ctrlEQP0007.onMouseOverFileName}"></p:ajax>-->
-                    </h:outputText>
-                </p:column>
-            </p:dataTable>
-        </p:outputPanel>
     </p:outputPanel>
+    <p:dialog widgetVar="deviceSelectDialog" modal="true">
+        <p:dataTable value="#{ctrlEQP0007.vm.equipmentList}" 
+                     var="equipment" 
+                     lazy="true"
+                     paginatorAlwaysVisible="false"
+                     paginator="true" rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     id="equipmentSelectList" widgetVar="equipmentSelectList"
+                     styleClass="bg-c-row-odd wd-f-700"
+                     scrollable="true"
+                     emptyMessage="无数据">
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column styleClass="tct wd-p-30" headerText="设备名"
+                              filterBy="#{equipment.ENmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                </p:row>
+            </p:columnGroup>
+            <p:column>
+                <h:outputText value="#{equipment.ENmae}">
+                    
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+    </p:dialog>
 </ui:composition>
