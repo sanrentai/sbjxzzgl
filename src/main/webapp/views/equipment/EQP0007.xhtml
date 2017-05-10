@@ -77,18 +77,17 @@
                     <p:commandButton value="保存" process=""
                                      oncomplete="showErrorMsg();"
                                      update="rootContainer"
-                                     actionListener="#{ctrlEQP0007.onSaveData}"/>
+                                     actionListener="#{ctrlEQP0007.onSaveData}" disabled="#{empty ctrlEQP0007.vm.currentEquipment and empty ctrlEQP0007.vm.equipGraphicEntityInEdit.FOriginalName}"/>
                     <p:commandButton value="取消" process="@this" 
-                                     update="rootContainer" actionListener="#{ctrlEQP0007.onCancelEdit}"
+                                     update="frmMain:rootContainer" actionListener="#{ctrlEQP0007.onCancelEdit}"
                                      styleClass="RedButton"/>
                 </p:panelGrid>
             </p:outputPanel>
         </p:outputPanel>
     </p:outputPanel>
     <p:dialog widgetVar="deviceSelectDialog" modal="true">
-        <p:dataTable value="#{ctrlEQP0007.vm.equipmentList}" 
+        <p:dataTable value="#{ctrlEQP0007.vm.equipmentList}" style="width:512px;"
                      var="equipment" 
-                     lazy="true"
                      paginatorAlwaysVisible="false"
                      paginator="true" rows="10"
                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
@@ -96,15 +95,37 @@
                      styleClass="bg-c-row-odd wd-f-700"
                      scrollable="true"
                      emptyMessage="无数据">
+            <f:facet name="header">
+                <h:outputText value="选择设备"/>
+            </f:facet>
             <p:columnGroup type="header">
                 <p:row>
                     <p:column styleClass="tct wd-p-30" headerText="设备名"
                               filterBy="#{equipment.ENmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                    <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
+                    <p:column styleClass="tct wd-p-30" headerText="上级设备"></p:column>
+                    <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
                 </p:row>
             </p:columnGroup>
-            <p:column>
+            <p:column >
                 <h:outputText value="#{equipment.ENmae}">
-                    
+
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <p:commandLink value="选择" 
+                               actionListener="#{ctrlEQP0007.setCurrentEquipment(equipment)}" 
+                               process="@this" update="frmMain:rootContainer"
+                               oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
+            </p:column>
+            <p:column >
+                <h:outputText value="#{equipment.parentStringChain}">
+
+                </h:outputText>
+            </p:column>
+            <p:column >
+                <h:outputText value="#{equipment.guiGeHeXingHao}">
+
                 </h:outputText>
             </p:column>
         </p:dataTable>
