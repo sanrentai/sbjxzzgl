@@ -5,22 +5,28 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -57,6 +63,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipWarn.findByVersion", query = "SELECT l FROM LTEquipWarn l WHERE l.version = :version")})
 public class LTEquipWarn extends BaseEntity implements Serializable {
 
+    private static final Logger LOG = Logger.getLogger(LTEquipWarn.class.getName());
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,7 +111,6 @@ public class LTEquipWarn extends BaseEntity implements Serializable {
     private Date editDate;
     @Column(name = "Edit_User")
     private Long editUser;
-    
 
     public LTEquipWarn() {
     }
@@ -112,8 +118,6 @@ public class LTEquipWarn extends BaseEntity implements Serializable {
     public LTEquipWarn(Long id) {
         this.id = id;
     }
-
-    
 
     public Long getId() {
         return id;
@@ -155,20 +159,29 @@ public class LTEquipWarn extends BaseEntity implements Serializable {
         this.tDate = tDate;
     }
 
-    public Long getTTyoe() {
-        return tTyoe;
+//    public Long getTTyoe() {
+//        return tTyoe;
+//    }
+//
+//    public void setTTyoe(Long tTyoe) {
+//        this.tTyoe = tTyoe;
+//    }
+    public SepE.ReminderTime getTTyoe() {
+        LOG.info(tTyoe);
+        LOG.info(tTyoe.intValue());
+        return SepE.ReminderTime.parse(tTyoe.intValue());
     }
 
-    public void setTTyoe(Long tTyoe) {
-        this.tTyoe = tTyoe;
+    public void setTTyoe(SepE.ReminderTime tTyoe) {
+        this.tTyoe = (long) tTyoe.getValue();
     }
 
-    public Integer getXhYn() {
-        return xhYn;
+    public SepE.Whether getXhYn() {
+        return SepE.Whether.parse(xhYn.intValue());
     }
 
-    public void setXhYn(Integer xhYn) {
-        this.xhYn = xhYn;
+    public void setXhYn(SepE.Whether xhYn) {
+        this.xhYn = xhYn.getValue();
     }
 
     public String getDCont() {
@@ -283,5 +296,33 @@ public class LTEquipWarn extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipWarn[ id=" + id + " ]";
     }
-    
+
+    ///父节点
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({
+        @JoinColumn(name = "E_ID", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", insertable = false, updatable = false)
+    })
+    private LTEquipWarn parent;
+
+    ///子节点
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private Set<LTEquipWarn> children;
+
+    public LTEquipWarn getParent() {
+        return parent;
+    }
+
+    public void setParent(LTEquipWarn parent) {
+        this.parent = parent;
+    }
+
+    public Set<LTEquipWarn> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<LTEquipWarn> children) {
+        this.children = children;
+    }
 }

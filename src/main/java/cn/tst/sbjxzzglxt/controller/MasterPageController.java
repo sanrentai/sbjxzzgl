@@ -146,6 +146,9 @@ public class MasterPageController extends BusinessBaseController {
             final String pageFunctionPath;
 
             switch (k.getCaidanId()) {
+                 case "XJ":
+                    pageFunctionPath = "patrol/";
+                    break;
                 case "EQP":
                     pageFunctionPath = "equipment/";
                     break;

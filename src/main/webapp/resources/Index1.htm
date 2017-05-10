@@ -1,0 +1,102 @@
+﻿<!Doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+		<title>天舜通科技</title>
+<link rel="stylesheet" type="text/css" media="screen" href="../css/iPicture.css"/>
+<link rel="stylesheet" href="css/iPicture.css" type="text/css">
+<link rel="stylesheet" href="css/iPicture.css" type="text/css"/>
+
+
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ipicture.js"></script>
+
+		<script language="javascript" src="MyCanvas.js"></script>
+	</head>
+	<body>
+		
+		<div style="width:100%;height:100%">
+		
+
+		<div id="iPicture" data-interaction="hover">
+  			<div class="ip_slide">
+			<canvas id="jvchao" width="960" height="540" style="background-color:red;background-image:url('sb.jpg')">
+				你的浏览器不支持，请升级浏览器
+			</canvas> 
+    			<div class="ip_tooltip ip_img32" style="top: 96px; left: 444px;z-index:10000" data-button="moreblue" data-tooltipbg="bgblack" data-round="roundBgW" data-animationtype="btt-slide">
+      			<p>第二分支段待建设！有一座桥，全长688米。</p>
+    			</div>
+    			<div class="ip_tooltip ip_img32" style="top: 104px; left: 400px;" data-button="moreblue" data-tooltipbg="bgblack" data-round="roundBgW" data-animationtype="btt-slide">
+      			<p><b>第一分支段已完成</b><br/>效果图：<br/><br/><img src="images/CS.jpg" alt="效果图" ></p>
+    			</div>
+    			<div class="ip_tooltip ip_img32" style="top: 193px; left: 129px;" data-button="moreblue" data-tooltipbg="bgblack" data-round="roundBgW" data-animationtype="btt-slide">
+      			<p><b>第四标段已完成</b><br/>效果图：<br/><br/><img src="images/CS.jpg" alt="效果图" ></p>
+    			</div>
+    			<div class="ip_tooltip ip_img32" style="top: 324px; left: 210px;" data-tooltipbg="bgblack" data-round="roundBgW" data-animationtype="btt-slide">
+      			<p><b>第三标段建设中</b><br/>查看详情：<a href="http://www.juchao.cc" style="color:#ffffff;text-decoration:none" target="_blank">点击查看详细进度情况</a></p>
+    			</div>
+                <div class="ip_tooltip ip_img32" style="top: 197px; left: 300px;" data-tooltipbg="bgblack" data-round="roundBgW" data-animationtype="btt-slide">
+      			<p><b>第五监测点</b><br/>监测要求：温度记录、振动记录、声音记录、传动是否正常、是否需要上油。</br>已巡检项目：温度35、振动0.4、声音45</br><span style="color:#ff6600">未巡检项目：传动是否正常、是否需要上油</span></p>
+    			</div>
+                <div class="ip_tooltip ip_img32" style="top: 139px; left: 387px;" data-button="moreblue" data-tooltipbg="bgblack" data-round="roundBgW" data-animationtype="btt-slide">
+      			<p>第一标段待建设！有一座桥，全长688米。</p>
+    			</div>
+				
+  			</div>
+		</div>
+
+		</div>
+		
+		
+		
+		
+<script> 
+
+        window.onload=function(){
+            var c1 = new MyCanvas();
+            //c1.drawLine([{ x: 430, y: 988 }, { x: 550, y: 988 }],{lineWidth:6,strokeStyle:'#ff6600'});//
+            //c1.drawLine([{ x: 560, y: 988 }, { x: 600, y: 986 }],{lineWidth:6,strokeStyle:'#dddddd'}); //普通线局
+          //  c1.drawLine([{ x: 605, y: 986 }, { x: 680, y: 986 }],{lineWidth:6,strokeStyle:'#dddddd'}); //普通线
+            //c1.drawLine([{ x: 720, y: 986 }, { x: 780, y: 986 }],{lineWidth:6,strokeStyle:'#006600'}); //普通线
+            
+            //c1.drawLine([{ x: 785, y: 948 }, { x: 813, y: 985 }],{lineWidth:3,strokeStyle:'#006600'}); //普通线
+            //c1.drawLine([{ x: 1291, y: 930 }, { x: 1295, y: 982 }],{lineWidth:3,strokeStyle:'#ff6600'});
+            //c1.drawLine([{ x: 200.5, y: 10 }, { x: 200.5, y: 200 }],{lineWidth:10,strokeStyle:'rgb(0,0,0)'}); //+0.5偏移
+ 
+        }
+
+
+
+
+function mouseMove(ev) 
+{ 
+Ev= ev || window.event; 
+var mousePos = mouseCoords(ev); 
+document.getElementById("xxx").value = mousePos.x; 
+document.getElementById("yyy").value = mousePos.y; 
+} 
+function mouseCoords(ev) 
+{ 
+if(ev.pageX || ev.pageY){ 
+return {x:ev.pageX, y:ev.pageY}; 
+} 
+return{ 
+x:ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
+y:ev.clientY + document.body.scrollTop - document.body.clientTop 
+}; 
+} 
+document.onmousemove = mouseMove; 
+</script>
+鼠标X轴: 
+<input id=xxx type=text> 
+鼠标Y轴: 
+<input id=yyy type=text> 
+<input type="button" value="画图" onclick="drawTri();"/> 
+
+<script type="text/javascript">
+$( "#iPicture" ).iPicture();
+</script>
+
+	</body>
+</html>

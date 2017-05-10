@@ -5,15 +5,21 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -33,7 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "LTEquipError.findAll", query = "SELECT l FROM LTEquipError l")
     , @NamedQuery(name = "LTEquipError.findById", query = "SELECT l FROM LTEquipError l WHERE l.id = :id")
-    , @NamedQuery(name = "LTEquipError.findByENum", query = "SELECT l FROM LTEquipError l WHERE l.eNum = :eNum")
+    , @NamedQuery(name = "LTEquipError.findByENum", query = "SELECT l FROM LTEquipError l  WHERE l.eNum = :eNum AND l.delFlg = :delFlg")//  AND l.eName = :eName AND l.delFlg = :delFlg
+//    , @NamedQuery(name = "LTEquipError.findByErrEName", query = "SELECT l FROM LTEquipError l WHERE l.equipBasic.eNmae = :eName AND l.delFlg = :delFlg ")
     , @NamedQuery(name = "LTEquipError.findByErrNum", query = "SELECT l FROM LTEquipError l WHERE l.errNum = :errNum")
     , @NamedQuery(name = "LTEquipError.findByErrTitle", query = "SELECT l FROM LTEquipError l WHERE l.errTitle = :errTitle")
     , @NamedQuery(name = "LTEquipError.findByErrWay", query = "SELECT l FROM LTEquipError l WHERE l.errWay = :errWay")
@@ -57,7 +64,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class LTEquipError extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ID")
     private Long id;
     @Size(max = 50)
@@ -103,13 +111,34 @@ public class LTEquipError extends BaseEntity implements Serializable {
     @Column(name = "FluctMin")
     private Integer fluctMin;
 
+    @Column(name = "suo_shu_gu_zhang")
+    private Long suoShuGuZhang;
+    @Column(name = "di_ji_gu_zhang")
+    private Integer diJiGuZhang;
+
     public LTEquipError() {
     }
 
     public LTEquipError(Long id) {
         this.id = id;
     }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private LTEquipBasic equip;
 
+    public LTEquipBasic getEquip() {
+        return equip;
+    }
+
+    public void setEquip(LTEquipBasic equip) {
+        this.equip = equip;
+    }
+   
+  
+   
     public Long getId() {
         return id;
     }
@@ -254,6 +283,24 @@ public class LTEquipError extends BaseEntity implements Serializable {
         this.fluctMin = fluctMin;
     }
 
+   
+
+    public Long getSuoShuGuZhang() {
+        return suoShuGuZhang;
+    }
+
+    public void setSuoShuGuZhang(Long suoShuGuZhang) {
+        this.suoShuGuZhang = suoShuGuZhang;
+    }
+    //底层因为0是1否，所以采用枚举
+    public SepE.Whether getDiJiGuZhang() {
+        return SepE.Whether.parse(diJiGuZhang);
+    }
+
+    public void setDiJiGuZhang(SepE.Whether diJiGuZhang) {
+        this.diJiGuZhang = diJiGuZhang.getValue();
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -279,4 +326,7 @@ public class LTEquipError extends BaseEntity implements Serializable {
         return "cn.tst.sbjxzzglxt.entity.LTEquipError[ id=" + id + " ]";
     }
 
+
+
+      
 }

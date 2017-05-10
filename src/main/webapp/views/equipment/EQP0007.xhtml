@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Card" id="rootContainer">
+        <h1 class="CardBigTopic Purple">
+            <h:outputText value="#{ctrlMaster.createPageTitle('EQP', 'EQP0007')}"/>
+        </h1>
+        <!--无敌分割线-->
+        <div class="SeparatorFull"></div>
+        <p:toolbar styleClass="Container100">
+            <f:facet name="left">
+                <p:commandButton value="新建" process="@this" update="rootContainer" actionListener="#{ctrlEQP0007.onAddTargetData}" 
+                                 styleClass="NavyButton" disabled="#{ctrlEQP0007.statusEditing}"/>
+            </f:facet>
+        </p:toolbar>
+        <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea">
+            <p:dataTable value="#{ctrlEQP0007.vm.selectEquipGraphicList}" var="graphic"
+                         widgetVar="wvYongMeiList"
+                         rows="10"
+                         filterDelay="500"
+                         style="word-break: keep-all!important"
+                         paginator="true"
+                         paginatorAlwaysVisible="false"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         emptyMessage="没有数据">
+                <f:facet name="header">
+                    <h:outputText value="文档及图片管理"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
+                        <p:column headerText="图文名称" styleClass="tct wd-p-8"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{graphic.equipment.ENmae}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{graphic.FOriginalName}">
+                        <!--<p:ajax event="mouseover" listener="#{ctrlEQP0007.onMouseOverFileName}"></p:ajax>-->
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+        <p:outputPanel styleClass="Container100 Responsive100 NoIndent" rendered="#{ctrlEQP0007.statusEditing}">
+            <p:outputPanel styleClass="Container70 Responsive100 tct">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                    <p:outputLabel value="选择文件："></p:outputLabel>
+                    <p:fileUpload update="rootContainer"
+                                  label="选择" 
+                                  mode="advanced" 
+                                  auto="true"
+                                  fileUploadListener="#{ctrlEQP0007.onFileUploaded}"
+                                  sizeLimit="100000000" 
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png|jpg)$/" required="true" requiredMessage="#{ctrlEQP0007.isRequiredMessage('选择文件')}"/>
+                </p:panelGrid>
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                    <p:outputLabel for="Equipment" value="所属设备："></p:outputLabel>
+                    <p:commandButton id="Equipment" value="选择设备" type="button" onclick="PF('deviceSelectDialog').show();">
+
+                    </p:commandButton>
+<!--                    <p:selectOneMenu id="Equipment" value="#{ctrlEQP0007.vm.equipGraphicEntityInEdit.ENum}">
+                        <f:selectItems value="#{ctrlEQP0007.vm.equipmentList}" var="equipment" itemLabel="#{equipment.ENmae}" itemValue="#{equipment.ENum}"></f:selectItems>
+                    </p:selectOneMenu>-->
+                </p:panelGrid>
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                    <p:outputLabel for="FileName" value="图文名称："></p:outputLabel>
+                    <p:inputText id="FileName" value="#{ctrlEQP0007.vm.equipGraphicEntityInEdit.FOriginalName}" required="true" requiredMessage="#{ctrlEQP0007.isRequiredMessage('图文名称')}"></p:inputText>
+                </p:panelGrid>
+            </p:outputPanel>
+            <p:outputPanel styleClass="Container100 Responsive100 tct">
+                <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:commandButton value="保存" process=""
+                                     oncomplete="showErrorMsg();"
+                                     update="rootContainer"
+                                     actionListener="#{ctrlEQP0007.onSaveData}" disabled="#{empty ctrlEQP0007.vm.currentEquipment and empty ctrlEQP0007.vm.equipGraphicEntityInEdit.FOriginalName}"/>
+                    <p:commandButton value="取消" process="@this" 
+                                     update="frmMain:rootContainer" actionListener="#{ctrlEQP0007.onCancelEdit}"
+                                     styleClass="RedButton"/>
+                </p:panelGrid>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
+    <p:dialog widgetVar="deviceSelectDialog" modal="true">
+        <p:dataTable value="#{ctrlEQP0007.vm.equipmentList}" style="width:512px;"
+                     var="equipment" 
+                     paginatorAlwaysVisible="false"
+                     paginator="true" rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     id="equipmentSelectList" widgetVar="equipmentSelectList"
+                     styleClass="bg-c-row-odd wd-f-700"
+                     scrollable="true"
+                     emptyMessage="无数据">
+            <f:facet name="header">
+                <h:outputText value="选择设备"/>
+            </f:facet>
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column styleClass="tct wd-p-30" headerText="设备名"
+                              filterBy="#{equipment.ENmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                    <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
+                    <p:column styleClass="tct wd-p-30" headerText="上级设备"></p:column>
+                    <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
+                </p:row>
+            </p:columnGroup>
+            <p:column >
+                <h:outputText value="#{equipment.ENmae}">
+
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <p:commandLink value="选择" 
+                               actionListener="#{ctrlEQP0007.setCurrentEquipment(equipment)}" 
+                               process="@this" update="frmMain:rootContainer"
+                               oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
+            </p:column>
+            <p:column >
+                <h:outputText value="#{equipment.parentStringChain}">
+
+                </h:outputText>
+            </p:column>
+            <p:column >
+                <h:outputText value="#{equipment.guiGeHeXingHao}">
+
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+    </p:dialog>
+</ui:composition>

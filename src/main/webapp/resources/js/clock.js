@@ -44,6 +44,17 @@ setTimeout("Draw()",500);
 }
 
 
+//EQP0005和EQP0006的显示开关，用于新建、修改、删除按钮的隐藏/显示状态
+ function displaySwitch()
+        {
+            var zt = document.getElementById("equipfault").style.display;
+            if (zt == "none")
+                document.getElementById("equipfault").style.display = "block";
+            else
+                document.getElementById("equipfault").style.display = "none";
+        }
+
+
 ////辅助函数////
 var hzWeek= new Array("日","一","二","三","四","五","六","日");
 function cweekday(wday){return hzWeek[wday];}
@@ -51,6 +62,8 @@ function shapetime(vhrs,vmin,vsec){
 if(vsec<=9) vsec="0"+vsec;if(vmin<=9) vmin="0"+vmin;
 if(vhrs<=9) vhrs="0"+vhrs;return vhrs+":"+vmin+":"+vsec
 }
+
+
 
 
 ////农历函数开始////

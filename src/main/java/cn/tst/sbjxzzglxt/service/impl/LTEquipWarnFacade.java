@@ -20,10 +20,10 @@ public class LTEquipWarnFacade extends AbstractFacade<LTEquipWarn> {
     }
     
     //查询下拉列表所对应的年月日对应的数据数据类型
-   public List<LTEquipBasic> findByCId(Long cId) {
-        Query query = getEntityManager().createNamedQuery("LTEquipBasic.findByCId");
+   public List<LTEquipWarn> findByEId(Long eId) {
+        Query query = getEntityManager().createNamedQuery("LTEquipWarn.findByEId");
         query.setParameter("delFlg", SepE.Flag.NO.getValue());
-        query.setParameter("cId", cId);
+        query.setParameter("eId", eId);
         return query.getResultList();
     }
 

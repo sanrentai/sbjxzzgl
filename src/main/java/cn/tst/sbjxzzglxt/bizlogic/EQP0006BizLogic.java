@@ -6,7 +6,7 @@ import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
 
 /**
- * 仓库管理业务逻辑
+ * 设备故障定义
  *
  * @author ps_xy@pscp.co.jp
  */
@@ -26,7 +26,7 @@ public interface EQP0006BizLogic {
      * @param vm 视图
      * @return 実行結果
      */
-    ExecuteResult onSaveEquipError(SepE.ExecuteMode mode, EQP0006ViewModel vm);
+    ExecuteResult onEquipError(SepE.ExecuteMode mode, EQP0006ViewModel vm);
 
    
 
