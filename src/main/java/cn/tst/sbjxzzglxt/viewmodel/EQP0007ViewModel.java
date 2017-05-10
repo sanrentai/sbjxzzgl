@@ -23,7 +23,7 @@ public class EQP0007ViewModel extends BaseViewModel {
     
     private List<LTEquipGraphic> selectEquipGraphicList;
     
-    private UploadedFile file;
+    private String fileName;
 
     public LTEquipGraphic getEquipGraphicEntityInEdit() {
         return equipGraphicEntityInEdit;
@@ -41,14 +41,6 @@ public class EQP0007ViewModel extends BaseViewModel {
         this.equipmentList = equipmentList;
     }
 
-    public UploadedFile getFile() {
-        return file;
-    }
-
-    public void setFile(UploadedFile file) {
-        this.file = file;
-    }
-
     public List<LTEquipGraphic> getSelectEquipGraphicList() {
         return selectEquipGraphicList;
     }
@@ -63,5 +55,14 @@ public class EQP0007ViewModel extends BaseViewModel {
 
     public void setCurrentEquipment(LTEquipBasic currentEquipment) {
         this.currentEquipment = currentEquipment;
+        equipGraphicEntityInEdit.setENum(currentEquipment.getENum());
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

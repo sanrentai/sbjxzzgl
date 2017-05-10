@@ -77,5 +77,6 @@ public class EQP0007Controller extends BusinessBaseController {
     
     public void setCurrentEquipment(LTEquipBasic equipment) {
         vm.setCurrentEquipment(equipment);
+        LOG.info("setCurrentEquipment");
     }
 }

@@ -512,4 +512,26 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setShiYongShiJian(Date shiYongShiJian) {
         this.shiYongShiJian = shiYongShiJian;
     }
+    
+    public String getParentStringChain() {
+        return getParentStringChain(parent);
+    }
+    
+    private String getParentStringChain(LTEquipBasic parent) {
+        String result = "";
+        if(parent != null) {
+            result = result.concat(getParentStringChain(parent.parent)).concat("-");
+            result = result.concat(parent.getENmae());
+        } else {
+            return "";
+        }
+        if(result.charAt(0) == '-') {
+            result = result.substring(1);
+        }
+        return result;
+    }
+    
+    public String getGuiGeHeXingHao() {
+        return getGuiGe().concat("/").concat(this.getXingHao());
+    }
 }
