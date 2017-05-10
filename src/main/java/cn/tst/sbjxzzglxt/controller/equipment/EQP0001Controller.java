@@ -5,7 +5,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
-import cn.tst.sbjxzzglxt.bizlogic.impl.EQP0001BizLogicImpl;
+import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
@@ -14,13 +14,22 @@ import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
 import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 
 /**
  * 仓库管理
@@ -40,6 +49,10 @@ public class EQP0001Controller extends BusinessBaseController {
 
     ///视图模型
     private EQP0001ViewModel vm;
+    
+    ///图片上传目录
+    private final String FILE_UPLOAD_PATH
+        = this.getServletContext().getInitParameter(SepC.INIT_PARAM_UPLOAD_DIRECTORY) + "/pingmiantu";
 
     @EJB
     private EQP0001BizLogic bizLogic;
@@ -157,6 +170,49 @@ public class EQP0001Controller extends BusinessBaseController {
     public void onCancelShuXuanZhe() {
         vm.setSelectedEquipBasic(null);
         selectedNode = null;
+    }
+    
+    /**
+     * 上传图片
+     * @param event 
+     */
+    
+    public void onFileUploaded(FileUploadEvent event) {
+
+        UploadedFile pingMianTu = event.getFile();
+
+        if (pingMianTu == null) {
+            return;
+        }
+        try {
+
+            ///源文件的扩展名
+            final String EXTENSION_NAME = FilenameUtils.getExtension(pingMianTu.getFileName());
+
+            ///上传后的文件名
+            final String FILE_NAME = UUID.randomUUID().toString().concat(CConst.DOT).concat(EXTENSION_NAME);
+            
+            ///原图片
+            Path originFilePath = Paths.get(this.FILE_UPLOAD_PATH, SepC.UploadFileType.ORIGIN, FILE_NAME);
+
+            ///压缩后图片保存路径
+            Path compressedFilePath = Paths.get(this.FILE_UPLOAD_PATH, SepC.UploadFileType.COMPRESSION, FILE_NAME);
+
+            ///压缩后图片保存路径
+            Path previewFilePath = Paths.get(this.FILE_UPLOAD_PATH, SepC.UploadFileType.PREVIEW, FILE_NAME);
+
+            ///预览用后图片保存路径
+            ///压缩图片
+            Thumbnails.of(pingMianTu.getInputstream()).size(400, 320).toFile(new File(compressedFilePath.toString()));
+            Thumbnails.of(pingMianTu.getInputstream()).size(160, 100).toFile(new File(previewFilePath.toString()));
+            ///原图片
+            Thumbnails.of(pingMianTu.getInputstream()).scale(1.0f).toFile(new File(originFilePath.toString()));
+
+            ///只存照片名字,不存路径
+            this.vm.getEditingEquipBasic().setPingMianTu(FILE_NAME);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**

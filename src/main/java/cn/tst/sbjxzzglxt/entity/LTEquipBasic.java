@@ -59,6 +59,9 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     @Size(max = 250)
     @Column(name = "sheng_can_shang")
     private String shengCanShang;
+    @Size(max = 250)
+    @Column(name = "ping_mian_tu")
+    private String pingMianTu;
     @Column(name = "jin_cang_ri_qi")
     @Temporal(TemporalType.TIMESTAMP)
     private Date jinCangRiQi;
@@ -266,85 +269,8 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setEditUser(Long editUser) {
         this.editUser = editUser;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof LTEquipBasic)) {
-            return false;
-        }
-        LTEquipBasic other = (LTEquipBasic) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-//        return "cn.tst.sbjxzzglxt.entity.LTEquipBasic[ id=" + id + " ]";
-        return eNmae;
-    }
-
-    ///父节点
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns({
-        @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false),
-        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
-    })
-//    @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
-    private LTEquipBasic parent;
-
-    ///子节点
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
-    private Set<LTEquipBasic> children;
-
-    public LTEquipBasic getParent() {
-        return parent;
-    }
-
-    public void setParent(LTEquipBasic parent) {
-        this.parent = parent;
-    }
-
-    public Set<LTEquipBasic> getChildren() {
-        return this.children;
-    }
-
-    public void setChildren(Set<LTEquipBasic> children) {
-        this.children = children;
-    }
-
-    @OneToMany(mappedBy = "equipBasic", fetch = FetchType.LAZY)
-    private List<LTEquipFitting> equipFittingList;
-
-    public List<LTEquipFitting> getEquipFittingList() {
-        return equipFittingList;
-    }
-
-    public void setEquipFittingList(List<LTEquipFitting> equipFittingList) {
-        this.equipFittingList = equipFittingList;
-    }
     
     
-    @OneToMany(mappedBy = "equip", fetch = FetchType.LAZY)
-    private List<LTEquipProRule> equipProRuleList;
-
-    public List<LTEquipProRule> getEquipProRuleList() {
-        return equipProRuleList;
-    }
-
-    public void setEquipProRuleList(List<LTEquipProRule> equipProRuleList) {
-        this.equipProRuleList = equipProRuleList;
-    }
-
     public String getZhiZhaoGuoBie() {
         return zhiZhaoGuoBie;
     }
@@ -512,6 +438,94 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setShiYongShiJian(Date shiYongShiJian) {
         this.shiYongShiJian = shiYongShiJian;
     }
+
+    public String getPingMianTu() {
+        return pingMianTu;
+    }
+
+    public void setPingMianTu(String pingMianTu) {
+        this.pingMianTu = pingMianTu;
+    }
+
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof LTEquipBasic)) {
+            return false;
+        }
+        LTEquipBasic other = (LTEquipBasic) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+//        return "cn.tst.sbjxzzglxt.entity.LTEquipBasic[ id=" + id + " ]";
+        return eNmae;
+    }
+
+    ///父节点
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({
+        @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+//    @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    private LTEquipBasic parent;
+
+    ///子节点
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    private Set<LTEquipBasic> children;
+
+    public LTEquipBasic getParent() {
+        return parent;
+    }
+
+    public void setParent(LTEquipBasic parent) {
+        this.parent = parent;
+    }
+
+    public Set<LTEquipBasic> getChildren() {
+        return this.children;
+    }
+
+    public void setChildren(Set<LTEquipBasic> children) {
+        this.children = children;
+    }
+
+    @OneToMany(mappedBy = "equipBasic", fetch = FetchType.LAZY)
+    private List<LTEquipFitting> equipFittingList;
+
+    public List<LTEquipFitting> getEquipFittingList() {
+        return equipFittingList;
+    }
+
+    public void setEquipFittingList(List<LTEquipFitting> equipFittingList) {
+        this.equipFittingList = equipFittingList;
+    }
+
+    @OneToMany(mappedBy = "equip", fetch = FetchType.LAZY)
+    private List<LTEquipProRule> equipProRuleList;
+
+    public List<LTEquipProRule> getEquipProRuleList() {
+        return equipProRuleList;
+    }
+
+    public void setEquipProRuleList(List<LTEquipProRule> equipProRuleList) {
+        this.equipProRuleList = equipProRuleList;
+    }
+
     
     public String getParentStringChain() {
         return getParentStringChain(parent);
