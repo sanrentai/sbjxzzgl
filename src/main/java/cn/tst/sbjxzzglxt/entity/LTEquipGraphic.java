@@ -7,18 +7,20 @@ package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -33,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LTEquipGraphic.findAll", query = "SELECT l FROM LTEquipGraphic l")
     , @NamedQuery(name = "LTEquipGraphic.findById", query = "SELECT l FROM LTEquipGraphic l WHERE l.id = :id")
     , @NamedQuery(name = "LTEquipGraphic.findByENum", query = "SELECT l FROM LTEquipGraphic l WHERE l.eNum = :eNum")
-    , @NamedQuery(name = "LTEquipGraphic.findByFName", query = "SELECT l FROM LTEquipGraphic l WHERE l.fName = :fName")
+    , @NamedQuery(name = "LTEquipGraphic.findByOriginalName", query = "SELECT l FROM LTEquipGraphic l WHERE l.fOriginalName = :fOriginalName")
     , @NamedQuery(name = "LTEquipGraphic.findByFUrl", query = "SELECT l FROM LTEquipGraphic l WHERE l.fUrl = :fUrl")
     , @NamedQuery(name = "LTEquipGraphic.findByFVer", query = "SELECT l FROM LTEquipGraphic l WHERE l.fVer = :fVer")
     , @NamedQuery(name = "LTEquipGraphic.findByDelYN", query = "SELECT l FROM LTEquipGraphic l WHERE l.delYN = :delYN")
@@ -52,7 +54,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipGraphic.findByUpdDate", query = "SELECT l FROM LTEquipGraphic l WHERE l.updDate = :updDate")
     , @NamedQuery(name = "LTEquipGraphic.findByDelFlg", query = "SELECT l FROM LTEquipGraphic l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipGraphic.findByVersion", query = "SELECT l FROM LTEquipGraphic l WHERE l.version = :version")})
-public class LTEquipGraphic implements Serializable {
+public class LTEquipGraphic extends BaseEntity implements Serializable {
+
+    @Size(max = 250)
+    @Column(name = "F_OriginalName")
+    private String fOriginalName;
+    @Size(max = 255)
+    @Column(name = "F_NameOnServer")
+    private String fNameOnServer;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -62,9 +71,6 @@ public class LTEquipGraphic implements Serializable {
     @Size(max = 50)
     @Column(name = "E_Num")
     private String eNum;
-    @Size(max = 250)
-    @Column(name = "F_Name")
-    private String fName;
     @Size(max = 350)
     @Column(name = "F_Url")
     private String fUrl;
@@ -94,50 +100,12 @@ public class LTEquipGraphic implements Serializable {
     private Date editDate;
     @Column(name = "Edit_User")
     private Long editUser;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "ins_rep")
-    private String insRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ins_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insDate;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "upd_rep")
-    private String updRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "upd_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "del_flg")
-    private Character delFlg;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "version")
-    private int version;
 
     public LTEquipGraphic() {
     }
 
     public LTEquipGraphic(Long id) {
         this.id = id;
-    }
-
-    public LTEquipGraphic(Long id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.delFlg = delFlg;
-        this.version = version;
     }
 
     public Long getId() {
@@ -154,14 +122,6 @@ public class LTEquipGraphic implements Serializable {
 
     public void setENum(String eNum) {
         this.eNum = eNum;
-    }
-
-    public String getFName() {
-        return fName;
-    }
-
-    public void setFName(String fName) {
-        this.fName = fName;
     }
 
     public String getFUrl() {
@@ -260,54 +220,6 @@ public class LTEquipGraphic implements Serializable {
         this.editUser = editUser;
     }
 
-    public String getInsRep() {
-        return insRep;
-    }
-
-    public void setInsRep(String insRep) {
-        this.insRep = insRep;
-    }
-
-    public Date getInsDate() {
-        return insDate;
-    }
-
-    public void setInsDate(Date insDate) {
-        this.insDate = insDate;
-    }
-
-    public String getUpdRep() {
-        return updRep;
-    }
-
-    public void setUpdRep(String updRep) {
-        this.updRep = updRep;
-    }
-
-    public Date getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Date updDate) {
-        this.updDate = updDate;
-    }
-
-    public Character getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Character delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -332,5 +244,74 @@ public class LTEquipGraphic implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipGraphic[ id=" + id + " ]";
     }
-    
+
+    public String getFOriginalName() {
+        return fOriginalName;
+    }
+
+    public void setFOriginalName(String fOriginalName) {
+        this.fOriginalName = fOriginalName;
+    }
+
+    public String getFNameOnServer() {
+        return fNameOnServer;
+    }
+
+    public void setFNameOnServer(String fNameOnServer) {
+        this.fNameOnServer = fNameOnServer;
+    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "E_NUM", referencedColumnName = "E_NUM", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private LTEquipBasic equipment;
+
+    public String getfOriginalName() {
+        return fOriginalName;
+    }
+
+    public void setfOriginalName(String fOriginalName) {
+        this.fOriginalName = fOriginalName;
+    }
+
+    public String getfNameOnServer() {
+        return fNameOnServer;
+    }
+
+    public void setfNameOnServer(String fNameOnServer) {
+        this.fNameOnServer = fNameOnServer;
+    }
+
+    public String geteNum() {
+        return eNum;
+    }
+
+    public void seteNum(String eNum) {
+        this.eNum = eNum;
+    }
+
+    public String getfUrl() {
+        return fUrl;
+    }
+
+    public void setfUrl(String fUrl) {
+        this.fUrl = fUrl;
+    }
+
+    public Integer getfVer() {
+        return fVer;
+    }
+
+    public void setfVer(Integer fVer) {
+        this.fVer = fVer;
+    }
+
+    public LTEquipBasic getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(LTEquipBasic equipment) {
+        this.equipment = equipment;
+    }
 }
