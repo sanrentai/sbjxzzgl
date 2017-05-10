@@ -700,12 +700,12 @@ public final class SepC {
         public static final String EQP0007 = "ctrlEQP0007";
 
         /**
-         * 巡检类表
+         * 巡检管理
          */
-        public static final String XJ0001 = "ctrlXJ0001";
-        public static final String XJ0002 = "ctrlXJ0002";
-        public static final String XJ0003 = "ctrlXJ0003";
-        public static final String XJ0004 = "ctrlXJ0004";
+        public static final String XUN_JIAN_XIN_XI_JI_LU_CONTROLLER_NAME = "XunJianXinXiJiLuController";
+        public static final String XUN_JIAN_DIAN_SHE_ZHI_CONTROLLER_NAME = "XunJianDianSheZhiController";
+        public static final String XunJian0003ControllerName = "XunJian0003Controller";
+        public static final String XunJian0004ControllerName = "XunJian0004Controller";
     }
 
     /**

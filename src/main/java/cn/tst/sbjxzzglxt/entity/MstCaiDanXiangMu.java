@@ -18,6 +18,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import cn.tst.sbjxzzglxt.common.SepE;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * 菜单项目实体
@@ -31,7 +33,6 @@ import cn.tst.sbjxzzglxt.common.SepE;
     @NamedQuery(name = "MstCaiDanXiangMu.findAll", query = "SELECT m FROM MstCaiDanXiangMu m WHERE m.delFlg = :delFlg ORDER BY m.paixu ASC")
 })
 public class MstCaiDanXiangMu extends BaseEntity implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected MstCaiDanXiangMuPK pk;

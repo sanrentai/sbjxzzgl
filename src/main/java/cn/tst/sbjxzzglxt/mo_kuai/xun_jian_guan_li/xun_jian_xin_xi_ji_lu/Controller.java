@@ -1,7 +1,6 @@
-package cn.tst.sbjxzzglxt.controller.equipment;
+package cn.tst.sbjxzzglxt.mo_kuai.xun_jian_guan_li.xun_jian_xin_xi_ji_lu;
 
 import cn.tst.sbjxzzglxt.bizlogic.EQP0005BizLogic;
-import cn.tst.sbjxzzglxt.bizlogic.XJ0002BizLogic;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -16,8 +15,6 @@ import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
-import cn.tst.sbjxzzglxt.viewmodel.XJ0001ViewModel;
-import cn.tst.sbjxzzglxt.viewmodel.XJ0002ViewModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,30 +34,25 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 @ViewScoped
-@Named(SepC.ControllerID.XJ0002)
-public class XJ0002Controller extends BusinessBaseController {
-
+@Named(SepC.ControllerID.XUN_JIAN_XIN_XI_JI_LU_CONTROLLER_NAME)
+public class Controller extends BusinessBaseController {
    private SysRoutingInspectionMessage messageList;//巡检信息列表集合
    private SysRoutingInspectionMessage message;//巡检信息列表对象
 
     ///视图模型
-    private XJ0002ViewModel vm;
+    private ViewModel vm;
 
     @EJB
-    private XJ0002BizLogic bizLogic;
+    private BizLogic bizLogic;
 
     /**
      *
      */
     @PostConstruct
     public void init() {
-
         ///初始化视图模型
-        this.vm = new XJ0002ViewModel();
-
+        this.vm = new ViewModel();
         this.bizLogic.loadXJ0002ViewModel(vm);
-        
-
     }
 
     //*****************************************************************
@@ -188,19 +180,19 @@ public class XJ0002Controller extends BusinessBaseController {
         this.message = message;
     }
 
-    public XJ0002ViewModel getVm() {
+    public ViewModel getVm() {
         return vm;
     }
 
-    public void setVm(XJ0002ViewModel vm) {
+    public void setVm(ViewModel vm) {
         this.vm = vm;
     }
 
-    public XJ0002BizLogic getBizLogic() {
+    public BizLogic getBizLogic() {
         return bizLogic;
     }
 
-    public void setBizLogic(XJ0002BizLogic bizLogic) {
+    public void setBizLogic(BizLogic bizLogic) {
         this.bizLogic = bizLogic;
     }
 }
