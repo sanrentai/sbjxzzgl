@@ -159,7 +159,8 @@ public class BizConfig implements Serializable {
     public String getDateTimeFormat2() {
         return SepC.FORMAT_DATETIME2_TYPE;
     }
-
+    
+    
     /**
      * 日期格式: 时:分(24时制)
      *
@@ -358,4 +359,22 @@ public class BizConfig implements Serializable {
     public SepE.RecordType[] getRecordTypes() {
         return SepE.RecordType.values();
     }
+    
+        /**
+     * 获取所有提醒日期类型
+     *
+     * @return 提醒日期类型
+     */
+    public SepE.ReminderTime[] getReminderTime() {
+        return SepE.ReminderTime.values();
+    }
+       /**
+     * 所有是与否
+     *
+     * @return 提醒日期类型
+     */
+    public SepE.Whether[] getWhether() {
+        return SepE.Whether.values();
+    }
+    
 }

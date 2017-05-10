@@ -3032,4 +3032,111 @@ public class SepE {
             this.value = value;
         }
     }
+
+    /**
+     * 提醒时间
+     */
+    public static enum ReminderTime {
+        /**
+         * 年
+         */
+        YEAR(0),
+        /**
+         * 最终审批
+         */
+        MONTH(1),
+        /**
+         * 最终审批
+         */
+        DAY(2);
+
+        private final int value;
+
+        ReminderTime(int value) {
+            this.value = value;
+        }
+
+        public final int getValue() {
+            return value;
+        }
+
+        public static ReminderTime parse(int v) {
+
+            switch (v) {
+                case 0:
+                    return YEAR;
+                case 1:
+                    return MONTH;
+                case 2:
+                    return DAY;
+                default:
+                    return null;
+            }
+        }
+
+        public String getMessage() {
+            switch (this) {
+                case YEAR:
+                    return "年";
+                case MONTH:
+                    return "月";
+                case DAY:
+                    return "日";
+                default:
+                    return null;
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * 是与否
+     */
+    public static enum Whether {
+        /**
+         *是
+         */
+        YES(0),
+        /**
+         * 否
+         */
+        NO(1);
+       
+
+        private final int value;
+
+        Whether(int value) {
+            this.value = value;
+        }
+
+        public final int getValue() {
+            return value;
+        }
+
+        public static Whether parse(int v) {
+
+            switch (v) {
+                case 0:
+                    return YES;
+                case 1:
+                    return NO;
+               
+                default:
+                    return null;
+            }
+        }
+
+        public String getMessage() {
+            switch (this) {
+                case YES:
+                    return "是";
+                case NO:
+                    return "否";
+              
+                default:
+                    return null;
+            }
+        }
+    }
 }

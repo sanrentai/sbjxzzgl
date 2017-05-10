@@ -1,6 +1,7 @@
 package cn.tst.sbjxzzglxt.common;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 常量定义
@@ -689,12 +690,20 @@ public final class SepC {
         public static final String EQP0001 = "ctrlEQP0001";
 
         public static final String EQP0002 = "ctrlEQP0002";
-        
+
         public static final String EQP0005 = "ctrlEQP0005";
-        
+
         public static final String EQP0006 = "ctrlEQP0006";
 
         public static final String EQP0004 = "ctrlEQP0004";
+
+        /**
+         * 巡检类表
+         */
+        public static final String XJ0001 = "ctrlXJ0001";
+        public static final String XJ0002 = "ctrlXJ0002";
+        public static final String XJ0003 = "ctrlXJ0003";
+        public static final String XJ0004 = "ctrlXJ0004";
     }
 
     /**

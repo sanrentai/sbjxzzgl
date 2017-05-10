@@ -1,6 +1,7 @@
 package cn.tst.sbjxzzglxt.controller.equipment;
 
 import cn.tst.sbjxzzglxt.bizlogic.EQP0005BizLogic;
+import cn.tst.sbjxzzglxt.bizlogic.XJ0002BizLogic;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -11,8 +12,12 @@ import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import static cn.tst.sbjxzzglxt.controller.equipment.EQP0001Controller.createEqpTree;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
+import cn.tst.sbjxzzglxt.viewmodel.XJ0001ViewModel;
+import cn.tst.sbjxzzglxt.viewmodel.XJ0002ViewModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,22 +32,22 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
- * 设备提醒管理
+ * 巡检信息列表
  *
  * @author ps_xy@pscp.co.jp
  */
 @ViewScoped
-@Named(SepC.ControllerID.EQP0005)
-public class EQP0005Controller extends BusinessBaseController {
+@Named(SepC.ControllerID.XJ0002)
+public class XJ0002Controller extends BusinessBaseController {
 
-    private LTEquipWarn equipWarn;
-    private Date date;
+   private SysRoutingInspectionMessage messageList;//巡检信息列表集合
+   private SysRoutingInspectionMessage message;//巡检信息列表对象
 
     ///视图模型
-    private EQP0005ViewModel vm;
+    private XJ0002ViewModel vm;
 
     @EJB
-    private EQP0005BizLogic bizLogic;
+    private XJ0002BizLogic bizLogic;
 
     /**
      *
@@ -51,9 +56,10 @@ public class EQP0005Controller extends BusinessBaseController {
     public void init() {
 
         ///初始化视图模型
-        this.vm = new EQP0005ViewModel();
+        this.vm = new XJ0002ViewModel();
 
-        this.bizLogic.loadEQP0005ViewModel(vm);
+        this.bizLogic.loadXJ0002ViewModel(vm);
+        
 
     }
 
@@ -69,48 +75,41 @@ public class EQP0005Controller extends BusinessBaseController {
      * /**
      * 編集取消
      */
-    public void onStartNodeEditing() {
-
-        if (date == null) {
-            return;
-        } else {
-        }
-
-        this.switchStatus2Editing();
-
-    }
-
+  
     //*****************************************************************
     //                        私有函数定义
     //*****************************************************************
     /**
-     * 修改故障提醒的记录
+     * 修改巡检信息列表
      *
-     * @param equipwarn
+     * @param message
+     * 
      */
-    public void onEditEquip(LTEquipWarn equipwarn) {
-        vm.setEquipWarn(equipwarn);
+    public void onUpdateMessage(SysRoutingInspectionMessage message) {
+        vm.setMessage(message);
     }
 
     /**
-     * 删除故障提醒的记录
+     * 删除巡检信息列表
      */
-    public void onDeleteEquip(LTEquipWarn row) {
+    public void onDeleteMessage(SysRoutingInspectionMessage row) {
         ///删除模式
         SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
-        vm.setEquipWarn(row);
+        vm.setMessage(row);
 
         ///执行更新
-        ExecuteResult result = this.bizLogic.onEquipWarn(mode, vm);
+        ExecuteResult result = this.bizLogic.onRoutingInspectionMessage(mode, vm);
 
         if (result.isSuccess()) {
             putInfoMessage("删除成功");
-            vm.setEquipWarn(null);
+            vm.setMessage(null);
 
         } else {
             putErrorMessage("删除失败");
         }
     }
+
+    
 
     /**
      * 删除节点
@@ -130,7 +129,7 @@ public class EQP0005Controller extends BusinessBaseController {
 //        this.switchStatus2Init();
         ///无模式
 //        this.switchEditMode2None();
-        vm.setEquipWarn(null);
+        vm.setMessage(null);
 
     }
 
@@ -142,11 +141,11 @@ public class EQP0005Controller extends BusinessBaseController {
         //初始化实体类的对象
 
         //当页面调用方法的时候，查看EquipWarn是否为空。
-        SepE.ExecuteMode mode = this.vm.getEquipWarn().getId() == null
+        SepE.ExecuteMode mode = this.vm.getMessage() == null
                 //如果为空就执行模型的插入方法，如果非空就修改。
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
         //本类调用接口实现方法，并把执行后的结果放进result中
-        ExecuteResult result = this.bizLogic.onEquipWarn(mode, vm);
+        ExecuteResult result = this.bizLogic.onRoutingInspectionMessage(mode, vm);
         //本类调用添加消息的方法，添加执行结果创建的信息
         this.addMessage(result.createMessage());
 
@@ -166,43 +165,42 @@ public class EQP0005Controller extends BusinessBaseController {
     }
 
     public void onAddTargetData() {
-        vm.setEquipWarn(new LTEquipWarn());
-        vm.getEquipWarn().setTTyoe(SepE.ReminderTime.YEAR);
-        vm.getEquipWarn().setXhYn(SepE.Whether.NO);
+        vm.setMessage(new SysRoutingInspectionMessage());
+       
     }
 
     //*****************************************************************
     //                        Getter Setter
     //*****************************************************************
-    public LTEquipWarn getEquipWarn() {
-        return equipWarn;
+  public SysRoutingInspectionMessage getMessageList() {
+        return messageList;
     }
 
-    public void setEquipWarn(LTEquipWarn equipWarn) {
-        this.equipWarn = equipWarn;
+    public void setMessageList(SysRoutingInspectionMessage messageList) {
+        this.messageList = messageList;
     }
 
-    public EQP0005ViewModel getVm() {
+    public SysRoutingInspectionMessage getMessage() {
+        return message;
+    }
+
+    public void setMessage(SysRoutingInspectionMessage message) {
+        this.message = message;
+    }
+
+    public XJ0002ViewModel getVm() {
         return vm;
     }
 
-    public void setVm(EQP0005ViewModel vm) {
+    public void setVm(XJ0002ViewModel vm) {
         this.vm = vm;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public EQP0005BizLogic getBizLogic() {
+    public XJ0002BizLogic getBizLogic() {
         return bizLogic;
     }
 
-    public void setBizLogic(EQP0005BizLogic bizLogic) {
+    public void setBizLogic(XJ0002BizLogic bizLogic) {
         this.bizLogic = bizLogic;
     }
 }

@@ -1,5 +1,7 @@
 package cn.tst.sbjxzzglxt.viewmodel;
 
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import java.text.SimpleDateFormat;
@@ -8,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.TreeNode;
 
 /**
  * 仓库管理
@@ -17,8 +20,19 @@ import org.primefaces.event.SelectEvent;
 public class EQP0005ViewModel extends BaseViewModel {
     private List<LTEquipWarn> equipWarnList;//在查询全部的时候，需要使用List接收
     private LTEquipWarn equipWarn;//设备提醒的实体类对象
- 
-    private Date tdate;//页面中时间设置的对象
+    private TreeNode equipTreeRoot;//tree节点
+    private List<LTEquipWarn> selectEquipWarnList;
+    private LTEquipWarn selectedEquipWarn;
+    private LTEquipWarn rootEqp;
+    private LTEquipWarn editingEquipWarn;
+
+    public List<LTEquipWarn> getEquipWarnList() {
+        return equipWarnList;
+    }
+
+    public void setEquipWarnList(List<LTEquipWarn> equipWarnList) {
+        this.equipWarnList = equipWarnList;
+    }
 
     public LTEquipWarn getEquipWarn() {
         return equipWarn;
@@ -28,25 +42,50 @@ public class EQP0005ViewModel extends BaseViewModel {
         this.equipWarn = equipWarn;
     }
 
-    public Date getTdate() {
-        return tdate;
+    public TreeNode getEquipTreeRoot() {
+        return equipTreeRoot;
     }
 
-    public void setTdate(Date tdate) {
-        this.tdate = tdate;
+    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
+        this.equipTreeRoot = equipTreeRoot;
     }
 
-
-      public List<LTEquipWarn> getEquipWarnList() {
-        return equipWarnList;
+    public List<LTEquipWarn> getSelectEquipWarnList() {
+        return selectEquipWarnList;
     }
 
-    public void setEquipWarnList(List<LTEquipWarn> equipWarnList) {
-        this.equipWarnList = equipWarnList;
+    public void setSelectEquipWarnList(List<LTEquipWarn> selectEquipWarnList) {
+        this.selectEquipWarnList = selectEquipWarnList;
     }
 
-   
-  public void onDateSelect(SelectEvent event) {
+    public LTEquipWarn getSelectedEquipWarn() {
+        return selectedEquipWarn;
+    }
+
+    public void setSelectedEquipWarn(LTEquipWarn selectedEquipWarn) {
+        this.selectedEquipWarn = selectedEquipWarn;
+    }
+
+    public LTEquipWarn getRootEqp() {
+        return rootEqp;
+    }
+
+    public void setRootEqp(LTEquipWarn rootEqp) {
+        this.rootEqp = rootEqp;
+    }
+
+    public LTEquipWarn getEditingEquipWarn() {
+        return editingEquipWarn;
+    }
+
+    public void setEditingEquipWarn(LTEquipWarn editingEquipWarn) {
+        this.editingEquipWarn = editingEquipWarn;
+    }
+
+    
+    
+    
+   public void onDateSelect(SelectEvent event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
@@ -58,7 +97,4 @@ public class EQP0005ViewModel extends BaseViewModel {
         requestContext.update("form:display");
         requestContext.execute("PF('dlg').show()");
     }
-
-   
-
 }

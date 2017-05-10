@@ -20,14 +20,14 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
- * 仓库管理
+ * 设备故障定义
  *
  * @author ps_xy@pscp.co.jp
  */
 @ViewScoped
 @Named(SepC.ControllerID.EQP0006)
 public class EQP0006Controller extends BusinessBaseController {
-    
+
     private List<LTEquipError> equipErrorList;
     private LTEquipError equipError;
     ///视图模型
@@ -43,14 +43,30 @@ public class EQP0006Controller extends BusinessBaseController {
         this.vm = new EQP0006ViewModel();
 
         this.bizLogic.loadEQP0006ViewModel(vm);
-
-        vm.setEquipError(new LTEquipError());
+      
+        vm.getEquipError().setDiJiGuZhang(SepE.Whether.NO);
     }
 
     //*****************************************************************
     //                        公有函数定义
     //*****************************************************************
-   
+    //*****************************************************************
+    //                        私有函数定义
+    //*****************************************************************
+    /**
+     * 修改故障提醒的记录
+     *
+     * @param equipwarn
+     */
+    public void onEditEquip(LTEquipError equipError) {
+        vm.setEquipError(equipError);
+    }
+
+    public void onAddTargetData() {
+        vm.setEquipError(new LTEquipError());
+
+    }
+
     /**
      * 保存数据
      *
@@ -60,21 +76,35 @@ public class EQP0006Controller extends BusinessBaseController {
         SepE.ExecuteMode mode = this.vm.getEquipError().getId() == null
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
 
-        ExecuteResult result = this.bizLogic.onSaveEquipError(mode, vm);
+        ExecuteResult result = this.bizLogic.onEquipError(mode, vm);
 
         this.addMessage(result.createMessage());
 
-      
+    }
+
+    /**
+     * 删除故障提醒的记录
+     */
+    public void onDeleteEquip(LTEquipError row) {
+        ///删除模式
+        SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
+        vm.setEquipError(row);
+
+        ///执行更新
+        ExecuteResult result = this.bizLogic.onEquipError(mode, vm);
+
+        if (result.isSuccess()) {
+            putInfoMessage("删除成功");
+            vm.setEquipError(null);
+            
+        } else {
+            putErrorMessage("删除失败");
+        }
     }
 
     //*****************************************************************
-    //                        私有函数定义
-    //*****************************************************************
-   
-    //*****************************************************************
     //                        Getter Setter
     //*****************************************************************
-
     public EQP0006ViewModel getVm() {
         return vm;
     }
@@ -82,6 +112,7 @@ public class EQP0006Controller extends BusinessBaseController {
     public void setVm(EQP0006ViewModel vm) {
         this.vm = vm;
     }
+
     public List<LTEquipError> getEquipErrorList() {
         return equipErrorList;
     }
