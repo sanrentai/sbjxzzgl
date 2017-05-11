@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LTEquipFitting.findAll", query = "SELECT l FROM LTEquipFitting l")
-    , @NamedQuery(name = "LTEquipFitting.findById", query = "SELECT l FROM LTEquipFitting l WHERE l.id = :id")
+    , @NamedQuery(name = "LTEquipFitting.findById", query = "SELECT l FROM LTEquipFitting l WHERE l.id = :id AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipFitting.findByPNmae", query = "SELECT l FROM LTEquipFitting l WHERE l.pNmae = :pNmae")
     , @NamedQuery(name = "LTEquipFitting.findByENum", query = "SELECT l FROM LTEquipFitting l WHERE l.eNum = :eNum AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipFitting.findByPNum", query = "SELECT l FROM LTEquipFitting l WHERE l.pNum = :pNum")

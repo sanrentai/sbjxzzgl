@@ -21,10 +21,10 @@ public class LTFittingFacade extends AbstractFacade<LTEquipFitting> {
         super(LTEquipFitting.class);
     }
     
-    public List<LTEquipFitting> findByENum(String ENum) {
-        Query query = getEntityManager().createNamedQuery("LTEquipFitting.findByENum");
+    public List<LTEquipFitting> findById(Long id) {
+        Query query = getEntityManager().createNamedQuery("LTEquipFitting.findById");
         query.setParameter("delFlg", SepE.Flag.NO.getValue());
-        query.setParameter("eNum", ENum);
+        query.setParameter("id", id);
         return query.getResultList();
     }
 }

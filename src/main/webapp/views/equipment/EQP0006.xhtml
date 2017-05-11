@@ -14,8 +14,10 @@
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
             <!--无敌分割线-->
+            
             <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
-                <p:dataTable value="#{ctrlEQP0006.vm.equipErrorList}" var="equipError"
+                
+                <p:dataTable id="table" value="#{ctrlEQP0006.vm.equipErrorList}" var="equipError"
                              widgetVar="wvYongMeiList"
                              rows="10"
                              filterDelay="500"
@@ -27,6 +29,7 @@
                     <f:facet name="header">
                         <h:outputText value="设备故障定义记录"/>
                     </f:facet>
+                 
                     <p:columnGroup type="header">
                         <p:row>
                             <p:row>
@@ -41,50 +44,41 @@
                             </p:row>
                         </p:row>
                     </p:columnGroup>
-                    
-            <!--设备名称-->
-            <p:column styleClass="tlt">
-                <h:outputText value="#{equipError.equip.ENmae}"/>
-            </p:column>
-            <!--所属故障-->
-            <p:column styleClass="tlt">
-                <h:outputText   value="#{equipError.errType}"/>
-            </p:column>
-            <!--底层故障-->
-            <p:column styleClass="tlt">
-                <h:outputText   value="#{equipError.diJiGuZhang.message}"/>
-            </p:column>
-            <!--故障标题-->
-            <p:column styleClass="tlt">
-                <h:outputText value="#{equipError.errTitle}"/>
-            </p:column>
-            <!--故障编号-->
-            <p:column styleClass="tct">
-                <h:outputText value="#{equipError.errNum}"/>
-            </p:column>
-          
-<!--            波动上限
-            <p:column styleClass="tct">
-                <h:outputText value="#{equipError.fluctMax}"/>
-            </p:column>
-            波动下限
-            <p:column styleClass="tct">
-                <h:outputText value="#{equipError.fluctMin}"/>
-            </p:column>-->
-            <!-- 解决方案 -->
-            <p:column styleClass="tct">
-                <h:outputText value="#{equipError.errWay}"/>
-            </p:column>
-          
-                              <!-- 修改按钮 -->
+
+                    <!--设备名称-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{equipError.equip.ENmae}"/>
+                    </p:column>
+                    <!--所属故障-->
+                    <p:column styleClass="tlt">
+                        <h:outputText   value="#{equipError.errType}"/>
+                    </p:column>
+                    <!--底层故障-->
+                    <p:column styleClass="tlt">
+                        <h:outputText   value="#{equipError.diJiGuZhang.message}"/>
+                    </p:column>
+                    <!--故障标题-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{equipError.errTitle}"/>
+                    </p:column>
+                    <!--故障编号-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equipError.errNum}"/>
+                    </p:column>
+
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equipError.errWay}"/>
+                    </p:column>
+
+                    <!-- 修改按钮 -->
                     <p:column styleClass="tct">
                         <p:commandLink actionListener="#{ctrlEQP0006.onEditEquip(equipError)}"
                                        process="@this" update="@(.pnlInputArea), @(.toolbar)">
                             <i class="fa fa-pencil Fs18 Blue"></i>
-                            
+
                         </p:commandLink>
                     </p:column>
-                     <!--删除按钮-->
+                    <!--删除按钮-->
                     <p:column styleClass="tct">
                         <p:commandLink actionListener="#{ctrlEQP0006.onDeleteEquip(equipError)}"
                                        process="@this" 
@@ -93,91 +87,83 @@
                                        oncomplete="showErrorMsg();">
                             <i class="fa fa-trash Fs18 Red"></i>
                             <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-                            
+
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
 
             </p:outputPanel>
-            
-            
-            
-            
-            
+
+
+
+
+
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
                 <p:toolbar styleClass="Container100">
                     <f:facet name="left">
                         <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0006.onAddTargetData}" 
                                          styleClass="NavyButton" disabled="#{ctrlEQP0006.statusEditing}"/>
-                     
+
                     </f:facet>
                 </p:toolbar>
                 <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0006.vm.equipError}">
-          
+
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                        <!-- 设备名称    required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('设备名称')}"-->
                         <p:outputLabel for="addEquipName" value="设备名称"/>
-                        <p:selectOneMenu id="addEquipName" value="#{ctrlEQP0006.vm.equipError.equip.ENmae}"  >
-                            <!--                                <f:selectItem itemLabel="请选择提醒类型" itemValue=""/>-->
+                        <p:selectOneMenu id="addEquipName" value="#{ctrlEQP0006.vm.equipError.ENum}"  >
                             <f:selectItem itemLabel="选择设备" itemValue=""/>
-                            <f:selectItems value="#{ctrlEQP0006.vm.equipErrorList}" var="name" itemLabel="#{name.equip.ENmae}" itemValue="#{name.equip.ENmae}" />
+                            <f:selectItems value="#{ctrlEQP0001.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
                         </p:selectOneMenu>
                     </p:panelGrid>
 
                     <!--故障类型-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                       <p:outputLabel for="addType" value="故障类型"/>
-                       <p:inputText id="addType" value="#{ctrlEQP0006.vm.equipError.errType}"/>
+                        <p:outputLabel for="addType" value="故障类型"/>
+                        <p:inputText id="addType" value="#{ctrlEQP0006.vm.equipError.errType}"/>
                     </p:panelGrid>
                     <!-- 底层故障  -->   
-                         <p:panelGrid>
-                         <p:outputLabel for="addFloorFault" value="底层故障"/>
-                         <p:selectOneMenu id="addFloorFault" value="#{ctrlEQP0006.vm.equipError.diJiGuZhang}" 
-                                         required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('底层故障')}">
-                         <f:selectItem itemLabel="是否底层故障" itemValue=""/>
-                         <f:selectItem itemLabel="是" itemValue="0"/>
-                         <f:selectItem itemLabel="否" itemValue="1"/>
-                         </p:selectOneMenu>
-                    </p:panelGrid>-->
-                     <!--故障编号-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50"  columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="addFloorFault" value="底层故障"/>
+                        <p:selectOneMenu id="addFloorFault" value="#{ctrlEQP0006.vm.equipError.diJiGuZhang}">
+                            <f:selectItems value="#{bizConfig.whether}" var="name" itemLabel="#{name.message}" itemValue="#{name}" />
+
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <!--故障编号 -->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addErrNum" value="故障编号"/>
                         <p:inputText id="addErrNum" value="#{ctrlEQP0006.vm.equipError.errNum}"/>
                     </p:panelGrid>
-                    <!--故障标题-->
+                    <!--故障标题 -->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                         <p:outputLabel for="addTitle" value="故障标题"/>
-                         <p:inputText id="addTitle" value="#{ctrlEQP0006.vm.equipError.errTitle}"/>
+                        <p:outputLabel for="addTitle" value="故障标题"/>
+                        <p:inputText id="addTitle" value="#{ctrlEQP0006.vm.equipError.errTitle}"/>
                     </p:panelGrid>
-<!--                    波动上限
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addFluctMax" value="波动上限"/>
-                        <p:inputText id="addFluctMax" value="#{ctrlEQP0006.vm.equipError.fluctMax}"/>
-                    </p:panelGrid>
-                     波动下限
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addFluctMin" value="波动上限"/>
-                        <p:inputText id="addFluctMin" value="#{ctrlEQP0006.vm.equipError.fluctMin}"/>
-                    </p:panelGrid>-->
-          
+                    
+                    <!--解决方案--> 
                     <p:panelGrid columns="1" layout="grid">
-                        <p:outputLabel for="addWarnContent" value="解决方案"/>
-                        <p:inputTextarea id="addWarnContent" value="#{ctrlEQP0006.vm.equipError.errWay}"/>
+                        <p:outputLabel for="addsolution" value="解决方案"/>
+                        <p:inputTextarea id="addsolution" value="#{ctrlEQP0006.vm.equipError.errWay}" 
+                                         required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('解决方案')}"
+                                         maxlength="400">
+                        </p:inputTextarea>
                     </p:panelGrid>
 
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
                                          update="pnlInputArea frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                         actionListener="#{ctrlEQP0006.onSaveData}"/>
+                                         actionListener="#{ctrlEQP0006.onSaveData}" onclick="refresh"/>
+                      
                         <p:commandButton value="取消" process="@this" 
                                          update="pnlInputArea" actionListener="#{ctrlEQP0006.onCancelEdit}"
                                          styleClass="RedButton"/>
                     </p:panelGrid>
                 </p:outputPanel>
-             </p:outputPanel>
-             </p:outputPanel>
-         </p:outputPanel>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
 
 
 
