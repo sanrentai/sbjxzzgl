@@ -38,9 +38,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LTEquipError.findAll", query = "SELECT l FROM LTEquipError l")
-    , @NamedQuery(name = "LTEquipError.findById", query = "SELECT l FROM LTEquipError l WHERE l.id = :id")
-    , @NamedQuery(name = "LTEquipError.findByENum", query = "SELECT l FROM LTEquipError l  WHERE l.eNum = :eNum AND l.delFlg = :delFlg")//  AND l.eName = :eName AND l.delFlg = :delFlg
-//    , @NamedQuery(name = "LTEquipError.findByErrEName", query = "SELECT l FROM LTEquipError l WHERE l.equipBasic.eNmae = :eName AND l.delFlg = :delFlg ")
+    , @NamedQuery(name = "LTEquipError.findById", query = "SELECT l FROM LTEquipError l WHERE l.id = :id AND l.delFlg = :delFlg")
+    , @NamedQuery(name = "LTEquipError.findByENum", query = "SELECT l FROM LTEquipError l  WHERE l.eNum = :eNum AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipError.findByErrNum", query = "SELECT l FROM LTEquipError l WHERE l.errNum = :errNum")
     , @NamedQuery(name = "LTEquipError.findByErrTitle", query = "SELECT l FROM LTEquipError l WHERE l.errTitle = :errTitle")
     , @NamedQuery(name = "LTEquipError.findByErrWay", query = "SELECT l FROM LTEquipError l WHERE l.errWay = :errWay")
@@ -62,10 +61,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipError.findByDelFlg", query = "SELECT l FROM LTEquipError l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipError.findByVersion", query = "SELECT l FROM LTEquipError l WHERE l.version = :version")})
 public class LTEquipError extends BaseEntity implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
     @Size(max = 50)
@@ -122,11 +122,11 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public LTEquipError(Long id) {
         this.id = id;
     }
+    //使用多对一的方式连表并且使用懒加载
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-        @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false),
-        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
-    })
+   //连表 插入列的名字 与引用列的名字
+    @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false)
+   //通过分装需要连表的实体类，完成页面的调用
     private LTEquipBasic equip;
 
     public LTEquipBasic getEquip() {

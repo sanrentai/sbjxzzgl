@@ -63,6 +63,7 @@ public class EQP0005BizLogicImpl extends BaseBizLogic implements EQP0005BizLogic
         return result;
     }
 
+    @Override
     public ExecuteResult onEquipWarn(SepE.ExecuteMode mode, EQP0005ViewModel vm) {
         //先创建一个执行结果的对象，并把mode的放进去
         ExecuteResult result = new ExecuteResult(mode);
