@@ -7,7 +7,7 @@ import cn.tst.sbjxzzglxt.common.SecurityUtils;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.login.LoginInfo;
 import cn.tst.sbjxzzglxt.entity.DatLoginInfo;
-import cn.tst.sbjxzzglxt.service.impl.DatLoginInfoFacade;
+import cn.tst.sbjxzzglxt.facade.DatLoginInfoFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 
 /**

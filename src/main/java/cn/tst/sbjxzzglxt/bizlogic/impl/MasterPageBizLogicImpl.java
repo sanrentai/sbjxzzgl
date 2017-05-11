@@ -6,7 +6,7 @@ import javax.ejb.Stateless;
 import cn.tst.sbjxzzglxt.bizlogic.MasterPageBizLogic;
 import cn.tst.sbjxzzglxt.entity.MstCaiDanXiangMu;
 import cn.tst.sbjxzzglxt.entity.MstCaiDanXiangMuPK;
-import cn.tst.sbjxzzglxt.service.impl.MstCaiDanXiangMuFacade;
+import cn.tst.sbjxzzglxt.facade.MstCaiDanXiangMuFacade;
 import cn.tst.sbjxzzglxt.viewmodel.MasterPageViewModel;
 
 /**

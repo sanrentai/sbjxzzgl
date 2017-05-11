@@ -13,9 +13,9 @@ import cn.tst.sbjxzzglxt.entity.MstGnShiYongQuanXian;
 import cn.tst.sbjxzzglxt.entity.MstGnShiYongQuanXianPK;
 import cn.tst.sbjxzzglxt.entity.MstRoleInfo;
 import cn.tst.sbjxzzglxt.entity.MstXiTongGongNeng;
-import cn.tst.sbjxzzglxt.service.impl.MstCaiDanXiangMuFacade;
-import cn.tst.sbjxzzglxt.service.impl.MstGnShiYongQuanXianFacade;
-import cn.tst.sbjxzzglxt.service.impl.MstRoleInfoFacade;
+import cn.tst.sbjxzzglxt.facade.MstCaiDanXiangMuFacade;
+import cn.tst.sbjxzzglxt.facade.MstGnShiYongQuanXianFacade;
+import cn.tst.sbjxzzglxt.facade.MstRoleInfoFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.MST0005ViewModel;
 

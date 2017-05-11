@@ -1,4 +1,4 @@
-package cn.tst.sbjxzzglxt.service.impl;
+package cn.tst.sbjxzzglxt.facade;
 
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;

@@ -1,4 +1,4 @@
-package cn.tst.sbjxzzglxt.service.impl;
+package cn.tst.sbjxzzglxt.facade;
 
 import java.util.Map;
 

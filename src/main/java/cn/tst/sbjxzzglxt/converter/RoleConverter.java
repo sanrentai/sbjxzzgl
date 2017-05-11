@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import cn.tst.sbjxzzglxt.entity.MstRoleInfo;
-import cn.tst.sbjxzzglxt.service.impl.MstRoleInfoFacade;
+import cn.tst.sbjxzzglxt.facade.MstRoleInfoFacade;
 import org.apache.commons.lang3.StringUtils;
 
 /**

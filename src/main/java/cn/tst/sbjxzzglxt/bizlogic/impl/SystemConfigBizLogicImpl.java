@@ -4,7 +4,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import cn.tst.sbjxzzglxt.bizlogic.SystemConfigBizLogic;
 import cn.tst.sbjxzzglxt.common.SepC;
-import cn.tst.sbjxzzglxt.service.impl.MstSystemConfigFacade;
+import cn.tst.sbjxzzglxt.facade.MstSystemConfigFacade;
 import cn.tst.sbjxzzglxt.viewmodel.SystemConfigViewModel;
 
 /**

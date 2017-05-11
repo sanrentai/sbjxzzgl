@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import cn.tst.sbjxzzglxt.entity.MstZhiNeng;
-import cn.tst.sbjxzzglxt.service.impl.MstZhiNengFacade;
+import cn.tst.sbjxzzglxt.facade.MstZhiNengFacade;
 import org.apache.commons.lang3.StringUtils;
 
 /**

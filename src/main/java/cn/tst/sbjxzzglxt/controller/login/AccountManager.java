@@ -9,7 +9,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.entity.MstSystemConfig;
-import cn.tst.sbjxzzglxt.service.impl.EntityManagerFactoryUtils;
+import cn.tst.sbjxzzglxt.facade.EntityManagerFactoryUtils;
 
 @Named
 @SessionScoped

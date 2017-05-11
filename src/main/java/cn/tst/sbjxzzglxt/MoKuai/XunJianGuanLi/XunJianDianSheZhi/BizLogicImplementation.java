@@ -6,7 +6,7 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianDianSheZhi;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
-import cn.tst.sbjxzzglxt.service.impl.LTEquipBasicFacade;
+import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 

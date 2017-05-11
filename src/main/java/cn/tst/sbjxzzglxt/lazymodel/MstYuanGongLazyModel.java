@@ -3,7 +3,7 @@ package cn.tst.sbjxzzglxt.lazymodel;
 import java.util.List;
 import java.util.Map;
 import cn.tst.sbjxzzglxt.entity.MstYuanGong;
-import cn.tst.sbjxzzglxt.service.impl.MstYuanGongFacade;
+import cn.tst.sbjxzzglxt.facade.MstYuanGongFacade;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
