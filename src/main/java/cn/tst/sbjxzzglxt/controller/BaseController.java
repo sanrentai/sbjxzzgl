@@ -23,7 +23,7 @@ public abstract class BaseController implements Serializable {
      *
      * @return FacesContext的实例
      */
-    protected FacesContext getFacesContext() {
+    protected static FacesContext getFacesContext() {
         return FacesContext.getCurrentInstance();
     }
 
@@ -32,8 +32,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return 请求对象物理Path
      */
-    protected String getRequestContextPath() {
-        return this.getExternalContext().getRequestContextPath();
+    protected static String getRequestContextPath() {
+        return getExternalContext().getRequestContextPath();
     }
 
     /**
@@ -41,8 +41,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return true：是postback処理 false：非postback处理
      */
-    protected boolean isPostBack() {
-        return this.getFacesContext().isPostback();
+    protected static boolean isPostBack() {
+        return getFacesContext().isPostback();
     }
 
     /**
@@ -50,8 +50,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return ViewId
      */
-    protected String getViewID() {
-        return this.getFacesContext().getViewRoot().getViewId();
+    protected static String getViewID() {
+        return getFacesContext().getViewRoot().getViewId();
     }
 
     /**
@@ -59,8 +59,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return ExternalContext的实例
      */
-    protected ExternalContext getExternalContext() {
-        return this.getFacesContext().getExternalContext();
+    protected static ExternalContext getExternalContext() {
+        return getFacesContext().getExternalContext();
     }
 
     /**
@@ -68,8 +68,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return ServletContext的实例
      */
-    protected ServletContext getServletContext() {
-        return (ServletContext) this.getExternalContext().getContext();
+    protected static ServletContext getServletContext() {
+        return (ServletContext)getExternalContext().getContext();
     }
 
     /**
@@ -77,8 +77,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return RequestParamterMap
      */
-    protected Map<String, String> getRequestParameterMap() {
-        return this.getExternalContext().getRequestParameterMap();
+    protected static Map<String, String> getRequestParameterMap() {
+        return getExternalContext().getRequestParameterMap();
     }
 
     /**
@@ -86,8 +86,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return RequestMap 的实例
      */
-    protected Map<String, Object> getRequestMap() {
-        return this.getExternalContext().getRequestMap();
+    protected static Map<String, Object> getRequestMap() {
+        return getExternalContext().getRequestMap();
     }
 
     /**
@@ -95,8 +95,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return HttpServletResponse 的实例
      */
-    protected HttpServletResponse getResponse() {
-        return (HttpServletResponse) this.getExternalContext().getResponse();
+    protected static HttpServletResponse getResponse() {
+        return (HttpServletResponse)getExternalContext().getResponse();
     }
 
     /**
@@ -104,8 +104,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return HttpServletRequest的实例
      */
-    protected HttpServletRequest getRequest() {
-        return (HttpServletRequest) this.getExternalContext().getRequest();
+    protected static HttpServletRequest getRequest() {
+        return (HttpServletRequest)getExternalContext().getRequest();
     }
 
     /**
@@ -113,8 +113,8 @@ public abstract class BaseController implements Serializable {
      *
      * @return ViewMap 对象
      */
-    protected Map<String, Object> getViewMap() {
-        return this.getFacesContext().getViewRoot().getViewMap();
+    protected static Map<String, Object> getViewMap() {
+        return getFacesContext().getViewRoot().getViewMap();
     }
 
     /**
@@ -122,7 +122,7 @@ public abstract class BaseController implements Serializable {
      *
      * @return HttpSession的对象
      */
-    public HttpSession getUserSession() {
+    public static HttpSession getUserSession() {
         return getUserSession(true);
     }
 
@@ -132,7 +132,7 @@ public abstract class BaseController implements Serializable {
      * @param create 当没有Session时是否创建
      * @return HttpSession的对象
      */
-    public HttpSession getUserSession(boolean create) {
+    public static HttpSession getUserSession(boolean create) {
         return (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(create);
     }
 
@@ -141,9 +141,9 @@ public abstract class BaseController implements Serializable {
      *
      * @param facesMessage メッセージインスタンス
      */
-    protected void addMessage(FacesMessage facesMessage) {
+    protected static void addMessage(FacesMessage facesMessage) {
         //client: validation 参考 master_page.xhmtl 便签定义
-        this.addMessage(null, facesMessage);
+        addMessage(null, facesMessage);
 //        RequestContext req = RequestContext.getCurrentInstance();
 //        req.execute("PAGE_COM.buttonShortCutKeyInvoke('frmMain:btnValidationPanel');");
     }
@@ -154,8 +154,8 @@ public abstract class BaseController implements Serializable {
      * @param msgBoxId MessageBoxId
      * @param facesMessage FacesMessage的实例
      */
-    protected void addMessage(String msgBoxId, FacesMessage facesMessage) {
-        this.getFacesContext().addMessage(msgBoxId, facesMessage);
+    protected static void addMessage(String msgBoxId, FacesMessage facesMessage) {
+        getFacesContext().addMessage(msgBoxId, facesMessage);
     }
 
     /**
@@ -163,20 +163,20 @@ public abstract class BaseController implements Serializable {
      *
      * @param facesMessage 消息内容
      */
-    protected void addToGlobalGrowl(FacesMessage facesMessage) {
+    protected static void addToGlobalGrowl(FacesMessage facesMessage) {
         //client:updating 参考 master_page.xhmtl 便签定义
-        this.addMessage("updating", facesMessage);
+        addMessage("updating", facesMessage);
 //        RequestContext req = RequestContext.getCurrentInstance();
         // update不管用
 //        req.update("frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel");
 //        req.execute("PAGE_COM.buttonShortCutKeyInvoke('frmMain:btnValidationPanel');");
     }
     
-    protected RequestContext getRequestContext() {
+    protected static RequestContext getRequestContext() {
         return RequestContext.getCurrentInstance();
     }
     
-    protected void execute(String cmd) {
+    protected static void execute(String cmd) {
         getRequestContext().execute(cmd);
     }
 }

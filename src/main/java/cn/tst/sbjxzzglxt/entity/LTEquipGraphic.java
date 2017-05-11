@@ -5,7 +5,12 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.CConst;
+import cn.tst.sbjxzzglxt.common.SepC;
+import cn.tst.sbjxzzglxt.controller.equipment.EQP0007Controller;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -313,5 +318,25 @@ public class LTEquipGraphic extends BaseEntity implements Serializable {
 
     public void setEquipment(LTEquipBasic equipment) {
         this.equipment = equipment;
+    }
+    
+    public String getPreviewFilePath() {
+        String result = "/uploadFiles/".concat(CConst.SLASH)
+                .concat(SepC.DEVICE_DOCUMENTS_DIRECTORY_NAME)
+                .concat(CConst.SLASH)
+                .concat(this.getFNameOnServer())
+                .concat(CConst.SLASH)
+                .concat("p");
+        return result;
+    }
+    
+    public String getOriginalFilePath() {
+        String result = "/uploadFiles/".concat(CConst.SLASH)
+                .concat(SepC.DEVICE_DOCUMENTS_DIRECTORY_NAME)
+                .concat(CConst.SLASH)
+                .concat(this.getFNameOnServer())
+                .concat(CConst.SLASH)
+                .concat("o");
+        return result;
     }
 }

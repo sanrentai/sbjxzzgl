@@ -19,6 +19,10 @@ public final class SepC {
      * 图片上传路径配置KEY
      */
     public static final String INIT_PARAM_UPLOAD_DIRECTORY = "uploadDirectory";
+    /**
+     * 设备文档上传文件夹名称
+     */
+    public static final String DEVICE_DOCUMENTS_DIRECTORY_NAME = "DeviceDocuments";
 
     /**
      * 图片上传默认文件名
