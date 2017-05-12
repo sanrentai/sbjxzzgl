@@ -4,147 +4,53 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
 
-    <p:outputPanel id="gong_zuo_tai_panel" style="min-width: 350px" styleClass="Container30 NoIndent gong_zuo_tai_panel" >
-        <div class="Container100 Responsive100">
-            <div class="Card ui-fluid">
-                <!--标题-->
-                <h1 class="CardBigTopic Purple">
-                    <h:outputText value="工作台"/>
-                </h1>
-                <div class="SeparatorFull"></div>
-                <p:outputPanel styleClass="Container100 Responsive100">
-                    <h:panelGrid id="gongZuoTai_1" columns="1">
-                        <p:outputPanel>
-                            <h:outputText value="数据更新于："/>
-                            <h:outputText value="#{ctrlGongZuoTai.vm.updateTime}">
-                                <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
-                            </h:outputText>
-                        </p:outputPanel>
-
-                        <p:commandLink id="ajax1" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('BIZ0004', 'business/')}" rendered="#{ctrlGongZuoTai.vm.shenQingLingHuo ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.shenQingLingHuo}件请求领货未处理" rendered="#{ctrlGongZuoTai.vm.shenQingLingHuo ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax2" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('ARP0001', 'approval/')}"  rendered="#{ctrlGongZuoTai.vm.wuZiShenQingShenPi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiShenQingShenPi}件物资申请没有审批" rendered="#{ctrlGongZuoTai.vm.wuZiShenQingShenPi ne 0}"/>
-                        </p:commandLink>
-                        <p:commandLink id="ajax3" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('ARP0002', 'approval/')}" rendered="#{ctrlGongZuoTai.vm.gouMaiShenQingShenPi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.gouMaiShenQingShenPi}件购买申请没有审批" rendered="#{ctrlGongZuoTai.vm.gouMaiShenQingShenPi ne 0}"/>
-
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax4" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('ARP0003', 'approval/')}"  rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaShenPi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouJiHuaShenPi}件采购计划没有审批" rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaShenPi ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax5" update="frmMain:sub_content"  rendered="#{ctrlGongZuoTai.vm.caiGouHeTongShenPi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouHeTongShenPi}件采购合同没有审批" rendered="#{ctrlGongZuoTai.vm.caiGouHeTongShenPi ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax6" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('ARP0009', 'approval/')}"  rendered="#{ctrlGongZuoTai.vm.zhiFuJiHuaShenPi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.zhiFuJiHuaShenPi}件采购支付计划没有审批" rendered="#{ctrlGongZuoTai.vm.zhiFuJiHuaShenPi ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax7" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0011', 'inventory/')}"  rendered="#{ctrlGongZuoTai.vm.wuZiShenQingShouLi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiShenQingShouLi}件物资申请没有处理" rendered="#{ctrlGongZuoTai.vm.wuZiShenQingShouLi ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax8" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0001', 'inventory/')}"  rendered="#{ctrlGongZuoTai.vm.wuZiTiaoPei ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiTiaoPei}件物资申请没有调配" rendered="#{ctrlGongZuoTai.vm.wuZiTiaoPei ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax9" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0007', 'inventory/')}"   rendered="#{ctrlGongZuoTai.vm.beiHuoQueRen ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.beiHuoQueRen}件物资分配没有备货" rendered="#{ctrlGongZuoTai.vm.beiHuoQueRen ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax10" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('BIZ0001', 'business/')}" rendered="#{ctrlGongZuoTai.vm.beiBoHuiWuZiShenQing ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.beiBoHuiWuZiShenQing}件物资申请被驳回未处理" rendered="#{ctrlGongZuoTai.vm.beiBoHuiWuZiShenQing ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax11" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0008', 'inventory/')}" rendered="#{ctrlGongZuoTai.vm.beiBoHuiGouMaiShenQing ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.beiBoHuiGouMaiShenQing}件购买申请被驳回未处理" rendered="#{ctrlGongZuoTai.vm.beiBoHuiGouMaiShenQing ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax12" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('SUP0001', 'supply/')}"  rendered="#{ctrlGongZuoTai.vm.beiBoHuiCaiGouJiHua ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.beiBoHuiCaiGouJiHua}件采购计划被驳回未处理" rendered="#{ctrlGongZuoTai.vm.beiBoHuiCaiGouJiHua ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax13" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0004', 'inventory/')}"  rendered="#{ctrlGongZuoTai.vm.wuZiRuKu ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiRuKu}件物资入库申请未处理" rendered="#{ctrlGongZuoTai.vm.wuZiRuKu ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax14" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0005', 'inventory/')}"  rendered="#{ctrlGongZuoTai.vm.wuZiChuKu ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiChuKu}件物资出库申请未处理" rendered="#{ctrlGongZuoTai.vm.wuZiChuKu ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax15" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('SUP0001', 'supply/')}"  rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaZhiDing ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouJiHuaZhiDing}件购买申请没有制定采购计划" rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaZhiDing ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax16" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('SUP0002', 'supply/')}"  rendered="#{ctrlGongZuoTai.vm.fenPeiCaiGouRenWu ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.fenPeiCaiGouRenWu}件采购计划没有分配采购员" rendered="#{ctrlGongZuoTai.vm.fenPeiCaiGouRenWu ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax17" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('SUP0003', 'supply/')}"  rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaZhiXing ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.caiGouJiHuaZhiXing}件采购任务未处理" rendered="#{ctrlGongZuoTai.vm.caiGouJiHuaZhiXing ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink id="ajax18" update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0009', 'inventory/')}"  rendered="#{ctrlGongZuoTai.vm.wuZiDiaoBoShenQingShouLi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.wuZiDiaoBoShenQingShouLi}件调拨申请未处理" rendered="#{ctrlGongZuoTai.vm.wuZiDiaoBoShenQingShouLi ne 0}"/>
-                        </p:commandLink>
-
-                        <p:commandLink update="frmMain:sub_content" actionListener="#{ctrlMaster.transfer2Page('INV0002', 'inventory/')}"  rendered="#{ctrlGongZuoTai.vm.kuCunShuChaoGuoJingJieZhi ne 0}" >
-                            <h:outputText value="您有#{ctrlGongZuoTai.vm.kuCunShuChaoGuoJingJieZhi}件物资库存数超过警戒值未处理" rendered="#{ctrlGongZuoTai.vm.kuCunShuChaoGuoJingJieZhi ne 0}"/>
-                        </p:commandLink>
-                        <h:outputText value="您有#{ctrlGongZuoTai.vm.cheLiangJiHua}项车辆计划未执行" rendered="#{ctrlGongZuoTai.vm.cheLiangJiHua ne 0}"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-            </div>
-        </div>
-    </p:outputPanel>
-    <!--    <p:outputPanel id="gong_zuo_tai_ri_li" styleClass="Container40 Hei90 NoIndent gong_zuo_tai_ri_li" >
-            <div class="Container100 Responsive100">
-                <div class="Card ui-fluid">
-                    标题
+    <p:outputPanel styleClass="Container100 Responsive100">
+        <div class="Container50 Responsive100 NoIndent">
+            <div class="Container100">
+                <div class="Card">
                     <h1 class="CardBigTopic Purple">
-                        <h:outputText value="日历"/>
+                        <h:outputText value="巡检任务"/>
                     </h1>
                     <div class="SeparatorFull"></div>
-                    <p:outputPanel styleClass="Container100 Responsive100">
-                        <ui:include src="/views/gongzuotai/rili.xhtml"  />
-                    </p:outputPanel>
+                    <div class="ht-f-200">
+                        
+                    </div>
                 </div>
             </div>
-        </p:outputPanel>-->
-
-    <p:outputPanel id="gong_zuo_tai_tian_qi" style="width: 300px" styleClass="Container30 NoIndent gong_zuo_tai_tian_qi" >
-        <div class="Container100 Responsive100">
-            <div class="Card ui-fluid">
-                <!--标题-->
-                <h1 class="CardBigTopic Purple">
-                    <h:outputText value="天气"/>
-                </h1>
-                <div class="SeparatorFull"></div>
-                <p:outputPanel styleClass="Container100 Responsive100">
-                    <iframe name="weather_inc" src="http://i.tianqi.com/index.php?c=code&amp;id=82" width="100%" height="440" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
-                </p:outputPanel>
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="设备提醒"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        
+                    </div>
+                </div>
             </div>
         </div>
-    </p:outputPanel>
-    <p:outputPanel id="qwe" style="width: 300px" styleClass="Container30 NoIndent gong_zuo_tai_tian_qi" >
-
-    </p:outputPanel>
-    <p:outputPanel id="gongNuanRiQi" style="width: 300px" styleClass="Container30 NoIndent gong_zuo_tai_tian_qi" >
-        <div class="Container100 Responsive100">
-            <div class="Card ui-fluid">
-                <!--标题-->
-                <h1 class="CardBigTopic Purple">
-                    <h:outputText value="当前供热期"/>
-                </h1>
-                <div class="SeparatorFull"></div>
-                <p:outputPanel styleClass="Container100 Responsive100">
-                    
-                </p:outputPanel>
+        <div class="Container50 Responsive100 NoIndent">
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="报警分析"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="最新培训"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        
+                    </div>
+                </div>
             </div>
         </div>
     </p:outputPanel>
