@@ -30,10 +30,13 @@ import org.apache.log4j.Logger;
  */
 @Stateless
 public class EQP0002BizLogicImpl extends BaseBizLogic implements EQP0002BizLogic {
-
+    
     private static final Logger LOG = Logger.getLogger(EQP0002BizLogicImpl.class.getName());
     @EJB
     private LTFittingFacade fittingFacade;
+    
+    @EJB
+    private LTEquipBasicFacade eqpService;
 
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
     @Override
@@ -41,15 +44,17 @@ public class EQP0002BizLogicImpl extends BaseBizLogic implements EQP0002BizLogic
 //        vm.setEquipErrorList(equipErrorFacade.findById(Long.MIN_VALUE));
         List<LTEquipFitting> equipFitting = fittingFacade.findAll();
         vm.setFittingList(equipFitting);
+        List<LTEquipBasic> findAll = eqpService.findAll();
+        vm.setEquipBasicList(findAll);
     }
-
+    
     public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, EQP0002ViewModel vm) {
-         
+        
         ExecuteResult result = new ExecuteResult(mode);
         LTEquipFitting target = vm.getFitting();
         LOG.info(target.getPNmae());
-              LOG.info(target.getENum());
-                    LOG.info(target.getPNum());
+        LOG.info(target.getENum());
+        LOG.info(target.getPNum());
         try {
             switch (mode) {
                 case INSERT:
@@ -57,7 +62,7 @@ public class EQP0002BizLogicImpl extends BaseBizLogic implements EQP0002BizLogic
                     fittingFacade.create(target);
                     break;
                 case UPDATE:
-                   fittingFacade.edit(target);
+                    fittingFacade.edit(target);
                     break;
                 case DELETE:
                     LOG.info("删除开始");
@@ -75,6 +80,7 @@ public class EQP0002BizLogicImpl extends BaseBizLogic implements EQP0002BizLogic
         }
         return result;
     }
+    
     @Override
     public ExecuteResult onEquipFitting(SepE.ExecuteMode mode, EQP0002ViewModel vm) {
         //先创建一个执行结果的对象，并把mode的放进去
@@ -109,5 +115,5 @@ public class EQP0002BizLogicImpl extends BaseBizLogic implements EQP0002BizLogic
         }
         return result;
     }
-
+    
 }

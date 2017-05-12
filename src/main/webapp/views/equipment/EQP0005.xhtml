@@ -116,7 +116,7 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addENmae" value="提醒标题"/>
                         <p:inputText id="addENmae" value="#{ctrlEQP0005.vm.equipWarn.TTitle}" 
-                                     required="true" requiredMessage="#{ctrlEQP0001.isRequiredMessage('设备标题')}"
+                                     required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('设备标题')}"
                                      maxlength="400" />
                     </p:panelGrid>
                     <!--提醒设备日期-->
@@ -180,10 +180,10 @@
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
-                                         update="pnlInputArea frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         update="pnlInputArea, pnlOutputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                          actionListener="#{ctrlEQP0005.onSaveData}" />
                         <p:commandButton value="取消" process="@this" 
-                                         update="pnlInputArea" actionListener="#{ctrlEQP0005.onCancelEdit}"
+                                         update="pnlInputArea, pnlOutputArea" actionListener="#{ctrlEQP0005.onCancelEdit}"
                                          styleClass="RedButton"/>
                     </p:panelGrid>
                 </p:outputPanel>

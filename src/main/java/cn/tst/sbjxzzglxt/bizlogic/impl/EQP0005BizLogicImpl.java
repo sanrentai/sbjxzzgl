@@ -7,6 +7,7 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
+import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
 import cn.tst.sbjxzzglxt.facade.LTEquipWarnFacade;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
@@ -27,11 +28,16 @@ public class EQP0005BizLogicImpl extends BaseBizLogic implements EQP0005BizLogic
 //注入service实体类
     @EJB
     private LTEquipWarnFacade equipWarnFacade;
+    @EJB
+    private LTEquipBasicFacade eqpService;
 
+    @Override
     public void loadEQP0005ViewModel(EQP0005ViewModel vm) {
         //把全部数据放进数据库
         List<LTEquipWarn> equip = equipWarnFacade.findAll();
         vm.setEquipWarnList(equip);
+        List<LTEquipBasic> findAll = eqpService.findAll();
+        vm.setEquipBasicList(findAll);
     }
 
     public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, EQP0005ViewModel vm) {
