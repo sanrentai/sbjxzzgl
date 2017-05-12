@@ -30,23 +30,24 @@ import org.apache.log4j.Logger;
 @Stateless
 public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLogic {
 
-     private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
+    private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
     @EJB
     private XunJianXiangMuFacade xiangMuFacade;
- @EJB
+    @EJB
     private LTEquipBasicFacade eqpService;
+
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
     @Override
     public void loadViewModel(ViewModel vm) {
 
         List<SysRoutingInspectionItems> equip = xiangMuFacade.findAll();
         vm.setRoutingInspectionItemsList(equip);
-          List<LTEquipBasic> findAll = eqpService.findAll();
+        List<LTEquipBasic> findAll = eqpService.findAll();
         vm.setEquipBasicList(findAll);
     }
 
-     @Override
-    public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode,ViewModel vm) {
+    @Override
+    public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, ViewModel vm) {
 
         ExecuteResult result = new ExecuteResult(mode);
         SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
@@ -61,7 +62,7 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
                     break;
                 case DELETE:
                     LOG.info("删除开始");
-                   xiangMuFacade.remove(target);
+                    xiangMuFacade.remove(target);
                     LOG.info("删除结束");
                     break;
             }
@@ -76,14 +77,13 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         return result;
     }
 
-   
-     @Override
-    public ExecuteResult onXunJianXiangMu(SepE.ExecuteMode mode,ViewModel vm) {
+    @Override
+    public ExecuteResult onXunJianXiangMu(SepE.ExecuteMode mode, ViewModel vm) {
         //先创建一个执行结果的对象，并把mode的放进去
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
-     
+
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
@@ -91,7 +91,7 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
                     xiangMuFacade.create(target);
                     break;
                 case UPDATE:
-                   xiangMuFacade.edit(target);
+                    xiangMuFacade.edit(target);
                     break;
                 case DELETE:
                     xiangMuFacade.remove(target);
@@ -109,6 +109,5 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         }
         return result;
     }
-
 
 }

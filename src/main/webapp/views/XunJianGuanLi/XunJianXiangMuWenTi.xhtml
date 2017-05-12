@@ -97,7 +97,7 @@
                         <p:outputLabel for="addEquipName" value="设备名称"/>
                         <p:selectOneMenu id="addEquipName" value="#{XunJianXiangMuWenTiController.vm.routingInspectionProblem.suoShuSheBeiId}"  filter="true" filterMatchMode="contains" >
                             <f:selectItem itemLabel="选择设备" itemValue=""/>
-                            <f:selectItems value="#{XunJianXiangMuWenTiController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENmae}" />
+                            <f:selectItems value="#{XunJianXiangMuWenTiController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
                         </p:selectOneMenu>
                     </p:panelGrid>
                     <!--所属巡检点-->

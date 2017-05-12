@@ -110,7 +110,7 @@
                                          required="true" requiredMessage="#{XunJianXiangMuController.isRequiredMessage('设备名称')}"
                                          value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuSheBeiId}"  >
                             <f:selectItem itemLabel="选择设备" />
-                            <f:selectItems value="#{XunJianXiangMuController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENmae}" />
+                            <f:selectItems value="#{XunJianXiangMuController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
                         </p:selectOneMenu>
                   </p:panelGrid>
                     <!--所属巡检点-->

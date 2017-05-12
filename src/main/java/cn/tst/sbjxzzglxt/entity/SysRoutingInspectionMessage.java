@@ -65,8 +65,9 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     @NotNull
     @Column(name = "xun_jian_dian_id")
     private int xunJianDianId;
+     @Size(max = 255)
     @Column(name = "xun_jian_dian_xiang_mu_id")
-    private Integer xunJianDianXiangMuId;
+    private String xunJianDianXiangMuId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "xun_jian_ren_id")
@@ -97,29 +98,6 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     @OneToOne(mappedBy = "message")
     private SysRoutingInspectionItems routingInspectionItems;
 
-    public SysRoutingInspectionItems getRoutingInspectionItems() {
-        return routingInspectionItems;
-    }
-
-    public void setRoutingInspectionItems(SysRoutingInspectionItems routingInspectionItems) {
-        this.routingInspectionItems = routingInspectionItems;
-    }
-
-    public LTEquipBasic getEquip() {
-        return equip;
-    }
-
-    public void setEquip(LTEquipBasic equip) {
-        this.equip = equip;
-    }
-
-    public SysRoutingInspectionMessage() {
-    }
-
-    public SysRoutingInspectionMessage(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
@@ -144,11 +122,11 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
         this.xunJianDianId = xunJianDianId;
     }
 
-    public Integer getXunJianDianXiangMuId() {
+    public String getXunJianDianXiangMuId() {
         return xunJianDianXiangMuId;
     }
 
-    public void setXunJianDianXiangMuId(Integer xunJianDianXiangMuId) {
+    public void setXunJianDianXiangMuId(String xunJianDianXiangMuId) {
         this.xunJianDianXiangMuId = xunJianDianXiangMuId;
     }
 
@@ -199,6 +177,24 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     public void setLuRuRen(int luRuRen) {
         this.luRuRen = luRuRen;
     }
+
+    public LTEquipBasic getEquip() {
+        return equip;
+    }
+
+    public void setEquip(LTEquipBasic equip) {
+        this.equip = equip;
+    }
+
+    public SysRoutingInspectionItems getRoutingInspectionItems() {
+        return routingInspectionItems;
+    }
+
+    public void setRoutingInspectionItems(SysRoutingInspectionItems routingInspectionItems) {
+        this.routingInspectionItems = routingInspectionItems;
+    }
+
+ 
 
     @Override
     public int hashCode() {
