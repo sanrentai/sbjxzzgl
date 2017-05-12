@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.controller.equipment;
 
 import cn.tst.sbjxzzglxt.bizlogic.EQP0007BizLogic;
+import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
@@ -27,8 +28,8 @@ import org.primefaces.event.FileUploadEvent;
 @Named(SepC.ControllerID.EQP0007)
 @ManagedBean
 public class EQP0007Controller extends BusinessBaseController {
-    private final String FILE_UPLOAD_PATH
-            = this.getServletContext().getInitParameter(SepC.INIT_PARAM_UPLOAD_DIRECTORY) + "/profile";
+    public static final String FILE_UPLOAD_PATH
+            = getServletContext().getInitParameter(SepC.INIT_PARAM_UPLOAD_DIRECTORY).concat(CConst.SLASH).concat(SepC.DEVICE_DOCUMENTS_DIRECTORY_NAME);
     private static final Logger LOG = Logger.getLogger(EQP0007Controller.class.getName());
 
     @PostConstruct

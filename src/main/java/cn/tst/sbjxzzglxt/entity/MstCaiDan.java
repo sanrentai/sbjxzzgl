@@ -19,6 +19,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import cn.tst.sbjxzzglxt.common.SepE;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * 菜单实体
@@ -32,12 +34,11 @@ import cn.tst.sbjxzzglxt.common.SepE;
     @NamedQuery(name = "MstCaiDan.findAll", query = "SELECT m FROM MstCaiDan m WHERE m.delFlg = :delFlg")
 })
 public class MstCaiDan extends BaseEntity implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 3)
+    @Size(min = 1, max = 32)
     @Column(name = "caidan_id")
     private String caidanId;
     @Basic(optional = false)

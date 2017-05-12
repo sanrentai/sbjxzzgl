@@ -428,11 +428,12 @@ public class MstYuanGong extends BaseEntity implements Serializable {
      * @return 图片路径 p:预览图, c:压缩图, o:原图
      */
     private String getPictureURL(String fileType) {
-
-        return "/uploadFiles/"  + "/profile/" + (StringUtils.isEmpty(this.zhaoPianLuJing)
+        String result =  "/uploadFiles/"  + "/profile/" + (StringUtils.isEmpty(this.zhaoPianLuJing)
             ? SepC.UploadFileDefaultName.PROFILE : this.zhaoPianLuJing
             .concat(CConst.SLASH)
             .concat(fileType));
+        System.out.println(result);
+        return result;
     }
     
     

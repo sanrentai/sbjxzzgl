@@ -11,27 +11,9 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 public class EQP0006ViewModel extends BaseViewModel {
-
-    private List<LTEquipError> equipErrorList;
+  private List<LTEquipBasic> equipBasicList;
+   private List<LTEquipError> equipErrorList;//故障实体类集合
     private LTEquipError equipError;//故障实体类
-
-    public LTEquipError getEquipError() {
-        return equipError;
-    }
-
-    public void setEquipError(LTEquipError equipError) {
-        this.equipError = equipError;
-    }
-    
-    private TreeNode equipTreeRoot;
-
-    public TreeNode getEquipTreeRoot() {
-        return equipTreeRoot;
-    }
-
-    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
-        this.equipTreeRoot = equipTreeRoot;
-    }
 
     public List<LTEquipError> getEquipErrorList() {
         return equipErrorList;
@@ -40,6 +22,22 @@ public class EQP0006ViewModel extends BaseViewModel {
     public void setEquipErrorList(List<LTEquipError> equipErrorList) {
         this.equipErrorList = equipErrorList;
     }
- 
+
+    public LTEquipError getEquipError() {
+        return equipError;
+    }
+
+    public void setEquipError(LTEquipError equipError) {
+        this.equipError = equipError;
+    }
+
+    public List<LTEquipBasic> getEquipBasicList() {
+        return equipBasicList;
+    }
+
+    public void setEquipBasicList(List<LTEquipBasic> equipBasicList) {
+        this.equipBasicList = equipBasicList;
+    }
+
 
 }

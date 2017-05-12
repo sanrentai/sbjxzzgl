@@ -548,4 +548,15 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public String getGuiGeHeXingHao() {
         return getGuiGe().concat("/").concat(this.getXingHao());
     }
+    
+    @OneToMany(mappedBy = "equipment", fetch = FetchType.EAGER)
+    private List<LTEquipGraphic> graphicList;
+
+    public List<LTEquipGraphic> getGraphicList() {
+        return graphicList;
+    }
+
+    public void setGraphicList(List<LTEquipGraphic> graphicList) {
+        this.graphicList = graphicList;
+    }
 }

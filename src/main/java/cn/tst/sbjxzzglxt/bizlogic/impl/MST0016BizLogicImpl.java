@@ -6,7 +6,7 @@ import javax.ejb.Stateless;
 import cn.tst.sbjxzzglxt.bizlogic.MST0016BizLogic;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.MstSystemConfig;
-import cn.tst.sbjxzzglxt.service.impl.MstSystemConfigFacade;
+import cn.tst.sbjxzzglxt.facade.MstSystemConfigFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.MST0016ViewModel;
 

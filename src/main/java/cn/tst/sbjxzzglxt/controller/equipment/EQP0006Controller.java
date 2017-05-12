@@ -43,8 +43,7 @@ public class EQP0006Controller extends BusinessBaseController {
         this.vm = new EQP0006ViewModel();
 
         this.bizLogic.loadEQP0006ViewModel(vm);
-      
-        vm.getEquipError().setDiJiGuZhang(SepE.Whether.NO);
+
     }
 
     //*****************************************************************
@@ -56,7 +55,8 @@ public class EQP0006Controller extends BusinessBaseController {
     /**
      * 修改故障提醒的记录
      *
-     * @param equipwarn
+     * 
+     * @param equipError
      */
     public void onEditEquip(LTEquipError equipError) {
         vm.setEquipError(equipError);
@@ -64,7 +64,8 @@ public class EQP0006Controller extends BusinessBaseController {
 
     public void onAddTargetData() {
         vm.setEquipError(new LTEquipError());
-
+        vm.getEquipError().setDiJiGuZhang(SepE.Whether.YES);
+//        vm.getEquipError().setEquip(vm.getEquipError().getEquip());
     }
 
     /**
@@ -72,13 +73,28 @@ public class EQP0006Controller extends BusinessBaseController {
      *
      */
     public void onSaveData() {
-
+        //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
         SepE.ExecuteMode mode = this.vm.getEquipError().getId() == null
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
-
+        //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onEquipError(mode, vm);
 
         this.addMessage(result.createMessage());
+         if (result.isSuccess()) {
+            onCancelEdit();
+        }
+    }
+    
+      /**
+     * 編集取消
+     */
+    public void onCancelEdit() {
+
+        ///初始化状态
+//        this.switchStatus2Init();
+        ///无模式
+//        this.switchEditMode2None();
+        vm.setEquipError(null);
 
     }
 

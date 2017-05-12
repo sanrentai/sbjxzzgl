@@ -149,7 +149,9 @@ public class EQP0005Controller extends BusinessBaseController {
         ExecuteResult result = this.bizLogic.onEquipWarn(mode, vm);
         //本类调用添加消息的方法，添加执行结果创建的信息
         this.addMessage(result.createMessage());
-
+         if (result.isSuccess()) {
+            onCancelEdit();
+        }
     }
 
     public void onDateSelect(SelectEvent event) {

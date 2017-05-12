@@ -19,6 +19,10 @@ public final class SepC {
      * 图片上传路径配置KEY
      */
     public static final String INIT_PARAM_UPLOAD_DIRECTORY = "uploadDirectory";
+    /**
+     * 设备文档上传文件夹名称
+     */
+    public static final String DEVICE_DOCUMENTS_DIRECTORY_NAME = "DeviceDocuments";
 
     /**
      * 图片上传默认文件名
@@ -700,12 +704,12 @@ public final class SepC {
         public static final String EQP0007 = "ctrlEQP0007";
 
         /**
-         * 巡检类表
+         * 巡检管理
          */
-        public static final String XJ0001 = "ctrlXJ0001";
-        public static final String XJ0002 = "ctrlXJ0002";
-        public static final String XJ0003 = "ctrlXJ0003";
-        public static final String XJ0004 = "ctrlXJ0004";
+        public static final String XUN_JIAN_XIN_XI_JI_LU_CONTROLLER_NAME = "XunJianXinXiJiLuController";
+        public static final String XUN_JIAN_DIAN_SHE_ZHI_CONTROLLER_NAME = "XunJianDianSheZhiController";
+        public static final String XUN_JIAN_XIANG_MU_CONTROLLER_NAME = "XunJianXiangMuController";
+        public static final String XUN_JIAN_XIANG_MU_WEN_TI_CONTROLLER_NAME = "XunJianXiangMuWenTiController";
     }
 
     /**

@@ -30,7 +30,6 @@
                     <p:columnGroup type="header">
                         <p:row>
                             <p:row>
-                                <p:column headerText="记录ID" styleClass="tct wd-p-8"/>
                                 <p:column headerText="设备ID" styleClass="tct wd-p-8"/>
                                 <p:column headerText="提醒标题" styleClass="tct wd-p-10"/>
                                 <p:column headerText="提醒时间" styleClass="tct wd-p-10" sortBy="#{ctrlEQP0005.vm.equipWarn.TDate}"/>
@@ -42,11 +41,7 @@
                                 <p:column headerText="删除" styleClass="wd-p-5"/>
                             </p:row>
                         </p:row>
-                    </p:columnGroup>
-                    <!--设备记录ID-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{equipWarn.id}"/>
-                    </p:column>
+                    </p:columnGroup>      
                     <!--设备ID-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{equipWarn.EId}"/>
@@ -121,7 +116,7 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addENmae" value="提醒标题"/>
                         <p:inputText id="addENmae" value="#{ctrlEQP0005.vm.equipWarn.TTitle}" 
-                                     required="true" requiredMessage="#{ctrlEQP0001.isRequiredMessage('设备名')}"
+                                     required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('设备标题')}"
                                      maxlength="400" />
                     </p:panelGrid>
                     <!--提醒设备日期-->
@@ -130,9 +125,9 @@
                         <p:outputLabel for="addDateTime" value="提醒日期:" />
                          <p:calendar id="addDateTime" value="#{ctrlEQP0005.vm.equipWarn.TDate}" pattern="dd-MM-yyyy" mask="true" />
                       
-                           <h:outputText value="#{ctrlEQP0005.vm.equipWarn.TDate}">
-                           <f:convertDateTime pattern="MM/dd/yyyy" />
-            </h:outputText>   
+<!--                           <h:outputText value="#{ctrlEQP0005.vm.equipWarn.TDate}">-->
+<!--                           <f:convertDateTime pattern="MM/dd/yyyy" />
+            </h:outputText>   -->
                      </p:panelGrid>
                        
                     
@@ -155,7 +150,7 @@
                         <!--    是否循环提醒   0代表是，1代表否  "-->
                         <p:outputLabel for="addCirculation" value="是否循环"/>
                         <p:selectOneMenu id="addCirculation" value="#{ctrlEQP0005.vm.equipWarn.xhYn}" 
-                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('提醒类型')}">
+                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('是否循环')}">
                             <f:selectItems value="#{bizConfig.whether}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
 
                         </p:selectOneMenu>
@@ -164,7 +159,7 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addWarnMethod" value="请选择提醒方式"/>
                         <p:selectOneMenu id="addWarnMethod" value="#{ctrlEQP0005.vm.equipWarn.DCont}" 
-                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('提醒类型')}">
+                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('提醒方式')}">
                             <!--                                <f:selectItem itemLabel="请选择提醒类型" itemValue=""/>-->
                             <f:selectItem itemLabel="短信" itemValue="短信"/>
                             <f:selectItem itemLabel="微信" itemValue="微信"/>
@@ -185,10 +180,10 @@
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
-                                         update="pnlInputArea frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                         actionListener="#{ctrlEQP0005.onSaveData}"/>
+                                         update="pnlInputArea, pnlOutputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{ctrlEQP0005.onSaveData}" />
                         <p:commandButton value="取消" process="@this" 
-                                         update="pnlInputArea" actionListener="#{ctrlEQP0005.onCancelEdit}"
+                                         update="pnlInputArea, pnlOutputArea" actionListener="#{ctrlEQP0005.onCancelEdit}"
                                          styleClass="RedButton"/>
                     </p:panelGrid>
                 </p:outputPanel>

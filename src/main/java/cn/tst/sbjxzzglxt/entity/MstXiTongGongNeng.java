@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import cn.tst.sbjxzzglxt.common.SepE;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * 系统功能表
@@ -30,7 +32,6 @@ import cn.tst.sbjxzzglxt.common.SepE;
     @NamedQuery(name = "MstXiTongGongNeng.findAll", query = "SELECT m FROM MstXiTongGongNeng m")
 })
 public class MstXiTongGongNeng extends BaseEntity implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,7 @@ public class MstXiTongGongNeng extends BaseEntity implements Serializable {
     @Column(name = "gong_neng_id")
     private String gongNengId;
     @NotNull
-    @Size(min = 1, max = 7)
+    @Size(min = 1, max = 32)
     @Column(name = "hua_mian_id")
     private String huaMianId;
     @Size(max = 2147483647)

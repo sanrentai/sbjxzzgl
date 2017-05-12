@@ -26,7 +26,9 @@ getlunar();//获取农历
 }
 nhrs=noww.getHours();nmin=noww.getMinutes();nsec=noww.getSeconds();
 }
-
+function refresh(){
+    window.opener.location.reload();//刷新 
+}
 
 document.write("<span id=\"clock\" style=\"word-break:keep-all\"></span>");
 
