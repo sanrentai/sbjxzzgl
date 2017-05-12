@@ -9,6 +9,7 @@ import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
 import cn.tst.sbjxzzglxt.viewmodel.BaseViewModel;
 import java.util.List;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -20,6 +21,10 @@ public class ViewModel extends BaseViewModel {
     private LTEquipBasic currentEquipment;
     
     private LTEquipGraphic currentGraphic;
+    
+    private Integer x;
+    
+    private Integer y;
 
     public List<LTEquipBasic> getEquipmentList() {
         return equipmentList;
@@ -43,5 +48,25 @@ public class ViewModel extends BaseViewModel {
 
     public void setCurrentGraphic(LTEquipGraphic currentGraphic) {
         this.currentGraphic = currentGraphic;
+    }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+    
+    public String getHotPointImagePath() {
+        return "/uploadFiles/".concat("images/HotPoint.png");
     }
 }
