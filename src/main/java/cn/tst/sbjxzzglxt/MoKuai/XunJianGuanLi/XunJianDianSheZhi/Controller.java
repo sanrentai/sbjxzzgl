@@ -7,6 +7,7 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianDianSheZhi;
 
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -46,7 +47,12 @@ public class Controller extends BusinessBaseController {
         this.bizLogic = bizLogic;
     }
     
-    public void onMouseDown() {
-        
+    public void onCoordConfirmDialogAccepted() {
+        bizLogic.onCoordConfirmDialogAccepted(vm);
+        bizLogic.loadViewModel(vm);
+    }
+    
+    public void updateViewModel() {
+        bizLogic.loadViewModel(vm);
     }
 }

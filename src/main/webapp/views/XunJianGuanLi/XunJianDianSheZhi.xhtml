@@ -13,8 +13,8 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
-            <p:outputPanel>
-                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+            <p:outputPanel styleClass="Container100 Responsive100">
+                <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-70 NoPadding,wd-p-70 NoPadding,wd-p-70 NoPadding">
                     <p:outputLabel for="Equipment" value="所属设备："></p:outputLabel>
                     <p:inputText label="所属设备："  
                                  title="所属设备："
@@ -29,20 +29,36 @@
                                      update="rootContainer">
 
                     </p:commandButton>
+                    <p:commandButton value="选择图片"
+                                     disabled="#{empty XunJianDianSheZhiController.vm.currentEquipment}"
+                                     type="button"
+                                     onclick="PF('pictureSelectDialog').show();">
+
+                    </p:commandButton>
                 </p:panelGrid>
             </p:outputPanel>
-            <p:outputPanel>
-                <p:commandButton value="选择图片"
-                                 disabled="#{empty XunJianDianSheZhiController.vm.currentEquipment}"
-                                 type="button"
-                                 onclick="PF('pictureSelectDialog').show();">
-
-                </p:commandButton>
+            <p:outputPanel styleClass="Container100 Responsive100">
+                <script>
+                    $(document).ready(function () {
+                        $(".image").bind("click", function (e) {
+                            console.log(e);
+                            $(".x").val(e.offsetX);
+                            $(".y").val(e.offsetY);
+                        });
+                    });
+                </script>
+                <p:outputPanel rendered="#{not empty XunJianDianSheZhiController.vm.currentGraphic}" style="padding-top:0;">
+                    <p:outputPanel style="float:left;">
+                        <ui:repeat value="#{XunJianDianSheZhiController.vm.currentGraphic.checkPointList}" var="point">
+                            <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" style="position:relative;left:#{point.x}px;top:#{point.y}px;"></p:graphicImage>
+                        </ui:repeat>
+                    </p:outputPanel>
+                    <p:graphicImage class="image" style="margin-top:0;"
+                                    value="#{XunJianDianSheZhiController.vm.currentGraphic.originalFilePath}"
+                                    onclick="PF('coordConfirmDialog').show();">
+                    </p:graphicImage>
+                </p:outputPanel>
             </p:outputPanel>
-            <p:graphicImage rendered="#{not empty XunJianDianSheZhiController.vm.currentGraphic}"
-                            value="#{XunJianDianSheZhiController.vm.currentGraphic.originalFilePath}">
-                <p:ajax event="mousedown" listener="#{XunJianDianSheZhiController.onMouseDown}"></p:ajax>
-            </p:graphicImage>
         </p:outputPanel>
         <p:dialog widgetVar="deviceSelectDialog" modal="true">
             <p:dataTable value="#{XunJianDianSheZhiController.vm.equipmentList}" style="width:512px;"
@@ -120,6 +136,20 @@
                                    oncomplete="PF('pictureSelectDialog').hide()"></p:commandLink>
                 </p:column>
             </p:dataTable>
+        </p:dialog>
+        <p:dialog widgetVar="coordConfirmDialog" id="coordConfirmDialog"
+                  modal="true" 
+                  onHide="PF('rootContainer').update();">
+            <p:inputText value="#{XunJianDianSheZhiController.vm.x}" class="x"></p:inputText>
+            <p:inputText value="#{XunJianDianSheZhiController.vm.y}" class="y"></p:inputText>
+            <p:commandButton value="确定" process="@this, coordConfirmDialog" 
+                             actionListener="#{XunJianDianSheZhiController.onCoordConfirmDialogAccepted}"
+                             update="frmMain:rootContainer" 
+                             oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
+            <p:commandButton value="取消" 
+                             process="@this" 
+                             update="frmMain:rootContainer" 
+                             oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
         </p:dialog>
     </p:outputPanel>
 </ui:composition>

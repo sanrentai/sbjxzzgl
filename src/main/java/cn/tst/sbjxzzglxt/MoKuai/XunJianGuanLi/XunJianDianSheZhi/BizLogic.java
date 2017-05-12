@@ -11,4 +11,6 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianDianSheZhi;
  */
 public interface BizLogic {
     void loadViewModel(ViewModel vm);
+    
+    void onCoordConfirmDialogAccepted(ViewModel vm);
 }
