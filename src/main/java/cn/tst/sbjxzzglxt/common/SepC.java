@@ -14,6 +14,8 @@ public final class SepC {
      * 系统ID
      */
     public static final String SYSTEM_ID = "material";
+    
+    public static final String PING_MIAN_TU_DIRECTORY = "pingmiantu";
 
     /**
      * 图片上传路径配置KEY

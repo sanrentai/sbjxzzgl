@@ -20,8 +20,6 @@ public class ViewModel extends BaseViewModel {
     
     private LTEquipBasic currentEquipment;
     
-    private LTEquipGraphic currentGraphic;
-    
     private Integer x;
     
     private Integer y;
@@ -40,14 +38,6 @@ public class ViewModel extends BaseViewModel {
 
     public void setCurrentEquipment(LTEquipBasic currentEquipment) {
         this.currentEquipment = currentEquipment;
-    }
-
-    public LTEquipGraphic getCurrentGraphic() {
-        return currentGraphic;
-    }
-
-    public void setCurrentGraphic(LTEquipGraphic currentGraphic) {
-        this.currentGraphic = currentGraphic;
     }
 
     public Integer getX() {

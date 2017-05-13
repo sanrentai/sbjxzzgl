@@ -50,7 +50,7 @@
         <!--<param-value>/Users/andysilver/Pictures/material/upload</param-value>-->
         <!--<param-value>/Users/dataotao/Pictures/material/upload</param-value>-->
         <!--Window-->
-        <param-value>C:\tmp\material\upload</param-value>
+        <param-value>C:/tmp/material/upload</param-value>
         <!--<param-value>D:\tmp\material\upload</param-value>-->
     </context-param>
     <!--文件上传配置-->

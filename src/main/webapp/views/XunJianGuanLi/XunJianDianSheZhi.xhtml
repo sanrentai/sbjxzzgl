@@ -5,6 +5,40 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <script>
+        function setStateToAddingCheckPoint() {
+            $(".image").unbind("click");
+            $(".image").bind("click", function (e) {
+                console.log(e);
+                $(".x").val(e.offsetX);
+                $(".y").val(e.offsetY);
+                PF('coordConfirmDialog').show();
+            });
+        }
+        function setStateToMovingCheckPoint() {
+            console.log($(".image"));
+            $(".image").unbind("click");
+            $(".HotPoint").unbind();
+            $(".HotPoint").mousedown(function (mouseDownEvent) {
+                var thisHotPoint = $(this);
+                $(".image").mousemove(function (mouseMoveEvent) {
+                    var left = mouseMoveEvent.offsetX;
+                    var top = mouseMoveEvent.offsetY;
+                    thisHotPoint.css({
+                        'top': top + 'px',
+                        'left': left + 'px',
+                    });
+                    return false;
+                });
+                $(document).mouseup(function (mouseUpEvent) {
+                    $(".image").unbind("mousemove");
+                });
+            });
+        }
+        $(document).ready(function () {
+
+        });
+    </script>
     <p:outputPanel id="rootContainer" styleClass="Container100 NoIndent">
         <p:outputPanel styleClass="Card">
             <!--标题-->
@@ -13,6 +47,7 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
+            <!-- 设备和图片选择 -->
             <p:outputPanel styleClass="Container100 Responsive100">
                 <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-70 NoPadding,wd-p-70 NoPadding,wd-p-70 NoPadding">
                     <p:outputLabel for="Equipment" value="所属设备："></p:outputLabel>
@@ -29,37 +64,38 @@
                                      update="rootContainer">
 
                     </p:commandButton>
-                    <p:commandButton value="选择图片"
-                                     disabled="#{empty XunJianDianSheZhiController.vm.currentEquipment}"
-                                     type="button"
-                                     onclick="PF('pictureSelectDialog').show();">
-
-                    </p:commandButton>
                 </p:panelGrid>
             </p:outputPanel>
+            <!-- 巡检点编辑工具栏 -->
+            <p:outputPanel>
+                <p:toolbar styleClass="Container100">
+                    <f:facet name="left">
+                        <p:commandButton value="添加巡检点" onclick="setStateToAddingCheckPoint()"></p:commandButton>
+                        <p:commandButton value="编辑巡检点"></p:commandButton>
+                        <p:commandButton value="移动巡检点" onclick="setStateToMovingCheckPoint()"></p:commandButton>
+                        <p:commandButton value="删除巡检点" onclick="setStateToRemovingCheckPoint()"></p:commandButton>
+                    </f:facet>
+                </p:toolbar>
+            </p:outputPanel>
+            <!-- 巡检点编辑界面 -->
             <p:outputPanel styleClass="Container100 Responsive100">
-                <script>
-                    $(document).ready(function () {
-                        $(".image").bind("click", function (e) {
-                            console.log(e);
-                            $(".x").val(e.offsetX);
-                            $(".y").val(e.offsetY);
-                        });
-                    });
-                </script>
-                <p:outputPanel rendered="#{not empty XunJianDianSheZhiController.vm.currentGraphic}" style="padding-top:0;">
-                    <p:outputPanel style="float:left;">
-                        <ui:repeat value="#{XunJianDianSheZhiController.vm.currentGraphic.checkPointList}" var="point">
-                            <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" style="position:relative;left:#{point.x}px;top:#{point.y}px;"></p:graphicImage>
+                <div id="iPicture" data-interaction="hover">
+                    <div class="ip_slide">
+                        <canvas id="jvchao" class="image" width="1920" height="1080" rendered="#{not empty XunJianDianSheZhiController.vm.currentEquipment}" style="background-image:url('#{XunJianDianSheZhiController.vm.currentEquipment.pingMianTuPath}');z-index:-1;">
+                            <!--p:graphicImage class="image" style="margin-top:0;"
+                                            value="#{XunJianDianSheZhiController.vm.currentGraphic.originalFilePath}">
+                            </p:graphicImage-->
+                        </canvas>
+                        <ui:repeat value="#{XunJianDianSheZhiController.vm.currentEquipment.checkPointList}" var="point">
+                            <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" class="HotPoint"
+                                            style="position:absolute;left:#{point.x}px;top:#{point.y}px;float:left;z-index:1000;">
+                            </p:graphicImage>
                         </ui:repeat>
-                    </p:outputPanel>
-                    <p:graphicImage class="image" style="margin-top:0;"
-                                    value="#{XunJianDianSheZhiController.vm.currentGraphic.originalFilePath}"
-                                    onclick="PF('coordConfirmDialog').show();">
-                    </p:graphicImage>
-                </p:outputPanel>
+                    </div>
+                </div>
             </p:outputPanel>
         </p:outputPanel>
+        <!-- 对话框 -->
         <p:dialog widgetVar="deviceSelectDialog" modal="true">
             <p:dataTable value="#{XunJianDianSheZhiController.vm.equipmentList}" style="width:512px;"
                          var="equipment" 
@@ -82,30 +118,30 @@
                         <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
                     </p:row>
                 </p:columnGroup>
-                <p:column >
+                <p:column styleClass="tct wd-p-30">
                     <h:outputText value="#{equipment.ENmae}">
 
                     </h:outputText>
                 </p:column>
-                <p:column>
+                <p:column styleClass="tct wd-p-10">
                     <p:commandLink value="选择" 
                                    actionListener="#{XunJianDianSheZhiController.vm.setCurrentEquipment(equipment)}" 
                                    process="@this" update="frmMain:rootContainer"
                                    oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
                 </p:column>
-                <p:column >
+                <p:column styleClass="tct wd-p-30">
                     <h:outputText value="#{equipment.parentStringChain}">
 
                     </h:outputText>
                 </p:column>
-                <p:column >
+                <p:column styleClass="tct wd-p-30">
                     <h:outputText value="#{equipment.guiGeHeXingHao}">
 
                     </h:outputText>
                 </p:column>
             </p:dataTable>
         </p:dialog>
-        <p:dialog widgetVar="pictureSelectDialog" 
+<!--        <p:dialog widgetVar="pictureSelectDialog" 
                   modal="true"
                   onHide="PF('rootContainer').update();">
             <p:dataTable value="#{XunJianDianSheZhiController.vm.currentEquipment.graphicList}" style="width:512px;"
@@ -136,7 +172,7 @@
                                    oncomplete="PF('pictureSelectDialog').hide()"></p:commandLink>
                 </p:column>
             </p:dataTable>
-        </p:dialog>
+        </p:dialog>-->
         <p:dialog widgetVar="coordConfirmDialog" id="coordConfirmDialog"
                   modal="true" 
                   onHide="PF('rootContainer').update();">
