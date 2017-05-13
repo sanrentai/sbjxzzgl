@@ -54,8 +54,18 @@ public class Controller extends BusinessBaseController {
     //*****************************************************************
     //                        私有函数定义
     //*****************************************************************
+//    /**
+//     * 用于设备名称选择的监听
+//     *
+//     * 
+//     * @param items
+//     */
+//    public void onListnener(LTEquipBasic equipBasic){
+//        vm.setEquipBasic(equipBasic);
+//    }
+    
     /**
-     * 修改故障提醒的记录
+     * 修改巡检项目记录
      *
      * 
      * @param items

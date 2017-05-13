@@ -6,7 +6,7 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
     <p:outputPanel styleClass="Container100 NoIndent">
-        <p:outputPanel styleClass="Card">
+        <p:outputPanel styleClass="Card" id="rootContainer">
             <!--标题-->
             <h1 class="CardBigTopic Purple">
                 <h:outputText value="#{ctrlMaster.createPageTitle('XunJianGuanLi', 'XunJianXiangMu')}"/>
@@ -14,7 +14,7 @@
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
 
-            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
+            <p:outputPanel id="pnlOutputArea" styleClass="Container100 Responsive100 pnlOutputArea">
                 <p:dataTable value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="items"
                              widgetVar="wvYongMeiList"
                              rows="10"
@@ -41,27 +41,27 @@
                             </p:row>
                         </p:row>
                     </p:columnGroup>
-                    <!-- 所属设备-->
+                     <!--所属设备-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{items.equip.ENmae}"/>
                     </p:column>
-                    <!-- 所属巡检点-->
+                     <!--所属巡检点-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{items.suoShuXunJianDianId}"/>
                     </p:column>
-                    <!-- 项目名称-->
+                     <!--项目名称-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{items.xiangMuMingCheng}"/>
                     </p:column>
-                    <!-- 巡检方式-->
+                     <!--巡检方式-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{items.xunJianFangShi}"/>
                     </p:column>
-                    <!-- 巡检顺序-->
+                     <!--巡检顺序-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{items.xunJianShunXu}"/>
                     </p:column>
-                    <!-- 项目说明-->
+                     <!--项目说明-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{items.xiangMuShuoMing}"/>
                     </p:column>
@@ -93,74 +93,129 @@
 
 
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
-                <p:toolbar styleClass="Container100">
-                    <f:facet name="left">
-                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{XunJianXiangMuController.onAddTargetData()}" 
-                                         styleClass="NavyButton" disabled="#{XunJianXiangMuController.statusEditing}"/>
+                <p:outputPanel>
+                    <p:toolbar styleClass="Container100">
+                        <f:facet name="left">
+                            <p:commandButton id="Equipment" value="选择设备" type="button" onclick="PF('deviceSelectDialog').show();"/> 
+                            <!--巡检点-->
+                            <p:panelGrid>
+                                <p:selectOneMenu id="addXunJianDian" filter="true" filterMatchMode="contains" 
+                                                 required="true"  value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}">
+                                    <f:selectItem itemLabel="巡检点" />
+                                    <f:selectItems value="#{XunJianXiangMuController.vm.siteList}" var="name" itemLabel="#{name.xunJianDianMing}" itemValue="#{name.id}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>   
+                            <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{XunJianXiangMuController.onAddTargetData()}" 
+                                             styleClass="NavyButton" disabled="#{XunJianXiangMuController.statusEditing}"/>
+                        </f:facet>
+                    </p:toolbar>
 
-                    </f:facet>
-                </p:toolbar>
-                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianXiangMuController.vm.routingInspectionItems}">
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianXiangMuController.vm.routingInspectionItems}">
 
-                    <!--所属设备-->
-                  <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                       <!-- 设备名称    required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('设备名称')}"-->
-                        <p:outputLabel for="addEquipName" value="设备名称"/>
-                        <p:selectOneMenu id="addEquipName"  filter="true" filterMatchMode="contains"
-                                         required="true" requiredMessage="#{XunJianXiangMuController.isRequiredMessage('设备名称')}"
-                                         value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuSheBeiId}"  >
-                            <f:selectItem itemLabel="选择设备" />
-                            <f:selectItems value="#{XunJianXiangMuController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
-                        </p:selectOneMenu>
-                  </p:panelGrid>
-                    <!--所属巡检点-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXunJianDian" value="巡检点"/>
-<!--                        <p:selectOneMenu id="addXunJianDian" value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}"  >
-                            <f:selectItem itemLabel="选择巡检点" itemValue=""/>
-                            <f:selectItems value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.suoShuXunJianDianId}" itemValue="#{name}" />
-                        </p:selectOneMenu>-->
-                        <p:inputText id="addXunJianDian" value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}"/>
-                    </p:panelGrid>
-                    <!--项目名称-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXiangMuMingCheng" value="项目名称"/>
-                        <p:inputText id="addXiangMuMingCheng" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuMingCheng}" />
-                    </p:panelGrid>
-                    <!--巡检方式-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXunJianFangShi" value="巡检方式"/>
-                        <p:selectOneMenu id="addXunJianFangShi" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianFangShi}"  >
-                            <f:selectItem itemLabel="选择巡检方式" itemValue=""/>
-                            <f:selectItem itemLabel="数值录入" itemValue="1"/>
-                            <f:selectItem itemLabel="问题选择" itemValue="0"/>
-                        </p:selectOneMenu>
-                    </p:panelGrid>
-                    <!--巡检顺序-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXunJianShunXu" value="巡检顺序:" />
-                        <p:inputText id="addXunJianShunXu" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianShunXu}"/>
-                    </p:panelGrid>
+                                            <!--所属设备-->
+                                          <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                                设备名称    required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('设备名称')}"
+                                                <p:outputLabel for="addEquipName" value="设备名称"/>
+                                                <p:selectOneMenu id="addEquipName"  filter="true" filterMatchMode="contains"
+                                                                 required="true" requiredMessage="#{XunJianXiangMuController.isRequiredMessage('设备名称')}"
+                                                                 value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuSheBeiId}"  >
+                                                    <f:selectItem itemLabel="选择设备" />
+                                                    <f:selectItems value="#{XunJianXiangMuController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
+                                                </p:selectOneMenu>
+                                          </p:panelGrid>
+                        <!--所属巡检点-->
+                                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                                    <p:outputLabel for="addXunJianDian" value="巡检点"/>
+                                                    <p:selectOneMenu id="addXunJianDian" value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}"  >
+                                                        <f:selectItem itemLabel="选择巡检点" itemValue=""/>
+                                                        <f:selectItems value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.suoShuXunJianDianId}" itemValue="#{name}" />
+                                                    </p:selectOneMenu>
+                                                    <p:inputText id="addXunJianDian" value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}"/>
+                                                </p:panelGrid>
+                        <!--项目名称-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="addXiangMuMingCheng" value="项目名称"/>
+                            <p:inputText id="addXiangMuMingCheng" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuMingCheng}" />
+                        </p:panelGrid>
+                        <!--巡检方式-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="addXunJianFangShi" value="巡检方式"/>
+                            <p:selectOneMenu id="addXunJianFangShi" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianFangShi}"  >
+                                <f:selectItem itemLabel="选择巡检方式" itemValue=""/>
+                                <f:selectItem itemLabel="数值录入" itemValue="1"/>
+                                <f:selectItem itemLabel="问题选择" itemValue="0"/>
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        <!--巡检顺序-->
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="addXunJianShunXu" value="巡检顺序:" />
+                            <p:inputText id="addXunJianShunXu" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianShunXu}"/>
+                        </p:panelGrid>
 
-                    <!--巡检说明-->
-                    <p:panelGrid columns="1" layout="grid">
-                        <p:outputLabel for="addXunJianShuoMing" value="巡检说明:" />
-                        <p:inputTextarea id="addXunJianShuoMing" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuShuoMing}"/>
-                    </p:panelGrid>
-                    
-                    
-                    <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
-                        <p:commandButton value="保存" process="pnlInputArea"
-                                         oncomplete="showErrorMsg();"
-                                         update="pnlInputArea, pnlOutputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                         actionListener="#{XunJianXiangMuController.onSaveData}" />
-                        <p:commandButton value="取消" process="@this" 
-                                         update="pnlInputArea, pnlOutputArea" actionListener="#{XunJianXiangMuController.onCancelEdit}"
-                                         styleClass="RedButton"/>
-                    </p:panelGrid>
+                        <!--巡检说明-->
+                        <p:panelGrid columns="1" layout="grid">
+                            <p:outputLabel for="addXunJianShuoMing" value="巡检说明:" />
+                            <p:inputTextarea id="addXunJianShuoMing" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuShuoMing}"/>
+                        </p:panelGrid>
+
+
+                        <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="保存" process="pnlInputArea"
+                                             oncomplete="showErrorMsg();"
+                                             update="pnlInputArea, pnlOutputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             actionListener="#{XunJianXiangMuController.onSaveData}" />
+                            <p:commandButton value="取消" process="@this" 
+                                             update="pnlInputArea, pnlOutputArea" actionListener="#{XunJianXiangMuController.onCancelEdit}"
+                                             styleClass="RedButton"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
                 </p:outputPanel>
             </p:outputPanel>
         </p:outputPanel>
     </p:outputPanel>
-  
+
+     <!--选择设备会通过JS来引用这个弹窗的表格--> 
+    <p:dialog widgetVar="deviceSelectDialog" modal="true">
+        <p:dataTable value="#{XunJianXiangMuController.vm.equipBasicList}" style="width:512px;"
+                     var="equip" 
+                     paginatorAlwaysVisible="false"
+                     paginator="true" rows="10"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     id="equipmentSelectList" widgetVar="equipmentSelectList"
+                     styleClass="bg-c-row-odd wd-f-700"
+                     scrollable="true"
+                     emptyMessage="无数据">
+            <f:facet name="header">
+                <h:outputText value="选择设备"/>
+            </f:facet>
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column styleClass="tct wd-p-30" headerText="设备名"
+                              filterBy="#{equip.ENmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                    <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
+                    <p:column styleClass="tct wd-p-30" headerText="上级设备"></p:column>
+                    <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
+                </p:row>
+            </p:columnGroup>
+            <p:column >
+                <h:outputText value="#{equip.ENmae}">
+
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <p:commandLink value="选择" 
+                               actionListener="#{XunJianXiangMuController.onListnener(equipBasic)}" 
+                               process="@this" update="frmMain:rootContainer"
+                               oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
+            </p:column>
+            <p:column >
+                <h:outputText value="#{equip.parentStringChain}"/>
+            </p:column>
+            <p:column >
+                <h:outputText value="#{equip.guiGeHeXingHao}"/>
+
+            </p:column>
+        </p:dataTable>
+    </p:dialog>
+
 </ui:composition>

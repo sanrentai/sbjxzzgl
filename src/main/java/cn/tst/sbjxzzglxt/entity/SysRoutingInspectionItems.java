@@ -66,7 +66,7 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Basic(optional = false)
     @NotNull
     @Column(name = "suo_shu_xun_jian_dian_id")
-    private int suoShuXunJianDianId;
+    private Long suoShuXunJianDianId;
     @Size(max = 255)
     @Column(name = "xiang_mu_ming_cheng")
     private String xiangMuMingCheng;
@@ -152,11 +152,11 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.suoShuSheBeiId = suoShuSheBeiId;
     }
 
-    public int getSuoShuXunJianDianId() {
+    public Long getSuoShuXunJianDianId() {
         return suoShuXunJianDianId;
     }
 
-    public void setSuoShuXunJianDianId(int suoShuXunJianDianId) {
+    public void setSuoShuXunJianDianId(Long suoShuXunJianDianId) {
         this.suoShuXunJianDianId = suoShuXunJianDianId;
     }
 
