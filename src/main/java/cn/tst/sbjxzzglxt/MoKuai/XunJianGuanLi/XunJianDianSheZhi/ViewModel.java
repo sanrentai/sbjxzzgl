@@ -6,10 +6,9 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianDianSheZhi;
 
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
-import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.viewmodel.BaseViewModel;
 import java.util.List;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -58,5 +57,9 @@ public class ViewModel extends BaseViewModel {
     
     public String getHotPointImagePath() {
         return "/uploadFiles/".concat("images/HotPoint.png");
+    }
+    
+    public List<LTEquipCheckPoint> getCheckPointList() {
+        return this.currentEquipment.getCheckPointList();
     }
 }
