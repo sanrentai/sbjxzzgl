@@ -33,12 +33,9 @@ public class BizLogicImplementation extends BaseBizLogic implements BizLogic {
     @Override
     public void onCoordConfirmDialogAccepted(ViewModel vm) {
         LTEquipCheckPoint checkPoint = new LTEquipCheckPoint();
-        checkPoint.setGraphicId(vm.getCurrentGraphic().getId().intValue());
+        checkPoint.setEquipmentId(vm.getCurrentEquipment().getId().intValue());
         checkPoint.setX(vm.getX());
         checkPoint.setY(vm.getY());
-        System.out.println("vm.getCurrentGraphic().getId()" + vm.getCurrentGraphic().getId());
-        System.out.println("vm.getX()" + vm.getX());
-        System.out.println("vm.getY()" + vm.getY());
         checkPointFacade.create(checkPoint);
     }
 }

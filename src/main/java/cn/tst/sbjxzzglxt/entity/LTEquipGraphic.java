@@ -7,6 +7,8 @@ package cn.tst.sbjxzzglxt.entity;
 
 import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
+import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.controller.equipment.EQP0007Controller;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -328,26 +330,5 @@ public class LTEquipGraphic extends BaseEntity implements Serializable {
                 .concat(CConst.SLASH)
                 .concat("p");
         return result;
-    }
-    
-    public String getOriginalFilePath() {
-        String result = "/uploadFiles/".concat(CConst.SLASH)
-                .concat(SepC.DEVICE_DOCUMENTS_DIRECTORY_NAME)
-                .concat(CConst.SLASH)
-                .concat(this.getFNameOnServer())
-                .concat(CConst.SLASH)
-                .concat("o");
-        return result;
-    }
-
-    @OneToMany(mappedBy="graphic",fetch = FetchType.EAGER)
-    private List<LTEquipCheckPoint> checkPointList;
-
-    public List<LTEquipCheckPoint> getCheckPointList() {
-        return checkPointList;
-    }
-
-    public void setCheckPointList(List<LTEquipCheckPoint> checkPointList) {
-        this.checkPointList = checkPointList;
     }
 }

@@ -5,6 +5,8 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.CConst;
+import cn.tst.sbjxzzglxt.common.SepC;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -558,5 +560,31 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
 
     public void setGraphicList(List<LTEquipGraphic> graphicList) {
         this.graphicList = graphicList;
+    }
+
+    @OneToMany(mappedBy="equipment",fetch = FetchType.EAGER)
+    private List<LTEquipCheckPoint> checkPointList;
+
+    public List<LTEquipCheckPoint> getCheckPointList() {
+        return checkPointList;
+    }
+
+    public void setCheckPointList(List<LTEquipCheckPoint> checkPointList) {
+        this.checkPointList = checkPointList;
+    }
+    
+    public String getPingMianTuPath() {
+        String result = "/sbjx/uploadFiles/".concat(SepC.PING_MIAN_TU_DIRECTORY)
+        //String result = EQP0007Controller.FILE_UPLOAD_PATH
+                .concat(CConst.SLASH)
+                //.concat(SepC.UploadFileType.ORIGIN)
+                //.concat(CConst.SLASH)
+                .concat(this.getPingMianTu())
+                .concat(CConst.SLASH)
+                .concat("o")
+                .concat(CConst.SLASH)
+                .concat("?pfdrid_c=true");
+        System.out.println(result);
+        return result;
     }
 }
