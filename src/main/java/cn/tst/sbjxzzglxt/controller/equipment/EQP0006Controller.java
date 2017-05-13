@@ -80,7 +80,9 @@ public class EQP0006Controller extends BusinessBaseController {
         ExecuteResult result = this.bizLogic.onEquipError(mode, vm);
 
         this.addMessage(result.createMessage());
-        
+         if (result.isSuccess()) {
+            onCancelEdit();
+        }
     }
     
       /**

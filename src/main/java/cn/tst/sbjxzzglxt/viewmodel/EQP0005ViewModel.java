@@ -18,6 +18,7 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 public class EQP0005ViewModel extends BaseViewModel {
+      private List<LTEquipBasic> equipBasicList;
     private List<LTEquipWarn> equipWarnList;//在查询全部的时候，需要使用List接收
     private LTEquipWarn equipWarn;//设备提醒的实体类对象
     private TreeNode equipTreeRoot;//tree节点
@@ -80,6 +81,14 @@ public class EQP0005ViewModel extends BaseViewModel {
 
     public void setEditingEquipWarn(LTEquipWarn editingEquipWarn) {
         this.editingEquipWarn = editingEquipWarn;
+    }
+
+    public List<LTEquipBasic> getEquipBasicList() {
+        return equipBasicList;
+    }
+
+    public void setEquipBasicList(List<LTEquipBasic> equipBasicList) {
+        this.equipBasicList = equipBasicList;
     }
 
     

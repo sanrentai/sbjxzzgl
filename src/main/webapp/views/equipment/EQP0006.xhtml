@@ -111,9 +111,9 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                        <!-- 设备名称    required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('设备名称')}"-->
                         <p:outputLabel for="addEquipName" value="设备名称"/>
-                        <p:selectOneMenu id="addEquipName" value="#{ctrlEQP0006.vm.equipError.ENum}"  >
+                        <p:selectOneMenu id="addEquipName" value="#{ctrlEQP0006.vm.equipError.ENum}"  filter="true" filterMatchMode="contains" >
                             <f:selectItem itemLabel="选择设备" itemValue=""/>
-                            <f:selectItems value="#{ctrlEQP0001.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
+                            <f:selectItems value="#{ctrlEQP0006.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
                         </p:selectOneMenu>
                     </p:panelGrid>
 
@@ -153,11 +153,11 @@
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
-                                         update="pnlInputArea frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         update="pnlInputArea, pnlOutputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                          actionListener="#{ctrlEQP0006.onSaveData}" onclick="refresh"/>
                       
                         <p:commandButton value="取消" process="@this" 
-                                         update="pnlInputArea" actionListener="#{ctrlEQP0006.onCancelEdit}"
+                                         update="pnlInputArea, pnlOutputArea" actionListener="#{ctrlEQP0006.onCancelEdit}"
                                          styleClass="RedButton"/>
                     </p:panelGrid>
                 </p:outputPanel>

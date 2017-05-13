@@ -17,96 +17,97 @@
         <ui:insert name="head" />
     </h:head>
 
-    <h:body styleClass="AquaBack">
+    <h:body style="background-image: url('resources/images/background.jpg')!important;background-size: 100% 100%;height: calc(100% + 56px)!important">
 
         <h:form id="frmMain">
+            <!--<div class="ht-p-100" style="background-image: url('resources/images/background.jpg')!important;background-size: 100% 100%;height: calc(100% + 56px)!important">-->
+                <div class="Wid70 MarAuto" >
+                    <div class="Wid70 MarAuto WidAutoOnMobile TexAlCenter" >
 
-            <div class="Wid70 MarAuto">
-                <div class="Wid70 MarAuto WidAutoOnMobile TexAlCenter">
+                        <div class="Wid70 MarAuto WidAutoOnMobile">
+                            <div class="EmptyBox30"></div>
 
-                    <div class="Wid70 MarAuto WidAutoOnMobile">
-                        <div class="EmptyBox30"></div>
+                            <div class="EmptyBox10 ShowOnMobile"></div>
 
-                        <div class="EmptyBox10 ShowOnMobile"></div>
-
-                        <div class="EmptyBox100 ShowOnDesktop"></div>
-                        <div class="EmptyBox20 ShowOnMobile"></div>
+                            <div class="EmptyBox100 ShowOnDesktop"></div>
+                            <div class="EmptyBox20 ShowOnMobile"></div>
 
 
-                        <div class="Card ui-fluid ShadowEffect">
-                            <div class="Container100">
-                                <div class="Wid100 FontLatoRegular Navy Fs30">本溪华兴管理系统</div>
-                                <div class="EmptyBox30"></div>
-                                <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
-                                    <p:selectOneMenu id="gong_si"
-                                                     value="#{ctrlLogin.selectedSysId}"
-                                                     required="true"
-                                                     requiredMessage="#{ctrlLogin.isRequiredMessage('公司')}">
-                                        <p:ajax listener="#{ctrlLogin.changeGongSiEvent}" process="@this" update="bu_men login_id"/>
-                                        <!--<f:selectItem itemLabel="请选择" itemValue=""/>-->
-                                        <f:selectItems value="#{ctrlLogin.gongSiList}"
-                                                       var="gongsi"
-                                                       itemLabel="#{gongsi.companyName}"
-                                                       itemValue="#{gongsi.sysId}"/>
-                                    </p:selectOneMenu>
-                                    <p:selectOneMenu id="bu_men"
-                                                     value="#{ctrlLogin.selectedBuMenId}"
-                                                     required="true" autoWidth="false"
-                                                     requiredMessage="#{ctrlLogin.isRequiredMessage('部门')}">
-                                        <p:ajax listener="#{ctrlLogin.changeBuMenEvent}" process="@this" update="login_id"/>
-                                        <!--<f:selectItem itemLabel="请选择" itemValue=""/>-->
-                                        <f:selectItems value="#{ctrlLogin.buMenList}"
-                                                       var="bumen"
-                                                       itemLabel="#{bumen.buMenMing}"
-                                                       itemValue="#{bumen.buMenId}"/>
-                                    </p:selectOneMenu>
-                                    <p:selectOneMenu id="login_id"
-                                                     value="#{ctrlLogin.loginId}"
-                                                     required="true" autoWidth="false"
-                                                     requiredMessage="#{ctrlLogin.isRequiredMessage(msg.login_id)}">
-                                        <f:selectItems value="#{ctrlLogin.loginInfoList}"
-                                                       var="user"
-                                                       itemLabel="#{user.yuanGong.nameZ}"
-                                                       itemValue="#{user.loginId}"/>
-                                    </p:selectOneMenu>
-                                    <!--用户ID-->
-<!--                                    <p:inputText id="txtLoginId" placeholder="#{msg.login_id}" value="#{ctrlLogin.loginId}"
-                                                 required="true" requiredMessage="#{ctrlLogin.isRequiredMessage(msg.login_id)}" style="padding:15px !important;"/>-->
-                                    <!--密码-->
-                                    <p:password id="txtPassword" placeholder="密码" value="#{ctrlLogin.password}" 
-                                                required="true" requiredMessage="#{ctrlLogin.isRequiredMessage(msg.password)}" style="padding:15px !important;"/>
-                                </p:panelGrid>
-                            </div>
-                            <div class="Container100 TexAlLeft">
+                            <div class="Card ui-fluid ShadowEffect">
+                                <div class="Container100">
+                                    <div class="Wid100 FontLatoRegular Navy Fs30">设备检修追踪管理系统</div>
+                                    <div class="EmptyBox30"></div>
+                                    <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+                                        <p:selectOneMenu id="gong_si"
+                                                         value="#{ctrlLogin.selectedSysId}"
+                                                         required="true"
+                                                         requiredMessage="#{ctrlLogin.isRequiredMessage('公司')}">
+                                            <p:ajax listener="#{ctrlLogin.changeGongSiEvent}" process="@this" update="bu_men login_id"/>
+                                            <!--<f:selectItem itemLabel="请选择" itemValue=""/>-->
+                                            <f:selectItems value="#{ctrlLogin.gongSiList}"
+                                                           var="gongsi"
+                                                           itemLabel="#{gongsi.companyName}"
+                                                           itemValue="#{gongsi.sysId}"/>
+                                        </p:selectOneMenu>
+                                        <p:selectOneMenu id="bu_men"
+                                                         value="#{ctrlLogin.selectedBuMenId}"
+                                                         required="true" autoWidth="false"
+                                                         requiredMessage="#{ctrlLogin.isRequiredMessage('部门')}">
+                                            <p:ajax listener="#{ctrlLogin.changeBuMenEvent}" process="@this" update="login_id"/>
+                                            <!--<f:selectItem itemLabel="请选择" itemValue=""/>-->
+                                            <f:selectItems value="#{ctrlLogin.buMenList}"
+                                                           var="bumen"
+                                                           itemLabel="#{bumen.buMenMing}"
+                                                           itemValue="#{bumen.buMenId}"/>
+                                        </p:selectOneMenu>
+                                        <p:selectOneMenu id="login_id"
+                                                         value="#{ctrlLogin.loginId}"
+                                                         required="true" autoWidth="false"
+                                                         requiredMessage="#{ctrlLogin.isRequiredMessage(msg.login_id)}">
+                                            <f:selectItems value="#{ctrlLogin.loginInfoList}"
+                                                           var="user"
+                                                           itemLabel="#{user.yuanGong.nameZ}"
+                                                           itemValue="#{user.loginId}"/>
+                                        </p:selectOneMenu>
+                                        <!--用户ID-->
+    <!--                                    <p:inputText id="txtLoginId" placeholder="#{msg.login_id}" value="#{ctrlLogin.loginId}"
+                                                     required="true" requiredMessage="#{ctrlLogin.isRequiredMessage(msg.login_id)}" style="padding:15px !important;"/>-->
+                                        <!--密码-->
+                                        <p:password id="txtPassword" placeholder="密码" value="#{ctrlLogin.password}" 
+                                                    required="true" requiredMessage="#{ctrlLogin.isRequiredMessage(msg.password)}" style="padding:15px !important;"/>
+                                    </p:panelGrid>
+                                </div>
+                                <div class="Container100 TexAlLeft">
+                                    <div class="EmptyBox10"></div>
+                                </div>
                                 <div class="EmptyBox10"></div>
+                                <div class="Container100">
+                                    <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
+                                        <p:commandButton id="btnLogin" value="登录" action="#{ctrlLogin.login}" update="@form" styleClass="Fs25 GreenButton"/>
+<!--                                        <a href="android.apk" class="ui-commandlink ShowOnMobile">下载安卓APP</a>
+                                        <p:commandLink id="ewm" styleClass="ShowOnDesktop"  process="@none">
+                                            <i class="fa fa-qrcode">点击扫码，下载安卓APP</i>
+                                        </p:commandLink>
+                                        <p:overlayPanel for="ewm" dynamic="true"  at="top">
+                                            <img src="resources/images/EWM.png" width="100" height="100" alt="EWM"/>
+                                            <p:graphicImage name="resources/images/EWM.png" width="300" />
+                                        </p:overlayPanel>-->
+                                    </p:panelGrid>
+                                    <p:defaultCommand target="btnLogin" />
+                                    <p:focus context="btnLogin"/>
+                                </div>
+                                <div class="EmptyBox10"></div>
+                                <div class="Separator"></div>
+                                <div class="Container100">
+                                    <p:messages showSummary="false" showDetail="true" showIcon="true"/>
+                                </div>
                             </div>
-                            <div class="EmptyBox10"></div>
-                            <div class="Container100">
-                                <p:panelGrid layout="grid" columns="1" styleClass="ui-panelgrid-blank">
-                                    <p:commandButton id="btnLogin" value="登录" action="#{ctrlLogin.login}" update="@form" styleClass="Fs25 GreenButton"/>
-                                    <a href="android.apk" class="ui-commandlink ShowOnMobile">下载安卓APP</a>
-                                    <p:commandLink id="ewm" styleClass="ShowOnDesktop"  process="@none">
-                                        <i class="fa fa-qrcode">点击扫码，下载安卓APP</i>
-                                    </p:commandLink>
-                                    <p:overlayPanel for="ewm" dynamic="true"  at="top">
-                                        <img src="resources/images/EWM.png" width="100" height="100" alt="EWM"/>
-                                        <!--<p:graphicImage name="resources/images/EWM.png" width="300" />-->
-                                    </p:overlayPanel>
-                                </p:panelGrid>
-                                <p:defaultCommand target="btnLogin" />
-                                <p:focus context="btnLogin"/>
-                            </div>
-                            <div class="EmptyBox10"></div>
-                            <div class="Separator"></div>
-                            <div class="Container100">
-                                <p:messages showSummary="false" showDetail="true" showIcon="true"/>
-                            </div>
+                            <div class="EmptyBox20"></div>
+                            <div class="Wid100 FontLatoRegular Fs12 TransparentWhite"> <i class="fa fa-copyright DispInlBlock"></i> Powerstar <br/>All rights reserved.</div>
                         </div>
-                        <div class="EmptyBox20"></div>
-                        <div class="Wid100 FontLatoRegular Fs12 TransparentWhite"> <i class="fa fa-copyright DispInlBlock"></i> Powerstar <br/>All rights reserved.</div>
                     </div>
                 </div>
-            </div>
+            <!--</div>-->
         </h:form>
 
         <style>.ui-button-text, .ui-button-text-only .ui-button-text{padding:15px !important; transition:none !important;}</style>

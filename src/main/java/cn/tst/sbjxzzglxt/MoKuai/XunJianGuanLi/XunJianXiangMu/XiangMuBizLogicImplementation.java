@@ -1,5 +1,6 @@
-package cn.tst.sbjxzzglxt.bizlogic.impl;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu;
 
+import cn.tst.sbjxzzglxt.bizlogic.impl.*;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -10,8 +11,10 @@ import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
 import cn.tst.sbjxzzglxt.facade.LTEquipErrorFacade;
+import cn.tst.sbjxzzglxt.facade.XunJianXiangMuFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
@@ -25,43 +28,45 @@ import org.apache.log4j.Logger;
  * @author ps_xy@pscp.co.jp
  */
 @Stateless
-public class EQP0006BizLogicImpl extends BaseBizLogic implements EQP0006BizLogic {
+public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLogic {
 
-    private static final Logger LOG = Logger.getLogger(EQP0006BizLogicImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
     @EJB
-    private LTEquipErrorFacade equipErrorFacade;
- @EJB
+    private XunJianXiangMuFacade xiangMuFacade;
+    @EJB
     private LTEquipBasicFacade eqpService;
+
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
     @Override
-    public void loadEQP0006ViewModel(EQP0006ViewModel vm) {
-//        vm.setEquipErrorList(equipErrorFacade.findById(Long.MIN_VALUE));
-        List<LTEquipError> equip = equipErrorFacade.findAll();
-        vm.setEquipErrorList(equip);
+    public void loadViewModel(ViewModel vm) {
+
+        List<SysRoutingInspectionItems> equip = xiangMuFacade.findAll();
+        vm.setRoutingInspectionItemsList(equip);
         List<LTEquipBasic> findAll = eqpService.findAll();
         vm.setEquipBasicList(findAll);
     }
 
-    public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, EQP0006ViewModel vm) {
+    @Override
+    public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, ViewModel vm) {
 
         ExecuteResult result = new ExecuteResult(mode);
-        LTEquipError target = vm.getEquipError();
+        SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
         try {
             switch (mode) {
                 case INSERT:
 //                    target.setId(UUID.randomUUID().toString());
-                    equipErrorFacade.create(target);
+                    xiangMuFacade.create(target);
                     break;
                 case UPDATE:
-                    equipErrorFacade.edit(target);
+                    xiangMuFacade.edit(target);
                     break;
                 case DELETE:
                     LOG.info("删除开始");
-                    equipErrorFacade.remove(target);
+                    xiangMuFacade.remove(target);
                     LOG.info("删除结束");
                     break;
             }
-            vm.setEquipErrorList(equipErrorFacade.findAll());
+            vm.setRoutingInspectionItemsList(xiangMuFacade.findAll());
             result.setSuccess(true);
 //              vm.setEquipErrorList(equipErrorFacade.findById(new Long(SepC.EQP_ROOT)));
 
@@ -73,33 +78,28 @@ public class EQP0006BizLogicImpl extends BaseBizLogic implements EQP0006BizLogic
     }
 
     @Override
-    public ExecuteResult onEquipError(SepE.ExecuteMode mode, EQP0006ViewModel vm) {
+    public ExecuteResult onXunJianXiangMu(SepE.ExecuteMode mode, ViewModel vm) {
         //先创建一个执行结果的对象，并把mode的放进去
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
-        LTEquipError target = vm.getEquipError();
-        LOG.info(target.getENum());
-        LOG.info(target.getDiJiGuZhang());
-        LOG.info(target.getErrType());
-        LOG.info(target.getErrTitle());
-        LOG.info(target.getErrWay());
-        LOG.info(target.getErrNum());
+        SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
+
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
                 case INSERT:
-                    equipErrorFacade.create(target);
+                    xiangMuFacade.create(target);
                     break;
                 case UPDATE:
-                    equipErrorFacade.edit(target);
+                    xiangMuFacade.edit(target);
                     break;
                 case DELETE:
-                    equipErrorFacade.remove(target);
+                    xiangMuFacade.remove(target);
                     break;
             }
             //执行结果如果是成功的，转化就设置为true。
 
-            vm.setEquipErrorList(equipErrorFacade.findAll());
+            vm.setRoutingInspectionItemsList(xiangMuFacade.findAll());
             result.setSuccess(true);
             //刷新数据后存储到EquipWarn中
 

@@ -7,12 +7,15 @@ package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -67,6 +70,7 @@ public class SysRoutingInspectionSite extends BaseEntity implements Serializable
     @Size(min = 1, max = 50)
     @Column(name = "xun_jian_dian_shuo_ming")
     private String xunJianDianShuoMing;
+    
   
 
     public SysRoutingInspectionSite() {

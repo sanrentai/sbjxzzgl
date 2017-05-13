@@ -7,12 +7,23 @@ package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,7 +32,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *  巡检项目实体类
+ * 巡检项目实体类
+ *
  * @author Administrator
  */
 @Entity
@@ -29,7 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SysRoutingInspectionItems.findAll", query = "SELECT s FROM SysRoutingInspectionItems s")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findBySuoShuSheBeiId", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.suoShuSheBeiId = :suoShuSheBeiId")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findBySuoShuSheBeiId", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.suoShuSheBeiId = :suoShuSheBeiId AND s.delFlg = :delFlg")
     , @NamedQuery(name = "SysRoutingInspectionItems.findBySuoShuXunJianDianId", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.suoShuXunJianDianId = :suoShuXunJianDianId")
     , @NamedQuery(name = "SysRoutingInspectionItems.findByXiangMuMingCheng", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xiangMuMingCheng = :xiangMuMingCheng")
     , @NamedQuery(name = "SysRoutingInspectionItems.findByXunJianFangShi", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xunJianFangShi = :xunJianFangShi")
@@ -43,15 +55,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
 
+     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
+    @Size(max = 255)
     @Column(name = "suo_shu_she_bei_id")
-    private int suoShuSheBeiId;
+    private String suoShuSheBeiId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "suo_shu_xun_jian_dian_id")
@@ -67,6 +78,55 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Column(name = "xiang_mu_shuo_ming")
     private String xiangMuShuoMing;
    
+    //连表用于取设备名称
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({
+        @JoinColumn(name = "suo_shu_she_bei_id", referencedColumnName = "E_Num", insertable = false, updatable = false)
+       
+    })
+    private LTEquipBasic equip;
+ 
+    
+    //这个对应的是SysRoutingInspectionProblem实体类，双向连表
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "suo_shu_xiang_mu_id")
+    private SysRoutingInspectionProblem routingInspectionProblem;
+
+    
+    //这个对应的是SysRoutingInspectionMessage实体类，双向连表
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "xun_jian_dian_xiang_mu_id")
+    private SysRoutingInspectionMessage message;
+
+    public SysRoutingInspectionMessage getMessage() {
+        return message;
+    }
+
+    public void setMessage(SysRoutingInspectionMessage message) {
+        this.message = message;
+    }
+    
+
+   
+    
+    
+    
+    public SysRoutingInspectionProblem getRoutingInspectionProblem() {
+        return routingInspectionProblem;
+    }
+
+    public void setRoutingInspectionProblem(SysRoutingInspectionProblem routingInspectionProblem) {
+        this.routingInspectionProblem = routingInspectionProblem;
+    }
+    
+    
+    public LTEquipBasic getEquip() {
+        return equip;
+    }
+
+    public void setEquip(LTEquipBasic equip) {
+        this.equip = equip;
+    }
 
     public SysRoutingInspectionItems() {
     }
@@ -75,7 +135,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.id = id;
     }
 
-  
 
     public Long getId() {
         return id;
@@ -85,11 +144,11 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.id = id;
     }
 
-    public int getSuoShuSheBeiId() {
+    public String getSuoShuSheBeiId() {
         return suoShuSheBeiId;
     }
 
-    public void setSuoShuSheBeiId(int suoShuSheBeiId) {
+    public void setSuoShuSheBeiId(String suoShuSheBeiId) {
         this.suoShuSheBeiId = suoShuSheBeiId;
     }
 
@@ -133,8 +192,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.xiangMuShuoMing = xiangMuShuoMing;
     }
 
-  
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -160,5 +217,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems[ id=" + id + " ]";
     }
 
-  
+
+
 }
