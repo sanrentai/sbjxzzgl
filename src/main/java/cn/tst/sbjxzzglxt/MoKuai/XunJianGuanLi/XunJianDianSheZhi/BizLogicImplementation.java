@@ -38,4 +38,11 @@ public class BizLogicImplementation extends BaseBizLogic implements BizLogic {
         checkPoint.setY(vm.getY());
         checkPointFacade.create(checkPoint);
     }
+    @Override
+    public void onMoveCoordConfirmDialogAccepted(ViewModel vm) {
+        LTEquipCheckPoint checkPoint = checkPointFacade.find(vm.getCheckPointId());
+        checkPoint.setX(vm.getX());
+        checkPoint.setY(vm.getY());
+        checkPointFacade.edit(checkPoint);
+    }
 }
