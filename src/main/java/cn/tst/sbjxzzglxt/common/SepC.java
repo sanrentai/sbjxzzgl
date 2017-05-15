@@ -606,6 +606,11 @@ public final class SepC {
          * 系统设定
          */
         public static final String MST0020 = "ctrlMST0020";
+
+        /**
+         * 巡检角色设置
+         */
+        public static final String MST0021 = "ctrlMST0021";
         /**
          * 车辆信息管理
          */
@@ -700,7 +705,7 @@ public final class SepC {
         public static final String EQP0006 = "ctrlEQP0006";
 
         public static final String EQP0004 = "ctrlEQP0004";
-        
+
         public static final String EQP0007 = "ctrlEQP0007";
 
         /**
