@@ -6,6 +6,8 @@
 package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +20,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +38,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipCheckPoint.findById", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.id = :id")
     , @NamedQuery(name = "LTEquipCheckPoint.findByX", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.x = :x")
     , @NamedQuery(name = "LTEquipCheckPoint.findByY", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.y = :y")
-    , @NamedQuery(name = "LTEquipCheckPoint.findByGraphicId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.graphicId = :graphicId")})
+    , @NamedQuery(name = "LTEquipCheckPoint.findByEquipmentId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId")})
 public class LTEquipCheckPoint extends BaseEntity implements Serializable {
+
+    @Column(name = "equipmentId")
+    private Integer equipmentId;
 
     @Column(name = "x")
     private Integer x;
@@ -45,8 +54,6 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "graphicId")
-    private Integer graphicId;
 
     public LTEquipCheckPoint() {
     }
@@ -61,14 +68,6 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getGraphicId() {
-        return graphicId;
-    }
-
-    public void setGraphicId(Integer graphicId) {
-        this.graphicId = graphicId;
     }
 
     @Override
@@ -113,17 +112,25 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     }
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
-        @JoinColumn(name = "graphicId", referencedColumnName = "ID", insertable = false, updatable = false)
+        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false)
         ,
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
-    private LTEquipGraphic graphic;
+    private LTEquipBasic equipment;
 
-    public LTEquipGraphic getGraphic() {
-        return graphic;
+    public LTEquipBasic getEquipment() {
+        return equipment;
     }
 
-    public void setGraphic(LTEquipGraphic graphic) {
-        this.graphic = graphic;
+    public void setEquipment(LTEquipBasic equipment) {
+        this.equipment = equipment;
+    }
+
+    public Integer getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(Integer equipmentId) {
+        this.equipmentId = equipmentId;
     }
 }

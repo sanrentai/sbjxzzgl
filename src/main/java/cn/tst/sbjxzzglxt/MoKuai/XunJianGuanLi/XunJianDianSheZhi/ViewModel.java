@@ -6,10 +6,9 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianDianSheZhi;
 
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
-import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.viewmodel.BaseViewModel;
 import java.util.List;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -20,11 +19,19 @@ public class ViewModel extends BaseViewModel {
     
     private LTEquipBasic currentEquipment;
     
-    private LTEquipGraphic currentGraphic;
-    
     private Integer x;
     
     private Integer y;
+    
+    private Integer checkPointId;
+
+    public Integer getCheckPointId() {
+        return checkPointId;
+    }
+
+    public void setCheckPointId(Integer checkPointId) {
+        this.checkPointId = checkPointId;
+    }
 
     public List<LTEquipBasic> getEquipmentList() {
         return equipmentList;
@@ -40,14 +47,6 @@ public class ViewModel extends BaseViewModel {
 
     public void setCurrentEquipment(LTEquipBasic currentEquipment) {
         this.currentEquipment = currentEquipment;
-    }
-
-    public LTEquipGraphic getCurrentGraphic() {
-        return currentGraphic;
-    }
-
-    public void setCurrentGraphic(LTEquipGraphic currentGraphic) {
-        this.currentGraphic = currentGraphic;
     }
 
     public Integer getX() {
@@ -68,5 +67,9 @@ public class ViewModel extends BaseViewModel {
     
     public String getHotPointImagePath() {
         return "/uploadFiles/".concat("images/HotPoint.png");
+    }
+    
+    public List<LTEquipCheckPoint> getCheckPointList() {
+        return this.currentEquipment.getCheckPointList();
     }
 }

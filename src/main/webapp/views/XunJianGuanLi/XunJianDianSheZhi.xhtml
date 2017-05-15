@@ -5,6 +5,59 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <script>
+        function setStateToAddingCheckPoint() {
+            $(".image").unbind("click");
+            $(".image").bind("click", function (e) {
+                console.log(e);
+                $(".x").val(e.offsetX);
+                $(".y").val(e.offsetY);
+                PF('coordConfirmDialog').show();
+            });
+        }
+        var hotPointHalfWidth = 16;
+        var hotPointHalfHeight = 16;
+        function setStateToMovingCheckPoint() {
+            $(".image").unbind("click");
+            $(".HotPoint").unbind();
+            var ifHotPointSelected = false;
+            $(".HotPoint").click(function (mouseClickEvent) {
+                var thisHotPoint = $(this);
+                if (!ifHotPointSelected) {
+                    ifHotPointSelected = true;
+                    $('.image').mousemove(function (bgMouseMoveEvent) {
+                        var left = bgMouseMoveEvent.offsetX - hotPointHalfWidth;
+                        var top = bgMouseMoveEvent.offsetY - hotPointHalfHeight;
+                        thisHotPoint.css({
+                            'top': top + 'px',
+                            'left': left + 'px',
+                        });
+                        return true;
+                    });
+                    thisHotPoint.mousemove(function (mouseMoveEvent) {
+                        var left = mouseMoveEvent.clientX - $('.image').offset().left - hotPointHalfWidth;
+                        var top = mouseMoveEvent.clientY - $('.image').offset().top - hotPointHalfHeight;
+                        thisHotPoint.css({
+                            'top': top + 'px',
+                            'left': left + 'px',
+                        });
+                        return true;
+                    });
+                } else {
+                    ifHotPointSelected = false;
+                    thisHotPoint.unbind("mousemove");
+                    $('.image').unbind("mousemove");
+                    $(".x").val(left + hotPointHalfWidth);
+                    $(".y").val(top + hotPointHalfHeight);
+                    $(".checkPointId").val(thisHotPoint.attr('name'));
+                    PF('coordMoveConfirmDialog').show();
+                }
+            });
+        }
+        $(document).ready(function () {
+
+        });
+    </script>
     <p:outputPanel id="rootContainer" styleClass="Container100 NoIndent">
         <p:outputPanel styleClass="Card">
             <!--标题-->
@@ -13,6 +66,7 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
+            <!-- 设备和图片选择 -->
             <p:outputPanel styleClass="Container100 Responsive100">
                 <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank" >
                     <p:outputLabel for="Equipment" value="所属设备："></p:outputLabel>
@@ -29,37 +83,36 @@
                                      update="rootContainer">
 
                     </p:commandButton>
-                    <p:commandButton value="选择图片"
-                                     disabled="#{empty XunJianDianSheZhiController.vm.currentEquipment}"
-                                     type="button"
-                                     onclick="PF('pictureSelectDialog').show();">
-
-                    </p:commandButton>
                 </p:panelGrid>
             </p:outputPanel>
+            <!-- 巡检点编辑工具栏 -->
+            <p:outputPanel>
+                <p:toolbar styleClass="Container100">
+                    <f:facet name="left">
+                        <p:commandButton value="添加巡检点" onclick="setStateToAddingCheckPoint()"></p:commandButton>
+                        <p:commandButton value="编辑巡检点"></p:commandButton>
+                        <p:commandButton value="移动巡检点" onclick="setStateToMovingCheckPoint()"></p:commandButton>
+                        <p:commandButton value="删除巡检点" onclick="setStateToRemovingCheckPoint()"></p:commandButton>
+                    </f:facet>
+                </p:toolbar>
+            </p:outputPanel>
+            <!-- 巡检点编辑界面 -->
             <p:outputPanel styleClass="Container100 Responsive100">
-                <script>
-                    $(document).ready(function () {
-                        $(".image").bind("click", function (e) {
-                            console.log(e);
-                            $(".x").val(e.offsetX);
-                            $(".y").val(e.offsetY);
-                        });
-                    });
-                </script>
-                <p:outputPanel rendered="#{not empty XunJianDianSheZhiController.vm.currentGraphic}" style="padding-top:0;">
-                    <p:outputPanel style="float:left;">
-                        <ui:repeat value="#{XunJianDianSheZhiController.vm.currentGraphic.checkPointList}" var="point">
-                            <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" style="position:relative;left:#{point.x}px;top:#{point.y}px;"></p:graphicImage>
+                <div id="iPicture" data-interaction="hover">
+                    <div class="ip_slide">
+                        <canvas id="jvchao" class="image" width="1920" height="1080" rendered="#{not empty XunJianDianSheZhiController.vm.currentEquipment}" style="background-image:url('#{XunJianDianSheZhiController.vm.currentEquipment.pingMianTuPath}');z-index:-1;">
+
+                        </canvas>
+                        <ui:repeat value="#{XunJianDianSheZhiController.vm.currentEquipment.checkPointList}" var="point">
+                            <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" class="HotPoint" name="#{point.id}"
+                                            style="position:absolute;left:#{point.x - 16}px;top:#{point.y - 16}px;float:left;z-index:1000;">
+                            </p:graphicImage>
                         </ui:repeat>
-                    </p:outputPanel>
-                    <p:graphicImage class="image" style="margin-top:0;"
-                                    value="#{XunJianDianSheZhiController.vm.currentGraphic.originalFilePath}"
-                                    onclick="PF('coordConfirmDialog').show();">
-                    </p:graphicImage>
-                </p:outputPanel>
+                    </div>
+                </div>
             </p:outputPanel>
         </p:outputPanel>
+        <!-- 对话框 -->
         <p:dialog widgetVar="deviceSelectDialog" modal="true">
             <p:dataTable value="#{XunJianDianSheZhiController.vm.equipmentList}" style="width:512px;"
                          var="equipment" 
@@ -82,61 +135,61 @@
                         <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
                     </p:row>
                 </p:columnGroup>
-                <p:column >
+                <p:column styleClass="tct wd-p-30">
                     <h:outputText value="#{equipment.ENmae}">
 
                     </h:outputText>
                 </p:column>
-                <p:column>
+                <p:column styleClass="tct wd-p-10">
                     <p:commandLink value="选择" 
                                    actionListener="#{XunJianDianSheZhiController.vm.setCurrentEquipment(equipment)}" 
                                    process="@this" update="frmMain:rootContainer"
                                    oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
                 </p:column>
-                <p:column >
+                <p:column styleClass="tct wd-p-30">
                     <h:outputText value="#{equipment.parentStringChain}">
 
                     </h:outputText>
                 </p:column>
-                <p:column >
+                <p:column styleClass="tct wd-p-30">
                     <h:outputText value="#{equipment.guiGeHeXingHao}">
 
                     </h:outputText>
                 </p:column>
             </p:dataTable>
         </p:dialog>
-        <p:dialog widgetVar="pictureSelectDialog" 
-                  modal="true"
-                  onHide="PF('rootContainer').update();">
-            <p:dataTable value="#{XunJianDianSheZhiController.vm.currentEquipment.graphicList}" style="width:512px;"
-                         var="graphic" 
-                         paginatorAlwaysVisible="false"
-                         paginator="true" rows="10"
-                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                         id="graphicSelectList" widgetVar="equipmentSelectList"
-                         styleClass="bg-c-row-odd wd-f-700"
-                         scrollable="true"
-                         emptyMessage="无数据">
-                <f:facet name="header">
-                    <h:outputText value="选择图片"/>
-                </f:facet>
-                <p:columnGroup type="header">
-                    <p:row>
-                        <p:column styleClass="tct wd-p-30" headerText="图片预览"></p:column>
-                        <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
-                    </p:row>
-                </p:columnGroup>
-                <p:column >
-                    <p:graphicImage value="#{graphic.previewFilePath}"></p:graphicImage>
-                </p:column>
-                <p:column>
-                    <p:commandLink value="选择" 
-                                   actionListener="#{XunJianDianSheZhiController.vm.setCurrentGraphic(graphic)}" 
-                                   process="@this" update="frmMain:rootContainer"
-                                   oncomplete="PF('pictureSelectDialog').hide()"></p:commandLink>
-                </p:column>
-            </p:dataTable>
-        </p:dialog>
+        <!--        <p:dialog widgetVar="pictureSelectDialog" 
+                          modal="true"
+                          onHide="PF('rootContainer').update();">
+                    <p:dataTable value="#{XunJianDianSheZhiController.vm.currentEquipment.graphicList}" style="width:512px;"
+                                 var="graphic" 
+                                 paginatorAlwaysVisible="false"
+                                 paginator="true" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 id="graphicSelectList" widgetVar="equipmentSelectList"
+                                 styleClass="bg-c-row-odd wd-f-700"
+                                 scrollable="true"
+                                 emptyMessage="无数据">
+                        <f:facet name="header">
+                            <h:outputText value="选择图片"/>
+                        </f:facet>
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column styleClass="tct wd-p-30" headerText="图片预览"></p:column>
+                                <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
+                            </p:row>
+                        </p:columnGroup>
+                        <p:column >
+                            <p:graphicImage value="#{graphic.previewFilePath}"></p:graphicImage>
+                        </p:column>
+                        <p:column>
+                            <p:commandLink value="选择" 
+                                           actionListener="#{XunJianDianSheZhiController.vm.setCurrentGraphic(graphic)}" 
+                                           process="@this" update="frmMain:rootContainer"
+                                           oncomplete="PF('pictureSelectDialog').hide()"></p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>-->
         <p:dialog widgetVar="coordConfirmDialog" id="coordConfirmDialog"
                   modal="true" 
                   onHide="PF('rootContainer').update();">
@@ -150,6 +203,21 @@
                              process="@this" 
                              update="frmMain:rootContainer" 
                              oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
+        </p:dialog>
+        <p:dialog widgetVar="coordMoveConfirmDialog" id="coordMoveConfirmDialog"
+                  modal="true" 
+                  onHide="PF('rootContainer').update();">
+            <p:inputText value="#{XunJianDianSheZhiController.vm.x}" class="x"></p:inputText>
+            <p:inputText value="#{XunJianDianSheZhiController.vm.y}" class="y"></p:inputText>
+            <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointId}" class="checkPointId"></p:inputText>
+            <p:commandButton value="确定" process="@this, coordMoveConfirmDialog" 
+                             actionListener="#{XunJianDianSheZhiController.onMoveCoordConfirmDialogAccepted}"
+                             update="frmMain:rootContainer" 
+                             oncomplete="PF('coordMoveConfirmDialog').hide()"></p:commandButton>
+            <p:commandButton value="取消" 
+                             process="@this" 
+                             update="frmMain:rootContainer" 
+                             oncomplete="PF('coordMoveConfirmDialog').hide()"></p:commandButton>
         </p:dialog>
     </p:outputPanel>
 </ui:composition>
