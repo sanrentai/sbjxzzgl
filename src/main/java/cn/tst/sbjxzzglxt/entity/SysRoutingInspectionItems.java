@@ -55,7 +55,15 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
 
-     private static final long serialVersionUID = 1L;
+    @Column(name = "bo_dong_shang_xian")
+    private Integer boDongShangXian;
+    @Column(name = "bo_dong_xia_xian")
+    private Integer boDongXiaXian;
+    @Size(max = 255)
+    @Column(name = "dui_ying_gu_zhang")
+    private String duiYingGuZhang;
+
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -77,22 +85,20 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Size(max = 255)
     @Column(name = "xiang_mu_shuo_ming")
     private String xiangMuShuoMing;
-   
+
     //连表用于取设备名称
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
         @JoinColumn(name = "suo_shu_she_bei_id", referencedColumnName = "E_Num", insertable = false, updatable = false)
-       
+
     })
     private LTEquipBasic equip;
- 
-    
+
     //这个对应的是SysRoutingInspectionProblem实体类，双向连表
     @OneToOne
     @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "suo_shu_xiang_mu_id")
     private SysRoutingInspectionProblem routingInspectionProblem;
 
-    
     //这个对应的是SysRoutingInspectionMessage实体类，双向连表
     @OneToOne
     @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "xun_jian_dian_xiang_mu_id")
@@ -105,12 +111,7 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public void setMessage(SysRoutingInspectionMessage message) {
         this.message = message;
     }
-    
 
-   
-    
-    
-    
     public SysRoutingInspectionProblem getRoutingInspectionProblem() {
         return routingInspectionProblem;
     }
@@ -118,8 +119,7 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public void setRoutingInspectionProblem(SysRoutingInspectionProblem routingInspectionProblem) {
         this.routingInspectionProblem = routingInspectionProblem;
     }
-    
-    
+
     public LTEquipBasic getEquip() {
         return equip;
     }
@@ -134,7 +134,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public SysRoutingInspectionItems(Long id) {
         this.id = id;
     }
-
 
     public Long getId() {
         return id;
@@ -217,6 +216,29 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems[ id=" + id + " ]";
     }
 
+    public String getDuiYingGuZhang() {
+        return duiYingGuZhang;
+    }
 
+    public void setDuiYingGuZhang(String duiYingGuZhang) {
+        this.duiYingGuZhang = duiYingGuZhang;
+    }
 
+    public Integer getBoDongShangXian() {
+        return boDongShangXian;
+    }
+
+    public void setBoDongShangXian(Integer boDongShangXian) {
+        this.boDongShangXian = boDongShangXian;
+    }
+
+    public Integer getBoDongXiaXian() {
+        return boDongXiaXian;
+    }
+
+    public void setBoDongXiaXian(Integer boDongXiaXian) {
+        this.boDongXiaXian = boDongXiaXian;
+    }
+
+   
 }
