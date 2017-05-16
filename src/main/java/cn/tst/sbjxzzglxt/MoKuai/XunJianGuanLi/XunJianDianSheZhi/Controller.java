@@ -55,4 +55,9 @@ public class Controller extends BusinessBaseController {
     public void updateViewModel() {
         bizLogic.loadViewModel(vm);
     }
+    
+    public void onMoveCoordConfirmDialogAccepted() {
+        bizLogic.onMoveCoordConfirmDialogAccepted(vm);
+        bizLogic.loadViewModel(vm);
+    }
 }

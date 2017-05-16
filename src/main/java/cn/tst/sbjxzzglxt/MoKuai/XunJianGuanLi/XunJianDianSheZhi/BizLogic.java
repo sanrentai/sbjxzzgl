@@ -13,4 +13,6 @@ public interface BizLogic {
     void loadViewModel(ViewModel vm);
     
     void onCoordConfirmDialogAccepted(ViewModel vm);
+    
+    void onMoveCoordConfirmDialogAccepted(ViewModel vm);
 }

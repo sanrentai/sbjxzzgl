@@ -22,6 +22,16 @@ public class ViewModel extends BaseViewModel {
     private Integer x;
     
     private Integer y;
+    
+    private Integer checkPointId;
+
+    public Integer getCheckPointId() {
+        return checkPointId;
+    }
+
+    public void setCheckPointId(Integer checkPointId) {
+        this.checkPointId = checkPointId;
+    }
 
     public List<LTEquipBasic> getEquipmentList() {
         return equipmentList;
