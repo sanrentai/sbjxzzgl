@@ -527,7 +527,21 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setEquipProRuleList(List<LTEquipProRule> equipProRuleList) {
         this.equipProRuleList = equipProRuleList;
     }
+    
+    @OneToMany(mappedBy = "equip")
+    private List<LTEquipError> equipErrorList;
 
+    public List<LTEquipError> getEquipErrorList() {
+        return equipErrorList;
+    }
+
+    public void setEquipErrorList(List<LTEquipError> equipErrorList) {
+        this.equipErrorList = equipErrorList;
+    }
+
+   
+
+  
     
     public String getParentStringChain() {
         return getParentStringChain(parent);

@@ -16,9 +16,14 @@ import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
+import static java.time.Clock.system;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -32,12 +37,14 @@ import org.primefaces.model.TreeNode;
 @Named(SepC.ControllerID.XUN_JIAN_XIANG_MU_CONTROLLER_NAME)
 public class Controller extends BusinessBaseController {
 
+    private static final Logger LOG = Logger.getLogger(Controller.class.getName());
     private List<SysRoutingInspectionItems> routingInspectionItemsList;//巡检项目实体类集合
     private SysRoutingInspectionItems routingInspectionItems;//巡检项目实体类
     ///视图模型
     private ViewModel vm;
     ///选中的节点
     private TreeNode selectedNode;
+
     @EJB
     private BizLogic bizLogic;
 
@@ -67,15 +74,13 @@ public class Controller extends BusinessBaseController {
      * @return 返回设备树
      */
     static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
-        //创建一个根节点
+        ///根节点
         DefaultTreeNode result = new DefaultTreeNode("Root", null);
-        //通过循环遍历，把设备集合中的数据放到默认的Tree节点上
-        equipBasicList.forEach((item) -> {
+        for (LTEquipBasic item : equipBasicList) {
             TreeNode subNode = new DefaultTreeNode(item, result);
             subNode.setExpanded(false);
-            //创建下一层Tree节点
             createRelationTree(subNode, item);
-        });
+        }
         return result;
     }
 
@@ -85,8 +90,8 @@ public class Controller extends BusinessBaseController {
      *
      *
      */
-    private static void createRelationTree(TreeNode node, LTEquipBasic data) {
-        ctreatRelationTree(node, data, false);
+    static private void createRelationTree(TreeNode node, LTEquipBasic data) {
+        createRelationTree(node, data, false);
     }
 
     /**
@@ -95,27 +100,28 @@ public class Controller extends BusinessBaseController {
      *
      *
      */
-    private static void ctreatRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
-        //去当前所有节点的子节点,为了表面节点的重复，所以采用set进行存储
+    static private void createRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
+
+        ///取得当前节点的所有子节点
         Set<LTEquipBasic> children = data.getChildren();
-        //判断当是否存在子节点
-        if (children != null && children.isEmpty()) {
-            //遍历所有子节点
+
+        ///如果存在子节点
+        if (children != null && !children.isEmpty()) {
+            ///遍历所有子节点
             children.forEach(c -> {
-                //当前节点ID
-                String cid = c.getId().toString();
-                //判断刚得到的当前ID是不是根节点，如果不是根节点，就创建子节点
-                if (!SepC.EQP_ROOT.equals(cid)) {
-                    //创建子节点
+
+                ///当前节点ID
+                String currentNodeId = c.getId().toString();
+
+                ///如果不是根节点,怎创建子节点
+                if (!SepC.EQP_ROOT.equals(currentNodeId)) {
                     TreeNode subNode = new DefaultTreeNode(c, node);
-                    //需要扩展
                     subNode.setExpanded(isNeedExpand);
-                    //递归子节点展现
-                    ctreatRelationTree(subNode, c, isNeedExpand);
+                    ///递归展
+                    createRelationTree(subNode, c, isNeedExpand);
 
                 }
             });
-
         }
     }
 
@@ -123,16 +129,21 @@ public class Controller extends BusinessBaseController {
      * 选中节点时
      */
     public void onNodeSelect(NodeSelectEvent event) {
-        //传进来选择的节点
+
         this.selectedNode = event.getTreeNode();
-        //拿到选中节点的值存到
+
         vm.setEquipBasic((LTEquipBasic) selectedNode.getData());
-        //下面是把值放到一个List集合中，通过循环把子节点遍历出来
+
+        LOG.info(vm.getEquipBasic().getENmae());
+
+        LOG.info(vm.getEquipBasic().getEquipErrorList().size());
         vm.setSelectEquipBasicList(new ArrayList());
         vm.getSelectEquipBasicList().add(vm.getEquipBasic());
         for (LTEquipBasic item : vm.getEquipBasic().getChildren()) {
             vm.getSelectEquipBasicList().add(item);
         }
+        //选中节点的时候开始初始化新建表里面的信息
+        vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
     }
 //    /**
 //     * 用于设备名称选择的监听
@@ -156,7 +167,7 @@ public class Controller extends BusinessBaseController {
 
     //在新建的时候会监听
     public void onAddTargetData() {
-        vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
+
     }
 
     /**
@@ -165,11 +176,12 @@ public class Controller extends BusinessBaseController {
      */
     public void onSaveData() {
         //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
+        LOG.info(1);
         SepE.ExecuteMode mode = this.vm.getRoutingInspectionItems().getId() == null
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
         //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onXunJianXiangMu(mode, vm);
-
+        LOG.info(vm.getRoutingInspectionItems().getId());
         this.addMessage(result.createMessage());
         if (result.isSuccess()) {
             onCancelEdit();
@@ -181,12 +193,18 @@ public class Controller extends BusinessBaseController {
      */
     public void onCancelEdit() {
 
-        ///初始化状态
-//        this.switchStatus2Init();
-        ///无模式
-//        this.switchEditMode2None();
+        selectedNode = null;
+        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
         vm.setRoutingInspectionItems(null);
 
+    }
+
+    /**
+     * 取消树选择
+     */
+    public void onCancelShuXuanZhe() {
+        vm.setEquipBasic(null);
+        selectedNode = null;
     }
 
     /**
@@ -211,6 +229,32 @@ public class Controller extends BusinessBaseController {
         }
     }
 
+    /**
+     * 弹窗数据存到视图中
+     *
+     * @param selectequipError
+     * @return
+     */
+    public List<LTEquipError> setSelectEquipBasic(LTEquipError selectequipError) {
+        //创建一个新的集合，用于存放每次存放进来的数据
+        ArrayList list = new ArrayList();
+        //判断故障是否选中
+        if (!selectequipError.isSelected()) {
+            //如果是选中状态就添加到集合内
+            list.add(selectequipError);
+        }
+        return list;//返回给yemian
+    }
+
+    public void onXuanZe(SysRoutingInspectionItems routingInspectionItems){
+        int a = routingInspectionItems.getXunJianFangShi();
+        switch(a){
+            case 0:
+	    break;
+	    case 1:
+	    break;
+        }
+    }
     //*****************************************************************
     //                        Getter Setter
     //*****************************************************************
@@ -245,7 +289,6 @@ public class Controller extends BusinessBaseController {
     public void setBizLogic(BizLogic bizLogic) {
         this.bizLogic = bizLogic;
     }
-    
 
     public TreeNode getSelectedNode() {
         return selectedNode;
@@ -254,4 +297,5 @@ public class Controller extends BusinessBaseController {
     public void setSelectedNode(TreeNode selectedNode) {
         this.selectedNode = selectedNode;
     }
+
 }

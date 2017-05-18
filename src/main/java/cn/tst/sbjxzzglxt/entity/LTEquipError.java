@@ -9,6 +9,7 @@ import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,9 +23,11 @@ import javax.persistence.ManyToOne;
 
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -136,9 +139,22 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public void setEquip(LTEquipBasic equip) {
         this.equip = equip;
     }
-   
+//    @ManyToOne
+//    @PrimaryKeyJoinColumn(name = "E_Num", referencedColumnName = "E_Num")
+//    private LTEquipBasic equipBasic;
+//
+//    public LTEquipBasic getEquipBasic() {
+//        return equipBasic;
+//    }
+//
+//    public void setEquipBasic(LTEquipBasic equipBasic) {
+//        this.equipBasic = equipBasic;
+//    }
+    
   
-   
+
+
+
     public Long getId() {
         return id;
     }
@@ -326,7 +342,16 @@ public class LTEquipError extends BaseEntity implements Serializable {
         return "cn.tst.sbjxzzglxt.entity.LTEquipError[ id=" + id + " ]";
     }
 
+    //用于标示故障是否选中状态
+    @Transient
+    private boolean selected;
 
+    public boolean isSelected() {
+        return selected;
+    }
 
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
       
 }

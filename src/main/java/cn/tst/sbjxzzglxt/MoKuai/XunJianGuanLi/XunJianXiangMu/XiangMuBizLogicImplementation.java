@@ -83,7 +83,13 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
-
+        LOG.info(target.getXiangMuMingCheng());
+        LOG.info(target.getSuoShuSheBeiId());
+        LOG.info(target.getXunJianShunXu());
+        LOG.info(target.getBoDongShangXian());
+        LOG.info(target.getBoDongXiaXian());
+        LOG.info(target.getDuiYingGuZhang());
+        LOG.info(target.getXiangMuShuoMing());
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
