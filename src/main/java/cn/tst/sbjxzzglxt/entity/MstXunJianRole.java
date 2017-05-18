@@ -41,7 +41,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "MstXunJianRole.findByDelFlg", query = "SELECT m FROM MstXunJianRole m WHERE m.delFlg = :delFlg")
     , @NamedQuery(name = "MstXunJianRole.findByVersion", query = "SELECT m FROM MstXunJianRole m WHERE m.version = :version")})
 public class MstXunJianRole extends BaseEntity implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,5 +110,4 @@ public class MstXunJianRole extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.MstXunJianRole[ roleId=" + roleId + " ]";
     }
-    
 }
