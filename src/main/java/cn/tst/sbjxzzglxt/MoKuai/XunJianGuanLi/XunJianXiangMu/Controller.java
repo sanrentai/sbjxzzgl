@@ -1,28 +1,20 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu;
 
-import cn.tst.sbjxzzglxt.controller.equipment.*;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import cn.tst.sbjxzzglxt.bizlogic.EQP0006BizLogic;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import static cn.tst.sbjxzzglxt.controller.equipment.EQP0001Controller.createEqpTree;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
-import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
-import static java.time.Clock.system;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -68,61 +60,15 @@ public class Controller extends BusinessBaseController {
     //                        私有函数定义
     //*****************************************************************
     /**
-     * 创建仓库树
+     *调用common包下的EquipmentTree类中的静态方法，实现Tree功能的重复使用
      *
      * @param equipBasicList 传入设备列表
      * @return 返回设备树
      */
     static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
         ///根节点
-        DefaultTreeNode result = new DefaultTreeNode("Root", null);
-        for (LTEquipBasic item : equipBasicList) {
-            TreeNode subNode = new DefaultTreeNode(item, result);
-            subNode.setExpanded(false);
-            createRelationTree(subNode, item);
-        }
+        DefaultTreeNode result =EquipmentTree.createEqpTree(equipBasicList);
         return result;
-    }
-
-    /**
-     * 创建下一层节点
-     *
-     *
-     *
-     */
-    static private void createRelationTree(TreeNode node, LTEquipBasic data) {
-        createRelationTree(node, data, false);
-    }
-
-    /**
-     * 创建下一层节点
-     *
-     *
-     *
-     */
-    static private void createRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
-
-        ///取得当前节点的所有子节点
-        Set<LTEquipBasic> children = data.getChildren();
-
-        ///如果存在子节点
-        if (children != null && !children.isEmpty()) {
-            ///遍历所有子节点
-            children.forEach(c -> {
-
-                ///当前节点ID
-                String currentNodeId = c.getId().toString();
-
-                ///如果不是根节点,怎创建子节点
-                if (!SepC.EQP_ROOT.equals(currentNodeId)) {
-                    TreeNode subNode = new DefaultTreeNode(c, node);
-                    subNode.setExpanded(isNeedExpand);
-                    ///递归展
-                    createRelationTree(subNode, c, isNeedExpand);
-
-                }
-            });
-        }
     }
 
     /**
