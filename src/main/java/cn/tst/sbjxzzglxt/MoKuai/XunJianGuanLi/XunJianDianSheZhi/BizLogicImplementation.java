@@ -36,6 +36,9 @@ public class BizLogicImplementation extends BaseBizLogic implements BizLogic {
         checkPoint.setEquipmentId(vm.getCurrentEquipment().getId().intValue());
         checkPoint.setX(vm.getX());
         checkPoint.setY(vm.getY());
+        checkPoint.setName(vm.getCheckPointName());
+        checkPoint.setCheckOrder(vm.getCheckPointOrder());
+        checkPoint.setSpecification(vm.getCheckPointSpecification());
         checkPointFacade.create(checkPoint);
     }
     @Override
@@ -43,6 +46,24 @@ public class BizLogicImplementation extends BaseBizLogic implements BizLogic {
         LTEquipCheckPoint checkPoint = checkPointFacade.find(vm.getCheckPointId());
         checkPoint.setX(vm.getX());
         checkPoint.setY(vm.getY());
+        checkPointFacade.edit(checkPoint);
+    }
+    
+    @Override
+    public void onCkeckPointRemoveConfirmDialogAccepted(ViewModel vm) {
+        LTEquipCheckPoint checkPoint = checkPointFacade.find(vm.getCheckPointId());
+        checkPointFacade.remove(checkPoint);
+    }
+    @Override
+    public void setCurrentEquipment(ViewModel vm, Integer currentEquipmentId) {
+        vm.setCurrentEquipment(equipmentFacade.find(currentEquipmentId.longValue()));
+    }
+    @Override
+    public void onCheckPointEditConfirmDialogAccepted(ViewModel vm) {
+        LTEquipCheckPoint checkPoint = checkPointFacade.find(vm.getCheckPointId());
+        checkPoint.setCheckOrder(vm.getCheckPointOrder());
+        checkPoint.setName(vm.getCheckPointName());
+        checkPoint.setSpecification(vm.getCheckPointSpecification());
         checkPointFacade.edit(checkPoint);
     }
 }

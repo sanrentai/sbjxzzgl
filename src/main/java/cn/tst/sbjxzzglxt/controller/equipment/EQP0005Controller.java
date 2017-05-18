@@ -8,7 +8,6 @@ import javax.inject.Named;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import static cn.tst.sbjxzzglxt.controller.equipment.EQP0001Controller.createEqpTree;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;

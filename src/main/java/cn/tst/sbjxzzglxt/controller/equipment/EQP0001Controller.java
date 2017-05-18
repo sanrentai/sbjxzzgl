@@ -6,6 +6,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
 import cn.tst.sbjxzzglxt.common.CConst;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
@@ -19,15 +20,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
@@ -66,7 +64,7 @@ public class EQP0001Controller extends BusinessBaseController {
         this.bizLogic.loadEQP0001ViewModel(vm);
 
         ///初始化设备树
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
     }
 
     //*****************************************************************
@@ -161,7 +159,7 @@ public class EQP0001Controller extends BusinessBaseController {
 //        this.switchEditMode2None();
         vm.setEditingEquipBasic(null);
         selectedNode = null;
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
     }
 
     /**
@@ -274,67 +272,7 @@ public class EQP0001Controller extends BusinessBaseController {
      * @param equipBasicList 传人设备列表
      * @return 返回设备树
      */
-    static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
-        ///根节点
-        DefaultTreeNode result = new DefaultTreeNode("Root", null);
-        for (LTEquipBasic item : equipBasicList) {
-            TreeNode subNode = new DefaultTreeNode(item, result);
-            subNode.setExpanded(false);
-            createRelationTree(subNode, item);
-        }
-        return result;
-    }
-
-    /**
-     * 创建下一层节点
-     *
-     * @param node 品类关系节点
-     * @param data 节点数据
-     */
-    static private void createRelationTree(TreeNode node, LTEquipBasic data) {
-        createRelationTree(node, data, false);
-    }
-
-    /**
-     * 创建下一层节点
-     *
-     * @param node 品类关系节点
-     * @param data 节点数据
-     * @param isNeedExpand 节点是否展开
-     */
-    static private void createRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
-
-        ///取得当前节点的所有子节点
-        Set<LTEquipBasic> children = data.getChildren();
-        
-        ///如果存在子节点
-        if (children != null && !children.isEmpty()) {
-            ///遍历所有子节点
-            children.forEach(c -> {
-
-                ///当前节点ID
-                String currentNodeId = c.getId().toString();
-                
-                ///如果不是根节点,怎创建子节点
-                if (!SepC.EQP_ROOT.equals(currentNodeId)) {
-                    TreeNode subNode = new DefaultTreeNode(c, node);
-                    subNode.setExpanded(isNeedExpand);
-
-//                    if (c.getPinLei().isLeibie()) {
-//                        /// 设置假的子节点表示用于表示该节点下有品类
-//                        long count = bizLogic.getChildrenCount(c);
-//                        if (count != 0) {
-//                            TreeNode tmpNode = new DefaultTreeNode(null, subNode);
-//                            tmpNode.setExpanded(false);
-//                        }
-//                    }
-                    ///递归展
-                    createRelationTree(subNode, c, isNeedExpand);
-
-                }
-            });
-        }
-    }
+    
     //*****************************************************************
     //                        Getter Setter
     //*****************************************************************

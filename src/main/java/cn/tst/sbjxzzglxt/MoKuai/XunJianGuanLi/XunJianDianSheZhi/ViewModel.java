@@ -24,6 +24,36 @@ public class ViewModel extends BaseViewModel {
     private Integer y;
     
     private Integer checkPointId;
+    
+    private String checkPointName;
+    
+    private String checkPointSpecification;
+    
+    private Integer checkPointOrder;
+
+    public Integer getCheckPointOrder() {
+        return checkPointOrder;
+    }
+
+    public void setCheckPointOrder(Integer checkPointOrder) {
+        this.checkPointOrder = checkPointOrder;
+    }
+
+    public String getCheckPointSpecification() {
+        return checkPointSpecification;
+    }
+
+    public void setCheckPointSpecification(String checkPointSpecification) {
+        this.checkPointSpecification = checkPointSpecification;
+    }
+
+    public String getCheckPointName() {
+        return checkPointName;
+    }
+
+    public void setCheckPointName(String checkPointName) {
+        this.checkPointName = checkPointName;
+    }
 
     public Integer getCheckPointId() {
         return checkPointId;

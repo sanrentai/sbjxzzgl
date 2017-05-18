@@ -29,6 +29,17 @@ public class Controller extends BusinessBaseController {
         return vm;
     }
     
+    private Integer currentEquipmentId;
+
+    public Integer getCurrentEquipmentId() {
+        return currentEquipmentId;
+    }
+
+    public void setCurrentEquipmentId(Integer currentEquipmentId) {
+        this.currentEquipmentId = currentEquipmentId;
+        bizLogic.setCurrentEquipment(vm, currentEquipmentId);
+    }
+    
     @PostConstruct
     public void init() {
         vm = new ViewModel();
@@ -49,15 +60,28 @@ public class Controller extends BusinessBaseController {
     
     public void onCoordConfirmDialogAccepted() {
         bizLogic.onCoordConfirmDialogAccepted(vm);
-        bizLogic.loadViewModel(vm);
+        updateViewModel();
     }
     
     public void updateViewModel() {
         bizLogic.loadViewModel(vm);
+        if(getCurrentEquipmentId() != null) {
+            this.setCurrentEquipmentId(getCurrentEquipmentId());
+        }
     }
     
     public void onMoveCoordConfirmDialogAccepted() {
         bizLogic.onMoveCoordConfirmDialogAccepted(vm);
-        bizLogic.loadViewModel(vm);
+        updateViewModel();
+    }
+    
+    public void onCkeckPointRemoveConfirmDialogAccepted() {
+        bizLogic.onCkeckPointRemoveConfirmDialogAccepted(vm);
+        updateViewModel();
+    }
+    
+    public void onCheckPointEditConfirmDialogAccepted() {
+        bizLogic.onCheckPointEditConfirmDialogAccepted(vm);
+        updateViewModel();
     }
 }

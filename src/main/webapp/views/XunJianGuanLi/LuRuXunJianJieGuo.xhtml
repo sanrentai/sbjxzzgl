@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <p:outputPanel styleClass="Card">
+            <!--标题-->
+            <h1 class="CardBigTopic Purple">
+                <h:outputText value="#{ctrlMaster.createPageTitle('XunJianGuanLi', 'LuRuXunJianJieGuo')}"/>
+            </h1>
+            <!--无敌分割线-->
+            <div class="SeparatorFull"></div>
+        </p:outputPanel>
+        <!-- 设备选择树 -->
+        <p:outputPanel styleClass="Container30 Responsive100 pnlOutputArea">
+            <p:panelGrid styleClass="wd-p-100">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="设备一览"/>
+                            <p:commandLink actionListener="#{LuRuXunJianJieGuoController.onCancelEdit}"
+                                           styleClass="fr"
+                                           process="@this" update="frmMain:pnlInputArea, frmMain:pnlOutputArea">
+                                <i class="fa fa-star-o Fs18 Blue"></i>
+                            </p:commandLink>
+                        </p:column>
+                    </p:row>
+                </f:facet>
+                <p:row>
+                    <p:column style="padding: 0px;">
+                        <p:tree id="treeCK" value="#{LuRuXunJianJieGuoController.vm.equipmentTreeRoot}" var="node" 
+                                selectionMode="single" selection="#{LuRuXunJianJieGuoController.vm.selectedNode}"
+                                styleClass="wd-p-100" animate="true">
+                            <p:ajax event="select" process="treeCK" 
+                                    update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{LuRuXunJianJieGuoController.onNodeSelect}"  />
+                            <!--根节点-->
+                            <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
+                            <p:treeNode>
+                                <h:outputText value="#{node}"/>
+                            </p:treeNode>
+                        </p:tree>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:outputPanel>
+        <!--巡检点列表-->
+        <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea">
+            
+        </p:outputPanel>
+    </p:outputPanel>
+</ui:composition>

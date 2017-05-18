@@ -21,13 +21,15 @@
             $(".image").unbind("click");
             $(".HotPoint").unbind();
             var ifHotPointSelected = false;
+            var left;
+            var top;
             $(".HotPoint").click(function (mouseClickEvent) {
                 var thisHotPoint = $(this);
                 if (!ifHotPointSelected) {
                     ifHotPointSelected = true;
                     $('.image').mousemove(function (bgMouseMoveEvent) {
-                        var left = bgMouseMoveEvent.offsetX - hotPointHalfWidth;
-                        var top = bgMouseMoveEvent.offsetY - hotPointHalfHeight;
+                        left = bgMouseMoveEvent.offsetX - hotPointHalfWidth;
+                        top = bgMouseMoveEvent.offsetY - hotPointHalfHeight;
                         thisHotPoint.css({
                             'top': top + 'px',
                             'left': left + 'px',
@@ -35,8 +37,8 @@
                         return true;
                     });
                     thisHotPoint.mousemove(function (mouseMoveEvent) {
-                        var left = mouseMoveEvent.clientX - $('.image').offset().left - hotPointHalfWidth;
-                        var top = mouseMoveEvent.clientY - $('.image').offset().top - hotPointHalfHeight;
+                        left = mouseMoveEvent.clientX - $('.image').offset().left - hotPointHalfWidth;
+                        top = mouseMoveEvent.clientY - $('.image').offset().top - hotPointHalfHeight;
                         thisHotPoint.css({
                             'top': top + 'px',
                             'left': left + 'px',
@@ -49,9 +51,39 @@
                     $('.image').unbind("mousemove");
                     $(".x").val(left + hotPointHalfWidth);
                     $(".y").val(top + hotPointHalfHeight);
-                    $(".checkPointId").val(thisHotPoint.attr('name'));
+                    var keyValuePairJSONString = thisHotPoint.attr('alt');
+                    console.log(keyValuePairJSONString);
+                    var keyValuePairs = JSON.parse(keyValuePairJSONString);
+                    var checkPointId = keyValuePairs.id;
+                    $(".checkPointId").val(checkPointId);
                     PF('coordMoveConfirmDialog').show();
                 }
+            });
+        }
+        function setStateToEditingCheckPoint() {
+            $(".image").unbind("click");
+            $(".HotPoint").unbind();
+            $(".HotPoint").click(function (mouseClickEvent) {
+                var thisHotPoint = $(this);
+                var keyValuePairJSONString = thisHotPoint.attr('alt');
+                var keyValuePairs = JSON.parse(keyValuePairJSONString);
+                $(".checkPointId").val(keyValuePairs.id);
+                $(".checkPointOrder").val(keyValuePairs.checkOrder);
+                $(".checkPointName").val(keyValuePairs.name);
+                $(".checkPointSpecification").val(keyValuePairs.specification);
+                PF('checkPointEditConfirmDialog').show();
+            });
+        }
+        function setStateToRemovingCheckPoint() {
+            $(".image").unbind("click");
+            $(".HotPoint").unbind();
+            $(".HotPoint").click(function (mouseClickEvent) {
+                var thisHotPoint = $(this);
+                var keyValuePairJSONString = thisHotPoint.attr('alt');
+                var keyValuePairs = JSON.parse(keyValuePairJSONString);
+                var checkPointId = keyValuePairs.id;
+                $(".checkPointId").val(checkPointId);
+                PF('checkPointRemoveConfirmDialog').show();
             });
         }
         $(document).ready(function () {
@@ -90,7 +122,7 @@
                 <p:toolbar styleClass="Container100">
                     <f:facet name="left">
                         <p:commandButton value="添加巡检点" onclick="setStateToAddingCheckPoint()"></p:commandButton>
-                        <p:commandButton value="编辑巡检点"></p:commandButton>
+                        <p:commandButton value="编辑巡检点" onclick="setStateToEditingCheckPoint()"></p:commandButton>
                         <p:commandButton value="移动巡检点" onclick="setStateToMovingCheckPoint()"></p:commandButton>
                         <p:commandButton value="删除巡检点" onclick="setStateToRemovingCheckPoint()"></p:commandButton>
                     </f:facet>
@@ -100,13 +132,18 @@
             <p:outputPanel styleClass="Container100 Responsive100">
                 <div id="iPicture" data-interaction="hover">
                     <div class="ip_slide">
-                        <canvas id="jvchao" class="image" width="1920" height="1080" rendered="#{not empty XunJianDianSheZhiController.vm.currentEquipment}" style="background-image:url('#{XunJianDianSheZhiController.vm.currentEquipment.pingMianTuPath}');z-index:-1;">
+                        <canvas id="jvchao" class="image" width="1920" height="1080"  rendered="#{not empty XunJianDianSheZhiController.vm.currentEquipment}" style="background-image:url('#{XunJianDianSheZhiController.vm.currentEquipment.pingMianTuPath}');background-repeat:no-repeat;">
 
                         </canvas>
                         <ui:repeat value="#{XunJianDianSheZhiController.vm.currentEquipment.checkPointList}" var="point">
-                            <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" class="HotPoint" name="#{point.id}"
-                                            style="position:absolute;left:#{point.x - 16}px;top:#{point.y - 16}px;float:left;z-index:1000;">
-                            </p:graphicImage>
+                            <p:outputPanel>
+                                <p:graphicImage value="#{XunJianDianSheZhiController.vm.hotPointImagePath}" 
+                                                class="HotPoint" 
+                                                alt='{"id":"#{point.id}","name":"#{point.name}","checkOrder":"#{point.checkOrder}","specification":"#{point.specification}"}' 
+                                                style="position:absolute;left:#{point.x - 16}px;top:#{point.y - 16}px;float:left;z-index:1000;">
+
+                                </p:graphicImage>
+                            </p:outputPanel>
                         </ui:repeat>
                     </div>
                 </div>
@@ -128,8 +165,11 @@
                 </f:facet>
                 <p:columnGroup type="header">
                     <p:row>
-                        <p:column styleClass="tct wd-p-30" headerText="设备名"
-                                  filterBy="#{equipment.ENmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                        <p:column styleClass="tct wd-p-30" 
+                                  headerText="设备名"
+                                  filterBy="#{equipment.ENmae}" 
+                                  filterMaxLength="10" 
+                                  filterMatchMode="contains"/>
                         <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
                         <p:column styleClass="tct wd-p-30" headerText="上级设备"></p:column>
                         <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
@@ -142,8 +182,9 @@
                 </p:column>
                 <p:column styleClass="tct wd-p-10">
                     <p:commandLink value="选择" 
-                                   actionListener="#{XunJianDianSheZhiController.vm.setCurrentEquipment(equipment)}" 
-                                   process="@this" update="frmMain:rootContainer"
+                                   actionListener="#{XunJianDianSheZhiController.setCurrentEquipmentId(equipment.id)}" 
+                                   process="@this" 
+                                   update="frmMain:rootContainer"
                                    oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
                 </p:column>
                 <p:column styleClass="tct wd-p-30">
@@ -192,32 +233,113 @@
                 </p:dialog>-->
         <p:dialog widgetVar="coordConfirmDialog" id="coordConfirmDialog"
                   modal="true" 
+                  width="512"
                   onHide="PF('rootContainer').update();">
-            <p:inputText value="#{XunJianDianSheZhiController.vm.x}" class="x"></p:inputText>
-            <p:inputText value="#{XunJianDianSheZhiController.vm.y}" class="y"></p:inputText>
-            <p:commandButton value="确定" process="@this, coordConfirmDialog" 
-                             actionListener="#{XunJianDianSheZhiController.onCoordConfirmDialogAccepted}"
-                             update="frmMain:rootContainer" 
-                             oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
-            <p:commandButton value="取消" 
-                             process="@this" 
-                             update="frmMain:rootContainer" 
-                             oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
+            <p:panelGrid columns="2" layout="grid">
+                <p:outputLabel value="检查点名称"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointName}" class="checkPointName"></p:inputText>
+
+                <p:outputLabel value="X坐标"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.x}" class="x"></p:inputText>
+
+                <p:outputLabel value="Y坐标"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.y}" class="y"></p:inputText>
+
+                <p:outputLabel value="巡检顺序"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointOrder}" class="checkPointOrder"></p:inputText>
+
+                <p:outputLabel value="巡检点说明"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointSpecification}" class="checkPointSpecification"></p:inputText>
+
+                <p:outputPanel></p:outputPanel>
+                <p:outputPanel>
+                    <p:commandButton value="确定" 
+                                     process="@this, coordConfirmDialog" 
+                                     actionListener="#{XunJianDianSheZhiController.onCoordConfirmDialogAccepted}"
+                                     update="frmMain:rootContainer" 
+                                     oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
+                    <p:commandButton value="取消" 
+                                     process="@this" 
+                                     update="frmMain:rootContainer" 
+                                     oncomplete="PF('coordConfirmDialog').hide()"></p:commandButton>
+                </p:outputPanel>
+            </p:panelGrid>
         </p:dialog>
-        <p:dialog widgetVar="coordMoveConfirmDialog" id="coordMoveConfirmDialog"
+        <p:dialog widgetVar="checkPointEditConfirmDialog" id="checkPointEditConfirmDialog"
+                  modal="true" 
+                  width="512"
+                  onHide="PF('rootContainer').update();">
+            <p:panelGrid columns="2" layout="grid">
+                <p:outputLabel value="巡检点ID"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointId}" 
+                             class="checkPointId"></p:inputText>
+
+                <p:outputLabel value="检查点名称"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointName}" class="checkPointName"></p:inputText>
+
+                <p:outputLabel value="巡检顺序"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointOrder}" class="checkPointOrder"></p:inputText>
+
+                <p:outputLabel value="巡检点说明"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointSpecification}" class="checkPointSpecification"></p:inputText>
+
+                <p:outputPanel></p:outputPanel>
+                <p:outputPanel>
+                    <p:commandButton value="确定" 
+                                     process="@this, checkPointEditConfirmDialog" 
+                                     actionListener="#{XunJianDianSheZhiController.onCheckPointEditConfirmDialogAccepted}"
+                                     update="frmMain:rootContainer" 
+                                     oncomplete="PF('checkPointEditConfirmDialog').hide()"></p:commandButton>
+                    <p:commandButton value="取消" 
+                                     process="@this" 
+                                     update="frmMain:rootContainer" 
+                                     oncomplete="PF('checkPointEditConfirmDialog').hide()"></p:commandButton>
+                </p:outputPanel>
+            </p:panelGrid>
+        </p:dialog>
+        <p:dialog widgetVar="coordMoveConfirmDialog" 
+                  id="coordMoveConfirmDialog"
+                  modal="true" 
+                  onHide="PF('rootContainer').update();"
+                  width="512">
+            <p:panelGrid columns="2" layout="grid">
+                <p:outputLabel value="X坐标"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.x}" 
+                             class="x"></p:inputText>
+
+                <p:outputLabel value="Y坐标"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.y}" 
+                             class="y"></p:inputText>
+
+                <p:outputLabel value="巡检点ID"></p:outputLabel>
+                <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointId}" 
+                             class="checkPointId"></p:inputText>
+
+                <p:outputPanel></p:outputPanel>
+                <p:outputPanel>
+                    <p:commandButton value="确定" process="@this, coordMoveConfirmDialog" 
+                                     actionListener="#{XunJianDianSheZhiController.onMoveCoordConfirmDialogAccepted}"
+                                     update="frmMain:rootContainer" 
+                                     oncomplete="PF('coordMoveConfirmDialog').hide()"></p:commandButton>
+                    <p:commandButton value="取消" 
+                                     process="@this" 
+                                     update="frmMain:rootContainer" 
+                                     oncomplete="PF('coordMoveConfirmDialog').hide()"></p:commandButton>
+                </p:outputPanel>
+            </p:panelGrid>
+        </p:dialog>
+        <p:dialog widgetVar="checkPointRemoveConfirmDialog" id="checkPointRemoveConfirmDialog"
                   modal="true" 
                   onHide="PF('rootContainer').update();">
-            <p:inputText value="#{XunJianDianSheZhiController.vm.x}" class="x"></p:inputText>
-            <p:inputText value="#{XunJianDianSheZhiController.vm.y}" class="y"></p:inputText>
             <p:inputText value="#{XunJianDianSheZhiController.vm.checkPointId}" class="checkPointId"></p:inputText>
-            <p:commandButton value="确定" process="@this, coordMoveConfirmDialog" 
-                             actionListener="#{XunJianDianSheZhiController.onMoveCoordConfirmDialogAccepted}"
+            <p:commandButton value="确定" process="@this, checkPointRemoveConfirmDialog" 
+                             actionListener="#{XunJianDianSheZhiController.onCkeckPointRemoveConfirmDialogAccepted}"
                              update="frmMain:rootContainer" 
-                             oncomplete="PF('coordMoveConfirmDialog').hide()"></p:commandButton>
+                             oncomplete="PF('checkPointRemoveConfirmDialog').hide()"></p:commandButton>
             <p:commandButton value="取消" 
                              process="@this" 
                              update="frmMain:rootContainer" 
-                             oncomplete="PF('coordMoveConfirmDialog').hide()"></p:commandButton>
+                             oncomplete="PF('checkPointRemoveConfirmDialog').hide()"></p:commandButton>
         </p:dialog>
     </p:outputPanel>
 </ui:composition>
