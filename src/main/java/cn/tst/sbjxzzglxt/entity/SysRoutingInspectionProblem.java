@@ -64,7 +64,7 @@ public class SysRoutingInspectionProblem extends BaseEntity implements Serializa
     @Basic(optional = false)
     @NotNull
     @Column(name = "suo_shu_xun_jian_dian_id")
-    private int suoShuXunJianDianId;
+    private Long suoShuXunJianDianId;
     @Size(max = 255)
     @Column(name = "suo_shu_xiang_mu_id")
     private String suoShuXiangMuId;
@@ -124,11 +124,11 @@ public class SysRoutingInspectionProblem extends BaseEntity implements Serializa
         this.suoShuSheBeiId = suoShuSheBeiId;
     }
 
-    public int getSuoShuXunJianDianId() {
+    public Long getSuoShuXunJianDianId() {
         return suoShuXunJianDianId;
     }
 
-    public void setSuoShuXunJianDianId(int suoShuXunJianDianId) {
+    public void setSuoShuXunJianDianId(Long suoShuXunJianDianId) {
         this.suoShuXunJianDianId = suoShuXunJianDianId;
     }
 

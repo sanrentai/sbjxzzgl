@@ -13,9 +13,43 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
-
+            <p:outputPanel id="pnlSelectArea" styleClass="Container30 Responsive100">
+                <p:panelGrid styleClass="wd-p-100">
+                    <f:facet name="header">
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="设备一览"/>
+                                <p:commandLink actionListener="#{XunJianXiangMuController.onCancelEdit}"
+                                               styleClass="fr"
+                                               process="@this" update="frmMain:pnlInputArea, frmMain:pnlOutputArea">
+                                    <i class="fa fa-star-o Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                    <p:row>
+                        <p:column style="padding: 0px;">
+                            <p:tree id="treeCK" value="#{XunJianXiangMuController.vm.equipTreeRoot}" var="v" 
+                                    selectionMode="single" selection="#{XunJianXiangMuController.vm.selectedNode}"
+                                    styleClass="wd-p-100" animate="true">
+                                <p:ajax event="select" process="treeCK" 
+                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{XunJianXiangMuController.onNodeSelect}"  />
+                                <p:treeNode>
+                                    <h:outputText value="#{v}"/>
+                                </p:treeNode>
+                            </p:tree>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:outputPanel>
             <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
-                <p:dataTable value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="items"
+<!--                <p:row>
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{XunJianXiangMuController.vm.site.xunJianDianMing}"/>
+ 
+                    </p:column>
+                </p:row>-->
+                <p:dataTable value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="equip"
                              widgetVar="wvYongMeiList"
                              rows="10"
                              filterDelay="500"
@@ -24,143 +58,193 @@
                              paginatorAlwaysVisible="false"
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              emptyMessage="没有数据">
-                    <f:facet name="header">
-                        <h:outputText value="巡检项目记录"/>
+                    <f:facet name="top">
+                        <h:outputText value="设备巡检点的巡检项目信息列表展示"/>
                     </f:facet>
                     <p:columnGroup type="header">
                         <p:row>
-                            <p:row>
-                                <p:column headerText="所属设备" styleClass="tct wd-p-8"/>
-                                <p:column headerText="所属巡检点" styleClass="tct wd-p-8"/>
-                                <p:column headerText="项目名称" styleClass="tct wd-p-10"/> 
-                                <p:column headerText="巡检方式" styleClass="tct wd-p-8"/>
-                                <p:column headerText="巡检顺序" styleClass="tct wd-p-8"/>
-                                <p:column headerText="项目说明" styleClass="tct wd-p-30"/>
-                                <p:column headerText="编辑" styleClass="wd-p-5"/>
-                                <p:column headerText="删除" styleClass="wd-p-5"/>
-                            </p:row>
+                            <p:column headerText="项目名称" styleClass="tct wd-p-8"/>
+                            <p:column headerText="巡检方式" styleClass="tct wd-p-10"/>
+                            <p:column headerText="波动" styleClass="tct wd-p-5"/>
+                            <p:column headerText="顺序" styleClass="tct wd-p-5"/>    
+                            <p:column headerText="编辑" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
                         </p:row>
                     </p:columnGroup>
-                    <!-- 所属设备-->
+                    <!--项目名称-->
                     <p:column styleClass="tlt">
-                        <h:outputText value="#{items.equip.ENmae}"/>
+                        <h:outputText value="#{equip.xiangMuMingCheng}"/>
                     </p:column>
-                    <!-- 所属巡检点-->
+                    <!--巡检方式-->
                     <p:column styleClass="tlt">
-                        <h:outputText value="#{items.suoShuXunJianDianId}"/>
+                        <h:outputText value="#{equip.xunJianFangShi}"/>
                     </p:column>
-                    <!-- 项目名称-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{items.xiangMuMingCheng}"/>
-                    </p:column>
-                    <!-- 巡检方式-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{items.xunJianFangShi}"/>
-                    </p:column>
-                    <!-- 巡检顺序-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{items.xunJianShunXu}"/>
-                    </p:column>
-                    <!-- 项目说明-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{items.xiangMuShuoMing}"/>
-                    </p:column>
-
-                    <!--修改按钮--> 
+                    <!--波动-->
                     <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{XunJianXiangMuController.onEditEquip(items)}"
+                        <h:outputText value="#{equip.boDongShangXian}-#{equip.boDongXiaXian}"/>
+                    </p:column>
+                    <!--顺序-->
+                    <p:column styleClass="tct">
+                        <h:outputText value="#{equip.xunJianShunXu}"/>
+                    </p:column>
+                   <!--修改按钮-->
+                    <p:column styleClass="tct">
+                        <p:commandLink actionListener="#{XunJianXiangMuController.onEditEquip(routingInspectionItems)}"
                                        process="@this" update="@(.pnlInputArea), @(.toolbar)">
                             <i class="fa fa-pencil Fs18 Blue"></i>
-
                         </p:commandLink>
                     </p:column>
                     <!--删除按钮-->
                     <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{XunJianXiangMuController.onDeleteEquip(items)}"
+                        <p:commandLink actionListener="#{XunJianXiangMuController.onDeleteEquip(routingInspectionItems)}"
                                        process="@this" 
-                                       rendered="#{empty equipWarn.children}"
+                                       rendered="#{empty equip.equip.children}"
                                        update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                        oncomplete="showErrorMsg();">
                             <i class="fa fa-trash Fs18 Red"></i>
                             <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
 
             </p:outputPanel>
-
-
-
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
                 <p:toolbar styleClass="Container100">
                     <f:facet name="left">
-                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{XunJianXiangMuController.onAddTargetData()}" 
+                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{XunJianXiangMuController.onAddTargetData}" 
                                          styleClass="NavyButton" disabled="#{XunJianXiangMuController.statusEditing}"/>
-
                     </f:facet>
                 </p:toolbar>
-                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianXiangMuController.vm.routingInspectionItems}">
-
-                    <!--所属设备-->
-                  <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                       <!-- 设备名称    required="true" requiredMessage="#{ctrlEQP0006.isRequiredMessage('设备名称')}"-->
-                        <p:outputLabel for="addEquipName" value="设备名称"/>
-                        <p:selectOneMenu id="addEquipName"  filter="true" filterMatchMode="contains"
-                                         required="true" requiredMessage="#{XunJianXiangMuController.isRequiredMessage('设备名称')}"
-                                         value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuSheBeiId}"  >
-                            <f:selectItem itemLabel="选择设备" />
-                            <f:selectItems value="#{XunJianXiangMuController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
-                        </p:selectOneMenu>
-                  </p:panelGrid>
-                    <!--所属巡检点-->
+                    <!--设备名-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXunJianDian" value="巡检点"/>
-<!--                        <p:selectOneMenu id="addXunJianDian" value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}"  >
-                            <f:selectItem itemLabel="选择巡检点" itemValue=""/>
-                            <f:selectItems value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.suoShuXunJianDianId}" itemValue="#{name}" />
-                        </p:selectOneMenu>-->
-                        <p:inputText id="addXunJianDian" value="#{XunJianXiangMuController.vm.routingInspectionItems.suoShuXunJianDianId}"/>
+                        <p:outputLabel for="SheBeiMing" value="设备名称"/>
+                        <p:inputText id="SheBeiMing" value="#{XunJianXiangMuController.vm.equipBasic.ENmae}"/>
                     </p:panelGrid>
+                    <!--巡检点-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                         <p:outputLabel for="XunJianDian" value="巡检点"/>
+                        <p:inputText id="XunJianDian" value="#{XunJianXiangMuController.vm.equipBasic.ENmae}"/>
+                    
+                    </p:panelGrid>
+                   
                     <!--项目名称-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXiangMuMingCheng" value="项目名称"/>
-                        <p:inputText id="addXiangMuMingCheng" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuMingCheng}" />
+                        <p:outputLabel for="XiangMuMing" value="巡检项目名"/>
+                        <p:inputText id="XiangMuMing" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuMingCheng}"/>
                     </p:panelGrid>
-                    <!--巡检方式-->
+                    <!--规格-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXunJianFangShi" value="巡检方式"/>
-                        <p:selectOneMenu id="addXunJianFangShi" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianFangShi}"  >
-                            <f:selectItem itemLabel="选择巡检方式" itemValue=""/>
-                            <f:selectItem itemLabel="数值录入" itemValue="1"/>
-                            <f:selectItem itemLabel="问题选择" itemValue="0"/>
-                        </p:selectOneMenu>
+                        <p:outputLabel value="巡检方式" />
+                        
+<!--                        <p:checkbox>
+                            <f:selectItem itemValue="1">录入</f:selectItem>
+                            <f:selectItem itemValue="2">选择</f:selectItem>
+                        </p:checkbox>-->
                     </p:panelGrid>
                     <!--巡检顺序-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addXunJianShunXu" value="巡检顺序:" />
-                        <p:inputText id="addXunJianShunXu" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianShunXu}"/>
+                        <p:outputLabel for="XunJianShunXu" value="巡检顺序"/>
+                        <p:inputText id="XunJianShunXu" value="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianShunXu}"/>
                     </p:panelGrid>
-
-                    <!--巡检说明-->
-                    <p:panelGrid columns="1" layout="grid">
-                        <p:outputLabel for="addXunJianShuoMing" value="巡检说明:" />
-                        <p:inputTextarea id="addXunJianShuoMing" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuShuoMing}"/>
+                    <!--波动上限-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="BoDongShangXian" value="波动上限"/>
+                        <p:inputText id="BoDongShangXian" value="#{XunJianXiangMuController.vm.routingInspectionItems.boDongShangXian}"/>
                     </p:panelGrid>
-                    
-                    
+                    <!--波动下限-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="BoDongXiaXian" value="波动下限"/>
+                        <p:inputText id="BoDongXiaXian" value="#{XunJianXiangMuController.vm.routingInspectionItems.boDongXiaXian}"/>
+                    </p:panelGrid>
+                    <!--对应故障-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                         <p:outputLabel for="GuZhang" value="对应故障："></p:outputLabel>
+                      <p:commandButton id="GuZhang" value="选择故障" type="button" onclick="PF('deviceSelectDialog').show();"/>
+                    </p:panelGrid>
+                    <!--项目说明-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="XiangMuShuoMing" value="项目说明"/>
+                        <p:inputTextarea id="XiangMuShuoMing" value="#{XunJianXiangMuController.vm.routingInspectionItems.xiangMuShuoMing}"/>
+                    </p:panelGrid>
+                    <!--保存 取消 按钮 -->
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
-                                         update="pnlInputArea, pnlOutputArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                         actionListener="#{XunJianXiangMuController.onSaveData}" />
+                                         update="pnlInputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         actionListener="#{XunJianXiangMuController.onSaveData}"/>
                         <p:commandButton value="取消" process="@this" 
-                                         update="pnlInputArea, pnlOutputArea" actionListener="#{XunJianXiangMuController.onCancelEdit}"
+                                         update="pnlInputArea, frmMain:pnlSelectArea" actionListener="#{XunJianXiangMuController.onCancelEdit}"
                                          styleClass="RedButton"/>
                     </p:panelGrid>
                 </p:outputPanel>
-            </p:outputPanel>
-        </p:outputPanel>
+               
+        <p:dialog widgetVar="ovlPinleiList"
+                  styleClass="ovlPinleiList"
+                  resizable="false"
+                  showHeader="false"
+                  closeOnEscape="true">
+            <p:dataTable value="#{ctrlEQP0001.vm.equipPropertyList}"
+                         var="canShu" lazy="true"
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="dtPinLei" widgetVar="dtPinLei"
+                         styleClass="bg-c-row-odd wd-f-700"
+                         scrollable="true"
+                         emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column styleClass="tct wd-p-30" headerText="参数名"
+                                  filterBy="#{canShu.PNmae}" filterMaxLength="10" filterMatchMode="contains"/>
+                        <p:column headerText="选择" styleClass="tct wd-p-10"/>
+                        <p:column headerText="类型" styleClass="tct wd-p-30"/>
+                        <p:column headerText="默认值" styleClass="tct wd-p-30"/>
+                        <p:column headerText="说明" styleClass="tct wd-p-30"/>
+                        <p:column headerText="是否为空" styleClass="tct wd-p-30"/>
+                    </p:row>
+                </p:columnGroup>
+                <!--参数名-->
+                <p:column>
+                    <h:outputText value="#{canShu.PNmae}"/>
+                </p:column>
+                <!--选择-->
+                <p:column styleClass="tct wd-f-50">
+                    <p:selectBooleanCheckbox value="#{canShu.selected}" >
+                        <p:ajax process="@(.pnlOutputArea), @this"
+                                listener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
+                                oncomplete="PF('ovlPinleiList').hide()"
+                                update="@()"/>
+                    </p:selectBooleanCheckbox>
+                    <p:commandLink value="选择"
+                                   process="@this"
+                                   actionListener="#{ctrlEQP0001.changeCanShuSelection(canShu)}"
+                                   oncomplete="PF('ovlPinleiList').hide()"
+                                   update="@(.WuLiaoInputArea)">
+                    </p:commandLink>
+                </p:column>
+                <!--类型-->
+                <p:column styleClass="wd-f-200" >
+                    <h:outputText value="#{canShu.PType}"/>
+                </p:column>
+                <!--默认值-->
+                <p:column>
+                    <h:outputText value="#{canShu.PDefault}"/>
+                </p:column>
+                <!--说明-->
+                <p:column>
+                    <h:outputText value="#{canShu.PSm}"/>
+                </p:column>
+                <!--是否为空-->
+                <p:column>
+                    <h:outputText value="#{canShu.PEmpt eq 0? '否':'是'}"/>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" widgetVar="confirmDialog">
+            <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
     </p:outputPanel>
-  
+        </p:outputPanel>
+
 </ui:composition>
