@@ -14,7 +14,7 @@
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
 
-            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
+            <p:outputPanel id="pnlOutputArea" styleClass="Container100 Responsive100 pnlOutputArea">
                 <p:dataTable value="#{XunJianXiangMuWenTiController.vm.routingInspectionProblemList}" var="Problem"
                              widgetVar="wvYongMeiList"
                              rows="10"
@@ -112,7 +112,7 @@
                         <p:outputLabel for="addXiangMuMing" value="所属项目"/>
                         <p:selectOneMenu id="addXiangMuMing" value="#{XunJianXiangMuWenTiController.vm.routingInspectionProblem.suoShuXiangMuId}"   filter="true" filterMatchMode="contains">
                             <f:selectItem itemLabel="选择项目" itemValue=""/>
-                            <f:selectItems value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.xiangMuMingCheng}" itemValue="#{name.xiangMuMingCheng}" />
+                            <f:selectItems value="#{XunJianXiangMuWenTiController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.xiangMuMingCheng}" itemValue="#{name.x}" />
                         </p:selectOneMenu>
                     </p:panelGrid>
                    <!--故障编号-->

@@ -6,6 +6,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
 import cn.tst.sbjxzzglxt.common.CConst;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
@@ -19,15 +20,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
@@ -66,7 +64,7 @@ public class EQP0001Controller extends BusinessBaseController {
         this.bizLogic.loadEQP0001ViewModel(vm);
 
         ///初始化设备树
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
     }
 
     //*****************************************************************
@@ -161,7 +159,7 @@ public class EQP0001Controller extends BusinessBaseController {
 //        this.switchEditMode2None();
         vm.setEditingEquipBasic(null);
         selectedNode = null;
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
     }
 
     /**

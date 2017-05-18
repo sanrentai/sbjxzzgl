@@ -24,5 +24,4 @@ public class LTEquipBasicFacade extends AbstractFacade<LTEquipBasic> {
         query.setParameter("cId", cId);
         return query.getResultList();
     }
-
 }

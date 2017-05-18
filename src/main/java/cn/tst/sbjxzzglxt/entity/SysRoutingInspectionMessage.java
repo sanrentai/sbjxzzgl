@@ -60,11 +60,11 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     private Long id;
     @Size(max = 255)
     @Column(name = "suo_shu_she_bei_ID")
-    private int suoshushebeiID;
+    private String suoshushebeiID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "xun_jian_dian_id")
-    private int xunJianDianId;
+    private Long xunJianDianId;
      @Size(max = 255)
     @Column(name = "xun_jian_dian_xiang_mu_id")
     private String xunJianDianXiangMuId;
@@ -106,19 +106,19 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
         this.id = id;
     }
 
-    public int getSuoshushebeiID() {
+    public String getSuoshushebeiID() {
         return suoshushebeiID;
     }
 
-    public void setSuoshushebeiID(int suoshushebeiID) {
+    public void setSuoshushebeiID(String suoshushebeiID) {
         this.suoshushebeiID = suoshushebeiID;
     }
 
-    public int getXunJianDianId() {
+    public Long getXunJianDianId() {
         return xunJianDianId;
     }
 
-    public void setXunJianDianId(int xunJianDianId) {
+    public void setXunJianDianId(Long xunJianDianId) {
         this.xunJianDianId = xunJianDianId;
     }
 

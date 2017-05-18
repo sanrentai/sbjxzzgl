@@ -41,6 +41,15 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipCheckPoint.findByEquipmentId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId")})
 public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
+    @Size(max = 10)
+    @Column(name = "name")
+    private String name;
+    @Column(name = "checkOrder")
+    private Integer checkOrder;
+    @Size(max = 50)
+    @Column(name = "specification")
+    private String specification;
+
     @Column(name = "equipmentId")
     private Integer equipmentId;
 
@@ -132,5 +141,29 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
     public void setEquipmentId(Integer equipmentId) {
         this.equipmentId = equipmentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getCheckOrder() {
+        return checkOrder;
+    }
+
+    public void setCheckOrder(Integer checkOrder) {
+        this.checkOrder = checkOrder;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
     }
 }

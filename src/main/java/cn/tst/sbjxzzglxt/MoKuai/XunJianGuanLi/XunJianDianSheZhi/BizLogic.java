@@ -15,4 +15,10 @@ public interface BizLogic {
     void onCoordConfirmDialogAccepted(ViewModel vm);
     
     void onMoveCoordConfirmDialogAccepted(ViewModel vm);
+    
+    void onCkeckPointRemoveConfirmDialogAccepted(ViewModel vm);
+    
+    void setCurrentEquipment(ViewModel vm, Integer currentEquipmentId);
+    
+    void onCheckPointEditConfirmDialogAccepted(ViewModel vm);
 }

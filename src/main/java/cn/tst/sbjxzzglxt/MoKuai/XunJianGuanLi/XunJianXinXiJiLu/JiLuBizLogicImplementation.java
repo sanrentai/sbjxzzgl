@@ -87,7 +87,10 @@ public class JiLuBizLogicImplementation extends BaseBizLogic implements BizLogic
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         SysRoutingInspectionMessage target = vm.getRoutingInspectionMessage();
-        
+        LOG.info(target.getEquip().getENmae());
+        LOG.info(target.getXunJianDianId());
+        LOG.info(target.getEquip().getENum());
+        LOG.info(target.getRoutingInspectionItems().getRoutingInspectionProblem().getSuoShuXiangMuId());
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
