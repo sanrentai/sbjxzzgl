@@ -63,9 +63,8 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
     @Size(max = 50)
     @Column(name = "P_Nmae")
     private String pNmae;
-    @Size(max = 250)
     @Column(name = "E_Num")
-    private String eNum;
+    private Long eNum;
     @Size(max = 50)
     @Column(name = "P_Num")
     private String pNum;
@@ -93,6 +92,15 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
     private Date editDate;
     @Column(name = "Edit_User")
     private Long editUser;
+    @Size(max = 20)
+    @Column(name = "gui_ge")
+    private String guiGe;
+    @Size(max = 20)
+    @Column(name = "xing_hao")
+    private String xingHao;
+    @Size(max = 50)
+    @Column(name = "chang_jia")
+    private String changJia;
 
     public String getpNmae() {
         return pNmae;
@@ -102,11 +110,11 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
         this.pNmae = pNmae;
     }
 
-    public String geteNum() {
+    public Long geteNum() {
         return eNum;
     }
 
-    public void seteNum(String eNum) {
+    public void seteNum(Long eNum) {
         this.eNum = eNum;
     }
 
@@ -125,15 +133,6 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public LTEquipFitting(Long id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.version = version;
-    }
-
     public Long getId() {
         return id;
     }
@@ -150,11 +149,11 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
         this.pNmae = pNmae;
     }
 
-    public String getENum() {
+    public Long getENum() {
         return eNum;
     }
 
-    public void setENum(String eNum) {
+    public void setENum(Long eNum) {
         this.eNum = eNum;
     }
 
@@ -246,6 +245,31 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
         this.editUser = editUser;
     }
 
+    
+    public String getGuiGe() {
+        return guiGe;
+    }
+
+    public void setGuiGe(String guiGe) {
+        this.guiGe = guiGe;
+    }
+
+    public String getXingHao() {
+        return xingHao;
+    }
+
+    public void setXingHao(String xingHao) {
+        this.xingHao = xingHao;
+    }
+
+    public String getChangJia() {
+        return changJia;
+    }
+
+    public void setChangJia(String changJia) {
+        this.changJia = changJia;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -270,9 +294,9 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipFitting[ id=" + id + " ]";
     }
-    
+
     @ManyToOne
-    @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false)
+    @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false)
     private LTEquipBasic equipBasic;
 
     public LTEquipBasic getEquipBasic() {
@@ -282,5 +306,5 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
     public void setEquipBasic(LTEquipBasic equipBasic) {
         this.equipBasic = equipBasic;
     }
-    
+
 }

@@ -119,7 +119,7 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     public void setY(Integer y) {
         this.y = y;
     }
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
         @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false)
         ,

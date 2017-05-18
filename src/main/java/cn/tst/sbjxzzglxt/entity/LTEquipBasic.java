@@ -477,7 +477,7 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     }
 
     ///父节点
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
         @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
         ,
@@ -487,7 +487,7 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     private LTEquipBasic parent;
 
     ///子节点
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private Set<LTEquipBasic> children;
 
     public LTEquipBasic getParent() {
@@ -506,6 +506,8 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         this.children = children;
     }
 
+    
+    ///配件表
     @OneToMany(mappedBy = "equipBasic", fetch = FetchType.LAZY)
     private List<LTEquipFitting> equipFittingList;
 
@@ -565,7 +567,7 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         return getGuiGe().concat("/").concat(this.getXingHao());
     }
     
-    @OneToMany(mappedBy = "equipment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "equipment", fetch = FetchType.LAZY)
     private List<LTEquipGraphic> graphicList;
 
     public List<LTEquipGraphic> getGraphicList() {
@@ -576,7 +578,8 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         this.graphicList = graphicList;
     }
 
-    @OneToMany(mappedBy="equipment",fetch = FetchType.EAGER)
+    ///巡检点
+    @OneToMany(mappedBy="equipment",fetch = FetchType.LAZY )
     private List<LTEquipCheckPoint> checkPointList;
 
     public List<LTEquipCheckPoint> getCheckPointList() {

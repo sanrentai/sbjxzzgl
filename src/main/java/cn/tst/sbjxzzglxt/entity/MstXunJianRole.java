@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -38,12 +40,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "MstXunJianRole.findByUpdDate", query = "SELECT m FROM MstXunJianRole m WHERE m.updDate = :updDate")
     , @NamedQuery(name = "MstXunJianRole.findByDelFlg", query = "SELECT m FROM MstXunJianRole m WHERE m.delFlg = :delFlg")
     , @NamedQuery(name = "MstXunJianRole.findByVersion", query = "SELECT m FROM MstXunJianRole m WHERE m.version = :version")})
-public class MstXunJianRole implements Serializable {
+public class MstXunJianRole extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private Integer roleId;
     @Basic(optional = false)
@@ -54,51 +55,12 @@ public class MstXunJianRole implements Serializable {
     @Size(max = 400)
     @Column(name = "role_description")
     private String roleDescription;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "ins_rep")
-    private String insRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ins_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insDate;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "upd_rep")
-    private String updRep;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "upd_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "del_flg")
-    private Character delFlg;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "version")
-    private int version;
 
     public MstXunJianRole() {
     }
 
     public MstXunJianRole(Integer roleId) {
         this.roleId = roleId;
-    }
-
-    public MstXunJianRole(Integer roleId, String roleName, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.roleId = roleId;
-        this.roleName = roleName;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.delFlg = delFlg;
-        this.version = version;
     }
 
     public Integer getRoleId() {
@@ -123,54 +85,6 @@ public class MstXunJianRole implements Serializable {
 
     public void setRoleDescription(String roleDescription) {
         this.roleDescription = roleDescription;
-    }
-
-    public String getInsRep() {
-        return insRep;
-    }
-
-    public void setInsRep(String insRep) {
-        this.insRep = insRep;
-    }
-
-    public Date getInsDate() {
-        return insDate;
-    }
-
-    public void setInsDate(Date insDate) {
-        this.insDate = insDate;
-    }
-
-    public String getUpdRep() {
-        return updRep;
-    }
-
-    public void setUpdRep(String updRep) {
-        this.updRep = updRep;
-    }
-
-    public Date getUpdDate() {
-        return updDate;
-    }
-
-    public void setUpdDate(Date updDate) {
-        this.updDate = updDate;
-    }
-
-    public Character getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Character delFlg) {
-        this.delFlg = delFlg;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 
     @Override

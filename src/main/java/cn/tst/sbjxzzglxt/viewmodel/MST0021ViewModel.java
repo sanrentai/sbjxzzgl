@@ -1,5 +1,8 @@
 package cn.tst.sbjxzzglxt.viewmodel;
 
+import cn.tst.sbjxzzglxt.entity.DatXunJianFanWei;
+import cn.tst.sbjxzzglxt.entity.DatXunJianGuiZe;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import java.util.Date;
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
@@ -12,30 +15,18 @@ import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
  */
 public class MST0021ViewModel extends BaseViewModel {
 
-    /**
-     * 开始日期
-     */
-    private Date startDate;
-
-    /**
-     * 结束日期
-     */
-    private Date endDate;
-    
-    /**
-     * 日期范围
-     */
-    private String riQiFanWei;
-
-    private String yueFen;
-
-    private List<String> yueFenList;
     
     ///编辑中的违章记录
-    private MstXunJianRole editingWeiZhang;
-
+    private MstXunJianRole editingXunJianRole;
+    
+    private DatXunJianFanWei editingXunJianFanWei;
+    
+    private DatXunJianGuiZe editingXunJianGuiZe;
+   
+    private List<LTEquipBasic> sheBeiList;
+    
     ///车辆违章一览
-    private List<MstXunJianRole> weiZhangList;
+    private List<MstXunJianRole> xunJianRoleList;
 
     ///车辆一览
 //    private List<MstCheLiang> cheLiangList;
@@ -46,62 +37,45 @@ public class MST0021ViewModel extends BaseViewModel {
     public MST0021ViewModel() {
     }
 
-
-    public String getYueFen() {
-        return yueFen;
+    public MstXunJianRole getEditingXunJianRole() {
+        return editingXunJianRole;
     }
 
-    public void setYueFen(String yueFen) {
-        this.yueFen = yueFen;
+    public void setEditingXunJianRole(MstXunJianRole editingXunJianRole) {
+        this.editingXunJianRole = editingXunJianRole;
     }
 
-    public List<String> getYueFenList() {
-        return yueFenList;
+    public List<MstXunJianRole> getXunJianRoleList() {
+        return xunJianRoleList;
     }
 
-    public void setYueFenList(List<String> yueFenList) {
-        this.yueFenList = yueFenList;
+    public void setXunJianRoleList(List<MstXunJianRole> xunJianRoleList) {
+        this.xunJianRoleList = xunJianRoleList;
     }
 
-  
-    public Date getEndDate() {
-        return endDate;
+    public DatXunJianFanWei getEditingXunJianFanWei() {
+        return editingXunJianFanWei;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEditingXunJianFanWei(DatXunJianFanWei editingXunJianFanWei) {
+        this.editingXunJianFanWei = editingXunJianFanWei;
     }
 
-    public String getRiQiFanWei() {
-        return riQiFanWei;
+    public DatXunJianGuiZe getEditingXunJianGuiZe() {
+        return editingXunJianGuiZe;
     }
 
-    public void setRiQiFanWei(String riQiFanWei) {
-        this.riQiFanWei = riQiFanWei;
+    public void setEditingXunJianGuiZe(DatXunJianGuiZe editingXunJianGuiZe) {
+        this.editingXunJianGuiZe = editingXunJianGuiZe;
     }
 
-    public MstXunJianRole getEditingWeiZhang() {
-        return editingWeiZhang;
+    public List<LTEquipBasic> getSheBeiList() {
+        return sheBeiList;
     }
 
-    public void setEditingWeiZhang(MstXunJianRole editingWeiZhang) {
-        this.editingWeiZhang = editingWeiZhang;
+    public void setSheBeiList(List<LTEquipBasic> sheBeiList) {
+        this.sheBeiList = sheBeiList;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public List<MstXunJianRole> getWeiZhangList() {
-        return weiZhangList;
-    }
-
-    public void setWeiZhangList(List<MstXunJianRole> weiZhangList) {
-        this.weiZhangList = weiZhangList;
-    }
 
 }
