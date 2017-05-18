@@ -14,8 +14,9 @@ import org.primefaces.model.TreeNode;
 public class EQP0002ViewModel extends BaseViewModel {
 
     private List<LTEquipBasic> equipBasicList;
-   private List<LTEquipFitting> fittingList;//配件实体类集合
+    private List<LTEquipFitting> fittingList;//配件实体类集合
     private LTEquipFitting fitting;//配件实体类
+    private LTEquipBasic selectedEquipBasic;
 
     public List<LTEquipFitting> getFittingList() {
         return fittingList;
@@ -41,7 +42,12 @@ public class EQP0002ViewModel extends BaseViewModel {
         this.equipBasicList = equipBasicList;
     }
 
-   
+    public LTEquipBasic getSelectedEquipBasic() {
+        return selectedEquipBasic;
+    }
 
+    public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
+        this.selectedEquipBasic = selectedEquipBasic;
+    }
 
 }

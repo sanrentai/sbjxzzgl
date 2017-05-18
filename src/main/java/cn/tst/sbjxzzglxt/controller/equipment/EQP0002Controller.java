@@ -5,21 +5,16 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import cn.tst.sbjxzzglxt.bizlogic.EQP0006BizLogic;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
-import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipFitting;
-import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0002ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -31,10 +26,11 @@ import org.primefaces.model.TreeNode;
 @Named(SepC.ControllerID.EQP0002)
 public class EQP0002Controller extends BusinessBaseController {
 
-    private List<LTEquipFitting> fittingList;//配件实体类集合
-    private LTEquipFitting fitting;//配件实体类
     ///视图模型
     private EQP0002ViewModel vm;
+
+    ///选中的节点
+    private TreeNode selectedNode;
 
     @EJB
     private EQP0002BizLogic bizLogic;
@@ -47,6 +43,8 @@ public class EQP0002Controller extends BusinessBaseController {
 
         this.bizLogic.loadEQP0002ViewModel(vm);
 
+        ///初始化设备树
+        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
     }
 
     //*****************************************************************
@@ -58,16 +56,29 @@ public class EQP0002Controller extends BusinessBaseController {
     /**
      * 配件修改
      *
-     * 
-     * @param Fitting
+     *
+     * @param fitting
      */
     public void onEditEquip(LTEquipFitting fitting) {
         vm.setFitting(fitting);
     }
+
     //xhtml新建监控的事件
     public void onAddTargetData() {
         vm.setFitting(new LTEquipFitting());
-     
+        vm.getFitting().setENum(vm.getSelectedEquipBasic().getId());
+    }
+
+    /**
+     * 选中节点时
+     *
+     * @param event
+     */
+    public void onNodeSelect(NodeSelectEvent event) {
+        this.selectedNode = event.getTreeNode();
+        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
+        onAddTargetData();
     }
 
     /**
@@ -79,15 +90,15 @@ public class EQP0002Controller extends BusinessBaseController {
         SepE.ExecuteMode mode = this.vm.getFitting().getId() == null
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
         //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
-        ExecuteResult result = this.bizLogic.onEquipFitting(mode, vm);
+        ExecuteResult result = this.bizLogic.onSaveEquipFitting(mode, vm);
 
         this.addMessage(result.createMessage());
-         if (result.isSuccess()) {
-            onCancelEdit();
+        if (result.isSuccess()) {
+            onAddTargetData();
         }
     }
-    
-      /**
+
+    /**
      * 編集取消
      */
     public void onCancelEdit() {
@@ -102,6 +113,7 @@ public class EQP0002Controller extends BusinessBaseController {
 
     /**
      * 删除记录
+     *
      * @param fitting
      */
     public void onDeleteEquip(LTEquipFitting fitting) {
@@ -110,12 +122,12 @@ public class EQP0002Controller extends BusinessBaseController {
         vm.setFitting(fitting);
 
         ///执行更新
-        ExecuteResult result = this.bizLogic.onEquipFitting(mode, vm);
+        ExecuteResult result = this.bizLogic.onSaveEquipFitting(mode, vm);
 
         if (result.isSuccess()) {
             putInfoMessage("删除成功");
             vm.setFitting(null);
-            
+
         } else {
             putErrorMessage("删除失败");
         }
@@ -124,23 +136,6 @@ public class EQP0002Controller extends BusinessBaseController {
     //*****************************************************************
     //                        Getter Setter
     //*****************************************************************
-
-    public List<LTEquipFitting> getFittingList() {
-        return fittingList;
-    }
-
-    public void setFittingList(List<LTEquipFitting> fittingList) {
-        this.fittingList = fittingList;
-    }
-
-    public LTEquipFitting getFitting() {
-        return fitting;
-    }
-
-    public void setFitting(LTEquipFitting fitting) {
-        this.fitting = fitting;
-    }
-
     public EQP0002ViewModel getVm() {
         return vm;
     }
@@ -148,5 +143,13 @@ public class EQP0002Controller extends BusinessBaseController {
     public void setVm(EQP0002ViewModel vm) {
         this.vm = vm;
     }
-   
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
 }

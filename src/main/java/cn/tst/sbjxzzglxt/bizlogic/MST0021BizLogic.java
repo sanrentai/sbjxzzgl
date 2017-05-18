@@ -5,7 +5,7 @@ import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.MST0021ViewModel;
 
 /**
- * 违章登记业务逻辑层
+ * 巡检角色登记业务逻辑层
  *
  * @author 曹春
  */
@@ -19,40 +19,16 @@ public interface MST0021BizLogic {
     void loadMST0021ViewModel(MST0021ViewModel vm);
 
     /**
-     * 保存违章记录
+     * 保存巡检角色记录
      *
      * @param mode 执行模式
      * @param vm 视图模型
      * @return 执行结果
      */
-    ExecuteResult saveWeiZhangJiLu(SepE.ExecuteMode mode, MST0021ViewModel vm);
+    ExecuteResult saveXunJianRoleJiLu(SepE.ExecuteMode mode, MST0021ViewModel vm);
     
-
+    void chaXunXunJianDian(MST0021ViewModel vm);
     
-    void refreshWeiZhang(MST0021ViewModel vm);
+    void refreshXunJianRole(MST0021ViewModel vm);
     
-    
-    /**
-     *
-     * @param vm 视图模型
-     */
-    public void setToday(MST0021ViewModel vm);
-
-    /**
-     *
-     * @param vm 视图模型
-     */
-    public void setThisWeek(MST0021ViewModel vm);
-
-    /**
-     *
-     * @param vm 视图模型
-     */
-    public void setThisMonth(MST0021ViewModel vm);
-
-    /**
-     *
-     * @param vm 视图模型
-     */
-    public void setThisSeason(MST0021ViewModel vm);
 }

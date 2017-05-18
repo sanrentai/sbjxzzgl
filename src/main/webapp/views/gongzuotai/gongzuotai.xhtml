@@ -82,61 +82,65 @@
     </script>
     鼠标X轴: 
     <input id="xxx" type="text" /> 
-        鼠标Y轴: 
-        <input id="yyy" type="text" /> 
-            <input type="button" value="画图" onclick="drawTri();"/> 
+    鼠标Y轴: 
+    <input id="yyy" type="text" /> 
+    <input type="button" value="画图" onclick="drawTri();"/> 
 
-            <script type="text/javascript">
-                $("#iPicture").iPicture();
-            </script>
-            <p:outputPanel styleClass="Container100 Responsive100">
-                <div class="Container50 Responsive100 NoIndent">
-                    <div class="Container100">
-                        <div class="Card">
-                            <h1 class="CardBigTopic Purple">
-                                <h:outputText value="巡检任务"/>
-                            </h1>
-                            <div class="SeparatorFull"></div>
-                            <div class="ht-f-200">
-                                暂无数据
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Container100">
-                        <div class="Card">
-                            <h1 class="CardBigTopic Purple">
-                                <h:outputText value="设备提醒"/>
-                            </h1>
-                            <div class="SeparatorFull"></div>
-                            <div class="ht-f-200">
-                                暂无数据
-                            </div>
-                        </div>
+    <script type="text/javascript">
+        $("#iPicture").iPicture();
+    </script>
+    <p:outputPanel styleClass="Container100 Responsive100">
+        <div class="Container50 Responsive100 NoIndent">
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="巡检任务"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        暂无数据
+                        <p:commandLink id="sfff">
+                            <i class="fa fa-wrench Fs18 Yellow"></i>
+                        </p:commandLink>
+                        <p:draggable for="sfff" containment="parent" />
                     </div>
                 </div>
-                <div class="Container50 Responsive100 NoIndent">
-                    <div class="Container100">
-                        <div class="Card">
-                            <h1 class="CardBigTopic Purple">
-                                <h:outputText value="报警分析"/>
-                            </h1>
-                            <div class="SeparatorFull"></div>
-                            <div class="ht-f-200">
-                                暂无数据
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Container100">
-                        <div class="Card">
-                            <h1 class="CardBigTopic Purple">
-                                <h:outputText value="最新培训"/>
-                            </h1>
-                            <div class="SeparatorFull"></div>
-                            <div class="ht-f-200">
-                                暂无数据
-                            </div>
-                        </div>
+            </div>
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="设备提醒"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        暂无数据
                     </div>
                 </div>
-            </p:outputPanel>
-            </ui:composition>
+            </div>
+        </div>
+        <div class="Container50 Responsive100 NoIndent">
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="报警分析"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        暂无数据
+                    </div>
+                </div>
+            </div>
+            <div class="Container100">
+                <div class="Card">
+                    <h1 class="CardBigTopic Purple">
+                        <h:outputText value="最新培训"/>
+                    </h1>
+                    <div class="SeparatorFull"></div>
+                    <div class="ht-f-200">
+                        暂无数据
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>

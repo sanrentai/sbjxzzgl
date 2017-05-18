@@ -8,6 +8,7 @@ import cn.tst.sbjxzzglxt.bizlogic.MST0021BizLogic;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.DatXunJianFanWei;
 import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.MST0021ViewModel;
@@ -34,55 +35,47 @@ public class MST0021Controller extends BusinessBaseController {
 
         this.bizLogic.loadMST0021ViewModel(vm);
     }
-    
-    public void changeRiQi() {
-        switch (vm.getRiQiFanWei()) {
-            case "today":
-                bizLogic.setToday(vm);
-                break;
-            case "thisWeek":
-                bizLogic.setThisWeek(vm);
-                break;
-            case "thisMonth":
-                bizLogic.setThisMonth(vm);
-                break;
-            case "thisSeason":
-               bizLogic.setThisSeason(vm);
-                break;
-        }
-    }
 
     /**
      * 开始编辑
      */
     public void onStartEditing() {
-        this.vm.setEditingWeiZhang(new MstXunJianRole());
+        this.vm.setEditingXunJianRole(new MstXunJianRole());
     }
 
     /**
      * 取消编辑
      */
     public void onCancelEditing() {
-        this.vm.setEditingWeiZhang(null);
+        this.vm.setEditingXunJianRole(null);
     }
 
     /**
-     * 编辑违章记录
+     * 编辑巡检点
      *
      * @param row 选中的行
      */
-    public void onEditWeiZhang(MstXunJianRole row) {
+    public void onEditXunJianRole(MstXunJianRole row) {
         ///设置编辑的对象
-        this.vm.setEditingWeiZhang(row);
+        this.vm.setEditingXunJianRole(row);
     }
     
-    public void onDeleteWeiZhang(MstXunJianRole row) {
+    /**
+     * 设置巡检范围
+     * @param row 
+     */
+    public void sheZhiXunJianFanWei(MstXunJianRole row){
+        this.vm.setEditingXunJianRole(row);
+        bizLogic.chaXunXunJianDian(vm);
+    }
+    
+    public void onDeleteXunJianRole(MstXunJianRole row) {
         ///删除模式
         SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
-        vm.setEditingWeiZhang(row);
+        vm.setEditingXunJianRole(row);
 
         ///执行更新
-        ExecuteResult result = this.bizLogic.saveWeiZhangJiLu(mode, vm);
+        ExecuteResult result = this.bizLogic.saveXunJianRoleJiLu(mode, vm);
 
         if (result.isSuccess()) {
             putInfoMessage("删除成功");
@@ -96,13 +89,13 @@ public class MST0021Controller extends BusinessBaseController {
     /**
      * 保存违章记录
      */
-    public void onSaveWeiZhang() {
+    public void onSaveXunJianRole() {
 
-        SepE.ExecuteMode mode = this.vm.getEditingWeiZhang().getRoleId()==null
+        SepE.ExecuteMode mode = this.vm.getEditingXunJianRole().getRoleId()==null
             ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
 
         ///执行更新
-        ExecuteResult result = this.bizLogic.saveWeiZhangJiLu(mode, vm);
+        ExecuteResult result = this.bizLogic.saveXunJianRoleJiLu(mode, vm);
 
         this.addMessage(result.createMessage());
 
@@ -116,7 +109,7 @@ public class MST0021Controller extends BusinessBaseController {
      * 刷新数据
      */
     public void onRefreshData() {
-
+        bizLogic.refreshXunJianRole(vm);
     }
 
     public MST0021ViewModel getVm() {

@@ -13,9 +13,42 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
+            <p:outputPanel id="pnlSelectArea" styleClass="Container30 Responsive100">
+                <p:panelGrid styleClass="wd-p-100">
+                    <f:facet name="header">
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="设备一览"/>
+                                <p:commandLink actionListener="#{ctrlEQP0001.onCancelEdit}"
+                                               styleClass="fr"
+                                               process="@this" update="frmMain:pnlInputArea, frmMain:pnlOutputArea">
+                                    <i class="fa fa-star-o Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                    <p:row>
+                        <p:column style="padding: 0px;">
+                            <p:tree id="treeCK" value="#{ctrlEQP0002.vm.equipTreeRoot}" var="v" 
+                                    selectionMode="single" selection="#{ctrlEQP0002.selectedNode}"
+                                    styleClass="wd-p-100" animate="true">
+<!--                            <p:tree id="treeCK" value="#{ctrlEQP0002.vm.equipTreeRoot}" var="v" 
+                                    styleClass="wd-p-100">-->
+                                <p:ajax event="select" process="treeCK" 
+                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0002.onNodeSelect}"  />
 
+                                <!--根节点-->
+                                <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
+                                <p:treeNode>
+                                    <h:outputText value="#{v}"/>
+                                </p:treeNode>
+                            </p:tree>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:outputPanel>
             <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
-                <p:dataTable value="#{ctrlEQP0002.vm.fittingList}" var="fitting"
+                <p:dataTable value="#{ctrlEQP0002.vm.selectedEquipBasic.equipFittingList}" var="fitting"
                              widgetVar="wvYongMeiList"
                              rows="10"
                              filterDelay="500"
@@ -30,33 +63,31 @@
                     <p:columnGroup type="header">
                         <p:row>
                             <p:row>
-                                <p:column headerText="配件名称" styleClass="tct wd-p-8"/>
-                                <p:column headerText="所属设备" styleClass="tct wd-p-8"/>
+                                <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
+                                <p:column headerText="配件名称" styleClass="tct wd-p-8"/>                       
                                 <p:column headerText="配件编号" styleClass="tct wd-p-10"/>   
                                 <p:column headerText="编辑" styleClass="wd-p-5"/>
                                 <p:column headerText="删除" styleClass="wd-p-5"/>
                             </p:row>
                         </p:row>
                     </p:columnGroup>
-                   <!-- 配件名称-->
+                    <!-- 所属设备-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{ctrlEQP0002.vm.selectedEquipBasic.ENmae}"/>
+                    </p:column>
+                    <!-- 配件名称-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{fitting.PNmae}"/>
                     </p:column>
-                   <!-- 所属设备-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{fitting.equipBasic.ENmae}"/>
-                    </p:column>
-                   <!-- 配件编号-->
+                    <!-- 配件编号-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{fitting.PNum}"/>
                     </p:column>
-                   
-                     <!--修改按钮--> 
+                    <!--修改按钮--> 
                     <p:column styleClass="tct">
                         <p:commandLink actionListener="#{ctrlEQP0002.onEditEquip(fitting)}"
                                        process="@this" update="@(.pnlInputArea), @(.toolbar)">
                             <i class="fa fa-pencil Fs18 Blue"></i>
-
                         </p:commandLink>
                     </p:column>
                     <!--删除按钮-->
@@ -68,46 +99,42 @@
                                        oncomplete="showErrorMsg();">
                             <i class="fa fa-trash Fs18 Red"></i>
                             <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
 
             </p:outputPanel>
-
-
-
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
-                <p:toolbar styleClass="Container100">
-                    <f:facet name="left">
-                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0002.onAddTargetData()}" 
-                                         styleClass="NavyButton" disabled="#{ctrlEQP0002.statusEditing}"/>
-
-                    </f:facet>
-                </p:toolbar>
                 <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0002.vm.fitting}">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="suoshushebei" value="所属设备："/>
+                        <p:inputText id="suoshushebei" disabled="true" value="#{ctrlEQP0002.vm.selectedEquipBasic.ENmae}" />
+                    </p:panelGrid>
                     <!--配件名称-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addFittingName" value="配件名称"/>
+                        <p:outputLabel for="addFittingName" value="配件名称："/>
                         <p:inputText id="addFittingName" value="#{ctrlEQP0002.vm.fitting.PNmae}" />
-                    </p:panelGrid>
-                    <!--所属设备-->
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addEquipName" value="设备名称"/>
-                        <p:selectOneMenu id="addEquipName" value="#{ctrlEQP0002.vm.fitting.ENum}"  filter="true" filterMatchMode="contains" >
-                            <f:selectItem itemLabel="选择设备" itemValue=""/>
-                            <f:selectItems value="#{ctrlEQP0002.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
-                        </p:selectOneMenu>
-                        
                     </p:panelGrid>
                     <!--配件编号-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-             
-                        <p:outputLabel for="addFittingNumber" value="配置编号:" />
+                        <p:outputLabel for="addFittingNumber" value="配件编号：" />
                         <p:inputText id="addFittingNumber" value="#{ctrlEQP0002.vm.fitting.PNum}"/>
-                 
-                     </p:panelGrid>
-                       
+                    </p:panelGrid>
+                    <!--配件规格-->
+                    <!--                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                            <p:outputLabel for="addFittingNumber" value="配件规格：" />
+                                            <p:inputText id="addFittingNumber" value="#{ctrlEQP0002.vm.fitting.PNum}"/>
+                                        </p:panelGrid>-->
+                    <!--配件型号-->
+                    <!--                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                            <p:outputLabel for="peijianguige" value="配件型号：" />
+                                            <p:inputText id="peijianguige" value="#{ctrlEQP0002.vm.fitting.PNum}"/>
+                                        </p:panelGrid>-->
+                    <!--生产厂家-->
+                    <!--                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                                            <p:outputLabel for="shengcanchangjia" value="生产厂家：" />
+                                            <p:inputText id="shengcanchangjia" value="#{ctrlEQP0002.vm.fitting.PNum}"/>
+                                        </p:panelGrid>-->
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
@@ -121,112 +148,112 @@
             </p:outputPanel>
         </p:outputPanel>
     </p:outputPanel>
-<!--            <div class="SeparatorFull"></div>
-
-            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
-                <p:dataTable value="#{ctrlEQP0002.vm.fittingList}" var="fitting"
-                             widgetVar="wvYongMeiList"
-                             rows="10"
-                             filterDelay="500"
-                             style="word-break: keep-all!important"
-                             paginator="true"
-                             paginatorAlwaysVisible="false"
-                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                             emptyMessage="没有数据">
-                    <f:facet name="header">
-                        <h:outputText value="配件记录记录"/>
-                    </f:facet>
-                    <p:columnGroup type="header">
-                        <p:row>
+    <!--            <div class="SeparatorFull"></div>
+    
+                <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
+                    <p:dataTable value="#{ctrlEQP0002.vm.fittingList}" var="fitting"
+                                 widgetVar="wvYongMeiList"
+                                 rows="10"
+                                 filterDelay="500"
+                                 style="word-break: keep-all!important"
+                                 paginator="true"
+                                 paginatorAlwaysVisible="false"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 emptyMessage="没有数据">
+                        <f:facet name="header">
+                            <h:outputText value="配件记录记录"/>
+                        </f:facet>
+                        <p:columnGroup type="header">
                             <p:row>
-                                <p:column headerText="配件名称" styleClass="tct wd-p-8"/>
-                                <p:column headerText="所属设备" styleClass="tct wd-p-10"/>
-                                <p:column headerText="配件编号" styleClass="tct wd-p-10"/>
-                                <p:column headerText="编辑" styleClass="wd-p-5"/>
-                                <p:column headerText="删除" styleClass="wd-p-5"/>
+                                <p:row>
+                                    <p:column headerText="配件名称" styleClass="tct wd-p-8"/>
+                                    <p:column headerText="所属设备" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="配件编号" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="编辑" styleClass="wd-p-5"/>
+                                    <p:column headerText="删除" styleClass="wd-p-5"/>
+                                </p:row>
                             </p:row>
-                        </p:row>
-                    </p:columnGroup>      
-                    配件名称
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{fitting.PNmae}"/>
-                    </p:column>
-                    所属设备
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{fitting.equipBasic.ENmae}"/>
-                    </p:column>
-                    配件编号
-                    <p:column styleClass="tct">
-                        <h:outputText value="#{fitting.PNum}"/>    
-                    </p:column>
-                
-                     修改按钮 
-                    <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{ctrlEQP0002.onEditEquip(fitting)}"
-                                       process="@this" update="@(.pnlInputArea), @(.toolbar)">
-                            <i class="fa fa-pencil Fs18 Blue"></i>
-
-                        </p:commandLink>
-                    </p:column>
-                    删除按钮
-                    <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{ctrlEQP0002.onDeleteEquip(row)}"
-                                       process="@this" 
-                                       rendered="#{empty equipWarn.children}"
-                                       update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                       oncomplete="showErrorMsg();">
-                            <i class="fa fa-trash Fs18 Red"></i>
-                            <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-
-                        </p:commandLink>
-                    </p:column>
-                </p:dataTable>
-
-            </p:outputPanel>
-
-
-
-            <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
-                <p:toolbar styleClass="Container100">
-                    <f:facet name="left">
-                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0002.onAddTargetData}" 
-                                         styleClass="NavyButton" disabled="#{ctrlEQP0002.statusEditing}"/>
-
-                    </f:facet>
-                </p:toolbar>
-                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0002.vm.fitting}">
-                    设备名称 
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addENum" value="设备名称"/>
-                        <p:inputText id="addENum" />
-                    </p:panelGrid>
-                    所属设备
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        </p:columnGroup>      
+                        配件名称
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{fitting.PNmae}"/>
+                        </p:column>
+                        所属设备
+                        <p:column styleClass="tlt">
+                            <h:outputText value="#{fitting.equipBasic.ENmae}"/>
+                        </p:column>
+                        配件编号
+                        <p:column styleClass="tct">
+                            <h:outputText value="#{fitting.PNum}"/>    
+                        </p:column>
                     
-                        <p:outputLabel for="addWarnType" value="所属设备"/>
-                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0002.vm.fitting.ENum}" 
-                                         required="true" requiredMessage="#{ctrlEQP0002.isRequiredMessage('所属设备')}">
-                            <f:selectItems value="#{ctrlEQP0001.vm.equipBasicList}" var="type" itemLabel="#{type.ENmae}" itemValue="#{type}" />
-                        </p:selectOneMenu>
-                    </p:panelGrid>
-                    设备编号
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addFittingNumber" value="设备编号"/>
-                        <p:inputText id="addFittingNumber"/>
-                    </p:panelGrid>
-
-                    <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
-                        <p:commandButton value="保存" process="pnlInputArea"
-                                         oncomplete="showErrorMsg();"
-                                         update="pnlInputArea frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
-                                         actionListener="#{ctrlEQP0002.onSaveData}" />
-                        <p:commandButton value="取消" process="@this" 
-                                         update="pnlInputArea" actionListener="#{ctrlEQP0002.onCancelEdit}"
-                                         styleClass="RedButton"/>
-                    </p:panelGrid>
+                         修改按钮 
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlEQP0002.onEditEquip(fitting)}"
+                                           process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                                <i class="fa fa-pencil Fs18 Blue"></i>
+    
+                            </p:commandLink>
+                        </p:column>
+                        删除按钮
+                        <p:column styleClass="tct">
+                            <p:commandLink actionListener="#{ctrlEQP0002.onDeleteEquip(row)}"
+                                           process="@this" 
+                                           rendered="#{empty equipWarn.children}"
+                                           update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                           oncomplete="showErrorMsg();">
+                                <i class="fa fa-trash Fs18 Red"></i>
+                                <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+    
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+    
+                </p:outputPanel>
+    
+    
+    
+                <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+                    <p:toolbar styleClass="Container100">
+                        <f:facet name="left">
+                            <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0002.onAddTargetData}" 
+                                             styleClass="NavyButton" disabled="#{ctrlEQP0002.statusEditing}"/>
+    
+                        </f:facet>
+                    </p:toolbar>
+                    <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0002.vm.fitting}">
+                        设备名称 
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="addENum" value="设备名称"/>
+                            <p:inputText id="addENum" />
+                        </p:panelGrid>
+                        所属设备
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        
+                            <p:outputLabel for="addWarnType" value="所属设备"/>
+                            <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0002.vm.fitting.ENum}" 
+                                             required="true" requiredMessage="#{ctrlEQP0002.isRequiredMessage('所属设备')}">
+                                <f:selectItems value="#{ctrlEQP0001.vm.equipBasicList}" var="type" itemLabel="#{type.ENmae}" itemValue="#{type}" />
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                        设备编号
+                        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                            <p:outputLabel for="addFittingNumber" value="设备编号"/>
+                            <p:inputText id="addFittingNumber"/>
+                        </p:panelGrid>
+    
+                        <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="保存" process="pnlInputArea"
+                                             oncomplete="showErrorMsg();"
+                                             update="pnlInputArea frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             actionListener="#{ctrlEQP0002.onSaveData}" />
+                            <p:commandButton value="取消" process="@this" 
+                                             update="pnlInputArea" actionListener="#{ctrlEQP0002.onCancelEdit}"
+                                             styleClass="RedButton"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
                 </p:outputPanel>
             </p:outputPanel>
-        </p:outputPanel>
-    </p:outputPanel>-->
+        </p:outputPanel>-->
 
 </ui:composition>

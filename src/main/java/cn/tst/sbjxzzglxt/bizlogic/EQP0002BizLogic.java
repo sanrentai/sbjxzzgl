@@ -1,6 +1,7 @@
 package cn.tst.sbjxzzglxt.bizlogic;
 
 import cn.tst.sbjxzzglxt.common.SepE;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0002ViewModel;
@@ -21,16 +22,19 @@ public interface EQP0002BizLogic {
     void loadEQP0002ViewModel(EQP0002ViewModel vm);
 
     /**
+     * 当前选中设备
+     *
+     * @param id 设备id
+     */
+    LTEquipBasic findSelectedEqp(Long id);
+
+    /**
      * 装备配件定义
      *
-     * @param mode  执行模式
+     * @param mode 执行模式
      * @param vm 视图
      * @return 実行結果
      */
-    ExecuteResult onEquipFitting(SepE.ExecuteMode mode, EQP0002ViewModel vm);
-
-  
-
-   
+    ExecuteResult onSaveEquipFitting(SepE.ExecuteMode mode, EQP0002ViewModel vm);
 
 }
