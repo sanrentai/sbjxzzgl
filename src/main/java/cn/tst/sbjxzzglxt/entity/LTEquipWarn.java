@@ -21,6 +21,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -297,32 +299,21 @@ public class LTEquipWarn extends BaseEntity implements Serializable {
         return "cn.tst.sbjxzzglxt.entity.LTEquipWarn[ id=" + id + " ]";
     }
 
-    ///父节点
-    @ManyToOne(fetch = FetchType.EAGER)
+    //用于取设备表设备名称
+    @ManyToOne
     @JoinColumns({
-        @JoinColumn(name = "E_ID", insertable = false, updatable = false)
+        @JoinColumn(name = "E_ID", referencedColumnName = "ID", insertable = false, updatable = false)
         ,
-        @JoinColumn(name = "del_flg", insertable = false, updatable = false)
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
-    private LTEquipWarn parent;
+    private LTEquipBasic equipBasic;
 
-    ///子节点
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private Set<LTEquipWarn> children;
-
-    public LTEquipWarn getParent() {
-        return parent;
+    public LTEquipBasic getEquipBasic() {
+        return equipBasic;
     }
 
-    public void setParent(LTEquipWarn parent) {
-        this.parent = parent;
+    public void setEquipBasic(LTEquipBasic equipBasic) {
+        this.equipBasic = equipBasic;
     }
 
-    public Set<LTEquipWarn> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<LTEquipWarn> children) {
-        this.children = children;
-    }
 }

@@ -23,10 +23,9 @@ public class ViewModel extends BaseViewModel {
     private LTEquipBasic equipBasic;//在视图内添加设备实体类，用于xhml前端取设备名称
     private List<SysRoutingInspectionItems> routingInspectionItemsList;//巡检项目实体类集合
     private SysRoutingInspectionItems routingInspectionItems;//巡检项目实体类
-    private TreeNode equipTreeRoot;//页面左侧Tree结构的对象
-    private TreeNode selectedNode; ///选中的节点
     private List<LTEquipError> selectErrorList;//用于弹窗选择故障
     private LTEquipError selectequipError;//用于弹窗选择故障
+    private LTEquipBasic selectedEquipBasic;
     /**
      * 当前选中故障
      */
@@ -39,6 +38,15 @@ public class ViewModel extends BaseViewModel {
     public void setCurrentError(String currentError) {
         this.currentError = currentError;
     }
+
+    public LTEquipBasic getSelectedEquipBasic() {
+        return selectedEquipBasic;
+    }
+
+    public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
+        this.selectedEquipBasic = selectedEquipBasic;
+    }
+    
     
 
     public List<LTEquipError> getSelectErrorList() {
@@ -57,20 +65,6 @@ public class ViewModel extends BaseViewModel {
         this.selectequipError = selectequipError;
     }
 
-  
-    
-   
-    
-
-    public TreeNode getSelectedNode() {
-        return selectedNode;
-    }
-
-    public void setSelectedNode(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
-    }
-
-    
     
     public SysRoutingInspectionSite getSite() {
         return site;
@@ -89,14 +83,6 @@ public class ViewModel extends BaseViewModel {
         this.selectEquipBasicList = selectEquipBasicList;
     }
   
-    
-    public TreeNode getEquipTreeRoot() {
-        return equipTreeRoot;
-    }
-
-    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
-        this.equipTreeRoot = equipTreeRoot;
-    }
     
     public List<SysRoutingInspectionItems> getRoutingInspectionItemsList() {
         return routingInspectionItemsList;

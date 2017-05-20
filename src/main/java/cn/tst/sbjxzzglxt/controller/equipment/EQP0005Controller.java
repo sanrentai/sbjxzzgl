@@ -1,6 +1,7 @@
 package cn.tst.sbjxzzglxt.controller.equipment;
 
 import cn.tst.sbjxzzglxt.bizlogic.EQP0005BizLogic;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -8,7 +9,9 @@ import javax.inject.Named;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import static cn.tst.sbjxzzglxt.controller.equipment.EQP0006Controller.createEqpTree;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipFitting;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
@@ -36,7 +39,8 @@ public class EQP0005Controller extends BusinessBaseController {
 
     private LTEquipWarn equipWarn;
     private Date date;
-
+    ///选中的节点
+    private TreeNode selectedNode;
     ///视图模型
     private EQP0005ViewModel vm;
 
@@ -53,6 +57,7 @@ public class EQP0005Controller extends BusinessBaseController {
         this.vm = new EQP0005ViewModel();
 
         this.bizLogic.loadEQP0005ViewModel(vm);
+        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
 
     }
 
@@ -60,64 +65,50 @@ public class EQP0005Controller extends BusinessBaseController {
     //                        公有函数定义
     //*****************************************************************
     /**
+     * 配件修改
      *
      *
-     *
-     * }
-     *
-     * /**
-     * 編集取消
+     * @param equipWarnList
      */
-    public void onStartNodeEditing() {
-
-        if (date == null) {
-            return;
-        } else {
-        }
-
-        this.switchStatus2Editing();
-
+    public void onEditEquip(LTEquipWarn equipWarnList) {
+        vm.setEquipWarn(equipWarnList);
     }
 
-    //*****************************************************************
-    //                        私有函数定义
-    //*****************************************************************
-    /**
-     * 修改故障提醒的记录
-     *
-     * @param equipwarn
-     */
-    public void onEditEquip(LTEquipWarn equipwarn) {
-        vm.setEquipWarn(equipwarn);
+    //xhtml新建监控的事件
+    public void onAddTargetData() {
+        vm.setEquipWarn(new LTEquipWarn());
+        vm.getEquipWarn().setTTyoe(SepE.ReminderTime.YEAR);
+        vm.getEquipWarn().setXhYn(SepE.Whether.YES);
+        vm.getEquipWarn().setEId(vm.getSelectedEquipBasic().getId());
     }
 
     /**
-     * 删除故障提醒的记录
+     * 选中节点时
+     *
+     * @param event
      */
-    public void onDeleteEquip(LTEquipWarn row) {
-        ///删除模式
-        SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
-        vm.setEquipWarn(row);
+    public void onNodeSelect(NodeSelectEvent event) {
+        this.selectedNode = event.getTreeNode();
+        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
+        onAddTargetData();
+    }
 
-        ///执行更新
+    /**
+     * 保存数据
+     *
+     */
+    public void onSaveData() {
+        //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
+        SepE.ExecuteMode mode = this.vm.getEquipWarn().getId() == null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
+        //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onEquipWarn(mode, vm);
 
+        this.addMessage(result.createMessage());
         if (result.isSuccess()) {
-            putInfoMessage("删除成功");
-            vm.setEquipWarn(null);
-
-        } else {
-            putErrorMessage("删除失败");
+            onAddTargetData();
         }
-    }
-
-    /**
-     * 删除节点
-     *
-     * @param type
-     */
-    public void onDeleteNode(String type) {
-
     }
 
     /**
@@ -134,22 +125,24 @@ public class EQP0005Controller extends BusinessBaseController {
     }
 
     /**
-     * 保存数据
+     * 删除记录
      *
+     * @param equipWarnList
      */
-    public void onSaveData() {
-        //初始化实体类的对象
+    public void onDeleteEquip(LTEquipWarn equipWarnList) {
+        ///删除模式
+        SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
+        vm.setEquipWarn(equipWarnList);
 
-        //当页面调用方法的时候，查看EquipWarn是否为空。
-        SepE.ExecuteMode mode = this.vm.getEquipWarn().getId() == null
-                //如果为空就执行模型的插入方法，如果非空就修改。
-                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
-        //本类调用接口实现方法，并把执行后的结果放进result中
+        ///执行更新
         ExecuteResult result = this.bizLogic.onEquipWarn(mode, vm);
-        //本类调用添加消息的方法，添加执行结果创建的信息
-        this.addMessage(result.createMessage());
-         if (result.isSuccess()) {
-            onCancelEdit();
+
+        if (result.isSuccess()) {
+            putInfoMessage("删除成功");
+            vm.setEquipWarn(null);
+
+        } else {
+            putErrorMessage("删除失败");
         }
     }
 
@@ -164,12 +157,6 @@ public class EQP0005Controller extends BusinessBaseController {
 
         requestContext.update("form:display");
         requestContext.execute("PF('dlg').show()");
-    }
-
-    public void onAddTargetData() {
-        vm.setEquipWarn(new LTEquipWarn());
-        vm.getEquipWarn().setTTyoe(SepE.ReminderTime.YEAR);
-        vm.getEquipWarn().setXhYn(SepE.Whether.NO);
     }
 
     //*****************************************************************
@@ -206,4 +193,13 @@ public class EQP0005Controller extends BusinessBaseController {
     public void setBizLogic(EQP0005BizLogic bizLogic) {
         this.bizLogic = bizLogic;
     }
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
 }

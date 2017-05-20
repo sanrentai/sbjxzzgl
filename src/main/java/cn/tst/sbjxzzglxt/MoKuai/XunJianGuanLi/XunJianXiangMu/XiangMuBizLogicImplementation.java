@@ -105,7 +105,8 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
             }
             //执行结果如果是成功的，转化就设置为true。
 
-            vm.setRoutingInspectionItemsList(xiangMuFacade.findAll());
+           Long id = target.getSuoShuSheBeiId();
+            vm.setSelectedEquipBasic(eqpService.find(id));
             result.setSuccess(true);
             //刷新数据后存储到EquipWarn中
 
@@ -116,4 +117,8 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         return result;
     }
 
+    @Override
+    public LTEquipBasic findSelectedEqp(Long id) {
+        return eqpService.find(id);
+    }
 }

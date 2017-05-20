@@ -18,14 +18,20 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 public class EQP0005ViewModel extends BaseViewModel {
-      private List<LTEquipBasic> equipBasicList;
+
+    private List<LTEquipBasic> equipBasicList;
     private List<LTEquipWarn> equipWarnList;//在查询全部的时候，需要使用List接收
     private LTEquipWarn equipWarn;//设备提醒的实体类对象
     private TreeNode equipTreeRoot;//tree节点
-    private List<LTEquipWarn> selectEquipWarnList;
-    private LTEquipWarn selectedEquipWarn;
-    private LTEquipWarn rootEqp;
-    private LTEquipWarn editingEquipWarn;
+    private LTEquipBasic selectedEquipBasic;
+
+    public LTEquipBasic getSelectedEquipBasic() {
+        return selectedEquipBasic;
+    }
+
+    public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
+        this.selectedEquipBasic = selectedEquipBasic;
+    }
 
     public List<LTEquipWarn> getEquipWarnList() {
         return equipWarnList;
@@ -43,46 +49,6 @@ public class EQP0005ViewModel extends BaseViewModel {
         this.equipWarn = equipWarn;
     }
 
-    public TreeNode getEquipTreeRoot() {
-        return equipTreeRoot;
-    }
-
-    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
-        this.equipTreeRoot = equipTreeRoot;
-    }
-
-    public List<LTEquipWarn> getSelectEquipWarnList() {
-        return selectEquipWarnList;
-    }
-
-    public void setSelectEquipWarnList(List<LTEquipWarn> selectEquipWarnList) {
-        this.selectEquipWarnList = selectEquipWarnList;
-    }
-
-    public LTEquipWarn getSelectedEquipWarn() {
-        return selectedEquipWarn;
-    }
-
-    public void setSelectedEquipWarn(LTEquipWarn selectedEquipWarn) {
-        this.selectedEquipWarn = selectedEquipWarn;
-    }
-
-    public LTEquipWarn getRootEqp() {
-        return rootEqp;
-    }
-
-    public void setRootEqp(LTEquipWarn rootEqp) {
-        this.rootEqp = rootEqp;
-    }
-
-    public LTEquipWarn getEditingEquipWarn() {
-        return editingEquipWarn;
-    }
-
-    public void setEditingEquipWarn(LTEquipWarn editingEquipWarn) {
-        this.editingEquipWarn = editingEquipWarn;
-    }
-
     public List<LTEquipBasic> getEquipBasicList() {
         return equipBasicList;
     }
@@ -91,18 +57,15 @@ public class EQP0005ViewModel extends BaseViewModel {
         this.equipBasicList = equipBasicList;
     }
 
-    
-    
-    
-   public void onDateSelect(SelectEvent event) {
+    public void onDateSelect(SelectEvent event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
     }
-     
+
     public void click() {
         RequestContext requestContext = RequestContext.getCurrentInstance();
-         
+
         requestContext.update("form:display");
         requestContext.execute("PF('dlg').show()");
     }

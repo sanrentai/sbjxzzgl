@@ -34,27 +34,27 @@ public class WenTiBizLogicImplementation extends BaseBizLogic implements BizLogi
     private static final Logger LOG = Logger.getLogger(WenTiBizLogicImplementation.class.getName());
     @EJB
     private XunJianXiangMuWenTiFacade wenTiFacade;
- @EJB
+    @EJB
     private LTEquipBasicFacade eqpService;
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
- 
+
     @Override
     public void loadViewModel(ViewModel vm) {
 //        vm.setEquipErrorList(equipErrorFacade.findById(Long.MIN_VALUE));
         List<SysRoutingInspectionProblem> Problem = wenTiFacade.findAll();
         vm.setRoutingInspectionProblemList(Problem);
-         List<LTEquipBasic> findAll = eqpService.findAll();
+        List<LTEquipBasic> findAll = eqpService.findAll();
         vm.setEquipBasicList(findAll);
     }
 
     public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, ViewModel vm) {
-       
+
         ExecuteResult result = new ExecuteResult(mode);
         SysRoutingInspectionProblem target = vm.getRoutingInspectionProblem();
-         LOG.info(target.getSuoShuSheBeiId());
-          LOG.info(target.getSuoShuXiangMuId());
-           LOG.info(target.getSuoShuXunJianDianId());
-            LOG.info(target.getGuZhangBianHao());
+        LOG.info(target.getSuoShuSheBeiId());
+        LOG.info(target.getSuoShuXiangMuId());
+        LOG.info(target.getSuoShuXunJianDianId());
+        LOG.info(target.getGuZhangBianHao());
         try {
             switch (mode) {
                 case INSERT:
@@ -80,17 +80,17 @@ public class WenTiBizLogicImplementation extends BaseBizLogic implements BizLogi
         }
         return result;
     }
-    
+
     @Override
     public ExecuteResult onXiangMuWenTi(SepE.ExecuteMode mode, ViewModel vm) {
         //先创建一个执行结果的对象，并把mode的放进去
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         SysRoutingInspectionProblem target = vm.getRoutingInspectionProblem();
-         LOG.info(target.getSuoShuSheBeiId());
-          LOG.info(target.getSuoShuXiangMuId());
-           LOG.info(target.getSuoShuXunJianDianId());
-            LOG.info(target.getGuZhangBianHao());
+        LOG.info(target.getSuoShuSheBeiId());
+        LOG.info(target.getSuoShuXiangMuId());
+        LOG.info(target.getSuoShuXunJianDianId());
+        LOG.info(target.getGuZhangBianHao());
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
@@ -101,7 +101,7 @@ public class WenTiBizLogicImplementation extends BaseBizLogic implements BizLogi
                     wenTiFacade.edit(target);
                     break;
                 case DELETE:
-                   wenTiFacade.remove(target);
+                    wenTiFacade.remove(target);
                     break;
             }
             //执行结果如果是成功的，转化就设置为true。
@@ -117,4 +117,8 @@ public class WenTiBizLogicImplementation extends BaseBizLogic implements BizLogi
         return result;
     }
 
+    @Override
+    public LTEquipBasic findSelectedEqp(Long id) {
+        return eqpService.find(id);
+    }
 }

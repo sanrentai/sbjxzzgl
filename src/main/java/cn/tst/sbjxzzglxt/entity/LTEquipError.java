@@ -23,6 +23,8 @@ import javax.persistence.ManyToOne;
 
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -64,16 +66,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipError.findByDelFlg", query = "SELECT l FROM LTEquipError l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipError.findByVersion", query = "SELECT l FROM LTEquipError l WHERE l.version = :version")})
 public class LTEquipError extends BaseEntity implements Serializable {
-    
+
+    @Size(max = 255)
+    @Column(name = "chu_li_shuo_ming")
+    private String chuLiShuoMing;
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Size(max = 50)
     @Column(name = "E_Num")
-    private String eNum;
+    private Long eNum;
     @Column(name = "Err_Num")
     private Integer errNum;
     @Size(max = 50)
@@ -82,9 +87,8 @@ public class LTEquipError extends BaseEntity implements Serializable {
     @Size(max = 200)
     @Column(name = "Err_Way")
     private String errWay;
-    @Size(max = 200)
     @Column(name = "Err_Type")
-    private String errType;
+    private Long errType;
     @Column(name = "Del_YN")
     private Integer delYN;
     @Column(name = "Del_Date")
@@ -127,9 +131,14 @@ public class LTEquipError extends BaseEntity implements Serializable {
     }
     //使用多对一的方式连表并且使用懒加载
     @ManyToOne(fetch = FetchType.LAZY)
-   //连表 插入列的名字 与引用列的名字
-    @JoinColumn(name = "E_Num", referencedColumnName = "E_Num", insertable = false, updatable = false)
-   //通过分装需要连表的实体类，完成页面的调用
+    //连表 插入列的名字 与引用列的名字
+    @JoinColumns({
+        @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    //通过分装需要连表的实体类，完成页面的调用
+
     private LTEquipBasic equip;
 
     public LTEquipBasic getEquip() {
@@ -150,10 +159,6 @@ public class LTEquipError extends BaseEntity implements Serializable {
 //    public void setEquipBasic(LTEquipBasic equipBasic) {
 //        this.equipBasic = equipBasic;
 //    }
-    
-  
-
-
 
     public Long getId() {
         return id;
@@ -163,11 +168,11 @@ public class LTEquipError extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public String getENum() {
+    public Long getENum() {
         return eNum;
     }
 
-    public void setENum(String eNum) {
+    public void setENum(Long eNum) {
         this.eNum = eNum;
     }
 
@@ -195,11 +200,11 @@ public class LTEquipError extends BaseEntity implements Serializable {
         this.errWay = errWay;
     }
 
-    public String getErrType() {
+    public Long getErrType() {
         return errType;
     }
 
-    public void setErrType(String errType) {
+    public void setErrType(Long errType) {
         this.errType = errType;
     }
 
@@ -299,22 +304,12 @@ public class LTEquipError extends BaseEntity implements Serializable {
         this.fluctMin = fluctMin;
     }
 
-   
-
     public Long getSuoShuGuZhang() {
         return suoShuGuZhang;
     }
 
     public void setSuoShuGuZhang(Long suoShuGuZhang) {
         this.suoShuGuZhang = suoShuGuZhang;
-    }
-    //底层因为0是1否，所以采用枚举
-    public SepE.Whether getDiJiGuZhang() {
-        return SepE.Whether.parse(diJiGuZhang);
-    }
-
-    public void setDiJiGuZhang(SepE.Whether diJiGuZhang) {
-        this.diJiGuZhang = diJiGuZhang.getValue();
     }
 
     @Override
@@ -353,5 +348,33 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
-      
+
+    public String getChuLiShuoMing() {
+        return chuLiShuoMing;
+    }
+
+    public void setChuLiShuoMing(String chuLiShuoMing) {
+        this.chuLiShuoMing = chuLiShuoMing;
+    }
+
+    //用于取故障名称
+    @OneToOne(mappedBy = "equipError", fetch = FetchType.LAZY)
+    private List<LTEquipErrorMessage> errorMessageList;
+
+    public List<LTEquipErrorMessage> getErrorMessageList() {
+        return errorMessageList;
+    }
+
+    public void setErrorMessageList(List<LTEquipErrorMessage> errorMessageList) {
+        this.errorMessageList = errorMessageList;
+    }
+    
+//    //项目表
+//     //这个连表用于页面区设备名称
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "Err_Num", referencedColumnName = "dui_ying_gu_zhang", insertable = false, updatable = false)
+//    
+
+    
+    
 }

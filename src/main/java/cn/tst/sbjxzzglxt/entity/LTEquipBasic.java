@@ -26,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -529,8 +530,8 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setEquipProRuleList(List<LTEquipProRule> equipProRuleList) {
         this.equipProRuleList = equipProRuleList;
     }
-    
-    @OneToMany(mappedBy = "equip")
+    //故障表
+    @OneToMany(mappedBy = "equip", fetch = FetchType.LAZY)
     private List<LTEquipError> equipErrorList;
 
     public List<LTEquipError> getEquipErrorList() {
@@ -604,4 +605,33 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         System.out.println(result);
         return result;
     }
+    
+     
+     //提醒表
+    @OneToMany(mappedBy = "equipBasic", fetch = FetchType.LAZY)
+    private List<LTEquipWarn> equipWarnList;
+
+    public List<LTEquipWarn> getEquipWarnList() {
+        return equipWarnList;
+    }
+
+    public void setEquipWarnList(List<LTEquipWarn> equipWarnList) {
+        this.equipWarnList = equipWarnList;
+    }
+    
+    //项目表
+    @OneToMany(mappedBy = "equip", fetch = FetchType.LAZY)
+    private List<SysRoutingInspectionItems> itemsList;
+
+    public List<SysRoutingInspectionItems> getItemsList() {
+        return itemsList;
+    }
+
+    public void setItemsList(List<SysRoutingInspectionItems> itemsList) {
+        this.itemsList = itemsList;
+    }
+
+    
+    
+    
 }

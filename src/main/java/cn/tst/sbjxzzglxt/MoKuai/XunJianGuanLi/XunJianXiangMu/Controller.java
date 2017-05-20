@@ -10,6 +10,7 @@ import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
+import cn.tst.sbjxzzglxt.entity.LTEquipFitting;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 @Named(SepC.ControllerID.XUN_JIAN_XIANG_MU_CONTROLLER_NAME)
 public class Controller extends BusinessBaseController {
-
+    
     private static final Logger LOG = Logger.getLogger(Controller.class.getName());
     private List<SysRoutingInspectionItems> routingInspectionItemsList;//巡检项目实体类集合
     private SysRoutingInspectionItems routingInspectionItems;//巡检项目实体类
@@ -36,21 +37,21 @@ public class Controller extends BusinessBaseController {
     private ViewModel vm;
     ///选中的节点
     private TreeNode selectedNode;
-
+    
     @EJB
     private BizLogic bizLogic;
-
+    
     @PostConstruct
     public void init() {
 
         ///初始化视图模型
         this.vm = new ViewModel();
-
+        
         this.bizLogic.loadViewModel(vm);
 
         //初始化树结构并把设备的值挂在树节点上
         vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
-
+        
     }
 
     //*****************************************************************
@@ -60,60 +61,42 @@ public class Controller extends BusinessBaseController {
     //                        私有函数定义
     //*****************************************************************
     /**
-     *调用common包下的EquipmentTree类中的静态方法，实现Tree功能的重复使用
+     * 调用common包下的EquipmentTree类中的静态方法，实现Tree功能的重复使用
      *
      * @param equipBasicList 传入设备列表
      * @return 返回设备树
      */
     static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
         ///根节点
-        DefaultTreeNode result =EquipmentTree.createEqpTree(equipBasicList);
+        DefaultTreeNode result = EquipmentTree.createEqpTree(equipBasicList);
         return result;
     }
-
-    /**
-     * 选中节点时
-     */
-    public void onNodeSelect(NodeSelectEvent event) {
-
-        this.selectedNode = event.getTreeNode();
-
-        vm.setEquipBasic((LTEquipBasic) selectedNode.getData());
-
-        LOG.info(vm.getEquipBasic().getENmae());
-
-        LOG.info(vm.getEquipBasic().getEquipErrorList().size());
-        vm.setSelectEquipBasicList(new ArrayList());
-        vm.getSelectEquipBasicList().add(vm.getEquipBasic());
-        for (LTEquipBasic item : vm.getEquipBasic().getChildren()) {
-            vm.getSelectEquipBasicList().add(item);
-        }
-        //选中节点的时候开始初始化新建表里面的信息
-        vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
-    }
-//    /**
-//     * 用于设备名称选择的监听
-//     *
-//     * 
-//     * @param items
-//     */
-
-    public void onListnener(LTEquipBasic equipBasic) {
-        vm.setEquipBasic(equipBasic);
-    }
-
-    /**
-     * 修改巡检项目记录
+ /**
+     * 修改项目
      *
      *
+     * @param routingInspectionItems
      */
     public void onEditEquip(SysRoutingInspectionItems routingInspectionItems) {
         vm.setRoutingInspectionItems(routingInspectionItems);
     }
 
-    //在新建的时候会监听
+    //xhtml新建监控的事件
     public void onAddTargetData() {
+        vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
+        vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
+    }
 
+    /**
+     * 选中节点时
+     *
+     * @param event
+     */
+    public void onNodeSelect(NodeSelectEvent event) {
+        this.selectedNode = event.getTreeNode();
+        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
+        onAddTargetData();
     }
 
     /**
@@ -122,15 +105,14 @@ public class Controller extends BusinessBaseController {
      */
     public void onSaveData() {
         //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
-        LOG.info(1);
         SepE.ExecuteMode mode = this.vm.getRoutingInspectionItems().getId() == null
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
         //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onXunJianXiangMu(mode, vm);
-        LOG.info(vm.getRoutingInspectionItems().getId());
+
         this.addMessage(result.createMessage());
         if (result.isSuccess()) {
-            onCancelEdit();
+            onAddTargetData();
         }
     }
 
@@ -139,24 +121,18 @@ public class Controller extends BusinessBaseController {
      */
     public void onCancelEdit() {
 
-        selectedNode = null;
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        ///初始化状态
+//        this.switchStatus2Init();
+        ///无模式
+//        this.switchEditMode2None();
         vm.setRoutingInspectionItems(null);
 
     }
 
     /**
-     * 取消树选择
-     */
-    public void onCancelShuXuanZhe() {
-        vm.setEquipBasic(null);
-        selectedNode = null;
-    }
-
-    /**
-     * 删除故障提醒的记录
+     * 删除记录
      *
-     * @param routingInspectionItems
+     * @param fitting
      */
     public void onDeleteEquip(SysRoutingInspectionItems routingInspectionItems) {
         ///删除模式
@@ -175,73 +151,48 @@ public class Controller extends BusinessBaseController {
         }
     }
 
-    /**
-     * 弹窗数据存到视图中
-     *
-     * @param selectequipError
-     * @return
-     */
-    public List<LTEquipError> setSelectEquipBasic(LTEquipError selectequipError) {
-        //创建一个新的集合，用于存放每次存放进来的数据
-        ArrayList list = new ArrayList();
-        //判断故障是否选中
-        if (!selectequipError.isSelected()) {
-            //如果是选中状态就添加到集合内
-            list.add(selectequipError);
-        }
-        return list;//返回给yemian
-    }
 
-    public void onXuanZe(SysRoutingInspectionItems routingInspectionItems){
-        int a = routingInspectionItems.getXunJianFangShi();
-        switch(a){
-            case 0:
-	    break;
-	    case 1:
-	    break;
-        }
-    }
     //*****************************************************************
     //                        Getter Setter
     //*****************************************************************
     public List<SysRoutingInspectionItems> getRoutingInspectionItemsList() {
         return routingInspectionItemsList;
     }
-
+    
     public void setRoutingInspectionItemsList(List<SysRoutingInspectionItems> routingInspectionItemsList) {
         this.routingInspectionItemsList = routingInspectionItemsList;
     }
-
+    
     public SysRoutingInspectionItems getRoutingInspectionItems() {
         return routingInspectionItems;
     }
-
+    
     public void setRoutingInspectionItems(SysRoutingInspectionItems routingInspectionItems) {
         this.routingInspectionItems = routingInspectionItems;
     }
-
+    
     public ViewModel getVm() {
         return vm;
     }
-
+    
     public void setVm(ViewModel vm) {
         this.vm = vm;
     }
-
+    
     public BizLogic getBizLogic() {
         return bizLogic;
     }
-
+    
     public void setBizLogic(BizLogic bizLogic) {
         this.bizLogic = bizLogic;
     }
-
+    
     public TreeNode getSelectedNode() {
         return selectedNode;
     }
-
+    
     public void setSelectedNode(TreeNode selectedNode) {
         this.selectedNode = selectedNode;
     }
-
+    
 }
