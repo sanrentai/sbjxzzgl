@@ -8,6 +8,7 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianJueSeGuanLi;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
+import cn.tst.sbjxzzglxt.entity.XunJianGuiZe;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -59,6 +60,10 @@ public class Controller extends BusinessBaseController {
     }
     
     public void onEditXunJianGuiZe(MstXunJianRole role) {
-        
+        vm.setRoleInEdit(role);
+    }
+    
+    public void onEditXunJianGuiZeDialogSubmit() {
+        bizLogic.onEditXunJianGuiZeDialogSubmit(vm);
     }
 }

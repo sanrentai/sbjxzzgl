@@ -5,6 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianJueSeGuanLi;
 
+import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
 import cn.tst.sbjxzzglxt.entity.XunJianGuiZe;
 import java.util.List;
@@ -18,14 +19,14 @@ public class ViewModel {
     
     private MstXunJianRole roleInEdit;
     
-    private XunJianGuiZe guiZeInEdit;
+    private XunJianGuiZe xunJianGuiZeInEdit;
 
-    public XunJianGuiZe getGuiZeInEdit() {
-        return guiZeInEdit;
+    public XunJianGuiZe getXunJianGuiZeInEdit() {
+        return xunJianGuiZeInEdit;
     }
 
-    public void setGuiZeInEdit(XunJianGuiZe guiZeInEdit) {
-        this.guiZeInEdit = guiZeInEdit;
+    public void setXunJianGuiZeInEdit(XunJianGuiZe xunJianGuiZeInEdit) {
+        this.xunJianGuiZeInEdit = xunJianGuiZeInEdit;
     }
 
     public MstXunJianRole getRoleInEdit() {
@@ -42,5 +43,9 @@ public class ViewModel {
 
     public void setRoleList(List<MstXunJianRole> roleList) {
         this.roleList = roleList;
+    }
+    
+    public SepE.XunJianXunHuanFangShi[] getXunJianXunHuanFangShi() {
+        return SepE.XunJianXunHuanFangShi.values();
     }
 }

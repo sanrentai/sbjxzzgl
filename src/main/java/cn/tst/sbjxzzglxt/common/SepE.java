@@ -8,6 +8,74 @@ import cn.tst.sbjxzzglxt.common.SepC.GouMaiFangShiConst;
  * @author ps_xy@pscp.co.jp
  */
 public class SepE {
+    
+    public static enum XunJianXunHuanFangShi {
+        NIAN(0),
+        BAN_NIAN(1),
+        JI(2),
+        YUE(3),
+        XUN(4),
+        ZHOU(5),
+        RI(6),
+        SHI(7);
+        
+        private int value;
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+        
+        XunJianXunHuanFangShi(int value) {
+            this.value = value;
+        }
+        public static XunJianXunHuanFangShi parse(int value) {
+            switch(value) {
+                case 0:
+                    return NIAN;
+                case 1:
+                    return BAN_NIAN;
+                case 2:
+                    return JI;
+                case 3:
+                    return YUE;
+                case 4:
+                    return XUN;
+                case 5:
+                    return ZHOU;
+                case 6:
+                    return RI;
+                case 7:
+                    return SHI;
+            }
+            return NIAN;
+        }
+        
+        public String getString() {
+            switch(this) {
+                case NIAN:
+                    return "年";
+                case BAN_NIAN:
+                    return "半年";
+                case JI:
+                    return "季";
+                case YUE:
+                    return "月";
+                case XUN:
+                    return "旬";
+                case ZHOU:
+                    return "周";
+                case RI:
+                    return "日";
+                case SHI:
+                    return "时";
+            }
+            return "年";
+        }
+    }
 
     /**
      * 画面状態

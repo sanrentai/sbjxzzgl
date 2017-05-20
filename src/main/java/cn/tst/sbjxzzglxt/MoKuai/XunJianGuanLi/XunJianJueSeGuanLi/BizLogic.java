@@ -13,4 +13,6 @@ public interface BizLogic {
     void loadViewModel(ViewModel vm);
     
     void onSubmitNewRole(ViewModel vm);
+    
+    void onEditXunJianGuiZeDialogSubmit(ViewModel vm);
 }

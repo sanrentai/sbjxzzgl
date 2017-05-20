@@ -33,13 +33,13 @@
             </p:column>
             <p:column styleClass="tlt">
                 <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditXunJianFanWei(role)}"
-                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianFanWeiDialog').show()">
+                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianFanWeiDialog').show();">
                     <i class="fa fa-pencil Fs18 Blue"></i>
                 </p:commandLink>
             </p:column>
             <p:column styleClass="tlt">
                 <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZe(role)}"
-                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianGuiZeDialog').show()">
+                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianGuiZeDialog').show();">
                     <i class="fa fa-pencil Fs18 Blue"></i>
                 </p:commandLink>
             </p:column>
@@ -89,24 +89,39 @@
                              layout="grid" 
                              styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                     <p:outputPanel></p:outputPanel>
-                    <p:commandButton value="提交" actionListener="#{XunJianJueSeGuanLiController.onSubmitNewRole}" update="frmMain:rootContainer"></p:commandButton>
+                    <p:commandButton value="提交" 
+                                     actionListener="#{XunJianJueSeGuanLiController.onSubmitNewRole}" 
+                                     update="frmMain:rootContainer"></p:commandButton>
                 </p:panelGrid>
             </p:panelGrid>
         </p:outputPanel>
     </p:outputPanel>
     <!--对话框-->
     <p:dialog id="EditXunJianFanWeiDialog"></p:dialog>
-    <p:dialog id="EditXunJianGuiZeDialog">
-        <p:panelGrid columns="1" layout="grid">
-            <p:panelGrid columns="2" 
-                         layout="grid" 
-                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
-                         columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                <p:outputLabel value="循环方式"></p:outputLabel>
-                <p:selectOneMenu value="#{XunJianJueSeGuanLiController.vm.guiZeInEdit.xunHuanFangShi}">
-                    <f:selectItem itemLabel="请选择循环方式" itemValue="" />
-                </p:selectOneMenu>
-            </p:panelGrid>
+    <p:dialog widgetVar="EditXunJianGuiZeDialog"
+              modal="true" 
+              onHide="PF('rootContainer').update();"
+              width="512">
+        <p:panelGrid columns="2" 
+                     layout="grid" 
+                     columnClasses="wd-p-30,wd-p-70 NoPadding">
+            <p:outputLabel value="循环方式："></p:outputLabel>
+            <p:selectOneMenu value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.xunHuanFangShi}">
+                <f:selectItems value="#{XunJianJueSeGuanLiController.vm.xunJianXunHuanFangShi}" 
+                               var="fangShi" 
+                               itemLabel="#{fangShi.string}" 
+                               itemValue="#{fangShi}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="开始时间："></p:outputLabel>
+            <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.kaiShiShiJian}"
+                        pattern="#{bizConfig.dateTimeFormat}"></p:calendar>
+            <p:outputLabel value="结束时间："></p:outputLabel>
+            <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.jieShuShiJian}" 
+                        pattern="#{bizConfig.dateTimeFormat}"></p:calendar>
+            <p:outputPanel></p:outputPanel>
+            <p:commandButton value="提交"
+                             actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZeDialogSubmit}"
+                             oncomplete="PF('EditXunJianGuiZeDialog').hide();"></p:commandButton>
         </p:panelGrid>
     </p:dialog>
 </ui:composition>
