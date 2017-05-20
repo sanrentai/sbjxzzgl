@@ -6,18 +6,17 @@
 package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,7 +40,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "MstXunJianRole.findByDelFlg", query = "SELECT m FROM MstXunJianRole m WHERE m.delFlg = :delFlg")
     , @NamedQuery(name = "MstXunJianRole.findByVersion", query = "SELECT m FROM MstXunJianRole m WHERE m.version = :version")})
 public class MstXunJianRole extends BaseEntity implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,5 +109,14 @@ public class MstXunJianRole extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.MstXunJianRole[ roleId=" + roleId + " ]";
     }
-    
+    @OneToOne(mappedBy="role", fetch=FetchType.EAGER)
+    private XunJianGuiZe xunJianGuiZe;
+
+    public XunJianGuiZe getXunJianGuiZe() {
+        return xunJianGuiZe;
+    }
+
+    public void setXunJianGuiZe(XunJianGuiZe xunJianGuiZe) {
+        this.xunJianGuiZe = xunJianGuiZe;
+    }
 }

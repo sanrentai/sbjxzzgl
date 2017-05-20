@@ -8,13 +8,14 @@ package cn.tst.sbjxzzglxt.viewmodel;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
 import java.util.List;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 /**
  *
  * @author Aaron-PC-i3-4130
  */
-public class EQP0007ViewModel extends BaseViewModel {
+public class EQP0007ViewModel {
     private LTEquipGraphic equipGraphicEntityInEdit;
     
     private List<LTEquipBasic> equipmentList;
@@ -24,6 +25,26 @@ public class EQP0007ViewModel extends BaseViewModel {
     private List<LTEquipGraphic> selectEquipGraphicList;
     
     private String fileName;
+    
+    private TreeNode equipmentTreeRoot;
+    
+    private TreeNode selectedNode;
+
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
+    public TreeNode getEquipmentTreeRoot() {
+        return equipmentTreeRoot;
+    }
+
+    public void setEquipmentTreeRoot(TreeNode equipmentTreeRoot) {
+        this.equipmentTreeRoot = equipmentTreeRoot;
+    }
 
     public LTEquipGraphic getEquipGraphicEntityInEdit() {
         return equipGraphicEntityInEdit;

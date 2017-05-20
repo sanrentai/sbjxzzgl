@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Card" id="rootContainer">
+        <h1 class="CardBigTopic Purple">
+            <h:outputText value="#{ctrlMaster.createPageTitle('XunJianGuanLi', 'XunJianJueSeGuanLi')}"/>
+        </h1>
+        <!--无敌分割线-->
+        <div class="SeparatorFull"></div>
+        <p:dataTable value="#{XunJianJueSeGuanLiController.vm.roleList}" var="role">
+            <f:facet name="header">
+                <h:outputText value="检修角色设置"/>
+            </f:facet>
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column headerText="角色名称" styleClass="tct wd-p-8"/>
+                    <p:column headerText="角色描述" styleClass="tct wd-p-8"/>                       
+                    <p:column headerText="巡检范围" styleClass="tct wd-p-10"/>   
+                    <p:column headerText="巡检规则" styleClass="wd-p-5"/>
+                    <p:column headerText="修改" styleClass="wd-p-5"/>
+                    <p:column headerText="删除" styleClass="wd-p-5"/>
+                </p:row>
+            </p:columnGroup>
+            <p:column styleClass="tlt">
+                <h:outputText value="#{role.roleName}"/>
+            </p:column>
+            <p:column styleClass="tlt">
+                <h:outputText value="#{role.roleDescription}"/>
+            </p:column>
+            <p:column styleClass="tlt">
+                <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditXunJianFanWei(role)}"
+                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianFanWeiDialog').show();">
+                    <i class="fa fa-pencil Fs18 Blue"></i>
+                </p:commandLink>
+            </p:column>
+            <p:column styleClass="tlt">
+                <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZe(role)}"
+                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianGuiZeDialog').show();">
+                    <i class="fa fa-pencil Fs18 Blue"></i>
+                </p:commandLink>
+            </p:column>
+            <p:column styleClass="tlt">
+                <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditRole(role)}"
+                               process="@this" update="frmMain:rootContainer">
+                    <i class="fa fa-pencil Fs18 Blue"></i>
+                </p:commandLink>
+            </p:column>
+            <p:column styleClass="tlt">
+                <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onDeleteRole(role)}"
+                               process="@this" update="frmMain:rootContainer">
+                    <i class="fa fa-trash Fs18 Blue"></i>
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
+        <p:toolbar styleClass="Container100">
+            <f:facet name="left">
+                <p:commandButton value="新建" 
+                                 process="@this" 
+                                 update="frmMain:rootContainer" 
+                                 actionListener="#{XunJianJueSeGuanLiController.onAddNewRole}" 
+                                 styleClass="NavyButton" 
+                                 disabled="#{XunJianJueSeGuanLiController.statusEditing}"/>
+            </f:facet>
+        </p:toolbar>
+        <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianJueSeGuanLiController.vm.roleInEdit}">
+            <f:facet name="header">
+                <p:outputPanel>新建角色</p:outputPanel>
+            </f:facet>
+            <p:panelGrid columns="1" layout="grid">
+                <p:panelGrid columns="2" 
+                             layout="grid" 
+                             styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                    <p:outputLabel value="角色名称"></p:outputLabel>
+                    <p:inputText value="#{XunJianJueSeGuanLiController.vm.roleInEdit.roleName}" 
+                                 required="true" 
+                                 requiredMessage="#{XunJianJueSeGuanLiController.isRequiredMessage('角色名称')}"></p:inputText>
+                </p:panelGrid>
+                <p:panelGrid columns="2" 
+                             layout="grid" 
+                             styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                    <p:outputLabel value="角色描述"></p:outputLabel>
+                    <p:inputTextarea value="#{XunJianJueSeGuanLiController.vm.roleInEdit.roleDescription}"></p:inputTextarea>
+                </p:panelGrid>
+                <p:panelGrid columns="2" 
+                             layout="grid" 
+                             styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                    <p:outputPanel></p:outputPanel>
+                    <p:commandButton value="提交" 
+                                     actionListener="#{XunJianJueSeGuanLiController.onSubmitNewRole}" 
+                                     update="frmMain:rootContainer"></p:commandButton>
+                </p:panelGrid>
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:outputPanel>
+    <!--对话框-->
+    <p:dialog id="EditXunJianFanWeiDialog"></p:dialog>
+    <p:dialog widgetVar="EditXunJianGuiZeDialog"
+              modal="true" 
+              onHide="PF('rootContainer').update();"
+              width="512">
+        <p:panelGrid columns="2" 
+                     layout="grid" 
+                     columnClasses="wd-p-30,wd-p-70 NoPadding">
+            <p:outputLabel value="循环方式："></p:outputLabel>
+            <p:selectOneMenu value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.xunHuanFangShi}">
+                <f:selectItems value="#{XunJianJueSeGuanLiController.vm.xunJianXunHuanFangShi}" 
+                               var="fangShi" 
+                               itemLabel="#{fangShi.string}" 
+                               itemValue="#{fangShi}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="开始时间："></p:outputLabel>
+            <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.kaiShiShiJian}"
+                        pattern="#{bizConfig.dateTimeFormat}"></p:calendar>
+            <p:outputLabel value="结束时间："></p:outputLabel>
+            <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.jieShuShiJian}" 
+                        pattern="#{bizConfig.dateTimeFormat}"></p:calendar>
+            <p:outputPanel></p:outputPanel>
+            <p:commandButton value="提交"
+                             actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZeDialogSubmit}"
+                             oncomplete="PF('EditXunJianGuiZeDialog').hide();"></p:commandButton>
+        </p:panelGrid>
+    </p:dialog>
+</ui:composition>
