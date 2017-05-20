@@ -97,7 +97,17 @@
         </p:outputPanel>
     </p:outputPanel>
     <!--对话框-->
-    <p:dialog id="EditXunJianFanWeiDialog"></p:dialog>
+    <p:dialog id="EditXunJianFanWeiDialog" width="512">
+        <p:tree value="#{XunJianJueSeGuanLiController.vm.equipmentNodeRoot}" var="node">
+            <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                <h:outputText value="#{node.name}"></h:outputText>
+            </p:treeNode>
+            <p:treeNode type="checkPoint" icon="ui-icon-document">
+                <p:checkbox ></p:checkbox>
+                <h:outputText value="#{node.name}"></h:outputText>
+            </p:treeNode>
+        </p:tree>
+    </p:dialog>
     <p:dialog widgetVar="EditXunJianGuiZeDialog"
               modal="true" 
               onHide="PF('rootContainer').update();"
@@ -114,10 +124,16 @@
             </p:selectOneMenu>
             <p:outputLabel value="开始时间："></p:outputLabel>
             <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.kaiShiShiJian}"
-                        pattern="#{bizConfig.dateTimeFormat}"></p:calendar>
+                        pattern="#{bizConfig.dateTimeFormat}"
+                        readonlyInput="true"
+                        mask="true" styleClass="tct NoPadding"
+                        required="true"
+                        requiredMessage="#{XunJianJueSeGuanLiController.isRequiredMessage('时间')}"
+                        converterMessage="#{XunJianJueSeGuanLiController.dateUnvalidMessage('时间')}"
+                        locale="#{bizConfig.locale}"></p:calendar>
             <p:outputLabel value="结束时间："></p:outputLabel>
             <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.jieShuShiJian}" 
-                        pattern="#{bizConfig.dateTimeFormat}"></p:calendar>
+                        pattern="#{bizConfig.dateTimeFormat}" mask="true"></p:calendar>
             <p:outputPanel></p:outputPanel>
             <p:commandButton value="提交"
                              actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZeDialogSubmit}"

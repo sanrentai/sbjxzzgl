@@ -6,8 +6,10 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianJueSeGuanLi;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.XunJianGuiZe;
+import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
 import cn.tst.sbjxzzglxt.facade.MstXunJianRoleFacade;
 import cn.tst.sbjxzzglxt.facade.XunJianGuiZeFacade;
 import javax.ejb.EJB;
@@ -23,6 +25,8 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
     private MstXunJianRoleFacade xunJianRoleFacade;
     @EJB
     private XunJianGuiZeFacade xunJianGuiZeFacade;
+    @EJB
+    private LTEquipBasicFacade equipmentFacade;
 
     public XunJianGuiZeFacade getXunJianGuiZeFacade() {
         return xunJianGuiZeFacade;
@@ -46,6 +50,7 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
         XunJianGuiZe guiZe = new XunJianGuiZe();
         guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN);
         vm.setXunJianGuiZeInEdit(guiZe);
+        vm.setEquipmentNodeRoot(EquipmentTree.createEquipmentTreeNodeWithCheckPoint(equipmentFacade.findAll()));
     }
     @Override 
     public void onSubmitNewRole(ViewModel vm) {

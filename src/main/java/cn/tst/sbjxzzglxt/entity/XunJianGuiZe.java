@@ -50,10 +50,10 @@ public class XunJianGuiZe extends BaseEntity implements Serializable {
     @Column(name = "xunHuanFangShi")
     private Integer xunHuanFangShi;
     @Column(name = "kaiShiShiJian")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date kaiShiShiJian;
     @Column(name = "jieShuShiJian")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date jieShuShiJian;
 
     public XunJianGuiZe() {

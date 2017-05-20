@@ -9,6 +9,7 @@ import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
 import cn.tst.sbjxzzglxt.entity.XunJianGuiZe;
 import java.util.List;
+import org.primefaces.model.TreeNode;
 
 /**
  *
@@ -20,6 +21,16 @@ public class ViewModel {
     private MstXunJianRole roleInEdit;
     
     private XunJianGuiZe xunJianGuiZeInEdit;
+    
+    private TreeNode equipmentNodeRoot;
+
+    public TreeNode getEquipmentNodeRoot() {
+        return equipmentNodeRoot;
+    }
+
+    public void setEquipmentNodeRoot(TreeNode equipmentNodeRoot) {
+        this.equipmentNodeRoot = equipmentNodeRoot;
+    }
 
     public XunJianGuiZe getXunJianGuiZeInEdit() {
         return xunJianGuiZeInEdit;

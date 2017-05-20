@@ -6,6 +6,8 @@
 package cn.tst.sbjxzzglxt.common;
 
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import org.primefaces.model.DefaultTreeNode;
@@ -76,5 +78,80 @@ public class EquipmentTree {
                 }
             });
         }
+    }
+    
+    public static TreeNode createEquipmentTreeNodeWithCheckPoint(List<LTEquipBasic> equipmentList) {
+        TreeNode rootNode = new DefaultTreeNode(new NodeData("设备检查点"), null);
+        for(LTEquipBasic equipment: equipmentList) {
+            createNode(rootNode, equipment);
+        }
+        return rootNode;
+    }
+    
+    public static void createNode(TreeNode parentNode, LTEquipBasic data) {
+        if(data.isHasBeenAddedToTreeNode()) {
+            return;
+        }
+        TreeNode result = new DefaultTreeNode(new NodeData(data.getENmae()), parentNode);
+        for(LTEquipCheckPoint checkPoint: data.getCheckPointList()) {
+            createCheckPointNode(result, checkPoint);
+        }
+        data.setHasBeenAddedToTreeNode(true);
+        if(data.getChildren() != null) {
+            for(LTEquipBasic equipment: data.getChildren()) {
+                createNode(result, equipment);
+            }
+        }
+    }
+    
+    public static void createCheckPointNode(TreeNode parentNode, LTEquipCheckPoint data) {
+        TreeNode result = new DefaultTreeNode("checkPoint", new NodeData(data.getName()), parentNode);
+    }
+}
+
+class NodeData implements Serializable, Comparable<NodeData> {
+    private String name;
+    
+    public NodeData(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NodeData other = (NodeData) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
+    }
+    @Override
+    public String toString() {
+        return name;
+    }
+    @Override
+    public int compareTo(NodeData otherNodeData) {
+        return this.getName().compareTo(otherNodeData.getName());
     }
 }
