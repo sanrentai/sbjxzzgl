@@ -26,7 +26,7 @@ public final class SepC {
     /**
      * 设备文档上传文件夹名称
      */
-    public static final String DEVICE_DOCUMENTS_DIRECTORY_NAME = "DeviceDocuments";
+    public static final String EQUIPMENT_DOCUMENTS_DIRECTORY_NAME = "EquipmentDocuments";
 
     /**
      * 图片上传默认文件名
@@ -708,7 +708,7 @@ public final class SepC {
 
         public static final String EQP0004 = "ctrlEQP0004";
 
-        public static final String EQP0007 = "ctrlEQP0007";
+        public static final String WEN_DANG_JI_TU_PIAN_GUAN_LI_CONTROLLER_NAME = "WenDangJiTuPianGuanLiController";
 
         /**
          * 巡检管理

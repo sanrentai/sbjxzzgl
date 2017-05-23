@@ -630,10 +630,6 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setItemsList(List<SysRoutingInspectionItems> itemsList) {
         this.itemsList = itemsList;
     }
-
-    
-    
-    
     @Transient
     private boolean hasBeenAddedToTreeNode = false;
 

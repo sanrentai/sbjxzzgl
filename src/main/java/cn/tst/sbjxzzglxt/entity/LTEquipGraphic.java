@@ -7,11 +7,8 @@ package cn.tst.sbjxzzglxt.entity;
 
 import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
-import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import cn.tst.sbjxzzglxt.controller.equipment.EQP0007Controller;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +28,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -63,6 +61,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipGraphic.findByDelFlg", query = "SELECT l FROM LTEquipGraphic l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipGraphic.findByVersion", query = "SELECT l FROM LTEquipGraphic l WHERE l.version = :version")})
 public class LTEquipGraphic extends BaseEntity implements Serializable {
+    @Size(max = 250)
+    @Column(name = "F_Name")
+    private String fName;
     @Size(max = 250)
     @Column(name = "F_OriginalName")
     private String fOriginalName;
@@ -324,11 +325,23 @@ public class LTEquipGraphic extends BaseEntity implements Serializable {
     
     public String getPreviewFilePath() {
         String result = "/uploadFiles/".concat(CConst.SLASH)
-                .concat(SepC.DEVICE_DOCUMENTS_DIRECTORY_NAME)
+                .concat(SepC.EQUIPMENT_DOCUMENTS_DIRECTORY_NAME)
                 .concat(CConst.SLASH)
                 .concat(this.getFNameOnServer())
                 .concat(CConst.SLASH)
                 .concat("p");
         return result;
+    }
+    
+    public String getType() {
+        return FilenameUtils.getExtension(this.fOriginalName).toUpperCase();
+    }
+
+    public String getFName() {
+        return fName;
+    }
+
+    public void setFName(String fName) {
+        this.fName = fName;
     }
 }

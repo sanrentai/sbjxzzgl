@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:outputPanel styleClass="Card" id="rootContainer">
+        <h1 class="CardBigTopic Purple">
+            <h:outputText value="#{ctrlMaster.createPageTitle('EQP', 'WenDangJiTuPianGuanLi')}"/>
+        </h1>
+        <!--无敌分割线-->
+        <div class="SeparatorFull"></div>
+        <p:outputPanel id="EquipmentTreeView" styleClass="Container30 Responsive100">
+            <p:panelGrid styleClass="wd-p-100">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column><h:outputText value="设备一览"/></p:column>
+                    </p:row>
+                </f:facet>
+                <p:row>
+                    <p:column>
+                        <p:tree id="EquipmentTree" 
+                                value="#{WenDangJiTuPianGuanLiController.vm.equipmentTreeRoot}" 
+                                var="equipment" 
+                                selectionMode="single" 
+                                selection="#{WenDangJiTuPianGuanLiController.vm.selectedEquipmentNode}"
+                                styleClass="wd-p-100" 
+                                animate="true">
+                            <p:ajax event="select" 
+                                    process="EquipmentTree" 
+                                    update="frmMain:rootContainer" 
+                                    listener="#{WenDangJiTuPianGuanLiController.onEquipmentNodeSelect(equipment)}"  />
+                            <p:treeNode>
+                                <h:outputText value="#{equipment}"/>
+                            </p:treeNode>
+                        </p:tree>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:outputPanel>
+        <p:outputPanel id="GraphicTabelView" styleClass="Container70 Responsive100">
+            <p:dataTable id="GraphicTable" 
+                         value="#{WenDangJiTuPianGuanLiController.vm.selectedEquipmentDocumentList}" 
+                         var="document">
+                <f:facet name="header">
+                    <h:outputText value="设备文档及图片信息列表展示"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="图文名称" styleClass="tct wd-p-8"/>
+                        <p:column headerText="预览" styleClass="tct wd-p-8"/>                       
+                        <p:column headerText="类型" styleClass="tct wd-p-10"/>   
+                        <p:column headerText="版本" styleClass="wd-p-5"/>
+                        <p:column headerText="下载" styleClass="wd-p-5"/>
+                        <p:column headerText="更新" styleClass="wd-p-5"/>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{document.FName}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <p:graphicImage value="#{document.previewFilePath}"></p:graphicImage>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{document.type}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{document.FVer}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{document.FOriginalName}"/>
+                </p:column>
+                <p:column styleClass="tlt">
+                    <h:outputText value="#{document.FOriginalName}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+        <p:toolbar styleClass="Container100">
+            <f:facet name="left">
+                <p:commandButton value="新建" 
+                                 process="@this" 
+                                 update="frmMain:rootContainer" 
+                                 actionListener="#{WenDangJiTuPianGuanLiController.onEditNewDocument}" 
+                                 styleClass="NavyButton" 
+                                 disabled="#{empty WenDangJiTuPianGuanLiController.vm.currentEquipment}"/>
+            </f:facet>
+        </p:toolbar>
+        <p:outputPanel id="NewEquipmentDocumentForm" styleClass="Container100 Responsive100 pnlOutputArea" 
+                       rendered="#{not empty WenDangJiTuPianGuanLiController.vm.equipmentDocumentInEdit}">
+            <p:panelGrid columns="3" layout="grid" styleClass="wd-p-50">
+                <f:facet name="header">
+                    <h:outputText value="新的图文上传表单"/>
+                </f:facet>
+                
+                <p:outputLabel value="所属设备："></p:outputLabel>
+                <p:outputLabel value="#{WenDangJiTuPianGuanLiController.vm.currentEquipment.ENmae}"></p:outputLabel>
+                <p:outputPanel></p:outputPanel>
+                
+                <p:outputLabel value="图文名称："></p:outputLabel>
+                <p:inputText value="#{WenDangJiTuPianGuanLiController.vm.equipmentDocumentInEdit.FName}"
+                             required="true"
+                             requiredMessage="#{WenDangJiTuPianGuanLiController.isRequiredMessage('图文名称')}"></p:inputText>
+                <p:outputPanel></p:outputPanel>
+                
+                <p:outputLabel value="上传文件："></p:outputLabel>
+                <p:inputText id="FileName" value="#{WenDangJiTuPianGuanLiController.vm.equipmentDocumentInEdit.FOriginalName}"
+                             required="true"
+                             requiredMessage="#{WenDangJiTuPianGuanLiController.isRequiredMessage('上传文件')}"></p:inputText>
+                <p:fileUpload mode="advanced" 
+                              required="true" 
+                              requiredMessage="#{WenDangJiTuPianGuanLiController.isRequiredMessage('上传文件')}"
+                              fileUploadListener="#{WenDangJiTuPianGuanLiController.onFileSelectToUpload}"
+                              update="frmMain:FileName"></p:fileUpload>
+                
+                <p:outputLabel value="文件版本："></p:outputLabel>
+                <p:inputText value="#{WenDangJiTuPianGuanLiController.vm.equipmentDocumentInEdit.FVer}"
+                             required="true"
+                             requiredMessage="#{WenDangJiTuPianGuanLiController.isRequiredMessage('文件版本')}"></p:inputText>
+                <p:outputPanel>默认新上传版本为1不可以修改，每次更新版本号加1</p:outputPanel>
+                
+                <p:commandButton value="提交" 
+                                 process="NewEquipmentDocumentForm"
+                                 actionListener="#{WenDangJiTuPianGuanLiController.onEditNewDocumentSubmit}"
+                                 update="frmMain:rootContainer GraphicTable"></p:commandButton>
+                <p:outputPanel></p:outputPanel>
+                <p:outputPanel></p:outputPanel>
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:outputPanel>
+</ui:composition>
