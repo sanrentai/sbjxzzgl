@@ -10,6 +10,7 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import static cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi.Controller.createEqpTree;
+import static cn.tst.sbjxzzglxt.controller.equipment.EQP0006Controller.createEqpTree;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipFitting;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
