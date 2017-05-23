@@ -96,7 +96,7 @@
                     <p:column styleClass="tct">
                         <h:outputText value="#{equipWarnList.DCont}"/>
                     </p:column>
-                   <!--修改按钮--> 
+                    <!--修改按钮--> 
                     <p:column styleClass="tct">
                         <p:commandLink actionListener="#{ctrlEQP0005.onEditEquip(equipWarnList)}"
                                        process="@this" update="@(.pnlInputArea), @(.toolbar)">
@@ -121,7 +121,7 @@
                 <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0005.vm.equipWarn}">
 
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                        <p:outputLabel for="addENum" value="提醒设备ID"/>
+                        <p:outputLabel for="addENum" value="所属设备"/>
                         <p:inputText id="addENum" disabled="true" value="#{ctrlEQP0005.vm.selectedEquipBasic.ENmae}" />
                     </p:panelGrid>
                     <!--提醒设备标题-->
@@ -142,19 +142,26 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <!--    提醒类型 数据库数据类型是小数，所以存储0代表年，1代表月，2代表日       -->
                         <p:outputLabel for="addWarnType" value="提醒类型"/>
-                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0005.vm.equipWarn.TTyoe}">
-                            <f:selectItems value="#{bizConfig.reminderTime}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0005.vm.equipWarn.TTyoe}"
+                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('提醒类型')}">
+                            <!--<f:selectItem itemLabel="选择项目" itemValue="#{null}" noSelectionOption="true" />-->
+                            <f:selectItems value="#{bizConfig.reminderTime}" var="type" itemLabel="#{type.message}" itemValue="#{type}" noSelectionValue="true"/>
                         </p:selectOneMenu>
                     </p:panelGrid>
                     <!--是否循环-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <!--    是否循环提醒   0代表是，1代表否  "-->
-                        <p:outputLabel for="addCirculation" value="是否循环"/>
-                        <p:selectOneMenu id="addCirculation" value="#{ctrlEQP0005.vm.equipWarn.xhYn}" 
-                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('是否循环')}">
-                            <f:selectItems value="#{bizConfig.whether}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
-
-                        </p:selectOneMenu>
+                        <!--                        <p:outputLabel for="addCirculation" value="是否循环"/>
+                                                <p:selectOneMenu id="addCirculation" value="#{ctrlEQP0005.vm.equipWarn.xhYn}" 
+                                                                 required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('是否循环')}">
+                                                    <f:selectItems value="#{bizConfig.whether}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
+                        
+                                                </p:selectOneMenu>-->
+                        <p:outputLabel value="是否循环" for="addCirculation"/>
+                        <p:selectOneRadio id="addCirculation" value="#{ctrlEQP0005.vm.equipWarn.xhYn}"
+                                          required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('是否循环')}" >
+                            <f:selectItems value="#{bizConfig.whether}" var="leixing" itemLabel="#{leixing.message}" itemValue="#{leixing}" />
+                        </p:selectOneRadio>
                     </p:panelGrid>
                     <!--提醒方式-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
@@ -167,7 +174,7 @@
                             <f:selectItem itemLabel="语音" itemValue="语音"/>
                         </p:selectOneMenu>
                     </p:panelGrid>
-                  
+
                     <p:panelGrid columns="1" layout="grid">
                         <p:outputLabel for="addWarnContent" value="提醒内容"/>
                         <p:inputTextarea id="addWarnContent" value="#{ctrlEQP0005.vm.equipWarn.TContent}" 

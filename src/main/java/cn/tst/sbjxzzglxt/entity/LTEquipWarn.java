@@ -169,13 +169,15 @@ public class LTEquipWarn extends BaseEntity implements Serializable {
 //        this.tTyoe = tTyoe;
 //    }
     public SepE.ReminderTime getTTyoe() {
-        LOG.info(tTyoe);
-        LOG.info(tTyoe.intValue());
+//        LOG.info(tTyoe);
+//        LOG.info(tTyoe.intValue());
         return SepE.ReminderTime.parse(tTyoe.intValue());
     }
 
     public void setTTyoe(SepE.ReminderTime tTyoe) {
+        if (tTyoe != null) {
         this.tTyoe = (long) tTyoe.getValue();
+        }
     }
 
     public SepE.Whether getXhYn() {

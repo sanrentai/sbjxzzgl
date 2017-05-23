@@ -14,6 +14,18 @@ var nsec;
 
 var lmonth,lday,lleap;//农历参数
 
+function chk()
+{
+alert("111");
+}
+
+$(document).ready(function(){
+    $(".anniu").click(function(){
+        alert("1111");
+       
+    });
+});
+
 
 function NewTick()
 {

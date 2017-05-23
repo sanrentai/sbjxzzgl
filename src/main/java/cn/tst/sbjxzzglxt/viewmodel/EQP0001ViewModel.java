@@ -2,6 +2,7 @@ package cn.tst.sbjxzzglxt.viewmodel;
 
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.LTEquipProRule;
 import cn.tst.sbjxzzglxt.entity.LTEquipProperty;
 import cn.tst.sbjxzzglxt.entity.MstBuMen;
@@ -14,7 +15,8 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 public class EQP0001ViewModel extends BaseViewModel {
-
+    private List<LTEquipCheckPoint> selectCheckpointList;
+    private LTEquipCheckPoint selectCheckpoint;
     private List<LTEquipProperty> equipPropertyList;
     private List<LTEquipBasic> equipBasicList;
     private List<LTEquipBasic> selectEquipBasicList;
@@ -106,6 +108,22 @@ public class EQP0001ViewModel extends BaseViewModel {
 
     public void setSelectEquipBasicList(List<LTEquipBasic> selectEquipBasicList) {
         this.selectEquipBasicList = selectEquipBasicList;
+    }
+
+    public List<LTEquipCheckPoint> getSelectCheckpointList() {
+        return selectCheckpointList;
+    }
+
+    public void setSelectCheckpointList(List<LTEquipCheckPoint> selectCheckpointList) {
+        this.selectCheckpointList = selectCheckpointList;
+    }
+
+    public LTEquipCheckPoint getSelectCheckpoint() {
+        return selectCheckpoint;
+    }
+
+    public void setSelectCheckpoint(LTEquipCheckPoint selectCheckpoint) {
+        this.selectCheckpoint = selectCheckpoint;
     }
 
 }

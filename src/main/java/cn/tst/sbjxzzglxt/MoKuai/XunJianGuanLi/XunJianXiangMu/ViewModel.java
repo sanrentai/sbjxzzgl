@@ -3,6 +3,7 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu;
 import cn.tst.sbjxzzglxt.viewmodel.*;
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
@@ -15,6 +16,7 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 public class ViewModel extends BaseViewModel {
+
     private List<LTEquipError> equipErrorList;//用于取故障名称
     private SysRoutingInspectionSite site;//用于取巡检点信息
     private List<SysRoutingInspectionSite> siteList;//用于取巡检点信息
@@ -26,11 +28,44 @@ public class ViewModel extends BaseViewModel {
     private List<LTEquipError> selectErrorList;//用于弹窗选择故障
     private LTEquipError selectequipError;//用于弹窗选择故障
     private LTEquipBasic selectedEquipBasic;
-    /**
-     * 当前选中故障
-     */
-    private String currentError;
+    private List<LTEquipCheckPoint> checkPointList;//巡检点
+    private List<LTEquipCheckPoint> selectCheckPointList;//项目巡检信息表
+    private LTEquipCheckPoint selectCheckPoint;
 
+    public LTEquipCheckPoint getSelectCheckPoint() {
+        return selectCheckPoint;
+    }
+
+    public void setSelectCheckPoint(LTEquipCheckPoint selectCheckPoint) {
+        this.selectCheckPoint = selectCheckPoint;
+    }
+
+   
+    
+    
+    private String currentError;//当前选中故障
+
+    public List<LTEquipCheckPoint> getSelectCheckPointList() {
+        return selectCheckPointList;
+    }
+
+    public void setSelectCheckPointList(List<LTEquipCheckPoint> selectCheckPointList) {
+        this.selectCheckPointList = selectCheckPointList;
+    }
+
+    
+    
+    public List<LTEquipCheckPoint> getCheckPointList() {
+        return checkPointList;
+    }
+
+    public void setCheckPointList(List<LTEquipCheckPoint> checkPointList) {
+        this.checkPointList = checkPointList;
+    }
+    
+    
+    
+    
     public String getCurrentError() {
         return currentError;
     }
@@ -46,8 +81,6 @@ public class ViewModel extends BaseViewModel {
     public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
         this.selectedEquipBasic = selectedEquipBasic;
     }
-    
-    
 
     public List<LTEquipError> getSelectErrorList() {
         return selectErrorList;
@@ -65,7 +98,6 @@ public class ViewModel extends BaseViewModel {
         this.selectequipError = selectequipError;
     }
 
-    
     public SysRoutingInspectionSite getSite() {
         return site;
     }
@@ -73,8 +105,7 @@ public class ViewModel extends BaseViewModel {
     public void setSite(SysRoutingInspectionSite site) {
         this.site = site;
     }
-    
-    
+
     public List<LTEquipBasic> getSelectEquipBasicList() {
         return selectEquipBasicList;
     }
@@ -82,8 +113,7 @@ public class ViewModel extends BaseViewModel {
     public void setSelectEquipBasicList(List<LTEquipBasic> selectEquipBasicList) {
         this.selectEquipBasicList = selectEquipBasicList;
     }
-  
-    
+
     public List<SysRoutingInspectionItems> getRoutingInspectionItemsList() {
         return routingInspectionItemsList;
     }
@@ -131,13 +161,7 @@ public class ViewModel extends BaseViewModel {
 
     public void setEquipErrorList(List<LTEquipError> equipErrorList) {
         this.equipErrorList = equipErrorList;
-        
+
     }
-
-   
-  
-
-   
-
-
+ 
 }

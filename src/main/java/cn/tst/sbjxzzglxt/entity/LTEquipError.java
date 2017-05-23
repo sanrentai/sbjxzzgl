@@ -369,12 +369,20 @@ public class LTEquipError extends BaseEntity implements Serializable {
         this.errorMessageList = errorMessageList;
     }
     
-//    //项目表
-//     //这个连表用于页面区设备名称
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "Err_Num", referencedColumnName = "dui_ying_gu_zhang", insertable = false, updatable = false)
-//    
+    //项目表
+     //这个连表用于页面区设备名称
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Err_Num", referencedColumnName = "dui_ying_gu_zhang", insertable = false, updatable = false)
+    private SysRoutingInspectionItems sysItems;
 
+    public SysRoutingInspectionItems getSysItems() {
+        return sysItems;
+    }
+
+    public void setSysItems(SysRoutingInspectionItems sysItems) {
+        this.sysItems = sysItems;
+    }
+    
     
     
 }

@@ -240,17 +240,17 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "xun_jian_dian_xiang_mu_id")
     private SysRoutingInspectionMessage message;
     
-//    //故障表格
-//     @OneToMany(mappedBy = "itmes", fetch = FetchType.LAZY)
-//     private List<LTEquipError> errorList;
-//
-//    public List<LTEquipError> getErrorList() {
-//        return errorList;
-//    }
-//
-//    public void setErrorList(List<LTEquipError> errorList) {
-//        this.errorList = errorList;
-//    }
-     
+    //故障表格
+     @OneToMany(mappedBy = "sysItems", fetch = FetchType.LAZY)
+     private List<LTEquipError> errorList;
+
+    public List<LTEquipError> getErrorList() {
+        return errorList;
+    }
+
+    public void setErrorList(List<LTEquipError> errorList) {
+        this.errorList = errorList;
+    }
+   
    
 }

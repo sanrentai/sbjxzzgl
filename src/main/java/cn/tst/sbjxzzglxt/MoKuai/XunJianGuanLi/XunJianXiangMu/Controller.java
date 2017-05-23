@@ -9,6 +9,7 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipFitting;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
@@ -84,7 +85,11 @@ public class Controller extends BusinessBaseController {
     //xhtml新建监控的事件
     public void onAddTargetData() {
         vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
-        vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
+        vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId()); 
+        //把巡检点列表清空，显示巡检项目列表
+        vm.setCheckPointList(null);  
+        vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
+        
     }
 
     /**
@@ -151,6 +156,20 @@ public class Controller extends BusinessBaseController {
         }
     }
 
+    public void onXiangMuLieBiao(){
+    //创建一个集合
+    List l = new ArrayList();
+    //把页面得到的集合便利后放到新创建的集合内
+    for(Object list :vm.getSelectedEquipBasic().getCheckPointList()){
+        l.add(list);
+    }
+    //最后把新集合放到视图内
+    vm.setCheckPointList(l);
+   
+    
+    }
+    
+ 
 
     //*****************************************************************
     //                        Getter Setter
