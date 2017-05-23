@@ -1,25 +1,15 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuWenTi;
 
-import cn.tst.sbjxzzglxt.controller.equipment.*;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import cn.tst.sbjxzzglxt.bizlogic.EQP0006BizLogic;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
-import cn.tst.sbjxzzglxt.entity.LTEquipError;
-import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionProblem;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
 import java.util.List;
-import java.util.Set;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 /**
  * 巡检故障定义

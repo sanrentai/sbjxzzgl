@@ -371,10 +371,19 @@ public class BizConfig implements Serializable {
        /**
      * 所有是与否
      *
-     * @return 提醒日期类型
+     * @return 是与否
      */
     public SepE.Whether[] getWhether() {
         return SepE.Whether.values();
+    }
+    
+        /**
+     * 故障处理方式
+     *
+     * @return 0代表处理 1代表上报
+     */
+    public SepE.ErrorDispose[] getErrorDispose(){
+        return SepE.ErrorDispose.values();
     }
     
 }

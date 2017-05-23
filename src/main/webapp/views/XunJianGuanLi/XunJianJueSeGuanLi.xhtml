@@ -11,7 +11,7 @@
         </h1>
         <!--无敌分割线-->
         <div class="SeparatorFull"></div>
-        <p:dataTable value="#{XunJianJueSeGuanLiController.vm.roleList}" var="role">
+        <p:dataTable id="RoleTable" value="#{XunJianJueSeGuanLiController.vm.roleList}" var="role">
             <f:facet name="header">
                 <h:outputText value="检修角色设置"/>
             </f:facet>
@@ -33,25 +33,30 @@
             </p:column>
             <p:column styleClass="tlt">
                 <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditXunJianFanWei(role)}"
-                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianFanWeiDialog').show();">
+                               process="@this" update="frmMain:EditXunJianFanWeiDialog, frmMain:EquipmentTree" 
+                               oncomplete="PF('EditXunJianFanWeiDialog').show();">
                     <i class="fa fa-pencil Fs18 Blue"></i>
                 </p:commandLink>
             </p:column>
             <p:column styleClass="tlt">
                 <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZe(role)}"
-                               process="@this" update="frmMain:rootContainer" oncomplete="PF('EditXunJianGuiZeDialog').show();">
+                               process="@this" 
+                               update="frmMain:EditXunJianGuiZeDialog" 
+                               oncomplete="PF('EditXunJianGuiZeDialog').show();">
                     <i class="fa fa-pencil Fs18 Blue"></i>
                 </p:commandLink>
             </p:column>
             <p:column styleClass="tlt">
                 <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onEditRole(role)}"
-                               process="@this" update="frmMain:rootContainer">
+                               process="@this" 
+                               update="frmMain:EditRoleDialog"
+                               oncomplete="PF('EditRoleDialog').show();">
                     <i class="fa fa-pencil Fs18 Blue"></i>
                 </p:commandLink>
             </p:column>
             <p:column styleClass="tlt">
                 <p:commandLink actionListener="#{XunJianJueSeGuanLiController.onDeleteRole(role)}"
-                               process="@this" update="frmMain:rootContainer">
+                               process="@this" update="frmMain:RoleTable">
                     <i class="fa fa-trash Fs18 Blue"></i>
                 </p:commandLink>
             </p:column>
@@ -66,7 +71,7 @@
                                  disabled="#{XunJianJueSeGuanLiController.statusEditing}"/>
             </f:facet>
         </p:toolbar>
-        <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianJueSeGuanLiController.vm.roleInEdit}">
+        <p:outputPanel id="XunJianRoleCreating" styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianJueSeGuanLiController.vm.roleInEdit}">
             <f:facet name="header">
                 <p:outputPanel>新建角色</p:outputPanel>
             </f:facet>
@@ -89,7 +94,7 @@
                              layout="grid" 
                              styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                     <p:outputPanel></p:outputPanel>
-                    <p:commandButton value="提交" 
+                    <p:commandButton value="提交" process="@this XunJianRoleCreating"
                                      actionListener="#{XunJianJueSeGuanLiController.onSubmitNewRole}" 
                                      update="frmMain:rootContainer"></p:commandButton>
                 </p:panelGrid>
@@ -97,20 +102,32 @@
         </p:outputPanel>
     </p:outputPanel>
     <!--对话框-->
-    <p:dialog id="EditXunJianFanWeiDialog" width="512">
-        <p:tree value="#{XunJianJueSeGuanLiController.vm.equipmentNodeRoot}" var="node">
+    <p:dialog widgetVar="EditXunJianFanWeiDialog" 
+              id="EditXunJianFanWeiDialog"
+              header="编辑巡检范围"
+              width="512" 
+              modal="true">
+        <p:tree id="EquipmentTree" value="#{XunJianJueSeGuanLiController.vm.equipmentNodeRoot}" 
+                selectionMode="checkbox"
+                selection="#{XunJianJueSeGuanLiController.vm.selectedEquipmentNodeArray}"
+                var="node">
             <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
                 <h:outputText value="#{node.name}"></h:outputText>
             </p:treeNode>
             <p:treeNode type="checkPoint" icon="ui-icon-document">
-                <p:checkbox ></p:checkbox>
                 <h:outputText value="#{node.name}"></h:outputText>
             </p:treeNode>
         </p:tree>
+        <p:commandButton value="提交" 
+                         process="@this,EditXunJianFanWeiDialog"
+                         actionListener="#{XunJianJueSeGuanLiController.onEditXunJianFanWeiDialogSubmit}"
+                         oncomplete="PF('EditXunJianFanWeiDialog').hide();"></p:commandButton>
     </p:dialog>
-    <p:dialog widgetVar="EditXunJianGuiZeDialog"
+    <!--编辑巡检规则对话框-->
+    <p:dialog widgetVar="EditXunJianGuiZeDialog" 
+              header="编辑巡检规则"
+              id="EditXunJianGuiZeDialog"
               modal="true" 
-              onHide="PF('rootContainer').update();"
               width="512">
         <p:panelGrid columns="2" 
                      layout="grid" 
@@ -133,11 +150,52 @@
                         locale="#{bizConfig.locale}"></p:calendar>
             <p:outputLabel value="结束时间："></p:outputLabel>
             <p:calendar value="#{XunJianJueSeGuanLiController.vm.xunJianGuiZeInEdit.jieShuShiJian}" 
-                        pattern="#{bizConfig.dateTimeFormat}" mask="true"></p:calendar>
+                        readonlyInput="true"
+                        pattern="#{bizConfig.dateTimeFormat}" 
+                        mask="true"
+                        required="true"
+                        requiredMessage="#{XunJianJueSeGuanLiController.isRequiredMessage('时间')}"
+                        converterMessage="#{XunJianJueSeGuanLiController.dateUnvalidMessage('时间')}"
+                        locale="#{bizConfig.locale}"></p:calendar>
             <p:outputPanel></p:outputPanel>
-            <p:commandButton value="提交"
+            <p:commandButton value="提交" process="@this EditXunJianGuiZeDialog" 
+                             update="frmMain:rootContainer"
                              actionListener="#{XunJianJueSeGuanLiController.onEditXunJianGuiZeDialogSubmit}"
                              oncomplete="PF('EditXunJianGuiZeDialog').hide();"></p:commandButton>
+        </p:panelGrid>
+    </p:dialog>
+    <!--角色编辑对话框-->
+    <p:dialog widgetVar="EditRoleDialog" 
+              header="编辑角色"
+              id="EditRoleDialog"
+              modal="true"
+              width="512">
+        <p:panelGrid columns="1" 
+                     layout="grid">
+            <p:panelGrid columns="2" 
+                         layout="grid" 
+                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
+                <p:outputLabel value="角色名称"></p:outputLabel>
+                <p:inputText value="#{XunJianJueSeGuanLiController.vm.roleInEdit.roleName}" 
+                             required="true" 
+                             requiredMessage="#{XunJianJueSeGuanLiController.isRequiredMessage('角色名称')}"></p:inputText>
+            </p:panelGrid>
+            <p:panelGrid columns="2" 
+                         layout="grid" 
+                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
+                <p:outputLabel value="角色描述"></p:outputLabel>
+                <p:inputTextarea value="#{XunJianJueSeGuanLiController.vm.roleInEdit.roleDescription}"></p:inputTextarea>
+            </p:panelGrid>
+            <p:panelGrid columns="2" 
+                         layout="grid" 
+                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
+                <p:outputPanel></p:outputPanel>
+                <p:commandButton value="提交" 
+                                 process="@this EditRoleDialog"
+                                 actionListener="#{XunJianJueSeGuanLiController.onEditRoleSubmit}" 
+                                 update="frmMain:rootContainer"
+                                 oncomplete="PF('EditRoleDialog').hide();"></p:commandButton>
+            </p:panelGrid>
         </p:panelGrid>
     </p:dialog>
 </ui:composition>

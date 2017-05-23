@@ -15,7 +15,7 @@ import org.primefaces.model.TreeNode;
  * @author ps_xy@pscp.co.jp
  */
 public class ViewModel extends BaseViewModel {
-  
+    private List<LTEquipError> equipErrorList;//用于取故障名称
     private SysRoutingInspectionSite site;//用于取巡检点信息
     private List<SysRoutingInspectionSite> siteList;//用于取巡检点信息
     private List<LTEquipBasic> equipBasicList;//用于取设备名称;
@@ -23,19 +23,48 @@ public class ViewModel extends BaseViewModel {
     private LTEquipBasic equipBasic;//在视图内添加设备实体类，用于xhml前端取设备名称
     private List<SysRoutingInspectionItems> routingInspectionItemsList;//巡检项目实体类集合
     private SysRoutingInspectionItems routingInspectionItems;//巡检项目实体类
-    private TreeNode equipTreeRoot;//页面左侧Tree结构的对象
-    ///选中的节点
-    private TreeNode selectedNode;
+    private List<LTEquipError> selectErrorList;//用于弹窗选择故障
+    private LTEquipError selectequipError;//用于弹窗选择故障
+    private LTEquipBasic selectedEquipBasic;
+    /**
+     * 当前选中故障
+     */
+    private String currentError;
 
-    public TreeNode getSelectedNode() {
-        return selectedNode;
+    public String getCurrentError() {
+        return currentError;
     }
 
-    public void setSelectedNode(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
+    public void setCurrentError(String currentError) {
+        this.currentError = currentError;
     }
 
+    public LTEquipBasic getSelectedEquipBasic() {
+        return selectedEquipBasic;
+    }
+
+    public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
+        this.selectedEquipBasic = selectedEquipBasic;
+    }
     
+    
+
+    public List<LTEquipError> getSelectErrorList() {
+        return selectErrorList;
+    }
+
+    public void setSelectErrorList(List<LTEquipError> selectErrorList) {
+        this.selectErrorList = selectErrorList;
+    }
+
+    public LTEquipError getSelectequipError() {
+        return selectequipError;
+    }
+
+    public void setSelectequipError(LTEquipError selectequipError) {
+        this.selectequipError = selectequipError;
+    }
+
     
     public SysRoutingInspectionSite getSite() {
         return site;
@@ -54,14 +83,6 @@ public class ViewModel extends BaseViewModel {
         this.selectEquipBasicList = selectEquipBasicList;
     }
   
-    
-    public TreeNode getEquipTreeRoot() {
-        return equipTreeRoot;
-    }
-
-    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
-        this.equipTreeRoot = equipTreeRoot;
-    }
     
     public List<SysRoutingInspectionItems> getRoutingInspectionItemsList() {
         return routingInspectionItemsList;
@@ -104,6 +125,16 @@ public class ViewModel extends BaseViewModel {
         this.siteList = siteList;
     }
 
+    public List<LTEquipError> getEquipErrorList() {
+        return equipErrorList;
+    }
+
+    public void setEquipErrorList(List<LTEquipError> equipErrorList) {
+        this.equipErrorList = equipErrorList;
+        
+    }
+
+   
   
 
    

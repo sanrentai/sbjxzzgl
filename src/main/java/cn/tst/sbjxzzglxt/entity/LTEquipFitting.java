@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -245,7 +246,6 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
         this.editUser = editUser;
     }
 
-    
     public String getGuiGe() {
         return guiGe;
     }
@@ -296,7 +296,11 @@ public class LTEquipFitting extends BaseEntity implements Serializable {
     }
 
     @ManyToOne
-    @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false)
+    @JoinColumns({
+        @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
     private LTEquipBasic equipBasic;
 
     public LTEquipBasic getEquipBasic() {

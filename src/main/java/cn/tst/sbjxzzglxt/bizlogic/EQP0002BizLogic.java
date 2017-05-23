@@ -5,7 +5,7 @@ import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0002ViewModel;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi.ViewModel;
 
 /**
  * 装备配件定义

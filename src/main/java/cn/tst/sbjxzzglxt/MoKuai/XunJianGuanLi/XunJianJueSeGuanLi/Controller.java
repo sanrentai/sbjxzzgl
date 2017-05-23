@@ -8,7 +8,6 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianJueSeGuanLi;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.MstXunJianRole;
-import cn.tst.sbjxzzglxt.entity.XunJianGuiZe;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -55,15 +54,33 @@ public class Controller extends BusinessBaseController {
         bizLogic.onSubmitNewRole(vm);
     }
     
-    public void onEditXunJianFanWei(MstXunJianRole role) {
-        
+    public void onEditXunJianFanWei(MstXunJianRole currentRole) {
+        bizLogic.onEditXunJianFanWei(vm, currentRole);
     }
     
     public void onEditXunJianGuiZe(MstXunJianRole role) {
-        vm.setRoleInEdit(role);
+        vm.setCurrentRole(role);
+        bizLogic.onEditXunJianGuiZe(vm);
     }
     
     public void onEditXunJianGuiZeDialogSubmit() {
         bizLogic.onEditXunJianGuiZeDialogSubmit(vm);
+    }
+    
+    public void onEditXunJianFanWeiDialogSubmit() {
+        bizLogic.onEditXunJianFanWeiDialogSubmit(vm);
+    }
+    
+    public void onDeleteRole(MstXunJianRole role) {
+        bizLogic.onDeleteRole(vm, role);
+    }
+    
+    public void onEditRole(MstXunJianRole role) {
+        vm.setCurrentRole(role);
+        bizLogic.onEditRole(vm);
+    }
+    
+    public void onEditRoleSubmit() {
+        bizLogic.onEditRoleSubmit(vm);
     }
 }

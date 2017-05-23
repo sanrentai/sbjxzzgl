@@ -3207,4 +3207,56 @@ public class SepE {
             }
         }
     }
+    
+        /**
+     * 处理方式枚举
+     */
+    public static enum ErrorDispose {
+        /**
+         *是
+         */
+        DISPOSE("0"),
+        /**
+         * 否
+         */
+         REPORT("1");
+       
+
+        private final String value;
+
+        ErrorDispose(String value) {
+            this.value = value;
+        }
+
+        public final String getValue() {
+            return value;
+        }
+
+        public static ErrorDispose parse(String v) {
+
+            switch (v) {
+                case "0":
+                    return DISPOSE;
+                case "1":
+                    return  REPORT;
+               
+                default:
+                    return null;
+            }
+        }
+
+        public String getMessage() {
+            switch (this) {
+                case DISPOSE:
+                    return "处理";
+                case REPORT:
+                    return "上报";
+              
+                default:
+                    return null;
+            }
+        }
+    }
+    
+    
 }

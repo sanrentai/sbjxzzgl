@@ -20,9 +20,29 @@ public class ViewModel {
     
     private MstXunJianRole roleInEdit;
     
+    private MstXunJianRole currentRole;
+
+    public MstXunJianRole getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(MstXunJianRole currentRole) {
+        this.currentRole = currentRole;
+    }
+    
     private XunJianGuiZe xunJianGuiZeInEdit;
     
     private TreeNode equipmentNodeRoot;
+    
+    private TreeNode[] selectedEquipmentNodeArray;
+
+    public TreeNode[] getSelectedEquipmentNodeArray() {
+        return selectedEquipmentNodeArray;
+    }
+
+    public void setSelectedEquipmentNodeArray(TreeNode[] selectedEquipmentNodeArray) {
+        this.selectedEquipmentNodeArray = selectedEquipmentNodeArray;
+    }
 
     public TreeNode getEquipmentNodeRoot() {
         return equipmentNodeRoot;

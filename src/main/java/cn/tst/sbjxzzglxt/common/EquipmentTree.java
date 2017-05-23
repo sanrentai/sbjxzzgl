@@ -18,6 +18,8 @@ import org.primefaces.model.TreeNode;
  * @author Aaron-PC-i3-4130
  */
 public class EquipmentTree {
+    static public final String CHECK_POINT_TYPE = "checkPoint";
+    
     static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
         ///根节点
         DefaultTreeNode result = new DefaultTreeNode("Root", null);
@@ -80,78 +82,31 @@ public class EquipmentTree {
         }
     }
     
-    public static TreeNode createEquipmentTreeNodeWithCheckPoint(List<LTEquipBasic> equipmentList) {
-        TreeNode rootNode = new DefaultTreeNode(new NodeData("设备检查点"), null);
+    public static TreeNode createEquipmentTreeNodeWithCheckPoint(List<LTEquipBasic> equipmentList, Integer roleId) {
+        TreeNode rootNode = new DefaultTreeNode(new EquipmentNodeData("设备检查点", roleId, SepC.INVALID_ID), null);
         for(LTEquipBasic equipment: equipmentList) {
-            createNode(rootNode, equipment);
+            createNode(rootNode, equipment, roleId);
         }
         return rootNode;
     }
     
-    public static void createNode(TreeNode parentNode, LTEquipBasic data) {
+    public static void createNode(TreeNode parentNode, LTEquipBasic data, Integer roleId) {
         if(data.isHasBeenAddedToTreeNode()) {
             return;
         }
-        TreeNode result = new DefaultTreeNode(new NodeData(data.getENmae()), parentNode);
+        TreeNode result = new DefaultTreeNode(new EquipmentNodeData(data.getENmae(), roleId, SepC.INVALID_ID), parentNode);
         for(LTEquipCheckPoint checkPoint: data.getCheckPointList()) {
-            createCheckPointNode(result, checkPoint);
+            createCheckPointNode(result, checkPoint, roleId);
         }
         data.setHasBeenAddedToTreeNode(true);
         if(data.getChildren() != null) {
             for(LTEquipBasic equipment: data.getChildren()) {
-                createNode(result, equipment);
+                createNode(result, equipment, roleId);
             }
         }
     }
     
-    public static void createCheckPointNode(TreeNode parentNode, LTEquipCheckPoint data) {
-        TreeNode result = new DefaultTreeNode("checkPoint", new NodeData(data.getName()), parentNode);
-    }
-}
-
-class NodeData implements Serializable, Comparable<NodeData> {
-    private String name;
-    
-    public NodeData(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
-    }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        NodeData other = (NodeData) obj;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
-    }
-    @Override
-    public String toString() {
-        return name;
-    }
-    @Override
-    public int compareTo(NodeData otherNodeData) {
-        return this.getName().compareTo(otherNodeData.getName());
+    public static void createCheckPointNode(TreeNode parentNode, LTEquipCheckPoint data, Integer roleId) {
+        TreeNode result = new DefaultTreeNode("checkPoint", new EquipmentNodeData(data.getName(), roleId, data.getId()), parentNode);
     }
 }

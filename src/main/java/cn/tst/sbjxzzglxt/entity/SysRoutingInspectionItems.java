@@ -58,19 +58,17 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Column(name = "bo_dong_shang_xian")
     private Integer boDongShangXian;
     @Column(name = "bo_dong_xia_xian")
-    private Integer boDongXiaXian;
-    @Size(max = 255)
+    private Integer boDongXiaXian; 
     @Column(name = "dui_ying_gu_zhang")
-    private String duiYingGuZhang;
+    private int duiYingGuZhang;
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Size(max = 255)
     @Column(name = "suo_shu_she_bei_id")
-    private String suoShuSheBeiId;
+    private Long suoShuSheBeiId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "suo_shu_xun_jian_dian_id")
@@ -86,23 +84,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Column(name = "xiang_mu_shuo_ming")
     private String xiangMuShuoMing;
 
-    //连表用于取设备名称
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns({
-        @JoinColumn(name = "suo_shu_she_bei_id", referencedColumnName = "E_Num", insertable = false, updatable = false)
-
-    })
-    private LTEquipBasic equip;
-
-    //这个对应的是SysRoutingInspectionProblem实体类，双向连表
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "suo_shu_xiang_mu_id")
-    private SysRoutingInspectionProblem routingInspectionProblem;
-
-    //这个对应的是SysRoutingInspectionMessage实体类，双向连表
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "xun_jian_dian_xiang_mu_id")
-    private SysRoutingInspectionMessage message;
 
     public SysRoutingInspectionMessage getMessage() {
         return message;
@@ -143,11 +124,11 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.id = id;
     }
 
-    public String getSuoShuSheBeiId() {
+    public Long getSuoShuSheBeiId() {
         return suoShuSheBeiId;
     }
 
-    public void setSuoShuSheBeiId(String suoShuSheBeiId) {
+    public void setSuoShuSheBeiId(Long suoShuSheBeiId) {
         this.suoShuSheBeiId = suoShuSheBeiId;
     }
 
@@ -216,11 +197,11 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems[ id=" + id + " ]";
     }
 
-    public String getDuiYingGuZhang() {
+    public int getDuiYingGuZhang() {
         return duiYingGuZhang;
     }
 
-    public void setDuiYingGuZhang(String duiYingGuZhang) {
+    public void setDuiYingGuZhang(int duiYingGuZhang) {
         this.duiYingGuZhang = duiYingGuZhang;
     }
 
@@ -240,5 +221,36 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.boDongXiaXian = boDongXiaXian;
     }
 
+    //连表用于取设备名称
+     @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name = "suo_shu_she_bei_id", referencedColumnName = "ID", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    }) 
+    private LTEquipBasic equip;
+
+    //这个对应的是SysRoutingInspectionProblem实体类，双向连表
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "suo_shu_xiang_mu_id")
+    private SysRoutingInspectionProblem routingInspectionProblem;
+
+    //这个对应的是SysRoutingInspectionMessage实体类，双向连表
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "xun_jian_dian_xiang_mu_id")
+    private SysRoutingInspectionMessage message;
+    
+//    //故障表格
+//     @OneToMany(mappedBy = "itmes", fetch = FetchType.LAZY)
+//     private List<LTEquipError> errorList;
+//
+//    public List<LTEquipError> getErrorList() {
+//        return errorList;
+//    }
+//
+//    public void setErrorList(List<LTEquipError> errorList) {
+//        this.errorList = errorList;
+//    }
+     
    
 }

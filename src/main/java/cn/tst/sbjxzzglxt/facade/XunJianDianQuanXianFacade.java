@@ -6,7 +6,7 @@
 package cn.tst.sbjxzzglxt.facade;
 
 import cn.tst.sbjxzzglxt.common.SepE;
-import cn.tst.sbjxzzglxt.entity.XunJianGuiZe;
+import cn.tst.sbjxzzglxt.entity.XunJianDianQuanXian;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -16,13 +16,13 @@ import javax.persistence.Query;
  * @author Aaron-PC-i3-4130
  */
 @Stateless
-public class XunJianGuiZeFacade extends AbstractFacade<XunJianGuiZe> {
-    public XunJianGuiZeFacade() {
-        super(XunJianGuiZe.class);
+public class XunJianDianQuanXianFacade extends AbstractFacade<XunJianDianQuanXian> {
+    public XunJianDianQuanXianFacade() {
+        super(XunJianDianQuanXian.class);
     }
     
-    public List<XunJianGuiZe> findByRoleId(Integer roleId) {
-        Query query = getEntityManager().createNamedQuery("XunJianGuiZe.findByRoleId");
+    public List<XunJianDianQuanXian> findByRoleId(Integer roleId) {
+        Query query = getEntityManager().createNamedQuery("XunJianDianQuanXian.findByRoleId");
         query.setParameter("delFlg", SepE.Flag.NO.getValue());
         query.setParameter("roleId", roleId);
         return query.getResultList();

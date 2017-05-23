@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MstXunJianRole.findAll", query = "SELECT m FROM MstXunJianRole m")
-    , @NamedQuery(name = "MstXunJianRole.findByRoleId", query = "SELECT m FROM MstXunJianRole m WHERE m.roleId = :roleId")
+    , @NamedQuery(name = "MstXunJianRole.findByRoleId", query = "SELECT m FROM MstXunJianRole m WHERE m.roleId = :roleId AND m.delFlg = :delFlg")
     , @NamedQuery(name = "MstXunJianRole.findByRoleName", query = "SELECT m FROM MstXunJianRole m WHERE m.roleName = :roleName")
     , @NamedQuery(name = "MstXunJianRole.findByRoleDescription", query = "SELECT m FROM MstXunJianRole m WHERE m.roleDescription = :roleDescription")
     , @NamedQuery(name = "MstXunJianRole.findByInsRep", query = "SELECT m FROM MstXunJianRole m WHERE m.insRep = :insRep")
@@ -109,14 +109,14 @@ public class MstXunJianRole extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.MstXunJianRole[ roleId=" + roleId + " ]";
     }
-    @OneToOne(mappedBy="role", fetch=FetchType.EAGER)
-    private XunJianGuiZe xunJianGuiZe;
-
-    public XunJianGuiZe getXunJianGuiZe() {
-        return xunJianGuiZe;
-    }
-
-    public void setXunJianGuiZe(XunJianGuiZe xunJianGuiZe) {
-        this.xunJianGuiZe = xunJianGuiZe;
-    }
+//    @OneToOne(mappedBy="role", fetch=FetchType.EAGER)
+//    private XunJianGuiZe xunJianGuiZe;
+//
+//    public XunJianGuiZe getXunJianGuiZe() {
+//        return xunJianGuiZe;
+//    }
+//
+//    public void setXunJianGuiZe(XunJianGuiZe xunJianGuiZe) {
+//        this.xunJianGuiZe = xunJianGuiZe;
+//    }
 }

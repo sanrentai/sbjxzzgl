@@ -15,6 +15,8 @@ public final class SepC {
      */
     public static final String SYSTEM_ID = "material";
     
+    public static final Integer INVALID_ID = -1;
+    
     public static final String PING_MIAN_TU_DIRECTORY = "pingmiantu";
 
     /**
@@ -704,8 +706,6 @@ public final class SepC {
 
         public static final String EQP0005 = "ctrlEQP0005";
 
-        public static final String EQP0006 = "ctrlEQP0006";
-
         public static final String EQP0004 = "ctrlEQP0004";
 
         public static final String EQP0007 = "ctrlEQP0007";
@@ -719,6 +719,7 @@ public final class SepC {
         public static final String XUN_JIAN_XIANG_MU_WEN_TI_CONTROLLER_NAME = "XunJianXiangMuWenTiController";
         public static final String LU_RU_XUN_JIAN_JIE_GUO_CONTROLLER_NAME = "LuRuXunJianJieGuoController";
         public static final String XUN_JIAN_JUE_SE_GUAN_LI_CONTROLLER_NAME = "XunJianJueSeGuanLiController";
+        public static final String SHE_BEI_GU_ZHANG_DING_YI_CONTROLLER_NAME = "SheBeiGuZhangDingYiController";
     }
 
     /**

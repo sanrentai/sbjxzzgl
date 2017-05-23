@@ -1,13 +1,9 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXinXiJiLu;
 
-import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuWenTi.*;
-import cn.tst.sbjxzzglxt.viewmodel.*;
 import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
-import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage;
-import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionProblem;
-import org.primefaces.model.TreeNode;
+import cn.tst.sbjxzzglxt.viewmodel.BaseViewModel;
 
 /**
  * 巡检信息记录视图

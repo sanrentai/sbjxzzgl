@@ -4,22 +4,12 @@ import cn.tst.sbjxzzglxt.bizlogic.impl.*;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
-import cn.tst.sbjxzzglxt.bizlogic.EQP0006BizLogic;
-import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
-import cn.tst.sbjxzzglxt.entity.LTEquipError;
-import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
-import cn.tst.sbjxzzglxt.facade.LTEquipErrorFacade;
 import cn.tst.sbjxzzglxt.facade.XunJianXiangMuFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0001ViewModel;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
-import cn.tst.sbjxzzglxt.viewmodel.EQP0006ViewModel;
-import java.util.UUID;
 import org.apache.log4j.Logger;
 
 /**
@@ -83,7 +73,13 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
-
+        LOG.info(target.getXiangMuMingCheng());
+        LOG.info(target.getSuoShuSheBeiId());
+        LOG.info(target.getXunJianShunXu());
+        LOG.info(target.getBoDongShangXian());
+        LOG.info(target.getBoDongXiaXian());
+        LOG.info(target.getDuiYingGuZhang());
+        LOG.info(target.getXiangMuShuoMing());
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
@@ -99,7 +95,8 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
             }
             //执行结果如果是成功的，转化就设置为true。
 
-            vm.setRoutingInspectionItemsList(xiangMuFacade.findAll());
+           Long id = target.getSuoShuSheBeiId();
+            vm.setSelectedEquipBasic(eqpService.find(id));
             result.setSuccess(true);
             //刷新数据后存储到EquipWarn中
 
@@ -110,4 +107,8 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         return result;
     }
 
+    @Override
+    public LTEquipBasic findSelectedEqp(Long id) {
+        return eqpService.find(id);
+    }
 }

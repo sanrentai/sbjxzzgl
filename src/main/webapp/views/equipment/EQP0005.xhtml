@@ -13,9 +13,40 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
+            <p:outputPanel id="pnlSelectArea" styleClass="Container30 Responsive100">
+                <p:panelGrid styleClass="wd-p-100">
+                    <f:facet name="header">
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="设备一览"/>
+                                <p:commandLink actionListener="#{ctrlEQP0001.onCancelEdit}"
+                                               styleClass="fr"
+                                               process="@this" update="frmMain:pnlInputArea, frmMain:pnlOutputArea">
+                                    <i class="fa fa-star-o Fs18 Blue"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                    <p:row>
+                        <p:column style="padding: 0px;">
+                            <p:tree id="treeCK" value="#{ctrlEQP0005.vm.equipTreeRoot}" var="v" 
+                                    selectionMode="single" selection="#{ctrlEQP0005.selectedNode}"
+                                    styleClass="wd-p-100" animate="true">
+                                <p:ajax event="select" process="treeCK" 
+                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0005.onNodeSelect}"  />
 
-            <p:outputPanel id="pnlOutputArea" styleClass="Container100 Responsive100 pnlOutputArea">
-                <p:dataTable value="#{ctrlEQP0005.vm.equipWarnList}" var="equipWarn"
+                                <!--根节点-->
+                                <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
+                                <p:treeNode>
+                                    <h:outputText value="#{v}"/>
+                                </p:treeNode>
+                            </p:tree>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:outputPanel>
+            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
+                <p:dataTable value="#{ctrlEQP0005.vm.selectedEquipBasic.equipWarnList}" var="equipWarnList"
                              widgetVar="wvYongMeiList"
                              rows="10"
                              filterDelay="500"
@@ -25,92 +56,73 @@
                              paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                              emptyMessage="没有数据">
                     <f:facet name="header">
-                        <h:outputText value="设备提醒记录"/>
+                        <h:outputText value="设备提醒信息列表展示"/>
                     </f:facet>
                     <p:columnGroup type="header">
                         <p:row>
-                            <p:row>
-                                <p:column headerText="设备ID" styleClass="tct wd-p-8"/>
-                                <p:column headerText="提醒标题" styleClass="tct wd-p-10"/>
-                                <p:column headerText="提醒时间" styleClass="tct wd-p-10" sortBy="#{ctrlEQP0005.vm.equipWarn.TDate}"/>
-                                <p:column headerText="提醒类型" styleClass="tct wd-p-5"/>
-                                <p:column headerText="是否循环" styleClass="tct wd-p-5"/>
-                                <p:column headerText="提醒方式" styleClass="tct wd-p-5"/>
-                                <p:column headerText="提醒内容" styleClass="tct wd-p-30"/>
-                                <p:column headerText="编辑" styleClass="wd-p-5"/>
-                                <p:column headerText="删除" styleClass="wd-p-5"/>
-                            </p:row>
+                            <p:column headerText="提醒标题" styleClass="tct wd-p-8"/>
+                            <p:column headerText="提醒内容" styleClass="tct wd-p-30" sortBy="#{equip.riQi}"/>
+                            <p:column headerText="提醒时间" styleClass="tct wd-p-25"/>
+                            <p:column headerText="提醒类型" styleClass="tct wd-p-5"/>
+                            <p:column headerText="是否循环" styleClass="tct wd-p-5"/>
+                            <p:column headerText="提醒方式" styleClass="tct wd-p-5"/>
+                            <p:column headerText="修改" styleClass="wd-p-5"/>
+                            <p:column headerText="删除" styleClass="wd-p-5"/>
                         </p:row>
-                    </p:columnGroup>      
-                    <!--设备ID-->
-                    <p:column styleClass="tlt">
-                        <h:outputText value="#{equipWarn.EId}"/>
-                    </p:column>
+                    </p:columnGroup>
                     <!--提醒标题-->
                     <p:column styleClass="tlt">
-                        <h:outputText value="#{equipWarn.TTitle}"/>
+                        <h:outputText value="#{equipWarnList.TTitle}"/>
                     </p:column>
-                    <!--提醒日期-->
+                    <!--提醒内容-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{equipWarnList.TContent}"/>
+                    </p:column>
+                    <!--提醒时间-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equipWarn.TDate}">
-                            <f:convertDateTime pattern="#{bizConfig.dateTimeFormat2}"/>
+                        <h:outputText value="#{equipWarnList.TDate}">
+                            <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
                         </h:outputText>
                     </p:column>
                     <!--提醒类型-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equipWarn.TTyoe.message}"/>
+                        <h:outputText value="#{equipWarnList.TTyoe.message}"/>
                     </p:column>
                     <!--是否循环-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equipWarn.xhYn.message}"/>
+                        <h:outputText value="#{equipWarnList.xhYn.message}"/>
                     </p:column>
-                    <!-- 提醒方式 -->
+                    <!--提醒方式-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equipWarn.DCont}"/>
+                        <h:outputText value="#{equipWarnList.DCont}"/>
                     </p:column>
-                    <!--提醒内容-->
+                   <!--修改按钮--> 
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equipWarn.TContent}"/>
-                    </p:column>
-                    <!-- 修改按钮 -->
-                    <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{ctrlEQP0005.onEditEquip(equipWarn)}"
+                        <p:commandLink actionListener="#{ctrlEQP0005.onEditEquip(equipWarnList)}"
                                        process="@this" update="@(.pnlInputArea), @(.toolbar)">
                             <i class="fa fa-pencil Fs18 Blue"></i>
-
                         </p:commandLink>
                     </p:column>
                     <!--删除按钮-->
                     <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{ctrlEQP0005.onDeleteEquip(equipWarn)}"
+                        <p:commandLink actionListener="#{ctrlEQP0005.onDeleteEquip(equipWarnList)}"
                                        process="@this" 
                                        rendered="#{empty equipWarn.children}"
                                        update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                        oncomplete="showErrorMsg();">
                             <i class="fa fa-trash Fs18 Red"></i>
                             <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
-
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
 
             </p:outputPanel>
-
-
-
-            <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
-                <p:toolbar styleClass="Container100">
-                    <f:facet name="left">
-                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{ctrlEQP0005.onAddTargetData}" 
-                                         styleClass="NavyButton" disabled="#{ctrlEQP0005.statusEditing}"/>
-
-                    </f:facet>
-                </p:toolbar>
+            <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">  
                 <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0005.vm.equipWarn}">
 
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addENum" value="提醒设备ID"/>
-                        <p:inputText id="addENum" value="#{ctrlEQP0005.vm.equipWarn.EId}" />
+                        <p:inputText id="addENum" disabled="true" value="#{ctrlEQP0005.vm.selectedEquipBasic.ENmae}" />
                     </p:panelGrid>
                     <!--提醒设备标题-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
@@ -121,28 +133,17 @@
                     </p:panelGrid>
                     <!--提醒设备日期-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-             
                         <p:outputLabel for="addDateTime" value="提醒日期:" />
-                         <p:calendar id="addDateTime" value="#{ctrlEQP0005.vm.equipWarn.TDate}" pattern="dd-MM-yyyy" mask="true" />
-                      
-<!--                           <h:outputText value="#{ctrlEQP0005.vm.equipWarn.TDate}">-->
-<!--                           <f:convertDateTime pattern="MM/dd/yyyy" />
-            </h:outputText>   -->
-                     </p:panelGrid>
-                       
-                    
+                        <p:calendar id="addDateTime" value="#{ctrlEQP0005.vm.equipWarn.TDate}" pattern="yyyy-MM-dd" mask="true" />
+                    </p:panelGrid>
+
+
                     <!--提醒类型-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <!--    提醒类型 数据库数据类型是小数，所以存储0代表年，1代表月，2代表日       -->
                         <p:outputLabel for="addWarnType" value="提醒类型"/>
-                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0005.vm.equipWarn.TTyoe}" 
-                                         required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('提醒类型')}">
+                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0005.vm.equipWarn.TTyoe}">
                             <f:selectItems value="#{bizConfig.reminderTime}" var="type" itemLabel="#{type.message}" itemValue="#{type}" />
-<!--                                                    <f:selectItem itemLabel="请选择提醒类型" itemValue=""/>
-                                                    <f:selectItem itemLabel="年" itemValue="0"/>
-                                                    <f:selectItem itemLabel="月" itemValue="1"/>
-                                                    <f:selectItem itemLabel="日" itemValue="2"/>-->
-                        
                         </p:selectOneMenu>
                     </p:panelGrid>
                     <!--是否循环-->
@@ -166,9 +167,7 @@
                             <f:selectItem itemLabel="语音" itemValue="语音"/>
                         </p:selectOneMenu>
                     </p:panelGrid>
-                    <!--提醒内容  styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
-                                 columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding"
-                    -->
+                  
                     <p:panelGrid columns="1" layout="grid">
                         <p:outputLabel for="addWarnContent" value="提醒内容"/>
                         <p:inputTextarea id="addWarnContent" value="#{ctrlEQP0005.vm.equipWarn.TContent}" 
