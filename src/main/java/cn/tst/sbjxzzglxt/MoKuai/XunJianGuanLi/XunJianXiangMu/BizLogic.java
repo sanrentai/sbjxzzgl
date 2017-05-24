@@ -35,6 +35,10 @@ public interface BizLogic {
 
     public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, ViewModel vm);
 
+    /**
+     *巡检项目中的故障类型选择方法
+     * @param vm
+     */
     public void setSelectError(ViewModel vm);
 
    

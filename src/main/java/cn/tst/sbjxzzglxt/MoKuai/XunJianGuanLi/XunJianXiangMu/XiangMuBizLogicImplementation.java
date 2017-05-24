@@ -6,8 +6,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
+import cn.tst.sbjxzzglxt.facade.LTEquipErrorFacade;
 import cn.tst.sbjxzzglxt.facade.LTEquipErrorMessageFacade;
 import cn.tst.sbjxzzglxt.facade.XunJianXiangMuFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
@@ -23,12 +25,13 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
 
     private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
     @EJB
-    private XunJianXiangMuFacade xiangMuFacade;
+    private XunJianXiangMuFacade xiangMuFacade;//巡检项目
     @EJB
-    private LTEquipBasicFacade eqpService;
+    private LTEquipBasicFacade eqpService;//设备
     @EJB
-    private LTEquipErrorMessageFacade errorMessageFacade;
-
+    private LTEquipErrorMessageFacade errorMessageFacade;//故障类型
+    @EJB
+    private LTEquipErrorFacade errorFacade;//故障
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
     @Override
     public void loadViewModel(ViewModel vm) {
@@ -114,10 +117,14 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
     public LTEquipBasic findSelectedEqp(Long id) {
         return eqpService.find(id);
     }
-
+     /* @调用时机 当故障选择窗口提交时回调
+     *  @功能目标 将对话框里选中的多选框对应的roleId和checkPointId存入数据库
+     *  @步骤     1. 清除当前角色对应的所有巡检点权限
+     *            2. 将选中的巡检点权限插入数据库
+     */
     @Override
     public void setSelectError(ViewModel vm) {
-    
+       List<LTEquipError> errorList= errorFacade.findById(vm.getSelectequipError().getId());
             
     }
 }

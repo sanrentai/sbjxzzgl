@@ -258,7 +258,7 @@
 
         </p:dataTable>
         <p:commandButton value="保存" process="selectError"
-                         oncomplete="showErrorMsg();"
+                         oncomplete="PF('deviceSelectDialog').hide();"
                          update="pnlInputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation,
                          frmMain:growlMessage, frmMain:btnValidationPanel, frmMain:equipmentSelectList"
                          actionListener="#{XunJianXiangMuController.setSelectError}"/>
