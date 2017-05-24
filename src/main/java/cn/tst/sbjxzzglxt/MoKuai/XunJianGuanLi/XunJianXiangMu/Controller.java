@@ -171,7 +171,9 @@ public class Controller extends BusinessBaseController {
     
     }
     
- 
+  public void setSelectError(){
+    bizLogic.setSelectError();
+  }
 
     //*****************************************************************
     //                        Getter Setter

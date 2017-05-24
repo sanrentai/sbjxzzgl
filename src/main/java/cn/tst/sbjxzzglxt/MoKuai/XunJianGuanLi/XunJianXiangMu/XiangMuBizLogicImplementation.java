@@ -8,6 +8,7 @@ import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
+import cn.tst.sbjxzzglxt.facade.LTEquipErrorMessageFacade;
 import cn.tst.sbjxzzglxt.facade.XunJianXiangMuFacade;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import org.apache.log4j.Logger;
@@ -25,6 +26,8 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
     private XunJianXiangMuFacade xiangMuFacade;
     @EJB
     private LTEquipBasicFacade eqpService;
+    @EJB
+    private LTEquipErrorMessageFacade errorMessageFacade;
 
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
     @Override
@@ -110,5 +113,11 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
     @Override
     public LTEquipBasic findSelectedEqp(Long id) {
         return eqpService.find(id);
+    }
+
+    @Override
+    public void setSelectError(ViewModel vm) {
+    
+            
     }
 }

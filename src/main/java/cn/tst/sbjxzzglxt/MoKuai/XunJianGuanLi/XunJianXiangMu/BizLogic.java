@@ -35,6 +35,8 @@ public interface BizLogic {
 
     public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, ViewModel vm);
 
+    public void setSelectError(ViewModel vm);
+
    
 
 }
