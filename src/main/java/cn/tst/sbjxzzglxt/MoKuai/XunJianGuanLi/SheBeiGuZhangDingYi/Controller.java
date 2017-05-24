@@ -42,7 +42,7 @@ public class Controller extends BusinessBaseController {
         this.vm = new ViewModel();
 
         this.bizLogic.loadEQP0006ViewModel(vm);
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
 
     }
 
@@ -104,12 +104,6 @@ public class Controller extends BusinessBaseController {
         } else {
             putErrorMessage("删除失败");
         }
-    }
-
-    static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
-        ///根节点
-        DefaultTreeNode result = EquipmentTree.createEqpTree(equipBasicList);
-        return result;
     }
 
     /**

@@ -51,7 +51,7 @@ public class Controller extends BusinessBaseController {
         this.bizLogic.loadViewModel(vm);
 
         //初始化树结构并把设备的值挂在树节点上
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
         
     }
 
@@ -67,11 +67,7 @@ public class Controller extends BusinessBaseController {
      * @param equipBasicList 传入设备列表
      * @return 返回设备树
      */
-    static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
-        ///根节点
-        DefaultTreeNode result = EquipmentTree.createEqpTree(equipBasicList);
-        return result;
-    }
+
  /**
      * 修改项目
      *
@@ -171,9 +167,11 @@ public class Controller extends BusinessBaseController {
     
     }
     
-  public void setSelectError(){
-    bizLogic.setSelectError();
-  }
+
+     public void setSelectError(){
+     
+     }
+  
 
     //*****************************************************************
     //                        Getter Setter
