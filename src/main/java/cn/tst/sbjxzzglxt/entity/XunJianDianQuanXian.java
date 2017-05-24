@@ -39,8 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "XunJianDianQuanXian.findByUpdRep", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.updRep = :updRep")
     , @NamedQuery(name = "XunJianDianQuanXian.findByUpdDate", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.updDate = :updDate")
     , @NamedQuery(name = "XunJianDianQuanXian.findByDelFlg", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.delFlg = :delFlg")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByVersion", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.version = :version")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByAuthority", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.authority = :authority")})
+    , @NamedQuery(name = "XunJianDianQuanXian.findByVersion", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.version = :version")})
 public class XunJianDianQuanXian extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
