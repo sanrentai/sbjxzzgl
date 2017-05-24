@@ -42,7 +42,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "XunJianDianQuanXian.findByVersion", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.version = :version")
     , @NamedQuery(name = "XunJianDianQuanXian.findByAuthority", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.authority = :authority")})
 public class XunJianDianQuanXian extends BaseEntity implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,10 +55,6 @@ public class XunJianDianQuanXian extends BaseEntity implements Serializable {
     @NotNull
     @Column(name = "checkPointId")
     private int checkPointId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "authority")
-    private int authority;
 
     public XunJianDianQuanXian() {
     }
@@ -68,7 +63,7 @@ public class XunJianDianQuanXian extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public XunJianDianQuanXian(Integer id, int roleId, int checkPointId, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version, int authority) {
+    public XunJianDianQuanXian(Integer id, int roleId, int checkPointId, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
         this.id = id;
         this.roleId = roleId;
         this.checkPointId = checkPointId;
@@ -77,7 +72,6 @@ public class XunJianDianQuanXian extends BaseEntity implements Serializable {
         this.updRep = updRep;
         this.updDate = updDate;
         this.version = version;
-        this.authority = authority;
     }
 
     public Integer getId() {
@@ -102,14 +96,6 @@ public class XunJianDianQuanXian extends BaseEntity implements Serializable {
 
     public void setCheckPointId(int checkPointId) {
         this.checkPointId = checkPointId;
-    }
-
-    public int getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(int authority) {
-        this.authority = authority;
     }
 
     @Override
