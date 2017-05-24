@@ -101,12 +101,31 @@ public class WenDangJiTuPianGuanLiBizLogicImpl extends BaseBizLogic implements B
     @Override
     public void onEditNewDocument(ViewModel vm) {
         LTEquipGraphic document = new LTEquipGraphic();
-        document.seteNum(vm.getCurrentEquipment().getENmae());
+        document.seteNum(vm.getCurrentEquipment().getENum());
+        document.setfVer(1);
         vm.setEquipmentDocumentInEdit(document);
     }
     @Override
     public void onFileSelectToUpload(ViewModel vm, FileUploadEvent event) {
         vm.setCurrentUploadedFile(event.getFile());
         vm.getEquipmentDocumentInEdit().setFOriginalName(event.getFile().getFileName());
+    }
+    /*
+     * @调用时机 当点击更新按钮的时候调用
+     * @功能目标 将vm的当前编辑的文档设置为被选中的文档
+    */
+    @Override
+    public void onEditDocumentToUpdate(ViewModel vm, LTEquipGraphic document) {
+        vm.setEquipmentDocumentInEdit(document);
+        vm.getEquipmentDocumentInEdit().setFOriginalName("");
+    }
+    @Override
+    public void onEditDocumentToUpdateSubmit(ViewModel vm) {
+        uploadFile(vm);
+        vm.getEquipmentDocumentInEdit().setfVer(vm.getEquipmentDocumentInEdit().getfVer() + 1);
+        equipmentGraphicFacade.edit(vm.getEquipmentDocumentInEdit());
+        loadViewModel(vm);
+        vm.setEquipmentDocumentInEdit(null);
+        vm.setSelectedEquipmentDocumentList(vm.getCurrentEquipment().getGraphicList());
     }
 }

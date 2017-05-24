@@ -9,6 +9,7 @@ import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -73,5 +74,13 @@ public class Controller extends BusinessBaseController {
     
     public void onFileSelectToUpload(FileUploadEvent event) {
         bizLogic.onFileSelectToUpload(vm, event);
+    }
+    
+    public void onEditDocumentToUpdate(LTEquipGraphic document) {
+        bizLogic.onEditDocumentToUpdate(vm, document);
+    }
+    
+    public void onEditDocumentToUpdateSubmit() {
+        bizLogic.onEditDocumentToUpdateSubmit(vm);
     }
 }

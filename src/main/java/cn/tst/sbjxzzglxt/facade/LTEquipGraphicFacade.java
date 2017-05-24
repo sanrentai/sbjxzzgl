@@ -23,7 +23,15 @@ public class LTEquipGraphicFacade extends AbstractFacade<LTEquipGraphic> {
     
     public List<LTEquipGraphic> findByOriginalName(String originalName) {
         Query query = getEntityManager().createNamedQuery("LTEquipGraphic.findByOriginalName");
+        query.setParameter("delFlg", SepE.Flag.NO.getValue());
         query.setParameter("fOriginalName", originalName);
+        return query.getResultList();
+    }
+    
+    public List<LTEquipGraphic> findById(Integer id) {
+        Query query = getEntityManager().createNamedQuery("LTEquipGraphic.findById");
+        query.setParameter("delFlg", SepE.Flag.NO.getValue());
+        query.setParameter("id", id);
         return query.getResultList();
     }
 }

@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.WenDangJiTuPianGuanLi;
 
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipGraphic;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -22,4 +23,8 @@ public interface BizLogic {
     void onEquipmentNodeSelect(ViewModel vm, LTEquipBasic equipment);
     
     void onFileSelectToUpload(ViewModel vm, FileUploadEvent event);
+    
+    void onEditDocumentToUpdate(ViewModel vm, LTEquipGraphic document);
+    
+    void onEditDocumentToUpdateSubmit(ViewModel vm);
 }
