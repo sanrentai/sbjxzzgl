@@ -5,6 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.common;
 
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,16 @@ public class EquipmentNodeData implements Serializable, Comparable<EquipmentNode
     private Integer roleId;
     
     private Integer checkPointId;
+    
+    private LTEquipBasic equipment;
+
+    public LTEquipBasic getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(LTEquipBasic equipment) {
+        this.equipment = equipment;
+    }
 
     public Integer getRoleId() {
         return roleId;
@@ -38,6 +49,11 @@ public class EquipmentNodeData implements Serializable, Comparable<EquipmentNode
         this.name = name;
         this.roleId = roleId;
         this.checkPointId = checkPointId;
+    }
+    
+    public EquipmentNodeData(String name, LTEquipBasic equipment) {
+        this.name = name;
+        this.equipment = equipment;
     }
 
     public String getName() {

@@ -23,7 +23,7 @@
                     <p:column>
                         <p:tree id="EquipmentTree" 
                                 value="#{WenDangJiTuPianGuanLiController.vm.equipmentTreeRoot}" 
-                                var="equipment" 
+                                var="node" 
                                 selectionMode="single" 
                                 selection="#{WenDangJiTuPianGuanLiController.vm.selectedEquipmentNode}"
                                 styleClass="wd-p-100" 
@@ -31,9 +31,9 @@
                             <p:ajax event="select" 
                                     process="EquipmentTree" 
                                     update="frmMain:rootContainer" 
-                                    listener="#{WenDangJiTuPianGuanLiController.onEquipmentNodeSelect(equipment)}"  />
+                                    listener="#{WenDangJiTuPianGuanLiController.onEquipmentNodeSelect(node.equipment)}"  />
                             <p:treeNode>
-                                <h:outputText value="#{equipment}"/>
+                                <h:outputText value="#{node}"/>
                             </p:treeNode>
                         </p:tree>
                     </p:column>
