@@ -49,8 +49,7 @@ public class Controller extends BusinessBaseController {
         bizLogic.loadViewModel(vm);
     }
     
-    public void onNodeSelect(NodeSelectEvent event) {
-        LTEquipBasic equipment = (LTEquipBasic)event.getTreeNode().getData();
+    public void onEquipmentNodeSelect(LTEquipBasic equipment) {
         bizLogic.setCurrentCheckPointList(vm, equipment.getId());
     }
 }
