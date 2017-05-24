@@ -20,15 +20,22 @@ import org.primefaces.model.TreeNode;
 public class EquipmentTree {
     static public final String CHECK_POINT_TYPE = "checkPoint";
     
-    static public DefaultTreeNode createEqpTree(List<LTEquipBasic> equipBasicList) {
-        ///根节点
-        DefaultTreeNode result = new DefaultTreeNode("Root", null);
-        for (LTEquipBasic item : equipBasicList) {
-            TreeNode subNode = new DefaultTreeNode(item, result);
-            subNode.setExpanded(false);
-            createRelationTree(subNode, item);
+    static public TreeNode createEqpTree(List<LTEquipBasic> equipmentList) {
+        TreeNode rootNode = new DefaultTreeNode("Root", null);
+        for(LTEquipBasic equipment: equipmentList) {
+            if(equipment.getParent() == null)
+                createNode(rootNode, equipment);
         }
-        return result;
+        return rootNode;
+    }
+    
+    private static void createNode(TreeNode parentNode, LTEquipBasic data) {
+        TreeNode result = new DefaultTreeNode(data.getENmae(), parentNode);
+        if(data.getChildren() != null) {
+            for(LTEquipBasic equipment: data.getChildren()) {
+                createNode(result, equipment);
+            }
+        }
     }
 
     /**
@@ -85,15 +92,16 @@ public class EquipmentTree {
     public static TreeNode createEquipmentTreeNodeWithCheckPoint(List<LTEquipBasic> equipmentList, Integer roleId) {
         TreeNode rootNode = new DefaultTreeNode(new EquipmentNodeData("设备检查点", roleId, SepC.INVALID_ID), null);
         for(LTEquipBasic equipment: equipmentList) {
-            createNode(rootNode, equipment, roleId);
+            if(equipment.getParent() == null)
+                createNode(rootNode, equipment, roleId);
         }
         return rootNode;
     }
     
     public static void createNode(TreeNode parentNode, LTEquipBasic data, Integer roleId) {
-        if(data.isHasBeenAddedToTreeNode()) {
-            return;
-        }
+//        if(data.isHasBeenAddedToTreeNode()) {
+//            return;
+//        }
         TreeNode result = new DefaultTreeNode(new EquipmentNodeData(data.getENmae(), roleId, SepC.INVALID_ID), parentNode);
         for(LTEquipCheckPoint checkPoint: data.getCheckPointList()) {
             createCheckPointNode(result, checkPoint, roleId);
