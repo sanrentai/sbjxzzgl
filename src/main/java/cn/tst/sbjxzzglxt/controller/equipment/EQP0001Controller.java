@@ -6,6 +6,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import cn.tst.sbjxzzglxt.bizlogic.EQP0001BizLogic;
 import cn.tst.sbjxzzglxt.common.CConst;
+import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
@@ -77,7 +78,7 @@ public class EQP0001Controller extends BusinessBaseController {
 
         this.selectedNode = event.getTreeNode();
 
-        vm.setSelectedEquipBasic((LTEquipBasic) selectedNode.getData());
+        vm.setSelectedEquipBasic(((EquipmentNodeData) selectedNode.getData()).getEquipment());
         vm.setSelectEquipBasicList(new ArrayList());
         vm.getSelectEquipBasicList().add(vm.getSelectedEquipBasic());
         for (LTEquipBasic item : vm.getSelectedEquipBasic().getChildren()) {

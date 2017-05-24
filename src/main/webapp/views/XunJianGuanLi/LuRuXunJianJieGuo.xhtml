@@ -31,12 +31,14 @@
                 </f:facet>
                 <p:row>
                     <p:column style="padding: 0px;">
-                        <p:tree id="treeCK" value="#{LuRuXunJianJieGuoController.vm.equipmentTreeRoot}" var="node" 
-                                selectionMode="single" selection="#{LuRuXunJianJieGuoController.vm.selectedNode}"
-                                styleClass="wd-p-100" animate="true">
+                        <p:tree id="EquipmentTree" value="#{LuRuXunJianJieGuoController.vm.equipmentTreeRoot}" 
+                                var="node" 
+                                selectionMode="single" 
+                                styleClass="wd-p-100" 
+                                animate="true">
                             <p:ajax event="select" 
-                                    process="treeCK" 
-                                    listener="#{LuRuXunJianJieGuoController.onNodeSelect}"  />
+                                    process="EquipmentTree" 
+                                    listener="#{LuRuXunJianJieGuoController.onEquipmentNodeSelect(node.equipment)}"  />
                             <!--根节点-->
                             <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
                             <p:treeNode>

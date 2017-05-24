@@ -21,17 +21,7 @@ public class ViewModel {
     
     private List<LTEquipCheckPoint> checkPointList;
     
-    private TreeNode selectedNode;
-    
     private LTEquipBasic currentEquipment;
-
-    public TreeNode getSelectedNode() {
-        return selectedNode;
-    }
-
-    public void setSelectedNode(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
-    }
 
     public List<LTEquipBasic> getEquipmentList() {
         return equipmentList;
