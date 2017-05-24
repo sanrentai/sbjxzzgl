@@ -1,5 +1,6 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi;
 
+import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -8,13 +9,11 @@ import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import java.util.List;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -111,7 +110,7 @@ public class Controller extends BusinessBaseController {
      */
     public void onNodeSelect(NodeSelectEvent event) {
         this.selectedNode = event.getTreeNode();
-        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        Long selectedId = ((EquipmentNodeData) selectedNode.getData()).getEquipment().getId();
         vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
         onAddTargetData();
     }
