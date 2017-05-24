@@ -23,7 +23,7 @@
                             <h:outputText value="设备一览"/>
                             <p:commandLink actionListener="#{LuRuXunJianJieGuoController.onCancelEdit}"
                                            styleClass="fr"
-                                           process="@this" update="frmMain:pnlInputArea, frmMain:pnlOutputArea">
+                                           process="@this">
                                 <i class="fa fa-star-o Fs18 Blue"></i>
                             </p:commandLink>
                         </p:column>
@@ -34,8 +34,9 @@
                         <p:tree id="treeCK" value="#{LuRuXunJianJieGuoController.vm.equipmentTreeRoot}" var="node" 
                                 selectionMode="single" selection="#{LuRuXunJianJieGuoController.vm.selectedNode}"
                                 styleClass="wd-p-100" animate="true">
-                            <p:ajax event="select" process="treeCK" 
-                                    update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{LuRuXunJianJieGuoController.onNodeSelect}"  />
+                            <p:ajax event="select" 
+                                    process="treeCK" 
+                                    listener="#{LuRuXunJianJieGuoController.onNodeSelect}"  />
                             <!--根节点-->
                             <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
                             <p:treeNode>
