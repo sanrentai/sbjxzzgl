@@ -11,61 +11,53 @@
         </h1>
         <!--无敌分割线-->
         <div class="SeparatorFull"></div>
-        <p:toolbar styleClass="Container100">
-            <f:facet name="left">
-                <p:commandButton value="新建" process="@this" update="rootContainer" actionListener="#{ctrlEQP0004.onAddTargetData}" 
-                                 styleClass="NavyButton" disabled="#{ctrlEQP0004.statusEditing}"/>
-            </f:facet>
-        </p:toolbar>
-        <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty ctrlEQP0004.vm.equipNotesInEditing}">
-            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                <p:outputLabel value="所属设备："></p:outputLabel>
-                <p:selectOneMenu value="#{ctrlEQP0004.vm.equipNotesInEditing.ENum}">
-                    <f:selectItems value="#{ctrlEQP0004.vm.equipmentList}" var="equipment" itemLabel="#{equipment.ENmae}" itemValue="#{equipment.ENum}"></f:selectItems>
-                </p:selectOneMenu>
-            </p:panelGrid>
-            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                <p:outputLabel value="记录类型："></p:outputLabel>
-                <p:selectOneMenu value="#{ctrlEQP0004.vm.equipNotesInEditing.TType}">
-                    <f:selectItems value="#{bizConfig.recordTypes}" var="recordType" itemLabel="#{recordType.string}" itemValue="#{recordType.value}"></f:selectItems>
-                </p:selectOneMenu>
-            </p:panelGrid>
-            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                <p:outputLabel value="当前保养日期："></p:outputLabel>
-                <p:calendar mode="popup" 
-                            value="#{ctrlEQP0004.vm.equipNotesInEditing.dangQianBaoYangRiQi}" 
-                            pattern="#{bizConfig.dateFormat}"
-                            required="true" 
-                            requiredMessage="#{ctrlEQP0004.isRequiredMessage('当前保养日期')}"></p:calendar>
-            </p:panelGrid>
-            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                <p:outputLabel value="下次保养日期："></p:outputLabel>
-                <p:calendar mode="popup" 
-                            value="#{ctrlEQP0004.vm.equipNotesInEditing.xiaCiBaoYangRiQi}" 
-                            pattern="#{bizConfig.dateFormat}"
-                            required="true" 
-                            requiredMessage="#{ctrlEQP0004.isRequiredMessage('下次保养日期')}"></p:calendar>
-            </p:panelGrid>
-            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-                <p:outputLabel value="遗留问题："></p:outputLabel>
-                <p:inputTextarea>
+        <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
+                   <p:toolbar>
+                <f:facet name="left">
 
-                </p:inputTextarea>
-            </p:panelGrid>
-            <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
-                <p:commandButton value="保存" process=""
-                                 oncomplete="showErrorMsg();"
-                                 update="rootContainer, pngDetails"
-                                 actionListener="#{ctrlEQP0004.onSaveData}"/>
-                <p:commandButton value="取消" process="@this" 
-                                 update="rootContainer" actionListener="#{ctrlEQP0004.bizLogic.onCancelEdit}"
-                                 styleClass="RedButton"/>
-            </p:panelGrid>
+                    <!--选择所属设备-->
+                    <p:panelGrid>
+                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0004.vm.equipBasic.ENmae}"
+                                           filter="true" >
+                            <f:selectItem itemLabel="选择设备" itemValue=""/>
+                            <f:selectItems value="#{ctrlEQP0004.vm.equipBasicList}" var="type" itemLabel="#{type.ENmae}" itemValue="#{type.id}" />
+                        </p:selectOneMenu>        
+                    </p:panelGrid>
+                    <!--记录类型-->
+                    <p:panelGrid>
+                        <p:selectOneMenu id="addJiLuLeiXing" value="#{ctrlEQP0004.vm.equipNotesInEditing.TType}">
+                            <f:selectItem itemLabel="记录类型" itemValue=""/>
+                            <f:selectItem itemLabel="维修" itemValue="0"/>
+                            <f:selectItem itemLabel="保养" itemValue="1"/>
+                        </p:selectOneMenu>   
+                    </p:panelGrid>
+                    <!--负责人-->
+                    <p:panelGrid>
+                        <p:selectOneMenu id="addFuZeRen" value="#{ctrlEQP0004.vm.equipNotesInEditing.fuZeRen}" >
+                            <f:selectItem itemLabel="负责人" itemValue=""/>
+                            <f:selectItems value="#{ctrlEQP0004.vm.equipNoteList}" var="type" itemLabel="#{type.fuZeRen}" itemValue="#{type.fuZeRen}" />
+                        </p:selectOneMenu>        
+                    </p:panelGrid>
+                    <!--记录时段-->
+                    <p:panelGrid>
+                        <p:calendar id="addDateTime" value="#{ctrlEQP0004.vm.equipNotesInEditing.chaXunShiJian}" pattern="yyyy-MM-dd" mask="true" />
+                    </p:panelGrid>
+                    <!--查询-->
+                    <p:commandButton value="查询" process="@this" actionListener="#{ctrlCAR0001.onRefreshData}" 
+                                     resetValues="true" oncomplete="PF('wvCheLiangList').clearFilters();"
+                                     update="pngDetails"/>
+                </f:facet>
+            </p:toolbar>
         </p:outputPanel>
-        <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
-            <p:dataTable value="#{ctrlEQP0004.vm.equipNoteList}" var="note" cellSeparator="5"
-                         widgetVar="wvWeiZhangList"
-                         rows="20"
+  
+    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+        <div class="Card">
+            <div class="CardBigTopic">车辆信息</div>
+            <div class="SeparatorFull"></div>
+            <div class="EmptyBox10"></div>
+            <p:dataTable value="#{ctrlCAR0001.vm.cheLiangList}" var="cheLiang" cellSeparator="5"
+                         widgetVar="wvCheLiangList"
+                         rows="10"
                          filterDelay="500"
                          style="word-break: keep-all!important"
                          paginator="true"
@@ -73,37 +65,58 @@
                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                          emptyMessage="没有数据">
                 <f:facet name="header">
-                    <h:outputText value="维修及保养记录"/>
+                    <h:outputText value="车辆一览"/>
                 </f:facet>
                 <p:columnGroup type="header">
                     <p:row>
-                        <p:column headerText="所属设备" styleClass="wd-p-5"/>
-                        <p:column headerText="记录类型" styleClass="wd-p-5"/>
-                        <p:column headerText="当前保养日期" styleClass="tct wd-p-10"/>
-                        <p:column headerText="下次保养日期" styleClass="tct wd-p-10"/>
-                        <p:column headerText="遗留问题" styleClass="tct wd-p-10"/>
+                        <p:column headerText="设备" styleClass="wd-p-5"/>
+                        <p:column headerText="类型" styleClass="wd-p-5"/>
+                        <p:column headerText="工作内容" filterBy="#{cheLiang.cheLiangMingCheng}" filterMaxLength="20" filterMatchMode="contains" styleClass="wd-p-10"/>
+                        <p:column headerText="遗留" styleClass="tct wd-p-5"/>
+                        <p:column headerText="工作时间" styleClass="tct wd-p-5"/>
+                        <p:column headerText="负责人" styleClass="tct wd-p-5"/>
+                        <p:column headerText="下次时间" styleClass="tct wd-p-10"/>
                     </p:row>
                 </p:columnGroup>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{note.equip.ENmae}"/>
+               
+              
+                <!--设备-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.beiZhu}"/>
                 </p:column>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{note.recordType}"/>
+                <!--类型-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.pinPai}"/>
                 </p:column>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{note.dangQianBaoYangRiQi}">
+                <!--工作内容-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.xingHao}"/>
+                </p:column>
+                <!--遗留-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.price}"/>
+                </p:column>
+                <!--工作时间-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.purchaseDate}">
                         <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
                     </h:outputText>
                 </p:column>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{note.xiaCiBaoYangRiQi}">
-                        <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
-                    </h:outputText>
+                <!--负责人-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.engineNumber}"/>
                 </p:column>
-                <p:column styleClass="tlt">
-                    <h:outputText value="#{note.yiLiuWenTi}"/>
+                <!--下次时间-->
+                <p:column>
+                    <h:outputText value="#{cheLiang.color}"/>
                 </p:column>
             </p:dataTable>
-        </p:outputPanel>
+        </div>
     </p:outputPanel>
+</p:outputPanel>
+
+<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+    <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
+    <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
+</p:confirmDialog>
 </ui:composition>

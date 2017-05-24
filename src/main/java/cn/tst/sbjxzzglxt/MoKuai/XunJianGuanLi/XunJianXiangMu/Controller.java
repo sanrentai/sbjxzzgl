@@ -87,6 +87,7 @@ public class Controller extends BusinessBaseController {
         vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
         vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId()); 
         //把巡检点列表清空，显示巡检项目列表
+        vm.setEquipErrorList(vm.getSelectedEquipBasic().getEquipErrorList());
         vm.setCheckPointList(null);  
         vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
         
@@ -158,6 +159,7 @@ public class Controller extends BusinessBaseController {
 
     public void onXiangMuLieBiao(){
     //创建一个集合
+    
     List l = new ArrayList();
     //把页面得到的集合便利后放到新创建的集合内
     for(Object list :vm.getSelectedEquipBasic().getCheckPointList()){

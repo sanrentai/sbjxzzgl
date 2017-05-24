@@ -386,4 +386,12 @@ public class BizConfig implements Serializable {
         return SepE.ErrorDispose.values();
     }
     
+      /**
+     * 维修与保养
+     *
+     * @return 维修与保养
+     */
+    public SepE.WeiXiuBaoYang[] getWeiXiuBaoYang() {
+        return SepE.WeiXiuBaoYang.values();
+    }
 }

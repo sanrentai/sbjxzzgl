@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package cn.tst.sbjxzzglxt.bizlogic;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0004ViewModel;
 /**
  *
@@ -15,4 +16,5 @@ public interface EQP0004BizLogic {
     void onSaveData(EQP0004ViewModel vm);
     
     void onCancelEdit(EQP0004ViewModel vm);
+    
 }

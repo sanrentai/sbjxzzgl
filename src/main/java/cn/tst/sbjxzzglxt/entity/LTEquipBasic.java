@@ -644,4 +644,5 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setHasBeenAddedToTreeNode(boolean hasBeenAddedToTreeNode) {
         this.hasBeenAddedToTreeNode = hasBeenAddedToTreeNode;
     }
+
 }

@@ -3260,4 +3260,55 @@ public class SepE {
     }
     
     
+          /**
+     * 维护和保养
+     */
+    public static enum WeiXiuBaoYang {
+        /**
+         *维护
+         */
+        WEIHU(0),
+        /**
+         * 保养
+         */
+         BAOYANG(1);
+       
+
+        private final int value;
+
+        WeiXiuBaoYang(int value) {
+            this.value = value;
+        }
+
+        public final int getValue() {
+            return value;
+        }
+
+        public static WeiXiuBaoYang parse(int v) {
+
+            switch (v) {
+                case 0:
+                    return WEIHU;
+                case 1:
+                    return  BAOYANG;
+               
+                default:
+                    return null;
+            }
+        }
+
+        public String getMessage() {
+            switch (this) {
+                case WEIHU:
+                    return "维护";
+                case BAOYANG:
+                    return "保养";
+              
+                default:
+                    return null;
+            }
+        }
+    }
+    
+    
 }
