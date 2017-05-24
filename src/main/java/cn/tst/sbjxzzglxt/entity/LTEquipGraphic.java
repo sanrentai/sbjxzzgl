@@ -7,12 +7,10 @@ package cn.tst.sbjxzzglxt.entity;
 
 import cn.tst.sbjxzzglxt.common.CConst;
 import cn.tst.sbjxzzglxt.common.SepC;
-import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import cn.tst.sbjxzzglxt.controller.equipment.EQP0007Controller;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.Basic;
+import javax.faces.context.FacesContext;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,13 +22,14 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.io.FilenameUtils;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -41,9 +40,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LTEquipGraphic.findAll", query = "SELECT l FROM LTEquipGraphic l")
-    , @NamedQuery(name = "LTEquipGraphic.findById", query = "SELECT l FROM LTEquipGraphic l WHERE l.id = :id")
+    , @NamedQuery(name = "LTEquipGraphic.findById", query = "SELECT l FROM LTEquipGraphic l WHERE l.id = :id AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipGraphic.findByENum", query = "SELECT l FROM LTEquipGraphic l WHERE l.eNum = :eNum")
-    , @NamedQuery(name = "LTEquipGraphic.findByOriginalName", query = "SELECT l FROM LTEquipGraphic l WHERE l.fOriginalName = :fOriginalName")
+    , @NamedQuery(name = "LTEquipGraphic.findByOriginalName", query = "SELECT l FROM LTEquipGraphic l WHERE l.fOriginalName = :fOriginalName AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipGraphic.findByFUrl", query = "SELECT l FROM LTEquipGraphic l WHERE l.fUrl = :fUrl")
     , @NamedQuery(name = "LTEquipGraphic.findByFVer", query = "SELECT l FROM LTEquipGraphic l WHERE l.fVer = :fVer")
     , @NamedQuery(name = "LTEquipGraphic.findByDelYN", query = "SELECT l FROM LTEquipGraphic l WHERE l.delYN = :delYN")
@@ -63,6 +62,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipGraphic.findByDelFlg", query = "SELECT l FROM LTEquipGraphic l WHERE l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipGraphic.findByVersion", query = "SELECT l FROM LTEquipGraphic l WHERE l.version = :version")})
 public class LTEquipGraphic extends BaseEntity implements Serializable {
+    @Size(max = 250)
+    @Column(name = "F_Name")
+    private String fName;
     @Size(max = 250)
     @Column(name = "F_OriginalName")
     private String fOriginalName;
@@ -324,11 +326,46 @@ public class LTEquipGraphic extends BaseEntity implements Serializable {
     
     public String getPreviewFilePath() {
         String result = "/uploadFiles/".concat(CConst.SLASH)
-                .concat(SepC.DEVICE_DOCUMENTS_DIRECTORY_NAME)
+                .concat(SepC.EQUIPMENT_DOCUMENTS_DIRECTORY_NAME)
                 .concat(CConst.SLASH)
                 .concat(this.getFNameOnServer())
                 .concat(CConst.SLASH)
                 .concat("p");
+        return result;
+    }
+    
+    private String getOriginalFilePath() {
+        String result = cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.WenDangJiTuPianGuanLi.Controller.FILE_UPLOAD_PATH
+                .concat(CConst.SLASH)
+                .concat("origin")
+                .concat(CConst.SLASH)
+                .concat(this.getFNameOnServer());
+        return result;
+    }
+    
+    public String getType() {
+        return FilenameUtils.getExtension(this.fOriginalName).toUpperCase();
+    }
+
+    public String getFName() {
+        return fName;
+    }
+
+    public void setFName(String fName) {
+        this.fName = fName;
+    }
+    
+    public StreamedContent getFile() {
+        System.out.println(getOriginalFilePath());
+        InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(getOriginalFilePath());
+        StreamedContent result;
+        switch(this.getType()) {
+            case "JPG":
+                result = new DefaultStreamedContent(stream, "image/jpg", this.getfOriginalName());
+                break;
+            default:
+                result = new DefaultStreamedContent(stream, "image/jpg", this.getfOriginalName());
+        }
         return result;
     }
 }
