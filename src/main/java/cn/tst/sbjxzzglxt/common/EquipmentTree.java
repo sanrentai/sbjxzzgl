@@ -21,7 +21,7 @@ public class EquipmentTree {
     static public final String CHECK_POINT_TYPE = "checkPoint";
     
     static public TreeNode createEqpTree(List<LTEquipBasic> equipmentList) {
-        TreeNode rootNode = new DefaultTreeNode("Root", null);
+        TreeNode rootNode = new DefaultTreeNode(new EquipmentNodeData("Root", null), null);
         for(LTEquipBasic equipment: equipmentList) {
             if(equipment.getParent() == null)
                 createNode(rootNode, equipment);
@@ -30,62 +30,11 @@ public class EquipmentTree {
     }
     
     private static void createNode(TreeNode parentNode, LTEquipBasic data) {
-        TreeNode result = new DefaultTreeNode(data.getENmae(), parentNode);
+        TreeNode result = new DefaultTreeNode(new EquipmentNodeData(data.getENmae(), data), parentNode);
         if(data.getChildren() != null) {
             for(LTEquipBasic equipment: data.getChildren()) {
                 createNode(result, equipment);
             }
-        }
-    }
-
-    /**
-     * 创建下一层节点
-     *
-     * @param node 品类关系节点
-     * @param data 节点数据
-     */
-    static private void createRelationTree(TreeNode node, LTEquipBasic data) {
-        createRelationTree(node, data, false);
-    }
-    
-    /**
-     * 创建下一层节点
-     *
-     * @param node 品类关系节点
-     * @param data 节点数据
-     * @param isNeedExpand 节点是否展开
-     */
-    static private void createRelationTree(TreeNode node, LTEquipBasic data, boolean isNeedExpand) {
-
-        ///取得当前节点的所有子节点
-        Set<LTEquipBasic> children = data.getChildren();
-        
-        ///如果存在子节点
-        if (children != null && !children.isEmpty()) {
-            ///遍历所有子节点
-            children.forEach(c -> {
-
-                ///当前节点ID
-                String currentNodeId = c.getId().toString();
-                
-                ///如果不是根节点,怎创建子节点
-                if (!SepC.EQP_ROOT.equals(currentNodeId)) {
-                    TreeNode subNode = new DefaultTreeNode(c, node);
-                    subNode.setExpanded(isNeedExpand);
-
-//                    if (c.getPinLei().isLeibie()) {
-//                        /// 设置假的子节点表示用于表示该节点下有品类
-//                        long count = bizLogic.getChildrenCount(c);
-//                        if (count != 0) {
-//                            TreeNode tmpNode = new DefaultTreeNode(null, subNode);
-//                            tmpNode.setExpanded(false);
-//                        }
-//                    }
-                    ///递归展
-                    createRelationTree(subNode, c, isNeedExpand);
-
-                }
-            });
         }
     }
     
@@ -98,7 +47,7 @@ public class EquipmentTree {
         return rootNode;
     }
     
-    public static void createNode(TreeNode parentNode, LTEquipBasic data, Integer roleId) {
+    private static void createNode(TreeNode parentNode, LTEquipBasic data, Integer roleId) {
 //        if(data.isHasBeenAddedToTreeNode()) {
 //            return;
 //        }
@@ -114,7 +63,7 @@ public class EquipmentTree {
         }
     }
     
-    public static void createCheckPointNode(TreeNode parentNode, LTEquipCheckPoint data, Integer roleId) {
+    private static void createCheckPointNode(TreeNode parentNode, LTEquipCheckPoint data, Integer roleId) {
         TreeNode result = new DefaultTreeNode("checkPoint", new EquipmentNodeData(data.getName(), roleId, data.getId()), parentNode);
     }
 }
