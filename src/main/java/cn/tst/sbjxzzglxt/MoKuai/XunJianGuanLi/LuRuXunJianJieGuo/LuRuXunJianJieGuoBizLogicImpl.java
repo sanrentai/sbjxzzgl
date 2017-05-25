@@ -7,6 +7,7 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuXunJianJieGuo;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
 import cn.tst.sbjxzzglxt.common.EquipmentTree;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
 import cn.tst.sbjxzzglxt.facade.LTEquipCheckPointFacade;
 import javax.ejb.EJB;
@@ -31,7 +32,8 @@ public class LuRuXunJianJieGuoBizLogicImpl extends BaseBizLogic implements BizLo
     }
     
     @Override
-    public void setCurrentCheckPointList(ViewModel vm, Long equipmentId) {
-        vm.setCheckPointList(checkPointFacade.findByEquipmentId(equipmentId));
+    public void onEquipmentNodeSelect(ViewModel vm, LTEquipBasic equipment) {
+        vm.setCurrentEquipment(equipment);
+        vm.setCurrentCheckPointList(checkPointFacade.findByEquipmentId(equipment.getId()));
     }
 }

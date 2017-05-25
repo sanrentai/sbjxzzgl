@@ -5,7 +5,7 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <p:outputPanel styleClass="Container100 NoIndent">
+    <p:outputPanel styleClass="Container100 NoIndent" id="rootContainer">
         <p:outputPanel styleClass="Card">
             <!--标题-->
             <h1 class="CardBigTopic Purple">
@@ -38,7 +38,8 @@
                                 animate="true">
                             <p:ajax event="select" 
                                     process="EquipmentTree" 
-                                    listener="#{LuRuXunJianJieGuoController.onEquipmentNodeSelect(node.equipment)}"  />
+                                    listener="#{LuRuXunJianJieGuoController.onEquipmentNodeSelect(node.equipment)}"
+                                    update="frmMain:XunJianResultRecordView,frmMain:CheckPointListView"/>
                             <!--根节点-->
                             <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
                             <p:treeNode>
@@ -50,8 +51,38 @@
             </p:panelGrid>
         </p:outputPanel>
         <!--巡检点列表-->
-        <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea">
-            
+        <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea"
+                       id="CheckPointListView">
+            <p:panelGrid styleClass="wd-p-100">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="巡检点列表"></p:outputLabel>
+                        </p:column>
+                    </p:row>
+                </f:facet>
+                <ui:repeat value="#{LuRuXunJianJieGuoController.vm.currentCheckPointList}" 
+                           var="checkPoint">
+                    <p:commandLink value="#{checkPoint.name}"></p:commandLink>
+                </ui:repeat>
+            </p:panelGrid>
+        </p:outputPanel>
+        <!--巡检结果记录表-->
+        <p:outputPanel styleClass="Container100 Responsive100 pnlOutputArea"
+                       id="XunJianResultRecordView">
+            <p:panelGrid columns="2" layout="grid">
+                <p:outputPanel>
+                    <p:outputLabel value="所属设备："></p:outputLabel>
+                    <p:outputLabel value="#{LuRuXunJianJieGuoController.vm.currentEquipment.ENmae}"
+                                   rendered="#{not empty LuRuXunJianJieGuoController.vm.currentEquipment}"></p:outputLabel>
+                </p:outputPanel>
+                <p:outputPanel>
+                    <p:outputLabel value="所属巡检点："></p:outputLabel>
+                    <p:outputLabel value="#{LuRuXunJianJieGuoController.vm.currentCheckPoint.name}" 
+                                   rendered="#{not empty LuRuXunJianJieGuoController.vm.currentCheckPoint}"></p:outputLabel>
+                </p:outputPanel>
+            </p:panelGrid>
+            <p:outputLabel></p:outputLabel>
         </p:outputPanel>
     </p:outputPanel>
 </ui:composition>
