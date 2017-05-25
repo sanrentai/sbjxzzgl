@@ -19,9 +19,27 @@ public class ViewModel {
     
     private List<LTEquipBasic> equipmentList;
     
-    private List<LTEquipCheckPoint> checkPointList;
+    private List<LTEquipCheckPoint> currentCheckPointList;
     
     private LTEquipBasic currentEquipment;
+    
+    private LTEquipCheckPoint currentCheckPoint;
+
+    public List<LTEquipCheckPoint> getCurrentCheckPointList() {
+        return currentCheckPointList;
+    }
+
+    public void setCurrentCheckPointList(List<LTEquipCheckPoint> currentCheckPointList) {
+        this.currentCheckPointList = currentCheckPointList;
+    }
+
+    public LTEquipCheckPoint getCurrentCheckPoint() {
+        return currentCheckPoint;
+    }
+
+    public void setCurrentCheckPoint(LTEquipCheckPoint currentCheckPoint) {
+        this.currentCheckPoint = currentCheckPoint;
+    }
 
     public List<LTEquipBasic> getEquipmentList() {
         return equipmentList;
@@ -37,14 +55,6 @@ public class ViewModel {
 
     public void setEquipmentTreeRoot(TreeNode equipmentTreeRoot) {
         this.equipmentTreeRoot = equipmentTreeRoot;
-    }
-
-    public List<LTEquipCheckPoint> getCheckPointList() {
-        return checkPointList;
-    }
-
-    public void setCheckPointList(List<LTEquipCheckPoint> checkPointList) {
-        this.checkPointList = checkPointList;
     }
 
     public LTEquipBasic getCurrentEquipment() {

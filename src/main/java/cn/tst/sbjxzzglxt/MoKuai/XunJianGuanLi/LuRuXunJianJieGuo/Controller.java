@@ -50,6 +50,6 @@ public class Controller extends BusinessBaseController {
     }
     
     public void onEquipmentNodeSelect(LTEquipBasic equipment) {
-        bizLogic.setCurrentCheckPointList(vm, equipment.getId());
+        bizLogic.onEquipmentNodeSelect(vm, equipment);
     }
 }

@@ -5,6 +5,8 @@
  */
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuXunJianJieGuo;
 
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+
 /**
  *
  * @author Aaron-PC-i3-4130
@@ -12,5 +14,5 @@ package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuXunJianJieGuo;
 public interface BizLogic {
     void loadViewModel(ViewModel vm);
     
-    void setCurrentCheckPointList(ViewModel vm, Long equipmentId);
+    void onEquipmentNodeSelect(ViewModel vm, LTEquipBasic equipment);
 }
