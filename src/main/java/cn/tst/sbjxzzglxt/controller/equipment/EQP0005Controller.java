@@ -10,6 +10,7 @@ import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import static cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi.Controller.createEqpTree;
+import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipFitting;
 import cn.tst.sbjxzzglxt.entity.LTEquipWarn;
@@ -57,7 +58,8 @@ public class EQP0005Controller extends BusinessBaseController {
         this.vm = new EQP0005ViewModel();
 
         this.bizLogic.loadEQP0005ViewModel(vm);
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        //初始化树结构并把设备的值挂在树节点上
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
 
     }
 
@@ -89,7 +91,7 @@ public class EQP0005Controller extends BusinessBaseController {
      */
     public void onNodeSelect(NodeSelectEvent event) {
         this.selectedNode = event.getTreeNode();
-        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        Long selectedId = ((EquipmentNodeData) selectedNode.getData()).getEquipment().getId();
         vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
         onAddTargetData();
     }

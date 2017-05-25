@@ -118,13 +118,12 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         return eqpService.find(id);
     }
      /* @调用时机 当故障选择窗口提交时回调
-     *  @功能目标 将对话框里选中的多选框对应的roleId和checkPointId存入数据库
-     *  @步骤     1. 清除当前角色对应的所有巡检点权限
-     *            2. 将选中的巡检点权限插入数据库
+     *  @功能目标 提交保存后把集合内容显示到指定的窗口
+     *  @步骤     1. 取出故障表的ID存到集合中
+     *            
      */
     @Override
     public void setSelectError(ViewModel vm) {
-       List<LTEquipError> errorList= errorFacade.findById(vm.getSelectequipError().getId());
-            
+       List<LTEquipError> guZhangBiao= errorFacade.findById(vm.getSelectequipError().getId());
     }
 }

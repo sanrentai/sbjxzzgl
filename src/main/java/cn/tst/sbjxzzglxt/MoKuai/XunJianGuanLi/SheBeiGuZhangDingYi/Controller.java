@@ -1,5 +1,6 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi;
 
+import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -111,7 +112,7 @@ public class Controller extends BusinessBaseController {
      */
     public void onNodeSelect(NodeSelectEvent event) {
         this.selectedNode = event.getTreeNode();
-        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        Long selectedId = ((EquipmentNodeData) selectedNode.getData()).getEquipment().getId();
         vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
         onAddTargetData();
     }

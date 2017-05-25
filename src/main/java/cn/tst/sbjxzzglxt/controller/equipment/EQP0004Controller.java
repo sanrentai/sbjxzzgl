@@ -30,6 +30,7 @@ public class EQP0004Controller extends BusinessBaseController {
     public void init() {
         vm = new EQP0004ViewModel();
         bizLogic.loadEQP0004ViewModel(vm);
+        
     }
 
     public EQP0004ViewModel getVm() {

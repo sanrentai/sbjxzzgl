@@ -1,6 +1,8 @@
 package cn.tst.sbjxzzglxt.controller.equipment;
 
 import cn.tst.sbjxzzglxt.bizlogic.EQP0002BizLogic;
+import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -43,8 +45,8 @@ public class EQP0002Controller extends BusinessBaseController {
 
         this.bizLogic.loadEQP0002ViewModel(vm);
 
-        ///初始化设备树
-        vm.setEquipTreeRoot(createEqpTree(vm.getEquipBasicList()));
+        //初始化树结构并把设备的值挂在树节点上
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
     }
 
     //*****************************************************************
@@ -76,7 +78,7 @@ public class EQP0002Controller extends BusinessBaseController {
      */
     public void onNodeSelect(NodeSelectEvent event) {
         this.selectedNode = event.getTreeNode();
-        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        Long selectedId = ((EquipmentNodeData) selectedNode.getData()).getEquipment().getId();
         vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
         onAddTargetData();
     }

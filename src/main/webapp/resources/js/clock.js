@@ -19,12 +19,6 @@ function chk()
 alert("111");
 }
 
-$(document).ready(function(){
-    $(".anniu").click(function(){
-        alert("1111");
-       
-    });
-});
 
 
 function NewTick()

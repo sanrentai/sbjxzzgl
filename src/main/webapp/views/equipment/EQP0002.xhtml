@@ -61,7 +61,10 @@
                             <p:row>
                                 <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
                                 <p:column headerText="配件名称" styleClass="tct wd-p-8"/>                       
-                                <p:column headerText="配件编号" styleClass="tct wd-p-10"/>   
+                                <p:column headerText="配件编号" styleClass="tct wd-p-10"/>  
+                                <p:column headerText="配件规格" styleClass="tct wd-p-8"/> 
+                                <p:column headerText="配件型号" styleClass="tct wd-p-8"/> 
+                                <p:column headerText="生产厂家" styleClass="tct wd-p-8"/> 
                                 <p:column headerText="编辑" styleClass="wd-p-5"/>
                                 <p:column headerText="删除" styleClass="wd-p-5"/>
                             </p:row>
@@ -78,6 +81,18 @@
                     <!-- 配件编号-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{fitting.PNum}"/>
+                    </p:column>
+                    <!-- 配件规格-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{fitting.guiGe}"/>
+                    </p:column>
+                    <!-- 配件型号-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{fitting.xingHao}"/>
+                    </p:column>
+                    <!-- 生产厂家-->
+                    <p:column styleClass="tlt">
+                        <h:outputText value="#{fitting.changJia}"/>
                     </p:column>
                     <!--修改按钮--> 
                     <p:column styleClass="tct">
@@ -115,7 +130,22 @@
                         <p:outputLabel for="addFittingNumber" value="配件编号：" />
                         <p:inputText id="addFittingNumber" value="#{ctrlEQP0002.vm.fitting.PNum}"/>
                     </p:panelGrid>
-                   
+                    <!--配件规格-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="addFittingGuiGe" value="配件规格：" />
+                        <p:inputText id="addFittingGuiGe" value="#{ctrlEQP0002.vm.fitting.guiGe}"/>
+                    </p:panelGrid>
+                    <!--配件型号-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="addFittingXingHao" value="配件型号：" />
+                        <p:inputText id="addFittingXingHao" value="#{ctrlEQP0002.vm.fitting.xingHao}"/>
+                    </p:panelGrid>
+                    <!--生产厂家-->
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
+                        <p:outputLabel for="addFittingChangJia" value="生产厂家：" />
+                        <p:inputText id="addFittingChangJia" value="#{ctrlEQP0002.vm.fitting.changJia}"/>
+                    </p:panelGrid>
+
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
@@ -129,5 +159,5 @@
             </p:outputPanel>
         </p:outputPanel>
     </p:outputPanel>
-  
+
 </ui:composition>

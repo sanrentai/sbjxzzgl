@@ -1,5 +1,6 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu;
 
+import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -84,7 +85,7 @@ public class Controller extends BusinessBaseController {
         vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId()); 
         //把巡检点列表清空，显示巡检项目列表
         vm.setEquipErrorList(vm.getSelectedEquipBasic().getEquipErrorList());
-        vm.setCheckPointList(null);  
+
         vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
         
     }
@@ -96,7 +97,7 @@ public class Controller extends BusinessBaseController {
      */
     public void onNodeSelect(NodeSelectEvent event) {
         this.selectedNode = event.getTreeNode();
-        Long selectedId = ((LTEquipBasic) selectedNode.getData()).getId();
+        Long selectedId = ((EquipmentNodeData) selectedNode.getData()).getEquipment().getId();
         vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
         onAddTargetData();
     }

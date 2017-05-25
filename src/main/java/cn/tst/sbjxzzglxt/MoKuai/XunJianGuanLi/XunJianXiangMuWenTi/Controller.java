@@ -1,5 +1,6 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuWenTi;
 
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -35,6 +36,8 @@ public class Controller extends BusinessBaseController {
         this.vm = new ViewModel();
 
         this.bizLogic.loadViewModel(vm);
+         //初始化树结构并把设备的值挂在树节点上
+        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
 
     }
 
