@@ -5,6 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu.XiangMuBizLogicImplementation;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.log4j.Logger;
 
 /**
  * 巡检项目实体类
@@ -54,7 +56,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "SysRoutingInspectionItems.findByDelFlg", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.delFlg = :delFlg")
     , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
-
+ private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
+ 
     @Column(name = "bo_dong_shang_xian")
     private Integer boDongShangXian;
     @Column(name = "bo_dong_xia_xian")
@@ -83,7 +86,7 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Size(max = 255)
     @Column(name = "xiang_mu_shuo_ming")
     private String xiangMuShuoMing;
-
+    
 
     public SysRoutingInspectionMessage getMessage() {
         return message;

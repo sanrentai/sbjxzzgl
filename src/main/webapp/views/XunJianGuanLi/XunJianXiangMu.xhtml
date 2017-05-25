@@ -7,15 +7,16 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
     
     <script type="text/javascript">
-  $(document).ready(function(){
-       $(".xiangmubiao").hide();
-  })
+//  $(document).ready(function(){
+//       $(".xiangmubiao").hide();
+//     
+//  });
+ function  onok(){
+          $(".xunjiandianbiao").hide();
+          $(".xiangmubiao").show();
+        }
 
-  $("#yincang").click(function(){
-     alert(1);
-    });
-  
-  
+
 </script>
 
 
@@ -27,6 +28,8 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
+            <div class="shangmian">
+            <div class="zuoce">
             <p:outputPanel id="pnlSelectArea" styleClass="Container30 Responsive100">
                 <p:panelGrid styleClass="wd-p-100">
                     <f:facet name="header">
@@ -56,9 +59,11 @@
                     </p:row>
                 </p:panelGrid>
             </p:outputPanel>
+            </div>
             <!--设备巡检点列表-->
+            <div class="youce">
             <p:outputPanel  styleClass="Container70 Responsive100">
-                <div class="zuiwaiceng">
+                
                 <div class="xunjiandianbiao">
                     <p:outputPanel  styleClass="Container100 Responsive100">
                         <p:outputPanel id="pnlOutputXunJianDian" styleClass="pnlOutputXunJianDian">
@@ -101,9 +106,10 @@
                                     <h:outputText value="#{equip.checkOrder}"/>
                                 </p:column>
                                 <!--设置按钮-->
-                                <p:column styleClass="tct">
+                                <p:column   styleClass="tct">
                                     <p:commandLink actionListener="#{XunJianXiangMuController.onXiangMuLieBiao()}"
-                                                 id="yincang"  process="@this" update="@(.pnlInputArea),@(.pnlOutputArea), @(.toolbar)" >
+                                                    process="@this" update="@(.pnlInputArea),@(.pnlOutputArea), @(.toolbar)"
+                                                    onclick="onok()">
                                         <i class="fa fa-pencil Fs18 Blue"></i>
                                     </p:commandLink>
                                 </p:column>
@@ -176,9 +182,11 @@
                              </p:outputPanel>
                     </p:outputPanel>
                 </div>
-                </div>
+               
             </p:outputPanel>  
-            
+                 </div>
+                 </div>
+            <div class="xiamian">
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
                 <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianXiangMuController.vm.checkPointList}">
                     <!--设备名-->
@@ -189,7 +197,7 @@
                     <!--巡检点-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="XunJianDian" value="巡检点"/>
-                        <p:inputText id="XunJianDian" value="#{XunJianXiangMuController.vm.selectedEquipBasic.checkPointList}" disabled="true"/>
+                        <p:inputText id="XunJianDian" value="#{XunJianXiangMuController.vm.selectedEquipBasic.ENmae}" disabled="true"/>
                     </p:panelGrid>
                     <!--项目名称-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
@@ -245,6 +253,7 @@
                     </p:panelGrid>
                 </p:outputPanel>
             </p:outputPanel>
+                </div>
         </p:outputPanel>
     </p:outputPanel>
 
