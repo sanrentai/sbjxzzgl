@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuXunJianJieGuo;
 
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 
 /**
  *
@@ -15,4 +16,6 @@ public interface BizLogic {
     void loadViewModel(ViewModel vm);
     
     void onEquipmentNodeSelect(ViewModel vm, LTEquipBasic equipment);
+    
+    void onCheckPointSelect(ViewModel vm, LTEquipCheckPoint checkPoint);
 }

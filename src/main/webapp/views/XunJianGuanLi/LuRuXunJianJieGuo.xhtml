@@ -53,7 +53,7 @@
         <!--巡检点列表-->
         <p:outputPanel styleClass="Container70 Responsive100 pnlOutputArea"
                        id="CheckPointListView">
-            <p:panelGrid styleClass="wd-p-100">
+            <h:panelGrid styleClass="wd-p-100">
                 <f:facet name="header">
                     <p:row>
                         <p:column>
@@ -63,9 +63,11 @@
                 </f:facet>
                 <ui:repeat value="#{LuRuXunJianJieGuoController.vm.currentCheckPointList}" 
                            var="checkPoint">
-                    <p:commandLink value="#{checkPoint.name}"></p:commandLink>
+                    <p:commandLink value="#{checkPoint.name}" 
+                                   actionListener="#{LuRuXunJianJieGuoController.onCheckPointSelect(checkPoint)}"
+                                   update="frmMain:XunJianResultRecordView"></p:commandLink>
                 </ui:repeat>
-            </p:panelGrid>
+            </h:panelGrid>
         </p:outputPanel>
         <!--巡检结果记录表-->
         <p:outputPanel styleClass="Container100 Responsive100 pnlOutputArea"
@@ -82,7 +84,9 @@
                                    rendered="#{not empty LuRuXunJianJieGuoController.vm.currentCheckPoint}"></p:outputLabel>
                 </p:outputPanel>
             </p:panelGrid>
-            <p:outputLabel></p:outputLabel>
+            
+            <p:outputLabel value="巡检时间："></p:outputLabel>
+            <p:calendar ></p:calendar>
         </p:outputPanel>
     </p:outputPanel>
 </ui:composition>
