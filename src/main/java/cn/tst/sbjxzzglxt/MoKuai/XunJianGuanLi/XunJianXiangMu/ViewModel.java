@@ -30,19 +30,16 @@ public class ViewModel extends BaseViewModel {
     private LTEquipBasic selectedEquipBasic;
     private List<LTEquipCheckPoint> checkPointList;//巡检点
     private List<LTEquipCheckPoint> selectCheckPointList;//项目巡检信息表
-    private LTEquipCheckPoint selectCheckPoint;
+    private LTEquipCheckPoint checkPoint;
 
-    public LTEquipCheckPoint getSelectCheckPoint() {
-        return selectCheckPoint;
+    public LTEquipCheckPoint getCheckPoint() {
+        return checkPoint;
     }
 
-    public void setSelectCheckPoint(LTEquipCheckPoint selectCheckPoint) {
-        this.selectCheckPoint = selectCheckPoint;
+    public void setCheckPoint(LTEquipCheckPoint checkPoint) {
+        this.checkPoint = checkPoint;
     }
 
-   
-    
-    
     private String currentError;//当前选中故障
 
     public List<LTEquipCheckPoint> getSelectCheckPointList() {

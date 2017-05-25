@@ -623,13 +623,31 @@ ul{
     float:right;
 }
 
-
-div.xunjiandianbiao{
-position:relative;
+div.shangmian{
+width: 100%;
 
 }
+div.zuoce{
+float:left;
+width: 30%;
 
+}
+div.youce{
+float: right;   
+width: 70%;
+
+
+}
+div.xunjiandianbiao{
+width: 100%;  
+
+}
 div.xiangmubiao{
-position:absolute;
-
+width: 100%;
+display:none;
+height: 40%;
+  
+}
+div.xiamian{
+width: 100%;    
 }
