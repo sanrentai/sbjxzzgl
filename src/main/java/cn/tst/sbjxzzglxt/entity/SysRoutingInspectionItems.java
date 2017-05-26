@@ -7,6 +7,7 @@ package cn.tst.sbjxzzglxt.entity;
 
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu.XiangMuBizLogicImplementation;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -24,6 +25,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -53,9 +56,8 @@ import org.apache.log4j.Logger;
     , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
 
-    @Size(max = 255)
     @Column(name = "suo_shu_she_bei_id")
-    private String suoShuSheBeiId;
+    private Long suoShuSheBeiId;
     @Size(max = 255)
     @Column(name = "dui_ying_gu_zhang")
     private String duiYingGuZhang;
@@ -238,14 +240,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.errorList = errorList;
     }
 
-    public String getSuoShuSheBeiId() {
-        return suoShuSheBeiId;
-    }
-
-    public void setSuoShuSheBeiId(String suoShuSheBeiId) {
-        this.suoShuSheBeiId = suoShuSheBeiId;
-    }
-
     public String getDuiYingGuZhang() {
         return duiYingGuZhang;
     }
@@ -266,5 +260,13 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
 
     public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
         this.guZhangShiLiList = guZhangShiLiList;
+    }
+
+    public Long getSuoShuSheBeiId() {
+        return suoShuSheBeiId;
+    }
+
+    public void setSuoShuSheBeiId(Long suoShuSheBeiId) {
+        this.suoShuSheBeiId = suoShuSheBeiId;
     }
 }

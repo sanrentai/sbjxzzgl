@@ -91,7 +91,9 @@
                     <p:outputLabel value="巡检项目："></p:outputLabel>
                     <p:outputPanel></p:outputPanel>
                     
-                    
+                    <ui:repeat value="#{LuRuXunJianJieGuoController.vm.currentCheckPoint.itemList}" var="item">
+                        
+                    </ui:repeat>
                 </p:panelGrid>
             </p:outputPanel>
         </p:outputPanel>
