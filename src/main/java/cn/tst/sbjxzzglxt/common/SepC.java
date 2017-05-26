@@ -15,7 +15,7 @@ public final class SepC {
      */
     public static final String SYSTEM_ID = "material";
     
-    public static final Integer INVALID_ID = -1;
+    public static final Long INVALID_ID = -1L;
     
     public static final String PING_MIAN_TU_DIRECTORY = "pingmiantu";
 

@@ -247,7 +247,7 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public void setDuiYingGuZhang(String duiYingGuZhang) {
         this.duiYingGuZhang = duiYingGuZhang;
     }
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="item")
     @JoinColumns({
         @JoinColumn(name = "ID", referencedColumnName = "xiang_mu_id", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
@@ -260,6 +260,21 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
 
     public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
         this.guZhangShiLiList = guZhangShiLiList;
+    }
+    // 巡检点
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "suo_shu_xun_jian_dian_id", referencedColumnName = "id", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private LTEquipCheckPoint checkPoint;
+
+    public LTEquipCheckPoint getCheckPoint() {
+        return checkPoint;
+    }
+
+    public void setCheckPoint(LTEquipCheckPoint checkPoint) {
+        this.checkPoint = checkPoint;
     }
 
     public Long getSuoShuSheBeiId() {

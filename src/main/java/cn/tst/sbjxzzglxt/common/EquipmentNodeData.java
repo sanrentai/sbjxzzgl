@@ -17,7 +17,7 @@ public class EquipmentNodeData implements Serializable, Comparable<EquipmentNode
     
     private Integer roleId;
     
-    private Integer checkPointId;
+    private Long checkPointId;
     
     private LTEquipBasic equipment;
 
@@ -37,15 +37,15 @@ public class EquipmentNodeData implements Serializable, Comparable<EquipmentNode
         this.roleId = roleId;
     }
 
-    public Integer getCheckPointId() {
+    public Long getCheckPointId() {
         return checkPointId;
     }
 
-    public void setCheckPointId(Integer checkPointId) {
+    public void setCheckPointId(Long checkPointId) {
         this.checkPointId = checkPointId;
     }
     
-    public EquipmentNodeData(String name, Integer roleId, Integer checkPointId) {
+    public EquipmentNodeData(String name, Integer roleId, Long checkPointId) {
         this.name = name;
         this.roleId = roleId;
         this.checkPointId = checkPointId;

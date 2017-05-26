@@ -70,7 +70,7 @@ public class WenDangJiTuPianGuanLiBizLogicImpl extends BaseBizLogic implements B
 
             Thumbnails.of(file.getInputstream()).scale(1, 1).toFile(new File(originFilePath.toString()));
             Thumbnails.of(file.getInputstream()).size(400, 320).toFile(new File(compressedFilePath.toString()));
-            Thumbnails.of(file.getInputstream()).size(160, 100).toFile(new File(previewFilePath.toString()));
+            Thumbnails.of(file.getInputstream()).size(85, 100).toFile(new File(previewFilePath.toString()));
         } catch (IOException ex) {
 
         }

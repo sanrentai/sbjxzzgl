@@ -92,7 +92,7 @@
                     <p:outputPanel></p:outputPanel>
                     
                     <ui:repeat value="#{LuRuXunJianJieGuoController.vm.currentCheckPoint.itemList}" var="item">
-                        
+                        <p:outputLabel value="#{item.xiangMuMingCheng}"></p:outputLabel>
                     </ui:repeat>
                 </p:panelGrid>
             </p:outputPanel>

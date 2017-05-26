@@ -43,6 +43,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipCheckPoint.findByEquipmentId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId AND l.delFlg = :delFlg")})
 public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "equipmentId")
+    private Long equipmentId;
     @Size(max = 10)
     @Column(name = "name")
     private String name;
@@ -52,8 +59,6 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     @Column(name = "specification")
     private String specification;
 
-    @Column(name = "equipmentId")
-    private Integer equipmentId;
 
     @Column(name = "x")
     private Integer x;
@@ -61,24 +66,8 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     private Integer y;
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
 
     public LTEquipCheckPoint() {
-    }
-
-    public LTEquipCheckPoint(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override
@@ -121,10 +110,10 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     public void setY(Integer y) {
         this.y = y;
     }
+    // 设备
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false)
-        ,
+        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
     private LTEquipBasic equipment;
@@ -137,13 +126,6 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
         this.equipment = equipment;
     }
 
-    public Integer getEquipmentId() {
-        return equipmentId;
-    }
-
-    public void setEquipmentId(Integer equipmentId) {
-        this.equipmentId = equipmentId;
-    }
 
     public String getName() {
         return name;
@@ -169,7 +151,7 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
         this.specification = specification;
     }
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="checkPoint")
     @JoinColumns({
         @JoinColumn(name = "id", referencedColumnName = "suo_shu_xun_jian_dian_id", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
@@ -182,5 +164,34 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
     public void setItemList(List<SysRoutingInspectionItems> itemList) {
         this.itemList = itemList;
+    }
+
+    public Long getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(Long equipmentId) {
+        this.equipmentId = equipmentId;
+    }
+
+    public LTEquipCheckPoint(Long id) {
+        this.id = id;
+    }
+
+    public LTEquipCheckPoint(Long id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
+        this.id = id;
+        this.insRep = insRep;
+        this.insDate = insDate;
+        this.updRep = updRep;
+        this.updDate = updDate;
+        this.version = version;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
