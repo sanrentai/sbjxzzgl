@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "XunJianDianQuanXian.findAll", query = "SELECT x FROM XunJianDianQuanXian x")
     , @NamedQuery(name = "XunJianDianQuanXian.findById", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.id = :id")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByRoleId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.roleId = :roleId AND x.delFlg = :delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByRoleId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.roleId = :roleId")
     , @NamedQuery(name = "XunJianDianQuanXian.findByCheckPointId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.checkPointId = :checkPointId")
     , @NamedQuery(name = "XunJianDianQuanXian.findByInsRep", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.insRep = :insRep")
     , @NamedQuery(name = "XunJianDianQuanXian.findByInsDate", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.insDate = :insDate")
@@ -60,17 +60,6 @@ public class XunJianDianQuanXian extends BaseEntity implements Serializable {
 
     public XunJianDianQuanXian(Integer id) {
         this.id = id;
-    }
-
-    public XunJianDianQuanXian(Integer id, int roleId, int checkPointId, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.roleId = roleId;
-        this.checkPointId = checkPointId;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.version = version;
     }
 
     public Integer getId() {
@@ -121,5 +110,4 @@ public class XunJianDianQuanXian extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.XunJianDianQuanXian[ id=" + id + " ]";
     }
-    
 }

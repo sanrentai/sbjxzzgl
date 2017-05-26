@@ -60,7 +60,7 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
     public void loadViewModel(ViewModel vm) {
         vm.setRoleList(xunJianRoleFacade.findAll());
         XunJianGuiZe guiZe = new XunJianGuiZe();
-        guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN);
+        guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN.getValue());
         vm.setXunJianGuiZeInEdit(guiZe);
     }
 
@@ -144,7 +144,7 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
 
     private TreeNode findTreeNodeByCheckPointId(TreeNode root, Integer checkPointId) {
         if (root.getType().equals(EquipmentTree.CHECK_POINT_TYPE)
-                && ((EquipmentNodeData) root.getData()).getCheckPointId().equals(checkPointId)) {
+                && ((EquipmentNodeData) root.getData()).getCheckPointId() == checkPointId) {
             return root;
         }
         if (root.isLeaf() || root.getChildCount() == 0) {
@@ -178,7 +178,7 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
         List<XunJianGuiZe> xunJianGuiZeList = xunJianGuiZeFacade.findByRoleId(vm.getCurrentRole().getRoleId());
         XunJianGuiZe guiZe = new XunJianGuiZe();
         if (xunJianGuiZeList.isEmpty()) {
-            guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN);
+            guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN.getValue());
         } else {
             guiZe.setXunHuanFangShi(xunJianGuiZeList.get(0).getXunHuanFangShi());
             guiZe.setKaiShiShiJian(xunJianGuiZeList.get(0).getKaiShiShiJian());

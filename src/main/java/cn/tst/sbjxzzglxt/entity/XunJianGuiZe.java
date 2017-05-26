@@ -5,7 +5,6 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
-import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -14,11 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,11 +32,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "XunJianGuiZe.findAll", query = "SELECT x FROM XunJianGuiZe x")
     , @NamedQuery(name = "XunJianGuiZe.findById", query = "SELECT x FROM XunJianGuiZe x WHERE x.id = :id")
-    , @NamedQuery(name = "XunJianGuiZe.findByRoleId", query = "SELECT x FROM XunJianGuiZe x WHERE x.roleId = :roleId AND x.delFlg = :delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByRoleId", query = "SELECT x FROM XunJianGuiZe x WHERE x.roleId = :roleId")
     , @NamedQuery(name = "XunJianGuiZe.findByXunHuanFangShi", query = "SELECT x FROM XunJianGuiZe x WHERE x.xunHuanFangShi = :xunHuanFangShi")
     , @NamedQuery(name = "XunJianGuiZe.findByKaiShiShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.kaiShiShiJian = :kaiShiShiJian")
-    , @NamedQuery(name = "XunJianGuiZe.findByJieShuShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.jieShuShiJian = :jieShuShiJian")})
+    , @NamedQuery(name = "XunJianGuiZe.findByJieShuShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.jieShuShiJian = :jieShuShiJian")
+    , @NamedQuery(name = "XunJianGuiZe.findByInsRep", query = "SELECT x FROM XunJianGuiZe x WHERE x.insRep = :insRep")
+    , @NamedQuery(name = "XunJianGuiZe.findByInsDate", query = "SELECT x FROM XunJianGuiZe x WHERE x.insDate = :insDate")
+    , @NamedQuery(name = "XunJianGuiZe.findByUpdRep", query = "SELECT x FROM XunJianGuiZe x WHERE x.updRep = :updRep")
+    , @NamedQuery(name = "XunJianGuiZe.findByUpdDate", query = "SELECT x FROM XunJianGuiZe x WHERE x.updDate = :updDate")
+    , @NamedQuery(name = "XunJianGuiZe.findByDelFlg", query = "SELECT x FROM XunJianGuiZe x WHERE x.delFlg = :delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByVersion", query = "SELECT x FROM XunJianGuiZe x WHERE x.version = :version")})
 public class XunJianGuiZe extends BaseEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -63,6 +66,15 @@ public class XunJianGuiZe extends BaseEntity implements Serializable {
         this.id = id;
     }
 
+    public XunJianGuiZe(Integer id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
+        this.id = id;
+        this.insRep = insRep;
+        this.insDate = insDate;
+        this.updRep = updRep;
+        this.updDate = updDate;
+        this.version = version;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -79,12 +91,12 @@ public class XunJianGuiZe extends BaseEntity implements Serializable {
         this.roleId = roleId;
     }
 
-    public SepE.XunJianXunHuanFangShi getXunHuanFangShi() {
-        return SepE.XunJianXunHuanFangShi.parse(xunHuanFangShi);
+    public Integer getXunHuanFangShi() {
+        return xunHuanFangShi;
     }
 
-    public void setXunHuanFangShi(SepE.XunJianXunHuanFangShi xunHuanFangShi) {
-        this.xunHuanFangShi = xunHuanFangShi.getValue();
+    public void setXunHuanFangShi(Integer xunHuanFangShi) {
+        this.xunHuanFangShi = xunHuanFangShi;
     }
 
     public Date getKaiShiShiJian() {
@@ -126,19 +138,5 @@ public class XunJianGuiZe extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.XunJianGuiZe[ id=" + id + " ]";
-    }
-    @OneToOne
-    @JoinColumns({
-        @JoinColumn(name = "roleId", referencedColumnName = "role_id", insertable = false, updatable = false),
-        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
-    })
-    private MstXunJianRole role;
-
-    public MstXunJianRole getRole() {
-        return role;
-    }
-
-    public void setRole(MstXunJianRole role) {
-        this.role = role;
     }
 }

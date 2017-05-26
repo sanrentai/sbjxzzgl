@@ -15,11 +15,27 @@ import java.io.Serializable;
 public class EquipmentNodeData implements Serializable, Comparable<EquipmentNodeData> {
     private String name;
     
-    private Integer roleId;
+    private int roleId;
     
-    private Long checkPointId;
+    private int checkPointId;
     
     private LTEquipBasic equipment;
+
+    public int getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
+
+    public int getCheckPointId() {
+        return checkPointId;
+    }
+
+    public void setCheckPointId(int checkPointId) {
+        this.checkPointId = checkPointId;
+    }
 
     public LTEquipBasic getEquipment() {
         return equipment;
@@ -28,24 +44,8 @@ public class EquipmentNodeData implements Serializable, Comparable<EquipmentNode
     public void setEquipment(LTEquipBasic equipment) {
         this.equipment = equipment;
     }
-
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
-    public Long getCheckPointId() {
-        return checkPointId;
-    }
-
-    public void setCheckPointId(Long checkPointId) {
-        this.checkPointId = checkPointId;
-    }
     
-    public EquipmentNodeData(String name, Integer roleId, Long checkPointId) {
+    public EquipmentNodeData(String name, int roleId, int checkPointId) {
         this.name = name;
         this.roleId = roleId;
         this.checkPointId = checkPointId;
