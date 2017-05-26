@@ -31,6 +31,8 @@ public class ViewModel extends BaseViewModel {
     private List<LTEquipCheckPoint> checkPointList;//巡检点
     private List<LTEquipCheckPoint> selectCheckPointList;//项目巡检信息表
     private LTEquipCheckPoint checkPoint;
+    
+    private LTEquipCheckPoint selectedCheckPoint;
 
     public LTEquipCheckPoint getCheckPoint() {
         return checkPoint;
@@ -159,6 +161,14 @@ public class ViewModel extends BaseViewModel {
     public void setEquipErrorList(List<LTEquipError> equipErrorList) {
         this.equipErrorList = equipErrorList;
 
+    }
+
+    public LTEquipCheckPoint getSelectedCheckPoint() {
+        return selectedCheckPoint;
+    }
+
+    public void setSelectedCheckPoint(LTEquipCheckPoint selectedCheckPoint) {
+        this.selectedCheckPoint = selectedCheckPoint;
     }
  
 }

@@ -9,6 +9,7 @@ import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 @Named(SepC.ControllerID.XUN_JIAN_XIANG_MU_CONTROLLER_NAME)
 public class Controller extends BusinessBaseController {
-    
+
     private static final Logger LOG = Logger.getLogger(Controller.class.getName());
     private List<SysRoutingInspectionItems> routingInspectionItemsList;//巡检项目实体类集合
     private SysRoutingInspectionItems routingInspectionItems;//巡检项目实体类
@@ -33,21 +34,21 @@ public class Controller extends BusinessBaseController {
     private ViewModel vm;
     ///选中的节点
     private TreeNode selectedNode;
-    
+
     @EJB
     private BizLogic bizLogic;
-    
+
     @PostConstruct
     public void init() {
 
         ///初始化视图模型
         this.vm = new ViewModel();
-        
+
         this.bizLogic.loadViewModel(vm);
 
         //初始化树结构并把设备的值挂在树节点上
         vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
-        
+
     }
 
     //*****************************************************************
@@ -62,8 +63,7 @@ public class Controller extends BusinessBaseController {
      * @param equipBasicList 传入设备列表
      * @return 返回设备树
      */
-
- /**
+    /**
      * 修改项目
      *
      *
@@ -76,11 +76,10 @@ public class Controller extends BusinessBaseController {
     //xhtml新建监控的事件
     public void onAddTargetData() {
         vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
-        vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId()); 
-        //把巡检点列表清空，显示巡检项目列表
+        vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
         vm.setEquipErrorList(vm.getSelectedEquipBasic().getEquipErrorList());
         vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
-        
+
     }
 
     /**
@@ -128,7 +127,7 @@ public class Controller extends BusinessBaseController {
     /**
      * 删除记录
      *
-     * @param fitting
+     * @param routingInspectionItems
      */
     public void onDeleteEquip(SysRoutingInspectionItems routingInspectionItems) {
         ///删除模式
@@ -147,25 +146,31 @@ public class Controller extends BusinessBaseController {
         }
     }
 
-    public void onXiangMuLieBiao(){
-    //创建一个集合
-    
-    List l = new ArrayList();
-    //把页面得到的集合便利后放到新创建的集合内
-    for(Object list :vm.getSelectedEquipBasic().getCheckPointList()){
-        l.add(list);
-    }
-    //最后把新集合放到视图内
-    vm.setCheckPointList(l);
-   
-    
-    }
-    
+    public void onXiangMuLieBiao(LTEquipCheckPoint row) {
+        //选中巡检点，把页面传进来的值放进去
+        vm.setSelectedCheckPoint(row);
+        //取出来巡检点的ID
+        Long id = Long.valueOf(row.getId());
+        //取出来设备ID
+        Integer equipmentId = row.getEquipmentId();
+        //调用方法对项目进行初始化
+        onAddTargetData();
+        //把巡检点ID放入项目中的所属巡检点ID内
+        vm.getRoutingInspectionItems().setSuoShuXunJianDianId(id);
+        
+        List l = new ArrayList();
+        //把页面得到的集合便利后放到新创建的集合内
+        for (Object list : vm.getSelectedEquipBasic().getCheckPointList()) {
+            l.add(list);
+        }
+        //最后把新集合放到视图内
+        vm.setCheckPointList(l);
 
-     public void setSelectError(){
-     bizLogic.setSelectError(vm);
-     }
-  
+    }
+
+    public void setSelectError() {
+        bizLogic.setSelectError(vm);
+    }
 
     //*****************************************************************
     //                        Getter Setter
@@ -173,41 +178,41 @@ public class Controller extends BusinessBaseController {
     public List<SysRoutingInspectionItems> getRoutingInspectionItemsList() {
         return routingInspectionItemsList;
     }
-    
+
     public void setRoutingInspectionItemsList(List<SysRoutingInspectionItems> routingInspectionItemsList) {
         this.routingInspectionItemsList = routingInspectionItemsList;
     }
-    
+
     public SysRoutingInspectionItems getRoutingInspectionItems() {
         return routingInspectionItems;
     }
-    
+
     public void setRoutingInspectionItems(SysRoutingInspectionItems routingInspectionItems) {
         this.routingInspectionItems = routingInspectionItems;
     }
-    
+
     public ViewModel getVm() {
         return vm;
     }
-    
+
     public void setVm(ViewModel vm) {
         this.vm = vm;
     }
-    
+
     public BizLogic getBizLogic() {
         return bizLogic;
     }
-    
+
     public void setBizLogic(BizLogic bizLogic) {
         this.bizLogic = bizLogic;
     }
-    
+
     public TreeNode getSelectedNode() {
         return selectedNode;
     }
-    
+
     public void setSelectedNode(TreeNode selectedNode) {
         this.selectedNode = selectedNode;
     }
-    
+
 }
