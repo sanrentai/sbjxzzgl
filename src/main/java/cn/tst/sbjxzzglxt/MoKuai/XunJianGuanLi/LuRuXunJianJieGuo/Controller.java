@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import org.primefaces.event.NodeSelectEvent;
 
 /**
  *
@@ -51,5 +50,9 @@ public class Controller extends BusinessBaseController {
     
     public void onEquipmentNodeSelect(LTEquipBasic equipment) {
         bizLogic.onEquipmentNodeSelect(vm, equipment);
+    }
+    
+    public void onCheckPointSelect(LTEquipCheckPoint checkPoint) {
+        bizLogic.onCheckPointSelect(vm, checkPoint);
     }
 }
