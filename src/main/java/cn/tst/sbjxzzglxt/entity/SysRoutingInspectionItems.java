@@ -7,7 +7,6 @@ package cn.tst.sbjxzzglxt.entity;
 
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu.XiangMuBizLogicImplementation;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,7 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -26,8 +24,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -56,22 +52,25 @@ import org.apache.log4j.Logger;
     , @NamedQuery(name = "SysRoutingInspectionItems.findByDelFlg", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.delFlg = :delFlg")
     , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
+
+    @Size(max = 255)
+    @Column(name = "suo_shu_she_bei_id")
+    private String suoShuSheBeiId;
+    @Size(max = 255)
+    @Column(name = "dui_ying_gu_zhang")
+    private String duiYingGuZhang;
  private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
  
     @Column(name = "bo_dong_shang_xian")
     private Integer boDongShangXian;
     @Column(name = "bo_dong_xia_xian")
     private Integer boDongXiaXian; 
-    @Column(name = "dui_ying_gu_zhang")
-    private int duiYingGuZhang;
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Column(name = "suo_shu_she_bei_id")
-    private Long suoShuSheBeiId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "suo_shu_xun_jian_dian_id")
@@ -125,14 +124,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getSuoShuSheBeiId() {
-        return suoShuSheBeiId;
-    }
-
-    public void setSuoShuSheBeiId(Long suoShuSheBeiId) {
-        this.suoShuSheBeiId = suoShuSheBeiId;
     }
 
     public Long getSuoShuXunJianDianId() {
@@ -200,14 +191,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems[ id=" + id + " ]";
     }
 
-    public int getDuiYingGuZhang() {
-        return duiYingGuZhang;
-    }
-
-    public void setDuiYingGuZhang(int duiYingGuZhang) {
-        this.duiYingGuZhang = duiYingGuZhang;
-    }
-
     public Integer getBoDongShangXian() {
         return boDongShangXian;
     }
@@ -254,6 +237,34 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public void setErrorList(List<LTEquipError> errorList) {
         this.errorList = errorList;
     }
-   
-   
+
+    public String getSuoShuSheBeiId() {
+        return suoShuSheBeiId;
+    }
+
+    public void setSuoShuSheBeiId(String suoShuSheBeiId) {
+        this.suoShuSheBeiId = suoShuSheBeiId;
+    }
+
+    public String getDuiYingGuZhang() {
+        return duiYingGuZhang;
+    }
+
+    public void setDuiYingGuZhang(String duiYingGuZhang) {
+        this.duiYingGuZhang = duiYingGuZhang;
+    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "ID", referencedColumnName = "xiang_mu_id", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private List<GuZhangShiLi> guZhangShiLiList;
+
+    public List<GuZhangShiLi> getGuZhangShiLiList() {
+        return guZhangShiLiList;
+    }
+
+    public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
+        this.guZhangShiLiList = guZhangShiLiList;
+    }
 }

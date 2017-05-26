@@ -72,21 +72,30 @@
         <!--巡检结果记录表-->
         <p:outputPanel styleClass="Container100 Responsive100 pnlOutputArea"
                        id="XunJianResultRecordView">
-            <p:panelGrid columns="2" layout="grid">
-                <p:outputPanel>
-                    <p:outputLabel value="所属设备："></p:outputLabel>
-                    <p:outputLabel value="#{LuRuXunJianJieGuoController.vm.currentEquipment.ENmae}"
-                                   rendered="#{not empty LuRuXunJianJieGuoController.vm.currentEquipment}"></p:outputLabel>
-                </p:outputPanel>
-                <p:outputPanel>
-                    <p:outputLabel value="所属巡检点："></p:outputLabel>
-                    <p:outputLabel value="#{LuRuXunJianJieGuoController.vm.currentCheckPoint.name}" 
-                                   rendered="#{not empty LuRuXunJianJieGuoController.vm.currentCheckPoint}"></p:outputLabel>
-                </p:outputPanel>
-            </p:panelGrid>
-            
-            <p:outputLabel value="巡检时间："></p:outputLabel>
-            <p:calendar ></p:calendar>
+            <p:outputPanel styleClass="Container50 Responsive100 pnlOutputArea">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:outputPanel>
+                        <p:outputLabel value="所属设备："></p:outputLabel>
+                        <p:outputLabel value="#{LuRuXunJianJieGuoController.vm.currentEquipment.ENmae}"
+                                       rendered="#{not empty LuRuXunJianJieGuoController.vm.currentEquipment}"></p:outputLabel>
+                    </p:outputPanel>
+                    <p:outputPanel>
+                        <p:outputLabel value="所属巡检点："></p:outputLabel>
+                        <p:outputLabel value="#{LuRuXunJianJieGuoController.vm.currentCheckPoint.name}" 
+                                       rendered="#{not empty LuRuXunJianJieGuoController.vm.currentCheckPoint}"></p:outputLabel>
+                    </p:outputPanel>
+                    
+                    <p:outputLabel value="巡检时间："></p:outputLabel>
+                    <p:calendar ></p:calendar>
+                    
+                    <p:outputLabel value="巡检项目："></p:outputLabel>
+                    <p:outputPanel></p:outputPanel>
+                    
+                    <ui:repeat>
+                        
+                    </ui:repeat>
+                </p:panelGrid>
+            </p:outputPanel>
         </p:outputPanel>
     </p:outputPanel>
 </ui:composition>

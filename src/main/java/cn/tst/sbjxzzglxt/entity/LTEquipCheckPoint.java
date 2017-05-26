@@ -169,8 +169,18 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
         this.specification = specification;
     }
     
-   
-    
-    
-    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "id", referencedColumnName = "suo_shu_xun_jian_dian_id", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private List<SysRoutingInspectionItems> itemList;
+
+    public List<SysRoutingInspectionItems> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<SysRoutingInspectionItems> itemList) {
+        this.itemList = itemList;
+    }
 }
