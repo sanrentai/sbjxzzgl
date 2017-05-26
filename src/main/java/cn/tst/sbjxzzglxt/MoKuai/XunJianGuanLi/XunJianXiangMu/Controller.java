@@ -152,7 +152,7 @@ public class Controller extends BusinessBaseController {
         //取出来巡检点的ID
         Long id = Long.valueOf(row.getId());
         //取出来设备ID
-        Integer equipmentId = row.getEquipmentId();
+        Long equipmentId = row.getEquipmentId();
         //调用方法对项目进行初始化
         onAddTargetData();
         //把巡检点ID放入项目中的所属巡检点ID内

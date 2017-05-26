@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -18,7 +20,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,45 +45,24 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "GuZhangShiLi.findByDelFlg", query = "SELECT g FROM GuZhangShiLi g WHERE g.delFlg = :delFlg")
     , @NamedQuery(name = "GuZhangShiLi.findByVersion", query = "SELECT g FROM GuZhangShiLi g WHERE g.version = :version")})
 public class GuZhangShiLi extends BaseEntity implements Serializable {
-    @Id
+
+     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "xiang_mu_id")
+    @Column(name = "xiangMuId")
     private int xiangMuId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "gu_zhang_id")
+    @Column(name = "guZhangId")
     private int guZhangId;
+   
 
     public GuZhangShiLi() {
     }
 
-    public GuZhangShiLi(Long id) {
-        this.id = id;
-    }
-
-    public GuZhangShiLi(Long id, int xiangMuId, int guZhangId, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.xiangMuId = xiangMuId;
-        this.guZhangId = guZhangId;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.version = version;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getXiangMuId() {
         return xiangMuId;
@@ -135,4 +119,20 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
     public void setItem(SysRoutingInspectionItems item) {
         this.item = item;
     }
+
+    public GuZhangShiLi(Integer id) {
+        this.id = id;
+    }
+
+    
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+   
 }
