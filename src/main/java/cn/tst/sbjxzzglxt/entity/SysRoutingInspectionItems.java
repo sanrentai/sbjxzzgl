@@ -72,8 +72,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     private Long id;
     @Column(name = "suo_shu_she_bei_id")
     private Long suoShuSheBeiId;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "suo_shu_xun_jian_dian_id")
     private Long suoShuXunJianDianId;
     @Size(max = 255)
