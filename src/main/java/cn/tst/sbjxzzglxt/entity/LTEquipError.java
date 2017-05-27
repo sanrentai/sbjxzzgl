@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LTEquipError.findAll", query = "SELECT l FROM LTEquipError l")
     , @NamedQuery(name = "LTEquipError.findById", query = "SELECT l FROM LTEquipError l WHERE l.id = :id AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipError.findByENum", query = "SELECT l FROM LTEquipError l  WHERE l.eNum = :eNum AND l.delFlg = :delFlg")
-    , @NamedQuery(name = "LTEquipError.findByErrNum", query = "SELECT l FROM LTEquipError l WHERE l.errNum = :errNum")
+    , @NamedQuery(name = "LTEquipError.findByErrNum", query = "SELECT l FROM LTEquipError l WHERE l.errNum = :errNum AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipError.findByErrTitle", query = "SELECT l FROM LTEquipError l WHERE l.errTitle = :errTitle")
     , @NamedQuery(name = "LTEquipError.findByErrWay", query = "SELECT l FROM LTEquipError l WHERE l.errWay = :errWay")
     , @NamedQuery(name = "LTEquipError.findByErrType", query = "SELECT l FROM LTEquipError l WHERE l.errType = :errType")
@@ -369,20 +369,34 @@ public class LTEquipError extends BaseEntity implements Serializable {
         this.errorMessageList = errorMessageList;
     }
     
-    //项目表
-     //这个连表用于页面区设备名称
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Err_Num", referencedColumnName = "dui_ying_gu_zhang", insertable = false, updatable = false)
-    private SysRoutingInspectionItems sysItems;
+  
+    
+        //故障实例
+     @OneToMany(mappedBy = "equipError", fetch = FetchType.LAZY)
+     private List<GuZhangShiLi> guZhangShiLiList;
 
-    public SysRoutingInspectionItems getSysItems() {
-        return sysItems;
+    public List<GuZhangShiLi> getGuZhangShiLiList() {
+        return guZhangShiLiList;
     }
 
-    public void setSysItems(SysRoutingInspectionItems sysItems) {
-        this.sysItems = sysItems;
+    public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
+        this.guZhangShiLiList = guZhangShiLiList;
     }
-    
-    
+
+     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "Err_Num", referencedColumnName = "dui_ying_gu_zhang", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+     private SysRoutingInspectionItems selectItems;
+
+    public SysRoutingInspectionItems getSelectItems() {
+        return selectItems;
+    }
+
+    public void setSelectItems(SysRoutingInspectionItems selectItems) {
+        this.selectItems = selectItems;
+    }
+     
     
 }

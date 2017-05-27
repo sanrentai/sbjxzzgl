@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "GuZhangShiLi.findAll", query = "SELECT g FROM GuZhangShiLi g")
     , @NamedQuery(name = "GuZhangShiLi.findById", query = "SELECT g FROM GuZhangShiLi g WHERE g.id = :id")
     , @NamedQuery(name = "GuZhangShiLi.findByXiangMuId", query = "SELECT g FROM GuZhangShiLi g WHERE g.xiangMuId = :xiangMuId")
-    , @NamedQuery(name = "GuZhangShiLi.findByGuZhangId", query = "SELECT g FROM GuZhangShiLi g WHERE g.guZhangId = :guZhangId")
+    , @NamedQuery(name = "GuZhangShiLi.findByGuZhangId", query = "SELECT g FROM GuZhangShiLi g WHERE g.guZhangId = :guZhangId AND g.delFlg = :delFlg")
     , @NamedQuery(name = "GuZhangShiLi.findByInsRep", query = "SELECT g FROM GuZhangShiLi g WHERE g.insRep = :insRep")
     , @NamedQuery(name = "GuZhangShiLi.findByInsDate", query = "SELECT g FROM GuZhangShiLi g WHERE g.insDate = :insDate")
     , @NamedQuery(name = "GuZhangShiLi.findByUpdRep", query = "SELECT g FROM GuZhangShiLi g WHERE g.updRep = :updRep")
@@ -107,18 +107,19 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "xiang_mu_id", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "guZhangId", referencedColumnName = "Err_Num", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
-    })
-    private SysRoutingInspectionItems item;
+    })  
+    private LTEquipError equipError;
 
-    public SysRoutingInspectionItems getItem() {
-        return item;
+    public LTEquipError getEquipError() {
+        return equipError;
     }
 
-    public void setItem(SysRoutingInspectionItems item) {
-        this.item = item;
+    public void setEquipError(LTEquipError equipError) {
+        this.equipError = equipError;
     }
+    
 
     public GuZhangShiLi(Integer id) {
         this.id = id;
@@ -134,5 +135,20 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-   
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "xiangMuId", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private SysRoutingInspectionItems itemsGuZhang;
+
+    public SysRoutingInspectionItems getItemsGuZhang() {
+        return itemsGuZhang;
+    }
+
+    public void setItemsGuZhang(SysRoutingInspectionItems itemsGuZhang) {
+        this.itemsGuZhang = itemsGuZhang;
+    }
+    
+    
 }

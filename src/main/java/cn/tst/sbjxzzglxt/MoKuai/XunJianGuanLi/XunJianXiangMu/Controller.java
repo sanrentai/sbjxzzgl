@@ -150,7 +150,7 @@ public class Controller extends BusinessBaseController {
         //选中巡检点，把页面传进来的值放进去
         vm.setSelectedCheckPoint(row);
         //取出来巡检点的ID
-        Long id = Long.valueOf(row.getId());
+        int id = row.getId();
         //取出来设备ID
         Long equipmentId = row.getEquipmentId();
         //调用方法对项目进行初始化
@@ -169,7 +169,16 @@ public class Controller extends BusinessBaseController {
     }
 
     public void setSelectError() {
-        bizLogic.setSelectError(vm);
+         //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
+        SepE.ExecuteMode mode = this.vm.getRoutingInspectionItems().getId() == null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
+        //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
+        ExecuteResult result = this.bizLogic.onXunJianXiangMu(mode, vm);
+
+        this.addMessage(result.createMessage());
+        if (result.isSuccess()) {
+            onAddTargetData();
+        }
     }
 
     //*****************************************************************

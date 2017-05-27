@@ -56,11 +56,11 @@ import org.apache.log4j.Logger;
     , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
 
+    @Column(name = "suo_shu_xun_jian_dian_id")
+    private Integer suoShuXunJianDianId;
     @Column(name = "suo_shu_she_bei_id")
     private Long suoShuSheBeiId;
-    @Size(max = 255)
-    @Column(name = "dui_ying_gu_zhang")
-    private String duiYingGuZhang;
+    
  private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
  
     @Column(name = "bo_dong_shang_xian")
@@ -73,10 +73,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "suo_shu_xun_jian_dian_id")
-    private Long suoShuXunJianDianId;
     @Size(max = 255)
     @Column(name = "xiang_mu_ming_cheng")
     private String xiangMuMingCheng;
@@ -128,11 +124,11 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.id = id;
     }
 
-    public Long getSuoShuXunJianDianId() {
+    public int getSuoShuXunJianDianId() {
         return suoShuXunJianDianId;
     }
 
-    public void setSuoShuXunJianDianId(Long suoShuXunJianDianId) {
+    public void setSuoShuXunJianDianId(int suoShuXunJianDianId) {
         this.suoShuXunJianDianId = suoShuXunJianDianId;
     }
 
@@ -227,40 +223,7 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @OneToOne
     @PrimaryKeyJoinColumn(name = "xiang_mu_ming_cheng", referencedColumnName = "xun_jian_dian_xiang_mu_id")
     private SysRoutingInspectionMessage message;
-    
-    //故障表格
-     @OneToMany(mappedBy = "sysItems", fetch = FetchType.LAZY)
-     private List<LTEquipError> errorList;
 
-    public List<LTEquipError> getErrorList() {
-        return errorList;
-    }
-
-    public void setErrorList(List<LTEquipError> errorList) {
-        this.errorList = errorList;
-    }
-
-    public String getDuiYingGuZhang() {
-        return duiYingGuZhang;
-    }
-
-    public void setDuiYingGuZhang(String duiYingGuZhang) {
-        this.duiYingGuZhang = duiYingGuZhang;
-    }
-    @OneToMany(mappedBy="item")
-    @JoinColumns({
-        @JoinColumn(name = "ID", referencedColumnName = "xiang_mu_id", insertable = false, updatable = false),
-        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
-    })
-    private List<GuZhangShiLi> guZhangShiLiList;
-
-    public List<GuZhangShiLi> getGuZhangShiLiList() {
-        return guZhangShiLiList;
-    }
-
-    public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
-        this.guZhangShiLiList = guZhangShiLiList;
-    }
     // 巡检点
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
@@ -284,4 +247,26 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public void setSuoShuSheBeiId(Long suoShuSheBeiId) {
         this.suoShuSheBeiId = suoShuSheBeiId;
     }
+    
+     @OneToMany(mappedBy = "selectItems", fetch = FetchType.LAZY)
+     private List<GuZhangShiLi> guZhangShiLiList;
+
+    public List<GuZhangShiLi> getGuZhangShiLiList() {
+        return guZhangShiLiList;
+    }
+
+    public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
+        this.guZhangShiLiList = guZhangShiLiList;
+    }
+
+    
+
+
+
+    public void setSuoShuXunJianDianId(Integer suoShuXunJianDianId) {
+        this.suoShuXunJianDianId = suoShuXunJianDianId;
+    }
+
+ 
+     
 }
