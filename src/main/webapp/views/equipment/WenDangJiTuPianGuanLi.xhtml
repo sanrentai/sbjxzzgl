@@ -30,7 +30,7 @@
                                 animate="true">
                             <p:ajax event="select" 
                                     process="EquipmentTree" 
-                                    update="frmMain:rootContainer" 
+                                    update="frmMain:GraphicTabelView frmMain:Toolbar" 
                                     listener="#{WenDangJiTuPianGuanLiController.onEquipmentNodeSelect(node.equipment)}"  />
                             <p:treeNode>
                                 <h:outputText value="#{node}"/>
@@ -64,23 +64,23 @@
                 <p:column styleClass="tlt">
                     <h:outputText value="#{document.FName}"/>
                 </p:column>
-                <p:column styleClass="tlt">
+                <p:column styleClass="tct">
                     <p:graphicImage value="#{document.previewFilePath}"></p:graphicImage>
                 </p:column>
-                <p:column styleClass="tlt">
+                <p:column styleClass="tct">
                     <h:outputText value="#{document.type}"/>
                 </p:column>
-                <p:column styleClass="tlt">
+                <p:column styleClass="tct">
                     <h:outputText value="#{document.FVer}"/>
                 </p:column>
-                <p:column styleClass="tlt">
+                <p:column styleClass="tct">
                     <p:commandButton value="下载" 
                                      ajax="false"
                                      icon="ui-icon-arrowthick-1-s">
                         <p:fileDownload value="#{document.file}"></p:fileDownload>
                     </p:commandButton>
                 </p:column>
-                <p:column styleClass="tlt">
+                <p:column styleClass="tct">
                     <p:commandButton value="更新" process="@this GraphicTable"
                                      actionListener="#{WenDangJiTuPianGuanLiController.onEditDocumentToUpdate(document)}"
                                      oncomplete="PF('EquipmentDocumentUpdateDialog').show();"
@@ -89,7 +89,8 @@
             </p:dataTable>
         </p:outputPanel>
         <!--工具栏-->
-        <p:toolbar styleClass="Container100">
+        <p:toolbar styleClass="Container100"
+                   id="Toolbar">
             <f:facet name="left">
                 <p:commandButton value="新建" 
                                  process="@this" 
@@ -137,7 +138,8 @@
                 <p:commandButton value="提交" 
                                  process="@this frmMain:NewEquipmentDocumentForm"
                                  actionListener="#{WenDangJiTuPianGuanLiController.onEditNewDocumentSubmit}"
-                                 update="frmMain:GraphicTabelView"></p:commandButton>
+                                 update="frmMain:GraphicTabelView frmMain:NewEquipmentDocumentForm frmMain:Toolbar"
+                                 oncomplete="alert('提交成功');"></p:commandButton>
                 <p:outputPanel></p:outputPanel>
                 <p:outputPanel></p:outputPanel>
             </p:panelGrid>

@@ -60,7 +60,7 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
     public void loadViewModel(ViewModel vm) {
         vm.setRoleList(xunJianRoleFacade.findAll());
         XunJianGuiZe guiZe = new XunJianGuiZe();
-        guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN.getValue());
+        guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN);
         vm.setXunJianGuiZeInEdit(guiZe);
     }
 
@@ -178,7 +178,7 @@ public class XunJianJueSeGuanLiBizLogicImpl extends BaseBizLogic implements BizL
         List<XunJianGuiZe> xunJianGuiZeList = xunJianGuiZeFacade.findByRoleId(vm.getCurrentRole().getRoleId());
         XunJianGuiZe guiZe = new XunJianGuiZe();
         if (xunJianGuiZeList.isEmpty()) {
-            guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN.getValue());
+            guiZe.setXunHuanFangShi(SepE.XunJianXunHuanFangShi.NIAN);
         } else {
             guiZe.setXunHuanFangShi(xunJianGuiZeList.get(0).getXunHuanFangShi());
             guiZe.setKaiShiShiJian(xunJianGuiZeList.get(0).getKaiShiShiJian());

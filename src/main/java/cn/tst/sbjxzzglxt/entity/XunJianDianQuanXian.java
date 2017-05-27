@@ -30,16 +30,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "XunJianDianQuanXian")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "XunJianDianQuanXian.findAll", query = "SELECT x FROM XunJianDianQuanXian x")
-    , @NamedQuery(name = "XunJianDianQuanXian.findById", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.id = :id")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByRoleId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.roleId = :roleId")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByCheckPointId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.checkPointId = :checkPointId")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByInsRep", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.insRep = :insRep")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByInsDate", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.insDate = :insDate")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByUpdRep", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.updRep = :updRep")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByUpdDate", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.updDate = :updDate")
+    @NamedQuery(name = "XunJianDianQuanXian.findAll", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findById", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.id = :id AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByRoleId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.roleId = :roleId AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByCheckPointId", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.checkPointId = :checkPointId AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByInsRep", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.insRep = :insRep AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByInsDate", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.insDate = :insDate AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByUpdRep", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.updRep = :updRep AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianDianQuanXian.findByUpdDate", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.updDate = :updDate AND x.delFlg=:delFlg")
     , @NamedQuery(name = "XunJianDianQuanXian.findByDelFlg", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.delFlg = :delFlg")
-    , @NamedQuery(name = "XunJianDianQuanXian.findByVersion", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.version = :version")})
+    , @NamedQuery(name = "XunJianDianQuanXian.findByVersion", query = "SELECT x FROM XunJianDianQuanXian x WHERE x.version = :version AND x.delFlg=:delFlg")})
 public class XunJianDianQuanXian extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

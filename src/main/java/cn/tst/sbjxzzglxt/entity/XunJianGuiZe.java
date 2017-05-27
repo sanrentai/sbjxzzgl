@@ -5,9 +5,9 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.SepE.XunJianXunHuanFangShi;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,8 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,18 +28,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "XunJianGuiZe")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "XunJianGuiZe.findAll", query = "SELECT x FROM XunJianGuiZe x")
-    , @NamedQuery(name = "XunJianGuiZe.findById", query = "SELECT x FROM XunJianGuiZe x WHERE x.id = :id")
-    , @NamedQuery(name = "XunJianGuiZe.findByRoleId", query = "SELECT x FROM XunJianGuiZe x WHERE x.roleId = :roleId")
-    , @NamedQuery(name = "XunJianGuiZe.findByXunHuanFangShi", query = "SELECT x FROM XunJianGuiZe x WHERE x.xunHuanFangShi = :xunHuanFangShi")
-    , @NamedQuery(name = "XunJianGuiZe.findByKaiShiShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.kaiShiShiJian = :kaiShiShiJian")
-    , @NamedQuery(name = "XunJianGuiZe.findByJieShuShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.jieShuShiJian = :jieShuShiJian")
-    , @NamedQuery(name = "XunJianGuiZe.findByInsRep", query = "SELECT x FROM XunJianGuiZe x WHERE x.insRep = :insRep")
-    , @NamedQuery(name = "XunJianGuiZe.findByInsDate", query = "SELECT x FROM XunJianGuiZe x WHERE x.insDate = :insDate")
-    , @NamedQuery(name = "XunJianGuiZe.findByUpdRep", query = "SELECT x FROM XunJianGuiZe x WHERE x.updRep = :updRep")
-    , @NamedQuery(name = "XunJianGuiZe.findByUpdDate", query = "SELECT x FROM XunJianGuiZe x WHERE x.updDate = :updDate")
+    @NamedQuery(name = "XunJianGuiZe.findAll", query = "SELECT x FROM XunJianGuiZe x WHERE x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findById", query = "SELECT x FROM XunJianGuiZe x WHERE x.id = :id AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByRoleId", query = "SELECT x FROM XunJianGuiZe x WHERE x.roleId = :roleId AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByXunHuanFangShi", query = "SELECT x FROM XunJianGuiZe x WHERE x.xunHuanFangShi = :xunHuanFangShi AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByKaiShiShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.kaiShiShiJian = :kaiShiShiJian AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByJieShuShiJian", query = "SELECT x FROM XunJianGuiZe x WHERE x.jieShuShiJian = :jieShuShiJian AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByInsRep", query = "SELECT x FROM XunJianGuiZe x WHERE x.insRep = :insRep AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByInsDate", query = "SELECT x FROM XunJianGuiZe x WHERE x.insDate = :insDate AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByUpdRep", query = "SELECT x FROM XunJianGuiZe x WHERE x.updRep = :updRep AND x.delFlg=:delFlg")
+    , @NamedQuery(name = "XunJianGuiZe.findByUpdDate", query = "SELECT x FROM XunJianGuiZe x WHERE x.updDate = :updDate AND x.delFlg=:delFlg")
     , @NamedQuery(name = "XunJianGuiZe.findByDelFlg", query = "SELECT x FROM XunJianGuiZe x WHERE x.delFlg = :delFlg")
-    , @NamedQuery(name = "XunJianGuiZe.findByVersion", query = "SELECT x FROM XunJianGuiZe x WHERE x.version = :version")})
+    , @NamedQuery(name = "XunJianGuiZe.findByVersion", query = "SELECT x FROM XunJianGuiZe x WHERE x.version = :version AND x.delFlg=:delFlg")})
 public class XunJianGuiZe extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -91,12 +89,12 @@ public class XunJianGuiZe extends BaseEntity implements Serializable {
         this.roleId = roleId;
     }
 
-    public Integer getXunHuanFangShi() {
-        return xunHuanFangShi;
+    public XunJianXunHuanFangShi getXunHuanFangShi() {
+        return XunJianXunHuanFangShi.parse(xunHuanFangShi);
     }
 
-    public void setXunHuanFangShi(Integer xunHuanFangShi) {
-        this.xunHuanFangShi = xunHuanFangShi;
+    public void setXunHuanFangShi(XunJianXunHuanFangShi xunHuanFangShi) {
+        this.xunHuanFangShi = xunHuanFangShi.getValue();
     }
 
     public Date getKaiShiShiJian() {

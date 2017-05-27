@@ -149,8 +149,4 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
     public void setSelectItems(SysRoutingInspectionItems selectItems) {
         this.selectItems = selectItems;
     }
-
-  
-    
-    
 }

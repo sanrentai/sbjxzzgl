@@ -6,8 +6,7 @@
 package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Basic;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +18,8 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -160,8 +157,7 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false)
-        ,
+        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
     private LTEquipBasic equipment;
@@ -173,5 +169,18 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     public void setEquipment(LTEquipBasic equipment) {
         this.equipment = equipment;
     }
+    @OneToMany(mappedBy="checkPoint")
+    @JoinColumns({
+        @JoinColumn(name = "id", referencedColumnName = "suo_shu_xun_jian_dian_id", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private List<SysRoutingInspectionItems> itemList;
 
+    public List<SysRoutingInspectionItems> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<SysRoutingInspectionItems> itemList) {
+        this.itemList = itemList;
+    }
 }
