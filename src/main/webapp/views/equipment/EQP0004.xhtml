@@ -10,52 +10,44 @@
             <h:outputText value="#{ctrlMaster.createPageTitle('EQP', 'EQP0004')}"/>
         </h1>
         <!--无敌分割线-->
-        <div class="SeparatorFull"></div>
+  
+    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
+        <div class="Card">
         <p:outputPanel id="toolbar" styleClass="Container100 Responsive100 NoIndent">
-                   <p:toolbar>
-                <f:facet name="left">
-
-                    <!--选择所属设备-->
-                    <p:panelGrid>
+            <h:panelGrid columns="6" cellpadding="5">
                         <p:commandButton id="Equipment" 
                                      value="选择设备" 
                                      type="button" 
                                      onclick="PF('deviceSelectDialog').show();"
                                      update="rootContainer">
-
                     </p:commandButton>    
-                    </p:panelGrid>
+                   
                     <!--记录类型-->
-                    <p:panelGrid>
+                    
                         <p:selectOneMenu id="addJiLuLeiXing" value="#{ctrlEQP0004.vm.equipNotesInEditing.TType}">
                             <f:selectItem itemLabel="记录类型" itemValue=""/>
                             <f:selectItem itemLabel="维修" itemValue="0"/>
                             <f:selectItem itemLabel="保养" itemValue="1"/>
                         </p:selectOneMenu>   
-                    </p:panelGrid>
+                  
                     <!--负责人-->
-                    <p:panelGrid>
+                    
                         <p:selectOneMenu id="addFuZeRen" value="#{ctrlEQP0004.vm.equipNotesInEditing.fuZeRen}" >
                             <f:selectItem itemLabel="负责人" itemValue=""/>
                             <!--<f:selectItems value="#{ctrlEQP0004.vm.equipNoteList}" var="type" itemLabel="#{type.fuZeRen}" itemValue="#{type.fuZeRen}" />-->
                         </p:selectOneMenu>        
-                    </p:panelGrid>
+                    
                     <!--记录时段-->
-                    <p:panelGrid>
-                        <p:calendar id="addDateTime" value="#{ctrlEQP0004.vm.equipNotesInEditing.chaXunShiJian}" pattern="yyyy-MM-dd" mask="true" />
-                    </p:panelGrid>
+                    <p:outputLabel for="addDateTime" value="查询时间:"/>
+                    <p:calendar id="addDateTime" value="#{ctrlEQP0004.vm.equipNotesInEditing.chaXunShiJian}" pattern="yyyy-MM-dd" mask="true" />
+                  
                     <!--查询-->
                     <p:commandButton value="查询" process="@this" actionListener="#{ctrlCAR0001.onRefreshData}" 
                                      resetValues="true" oncomplete="PF('wvCheLiangList').clearFilters();"
                                      update="pngDetails"/>
-                </f:facet>
-            </p:toolbar>
+                    </h:panelGrid>
+
         </p:outputPanel>
-  
-    <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
-        <div class="Card">
-            <div class="CardBigTopic">维修及保养</div>
-            <div class="SeparatorFull"></div>
             <div class="EmptyBox10"></div>
             <p:dataTable value="#{ctrlCAR0001.vm.cheLiangList}" var="cheLiang" cellSeparator="5"
                          widgetVar="wvCheLiangList"
