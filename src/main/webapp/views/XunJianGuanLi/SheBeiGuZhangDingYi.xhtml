@@ -255,7 +255,7 @@
                                      update="GuZhangMingLieBiao"
                                      actionListener="#{SheBeiGuZhangDingYiController.onSaveErrorMessage()}" />
                     <p:commandButton value="取消" process="ZengJiaGuZhangMing" 
-                                     update="GuZhangMingLieBiao" actionListener="#{SheBeiGuZhangDingYiController.onCancelEdit}"
+                                     update="GuZhangMingLieBiao,pnlInputArea" actionListener="#{SheBeiGuZhangDingYiController.onCancelEdit}"
                                      styleClass="RedButton"  oncomplete="PF('deviceSelectDialog').hide()"/>
                 </p:panelGrid>
             </p:outputPanel>

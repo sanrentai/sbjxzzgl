@@ -216,7 +216,6 @@
                     <p:column styleClass="tct">
                         <p:commandLink actionListener="#{ctrlEQP0001.onDeleteEquip(equip)}"
                                        process="@this" 
-                                       rendered="#{empty equip.children}"
                                        update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                        oncomplete="showErrorMsg();">
                             <i class="fa fa-trash Fs18 Red"></i>
