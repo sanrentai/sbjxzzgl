@@ -140,15 +140,17 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
         @JoinColumn(name = "xiangMuId", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
-    private SysRoutingInspectionItems itemsGuZhang;
+    private SysRoutingInspectionItems selectItems;
 
-    public SysRoutingInspectionItems getItemsGuZhang() {
-        return itemsGuZhang;
+    public SysRoutingInspectionItems getSelectItems() {
+        return selectItems;
     }
 
-    public void setItemsGuZhang(SysRoutingInspectionItems itemsGuZhang) {
-        this.itemsGuZhang = itemsGuZhang;
+    public void setSelectItems(SysRoutingInspectionItems selectItems) {
+        this.selectItems = selectItems;
     }
+
+  
     
     
 }

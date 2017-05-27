@@ -118,12 +118,13 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         return eqpService.find(id);
     }
      /* @调用时机 当故障选择窗口提交时回调
-     *  @功能目标 提交保存后把集合内容显示到指定的窗口
-     *  @步骤     1. 取出故障表的ID存到集合中
+     *  @功能目标 提交后把数据保存到故障实例表中
+     *  @步骤     1. 取出故障实例表的ID存到集合中
      *            
      */
     @Override
     public void setSelectError(ViewModel vm) {
        List<LTEquipError> guZhangBiao= errorFacade.findById(vm.getSelectequipError().getId());
+       
     }
 }

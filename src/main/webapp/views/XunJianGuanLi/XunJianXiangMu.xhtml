@@ -61,11 +61,12 @@
                     </p:outputPanel>
                 </div>
                 <!--设备巡检点列表-->
-                <div class="youce">
+               
                     <p:outputPanel id="youCheLieBiao" styleClass="Container70 Responsive100 youCheLieBiao">
-
-                        <div class="xunjiandianbiao">
+                        <div class="youce">             
+                       
                             <p:outputPanel  styleClass="Container100 Responsive100">
+                                 <div class="xunjiandianbiao">
                                 <p:outputPanel id="pnlOutputXunJianDian" styleClass="pnlOutputXunJianDian">
                                     <p:dataTable value="#{XunJianXiangMuController.vm.selectedEquipBasic.checkPointList}" var="equip"
                                                  widgetVar="wvYongMeiList"
@@ -119,8 +120,9 @@
                         </div>
 
                         <!--巡检点对应的项目信息列表-->
-                        <div class="xiangmubiao">
+                       
                             <p:outputPanel  styleClass="Container100 Responsive100">
+                                 <div class="xiangmubiao">
                                 <p:outputPanel id="pnlOutputArea" styleClass="Container100 Responsive100 pnlOutputArea">
                                     <p:dataTable value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="equip"
                                                  widgetVar="wvYongMeiList"
@@ -179,8 +181,9 @@
                                         </p:column>
                                     </p:dataTable>
                                 </p:outputPanel>
+                                               </div>
                             </p:outputPanel>
-                        </div>
+              
 
                     </p:outputPanel>  
                 </div>
@@ -211,10 +214,10 @@
                         <!--规格-->
                         <p:panelGrid columns="1" layout="grid">
                             <p:outputLabel value="巡检方式" />
-                            <p:tabView scrollable="true" activeIndex="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianFangShi}">
+                            <p:tabView scrollable="true" activeIndex="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianFangShi}" >
                                 <p:tab title="数值录入">
                                     <!--巡检方式-->
-
+                                    
                                     <!--波动上限-->
                                     <p:panelGrid columns="2" layout="grid">
                                         <p:outputLabel for="BoDongShangXian" value="波动上限"/>
