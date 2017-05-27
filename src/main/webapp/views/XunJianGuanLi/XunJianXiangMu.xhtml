@@ -62,7 +62,7 @@
                 </div>
                 <!--设备巡检点列表-->
                 <div class="youce">
-                    <p:outputPanel  styleClass="Container70 Responsive100">
+                    <p:outputPanel id="youCheLieBiao" styleClass="Container70 Responsive100 youCheLieBiao">
 
                         <div class="xunjiandianbiao">
                             <p:outputPanel  styleClass="Container100 Responsive100">
@@ -211,7 +211,7 @@
                         <!--规格-->
                         <p:panelGrid columns="1" layout="grid">
                             <p:outputLabel value="巡检方式" />
-                            <p:tabView scrollable="true">
+                            <p:tabView scrollable="true" activeIndex="#{XunJianXiangMuController.vm.routingInspectionItems.xunJianFangShi}">
                                 <p:tab title="数值录入">
                                     <!--巡检方式-->
 
@@ -246,7 +246,7 @@
                         <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                             <p:commandButton value="保存" process="pnlInputArea"
                                              oncomplete="showErrorMsg();"
-                                             update="pnlInputArea,pnlOutputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             update="pnlInputArea,,pnlOutputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                              actionListener="#{XunJianXiangMuController.onSaveData}"/>
                             <p:commandButton value="取消" process="@this" 
                                              update="pnlInputArea,pnlOutputArea, frmMain:pnlSelectArea" actionListener="#{XunJianXiangMuController.onCancelEdit}"
@@ -260,7 +260,7 @@
 
     <!--故障按钮对应的窗口-->
     <p:dialog id="selectError" widgetVar="deviceSelectDialog" modal="true">
-        <p:dataTable value="#{XunJianXiangMuController.vm.selectedEquipBasic.equipErrorList}" style="width:512px;"
+        <p:dataTable value="#{XunJianXiangMuController.vm.selectequipError.guZhangShiLiList}" style="width:512px;"
                      var="equipment" 
                      paginatorAlwaysVisible="false"
                      paginator="true" rows="10"
@@ -281,14 +281,14 @@
             </p:columnGroup>
             <p:column>
                 <p:selectManyCheckbox>
-                    <f:selectItem itemLabel="" itemValue="#{equipment.selected}" />
+                    <f:selectItem itemLabel="" itemValue="#{equipment.equipError.selectItems.deleted}" />
                 </p:selectManyCheckbox>
             </p:column>
             <p:column>
-                <h:outputText value="#{equipment.sysItems.xiangMuMingCheng}"/>
+                <h:outputText value="#{equipment.equipError.selectItems.xiangMuMingCheng}"/>
             </p:column>
             <p:column>
-                <h:outputText value="#{equipment.errTitle}"/>
+                <h:outputText value="#{equipment.equipError.errTitle}"/>
             </p:column>
 
         </p:dataTable>

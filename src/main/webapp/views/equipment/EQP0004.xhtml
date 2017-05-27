@@ -17,11 +17,13 @@
 
                     <!--选择所属设备-->
                     <p:panelGrid>
-                        <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0004.vm.equipBasic.ENmae}"
-                                           filter="true" >
-                            <f:selectItem itemLabel="选择设备" itemValue=""/>
-                            <f:selectItems value="#{ctrlEQP0004.vm.equipBasicList}" var="type" itemLabel="#{type.ENmae}" itemValue="#{type.id}" />
-                        </p:selectOneMenu>        
+                        <p:commandButton id="Equipment" 
+                                     value="选择设备" 
+                                     type="button" 
+                                     onclick="PF('deviceSelectDialog').show();"
+                                     update="rootContainer">
+
+                    </p:commandButton>    
                     </p:panelGrid>
                     <!--记录类型-->
                     <p:panelGrid>
@@ -52,7 +54,7 @@
   
     <p:outputPanel id="pngDetails" styleClass="Container100 Responsive100 pngDetails">
         <div class="Card">
-            <div class="CardBigTopic">车辆信息</div>
+            <div class="CardBigTopic">维修及保养</div>
             <div class="SeparatorFull"></div>
             <div class="EmptyBox10"></div>
             <p:dataTable value="#{ctrlCAR0001.vm.cheLiangList}" var="cheLiang" cellSeparator="5"
@@ -65,7 +67,7 @@
                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                          emptyMessage="没有数据">
                 <f:facet name="header">
-                    <h:outputText value="车辆一览"/>
+                    <h:outputText value="维修及保养记录"/>
                 </f:facet>
                 <p:columnGroup type="header">
                     <p:row>
@@ -119,4 +121,55 @@
     <p:commandButton value="确定" type="button" styleClass="ui-confirmdialog-yes"/>
     <p:commandButton value="取消" type="button" styleClass="ui-confirmdialog-no"/>
 </p:confirmDialog>
+    
+      <!-- 对话框 -->
+        <p:dialog widgetVar="deviceSelectDialog" modal="true">
+            <p:dataTable value="#{XunJianDianSheZhiController.vm.equipmentList}" style="width:512px;"
+                         var="equipment" 
+                         paginatorAlwaysVisible="false"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         id="equipmentSelectList" widgetVar="equipmentSelectList"
+                         styleClass="bg-c-row-odd wd-f-700"
+                         scrollable="true"
+                         emptyMessage="无数据">
+                <f:facet name="header">
+                    <h:outputText value="选择设备"/>
+                </f:facet>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column styleClass="tct wd-p-30" 
+                                  headerText="设备名"
+                                  filterBy="#{equipment.ENmae}" 
+                                  filterMaxLength="10" 
+                                  filterMatchMode="contains"/>
+                        <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
+                        <p:column styleClass="tct wd-p-30" headerText="上级设备"></p:column>
+                        <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
+                    </p:row>
+                </p:columnGroup>
+                <p:column styleClass="tct wd-p-30">
+                    <h:outputText value="#{equipment.ENmae}">
+
+                    </h:outputText>
+                </p:column>
+                <p:column styleClass="tct wd-p-10">
+                    <p:commandLink value="选择" 
+                                   actionListener="#{XunJianDianSheZhiController.setCurrentEquipmentId(equipment.id)}" 
+                                   process="@this" 
+                                   update="frmMain:rootContainer"
+                                   oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
+                </p:column>
+                <p:column styleClass="tct wd-p-30">
+                    <h:outputText value="#{equipment.parentStringChain}">
+
+                    </h:outputText>
+                </p:column>
+                <p:column styleClass="tct wd-p-30">
+                    <h:outputText value="#{equipment.guiGeHeXingHao}">
+
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
 </ui:composition>

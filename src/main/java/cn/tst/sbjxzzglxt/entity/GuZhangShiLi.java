@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -18,7 +20,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,7 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "GuZhangShiLi.findAll", query = "SELECT g FROM GuZhangShiLi g")
     , @NamedQuery(name = "GuZhangShiLi.findById", query = "SELECT g FROM GuZhangShiLi g WHERE g.id = :id")
     , @NamedQuery(name = "GuZhangShiLi.findByXiangMuId", query = "SELECT g FROM GuZhangShiLi g WHERE g.xiangMuId = :xiangMuId")
-    , @NamedQuery(name = "GuZhangShiLi.findByGuZhangId", query = "SELECT g FROM GuZhangShiLi g WHERE g.guZhangId = :guZhangId")
+    , @NamedQuery(name = "GuZhangShiLi.findByGuZhangId", query = "SELECT g FROM GuZhangShiLi g WHERE g.guZhangId = :guZhangId AND g.delFlg = :delFlg")
     , @NamedQuery(name = "GuZhangShiLi.findByInsRep", query = "SELECT g FROM GuZhangShiLi g WHERE g.insRep = :insRep")
     , @NamedQuery(name = "GuZhangShiLi.findByInsDate", query = "SELECT g FROM GuZhangShiLi g WHERE g.insDate = :insDate")
     , @NamedQuery(name = "GuZhangShiLi.findByUpdRep", query = "SELECT g FROM GuZhangShiLi g WHERE g.updRep = :updRep")
@@ -40,45 +45,24 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "GuZhangShiLi.findByDelFlg", query = "SELECT g FROM GuZhangShiLi g WHERE g.delFlg = :delFlg")
     , @NamedQuery(name = "GuZhangShiLi.findByVersion", query = "SELECT g FROM GuZhangShiLi g WHERE g.version = :version")})
 public class GuZhangShiLi extends BaseEntity implements Serializable {
-    @Id
+
+     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "xiang_mu_id")
+    @Column(name = "xiangMuId")
     private int xiangMuId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "gu_zhang_id")
+    @Column(name = "guZhangId")
     private int guZhangId;
+   
 
     public GuZhangShiLi() {
     }
 
-    public GuZhangShiLi(Long id) {
-        this.id = id;
-    }
-
-    public GuZhangShiLi(Long id, int xiangMuId, int guZhangId, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.xiangMuId = xiangMuId;
-        this.guZhangId = guZhangId;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.version = version;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getXiangMuId() {
         return xiangMuId;
@@ -123,16 +107,48 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "xiang_mu_id", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "guZhangId", referencedColumnName = "Err_Num", insertable = false, updatable = false),
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })  
+    private LTEquipError equipError;
+
+    public LTEquipError getEquipError() {
+        return equipError;
+    }
+
+    public void setEquipError(LTEquipError equipError) {
+        this.equipError = equipError;
+    }
+    
+
+    public GuZhangShiLi(Integer id) {
+        this.id = id;
+    }
+
+    
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "xiangMuId", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
-    private SysRoutingInspectionItems item;
+    private SysRoutingInspectionItems itemsGuZhang;
 
-    public SysRoutingInspectionItems getItem() {
-        return item;
+    public SysRoutingInspectionItems getItemsGuZhang() {
+        return itemsGuZhang;
     }
 
-    public void setItem(SysRoutingInspectionItems item) {
-        this.item = item;
+    public void setItemsGuZhang(SysRoutingInspectionItems itemsGuZhang) {
+        this.itemsGuZhang = itemsGuZhang;
     }
+    
+    
 }

@@ -7,19 +7,21 @@ package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -34,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "LTEquipCheckPoint.findAll", query = "SELECT l FROM LTEquipCheckPoint l")
     , @NamedQuery(name = "LTEquipCheckPoint.findById", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.id = :id")
-    , @NamedQuery(name = "LTEquipCheckPoint.findByEquipmentId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId")
+    , @NamedQuery(name = "LTEquipCheckPoint.findByEquipmentId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipCheckPoint.findByX", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.x = :x")
     , @NamedQuery(name = "LTEquipCheckPoint.findByY", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.y = :y")
     , @NamedQuery(name = "LTEquipCheckPoint.findByName", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.name = :name")
@@ -50,8 +52,7 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "equipmentId")
@@ -74,15 +75,6 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
 
     public LTEquipCheckPoint(Integer id) {
         this.id = id;
-    }
-
-    public LTEquipCheckPoint(Integer id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
-        this.id = id;
-        this.insRep = insRep;
-        this.insDate = insDate;
-        this.updRep = updRep;
-        this.updDate = updDate;
-        this.version = version;
     }
 
     public Integer getId() {
@@ -165,9 +157,11 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint[ id=" + id + " ]";
     }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false)
+        ,
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
     private LTEquipBasic equipment;
@@ -179,14 +173,5 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     public void setEquipment(LTEquipBasic equipment) {
         this.equipment = equipment;
     }
-    @OneToMany(mappedBy="checkPoint")
-    private List<SysRoutingInspectionItems> itemList; 
 
-    public List<SysRoutingInspectionItems> getItemList() {
-        return itemList;
-    }
-
-    public void setItemList(List<SysRoutingInspectionItems> itemList) {
-        this.itemList = itemList;
-    }
 }
