@@ -158,13 +158,13 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
         return "cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint[ id=" + id + " ]";
     }
 
-     @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
         @JoinColumn(name = "equipmentId", referencedColumnName = "ID", insertable = false, updatable = false)
         ,
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
-     private LTEquipBasic equipment;
+    private LTEquipBasic equipment;
 
     public LTEquipBasic getEquipment() {
         return equipment;
@@ -173,5 +173,5 @@ public class LTEquipCheckPoint extends BaseEntity implements Serializable {
     public void setEquipment(LTEquipBasic equipment) {
         this.equipment = equipment;
     }
-     
+
 }
