@@ -33,6 +33,7 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
     @EJB
     private LTEquipErrorFacade errorFacade;//故障
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
+
     @Override
     public void loadViewModel(ViewModel vm) {
 
@@ -77,12 +78,12 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
     public ExecuteResult onXunJianXiangMu(SepE.ExecuteMode mode, ViewModel vm) {
         //先创建一个执行结果的对象，并把mode的放进去
         ExecuteResult result = new ExecuteResult(mode);
-        //从视图中取出EquipWarn
         SysRoutingInspectionItems target = vm.getRoutingInspectionItems();
         LOG.info(target.getId());
-        LOG.info(target.getXiangMuMingCheng());
         LOG.info(target.getSuoShuSheBeiId());
+        LOG.info(target.getSuoShuXunJianDianId());
         LOG.info(target.getXunJianShunXu());
+        LOG.info(target.getXunJianFangShi());
         LOG.info(target.getBoDongShangXian());
         LOG.info(target.getBoDongXiaXian());
         LOG.info(target.getXiangMuShuoMing());
@@ -101,7 +102,7 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
             }
             //执行结果如果是成功的，转化就设置为true。
 
-           Long id = target.getSuoShuSheBeiId();
+            Long id = target.getSuoShuSheBeiId();
             vm.setSelectedEquipBasic(eqpService.find(id));
             result.setSuccess(true);
             //刷新数据后存储到EquipWarn中
@@ -117,14 +118,15 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
     public LTEquipBasic findSelectedEqp(Long id) {
         return eqpService.find(id);
     }
-     /* @调用时机 当故障选择窗口提交时回调
+
+    /* @调用时机 当故障选择窗口提交时回调
      *  @功能目标 提交后把数据保存到故障实例表中
      *  @步骤     1. 取出故障实例表的ID存到集合中
      *            
      */
     @Override
     public void setSelectError(ViewModel vm) {
-       List<LTEquipError> guZhangBiao= errorFacade.findById(vm.getSelectequipError().getId());
-       
+        List<LTEquipError> guZhangBiao = errorFacade.findById(vm.getSelectequipError().getId());
+
     }
 }

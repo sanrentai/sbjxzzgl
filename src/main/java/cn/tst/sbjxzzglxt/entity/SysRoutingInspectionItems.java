@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.entity;
 
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu.XiangMuBizLogicImplementation;
+import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -60,13 +61,13 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     private Integer suoShuXunJianDianId;
     @Column(name = "suo_shu_she_bei_id")
     private Long suoShuSheBeiId;
-    
- private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
- 
+
+    private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
+
     @Column(name = "bo_dong_shang_xian")
     private Integer boDongShangXian;
     @Column(name = "bo_dong_xia_xian")
-    private Integer boDongXiaXian; 
+    private Integer boDongXiaXian;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -83,7 +84,6 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     @Size(max = 255)
     @Column(name = "xiang_mu_shuo_ming")
     private String xiangMuShuoMing;
-    
 
     public SysRoutingInspectionMessage getMessage() {
         return message;
@@ -140,12 +140,12 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.xiangMuMingCheng = xiangMuMingCheng;
     }
 
-    public Integer getXunJianFangShi() {
-        return xunJianFangShi;
+    public SepE.WeiXiuBaoYang getXunJianFangShi() {
+        return SepE.WeiXiuBaoYang.parse(xunJianFangShi);
     }
 
-    public void setXunJianFangShi(Integer xunJianFangShi) {
-        this.xunJianFangShi = xunJianFangShi;
+    public void setXunJianFangShi(SepE.WeiXiuBaoYang xunJianFangShi) {
+        this.xunJianFangShi = xunJianFangShi.getValue();
     }
 
     public Integer getXunJianShunXu() {
@@ -206,12 +206,12 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     }
 
     //连表用于取设备名称
-     @ManyToOne
+    @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "suo_shu_she_bei_id", referencedColumnName = "ID", insertable = false, updatable = false)
         ,
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
-    }) 
+    })
     private LTEquipBasic equip;
 
     //这个对应的是SysRoutingInspectionProblem实体类，双向连表
@@ -227,7 +227,8 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     // 巡检点
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "suo_shu_xun_jian_dian_id", referencedColumnName = "id", insertable = false, updatable = false),
+        @JoinColumn(name = "suo_shu_xun_jian_dian_id", referencedColumnName = "id", insertable = false, updatable = false)
+        ,
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
     private LTEquipCheckPoint checkPoint;
@@ -247,9 +248,9 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
     public void setSuoShuSheBeiId(Long suoShuSheBeiId) {
         this.suoShuSheBeiId = suoShuSheBeiId;
     }
-    
-     @OneToMany(mappedBy = "selectItems", fetch = FetchType.LAZY)
-     private List<GuZhangShiLi> guZhangShiLiList;
+
+    @OneToMany(mappedBy = "selectItems", fetch = FetchType.LAZY)
+    private List<GuZhangShiLi> guZhangShiLiList;
 
     public List<GuZhangShiLi> getGuZhangShiLiList() {
         return guZhangShiLiList;
@@ -259,14 +260,8 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.guZhangShiLiList = guZhangShiLiList;
     }
 
-    
-
-
-
     public void setSuoShuXunJianDianId(Integer suoShuXunJianDianId) {
         this.suoShuXunJianDianId = suoShuXunJianDianId;
     }
 
- 
-     
 }
