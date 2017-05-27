@@ -104,7 +104,7 @@ public class LTEquipErrorMessage extends BaseEntity implements Serializable {
     
     //用于取故障表的故障名称
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "Err_Type")
+    @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "Err_Type")
     private LTEquipError equipError;
 
     public LTEquipError getEquipError() {

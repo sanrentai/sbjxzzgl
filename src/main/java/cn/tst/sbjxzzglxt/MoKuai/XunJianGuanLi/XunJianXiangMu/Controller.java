@@ -79,7 +79,7 @@ public class Controller extends BusinessBaseController {
         vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
         vm.setEquipErrorList(vm.getSelectedEquipBasic().getEquipErrorList());
         vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
-        vm.getRoutingInspectionItems().setXunJianFangShi(SepE.WeiXiuBaoYang.BAOYANG);
+//        vm.getRoutingInspectionItems().setXunJianFangShi(SepE.WeiXiuBaoYang.BAOYANG);
 
     }
 
