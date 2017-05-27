@@ -480,8 +480,7 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     ///父节点
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
-        ,
+        @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
 //    @JoinColumn(name = "C_ID", referencedColumnName = "ID", insertable = false, updatable = false)
@@ -531,21 +530,16 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
         this.equipProRuleList = equipProRuleList;
     }
     //故障表
-    @OneToMany(mappedBy = "equip", fetch = FetchType.LAZY)
-    private List<LTEquipError> equipErrorList;
+    @OneToMany(mappedBy = "equipment", fetch = FetchType.LAZY)
+    private List<LTEquipError> errorList;
 
-    public List<LTEquipError> getEquipErrorList() {
-        return equipErrorList;
+    public List<LTEquipError> getErrorList() {
+        return errorList;
     }
 
-    public void setEquipErrorList(List<LTEquipError> equipErrorList) {
-        this.equipErrorList = equipErrorList;
+    public void setErrorList(List<LTEquipError> errorList) {
+        this.errorList = errorList;
     }
-
-   
-
-  
-    
     public String getParentStringChain() {
         return getParentStringChain(parent);
     }
@@ -630,15 +624,4 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setItemsList(List<SysRoutingInspectionItems> itemsList) {
         this.itemsList = itemsList;
     }
-    @Transient
-    private boolean hasBeenAddedToTreeNode = false;
-
-    public boolean isHasBeenAddedToTreeNode() {
-        return hasBeenAddedToTreeNode;
-    }
-
-    public void setHasBeenAddedToTreeNode(boolean hasBeenAddedToTreeNode) {
-        this.hasBeenAddedToTreeNode = hasBeenAddedToTreeNode;
-    }
-
 }

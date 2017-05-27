@@ -77,7 +77,7 @@ public class Controller extends BusinessBaseController {
     public void onAddTargetData() {
         vm.setRoutingInspectionItems(new SysRoutingInspectionItems());
         vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
-        vm.setEquipErrorList(vm.getSelectedEquipBasic().getEquipErrorList());
+        vm.setEquipErrorList(vm.getSelectedEquipBasic().getErrorList());
         vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
 //        vm.getRoutingInspectionItems().setXunJianFangShi(SepE.WeiXiuBaoYang.BAOYANG);
 

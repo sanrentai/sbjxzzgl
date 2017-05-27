@@ -5,15 +5,14 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import java.util.List;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -24,8 +23,8 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 @Named(SepC.ControllerID.SHE_BEI_GU_ZHANG_DING_YI_CONTROLLER_NAME)
 public class Controller extends BusinessBaseController {
-
     private List<LTEquipError> equipErrorList;
+    
     private LTEquipError equipError;
     ///视图模型
     private ViewModel vm;
@@ -39,10 +38,11 @@ public class Controller extends BusinessBaseController {
 
         ///初始化视图模型
         this.vm = new ViewModel();
-
-        this.bizLogic.loadEQP0006ViewModel(vm);
-        vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
-
+        this.bizLogic.loadViewModel(vm);
+    }
+    
+    public void onAddNewError() {
+        bizLogic.onAddNewError(vm);
     }
 
     //*****************************************************************
@@ -58,12 +58,7 @@ public class Controller extends BusinessBaseController {
      * @param equip
      */
     public void onEditEquip(LTEquipError equip) {
-        vm.setEquipError(equip);
-    }
-
-    public void onAddTargetData() {
-        vm.setEquipError(new LTEquipError());
-        vm.getEquipError().setENum(vm.getSelectedEquipBasic().getId());
+        vm.setErrorInEdit(equip);
     }
 
     /**
@@ -72,7 +67,7 @@ public class Controller extends BusinessBaseController {
      */
     public void onSaveData() {
         //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
-        SepE.ExecuteMode mode = this.vm.getEquipError().getId() == null
+        SepE.ExecuteMode mode = this.vm.getErrorInEdit().getId() == null
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
         //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onEquipError(mode, vm);
@@ -91,14 +86,14 @@ public class Controller extends BusinessBaseController {
     public void onDeleteEquip(LTEquipError equip) {
         ///删除模式
         SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
-        vm.setEquipError(equip);
+        vm.setErrorInEdit(equip);
 
         ///执行更新
         ExecuteResult result = this.bizLogic.onEquipError(mode, vm);
 
         if (result.isSuccess()) {
             putInfoMessage("删除成功");
-            vm.setEquipError(null);
+            vm.setErrorInEdit(null);
 
         } else {
             putErrorMessage("删除失败");
@@ -106,13 +101,11 @@ public class Controller extends BusinessBaseController {
     }
 
     /**
-     * 选中节点时
+     * @调用时机 当设备选中时
+     * @param equipment 选中的设备
      */
-    public void onNodeSelect(NodeSelectEvent event) {
-        this.selectedNode = event.getTreeNode();
-        Long selectedId = ((EquipmentNodeData) selectedNode.getData()).getEquipment().getId();
-        vm.setSelectedEquipBasic(bizLogic.findSelectedEqp(selectedId));
-        onAddTargetData();
+    public void onEquipmentSelect(LTEquipBasic equipment) {
+        bizLogic.onEquipmentSelect(vm, equipment);
     }
 
     //修改故障名称信息
@@ -171,7 +164,7 @@ public class Controller extends BusinessBaseController {
      * 編集取消
      */
     public void onCancelEdit() {
-        vm.setEquipError(null);
+        vm.setErrorInEdit(null);
         vm.setErrorMessage(null);
 
     }

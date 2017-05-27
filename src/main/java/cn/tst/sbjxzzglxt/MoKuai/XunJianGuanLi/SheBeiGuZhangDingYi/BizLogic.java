@@ -18,7 +18,11 @@ public interface BizLogic {
      *
      * @param vm 视图模型
      */
-    void loadEQP0006ViewModel(ViewModel vm);
+    void loadViewModel(ViewModel vm);
+    
+    void onEquipmentSelect(ViewModel vm, LTEquipBasic equipment);
+    
+    void onAddNewError(ViewModel vm);
  /**
      * 当前选中设备
      *

@@ -4,7 +4,6 @@ import java.util.List;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
-import cn.tst.sbjxzzglxt.viewmodel.BaseViewModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -12,14 +11,36 @@ import org.primefaces.model.TreeNode;
  *
  * @author ps_xy@pscp.co.jp
  */
-public class ViewModel extends BaseViewModel {
+public class ViewModel {
     private List<LTEquipErrorMessage> errorMessageList;//故障名称表实体集合
+    
     private LTEquipErrorMessage errorMessage;//故障名称表对象
-    private List<LTEquipBasic> equipBasicList;
+    
+    private List<LTEquipBasic> equipmentList;
+    
     private List<LTEquipError> equipErrorList;//故障实体类集合
-    private LTEquipError equipError;//故障实体类
-    private LTEquipBasic selectedEquipBasic;
-    private LTEquipBasic editingEquipBasic;
+    
+    private LTEquipError errorInEdit;//故障实体类
+    
+    private LTEquipBasic selectedEquipment;
+    
+    private TreeNode equipmentTreeRootNode;
+
+    public LTEquipBasic getSelectedEquipment() {
+        return selectedEquipment;
+    }
+
+    public void setSelectedEquipment(LTEquipBasic selectedEquipment) {
+        this.selectedEquipment = selectedEquipment;
+    }
+
+    public TreeNode getEquipmentTreeRootNode() {
+        return equipmentTreeRootNode;
+    }
+
+    public void setEquipmentTreeRootNode(TreeNode equipmentTreeRootNode) {
+        this.equipmentTreeRootNode = equipmentTreeRootNode;
+    }
 
     public LTEquipErrorMessage getErrorMessage() {
         return errorMessage;
@@ -28,8 +49,6 @@ public class ViewModel extends BaseViewModel {
     public void setErrorMessage(LTEquipErrorMessage errorMessage) {
         this.errorMessage = errorMessage;
     }
-    
-    
 
     public List<LTEquipErrorMessage> getErrorMessageList() {
         return errorMessageList;
@@ -38,26 +57,13 @@ public class ViewModel extends BaseViewModel {
     public void setErrorMessageList(List<LTEquipErrorMessage> errorMessageList) {
         this.errorMessageList = errorMessageList;
     }
-
-   
-
-    
-    public LTEquipBasic getEditingEquipBasic() {
-        return editingEquipBasic;
-    }
-
-    public void setEditingEquipBasic(LTEquipBasic editingEquipBasic) {
-        this.editingEquipBasic = editingEquipBasic;
-    }
-    
-    
     
     public LTEquipBasic getSelectedEquipBasic() {
-        return selectedEquipBasic;
+        return selectedEquipment;
     }
 
     public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
-        this.selectedEquipBasic = selectedEquipBasic;
+        this.selectedEquipment = selectedEquipBasic;
     }
 
     
@@ -69,20 +75,19 @@ public class ViewModel extends BaseViewModel {
         this.equipErrorList = equipErrorList;
     }
 
-    public LTEquipError getEquipError() {
-        return equipError;
+    public LTEquipError getErrorInEdit() {
+        return errorInEdit;
     }
 
-    public void setEquipError(LTEquipError equipError) {
-        this.equipError = equipError;
+    public void setErrorInEdit(LTEquipError errorInEdit) {
+        this.errorInEdit = errorInEdit;
     }
 
-    public List<LTEquipBasic> getEquipBasicList() {
-        return equipBasicList;
+    public List<LTEquipBasic> getEquipmentList() {
+        return equipmentList;
     }
 
-    public void setEquipBasicList(List<LTEquipBasic> equipBasicList) {
-        this.equipBasicList = equipBasicList;
+    public void setEquipmentList(List<LTEquipBasic> equipmentList) {
+        this.equipmentList = equipmentList;
     }
-
 }
