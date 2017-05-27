@@ -79,6 +79,7 @@ public class Controller extends BusinessBaseController {
         vm.getRoutingInspectionItems().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
         vm.setEquipErrorList(vm.getSelectedEquipBasic().getEquipErrorList());
         vm.getSelectedEquipBasic().setItemsList(routingInspectionItemsList);
+        vm.getRoutingInspectionItems().setXunJianFangShi(SepE.WeiXiuBaoYang.BAOYANG);
 
     }
 
@@ -104,7 +105,6 @@ public class Controller extends BusinessBaseController {
                 ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
         //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onXunJianXiangMu(mode, vm);
-
         this.addMessage(result.createMessage());
         if (result.isSuccess()) {
             onAddTargetData();
