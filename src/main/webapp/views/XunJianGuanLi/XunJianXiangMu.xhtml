@@ -68,7 +68,7 @@
                     <div class="youce">             
 
                         <p:outputPanel  styleClass="Container100 Responsive100">
-                            <div class="xunjiandianbiao">
+                            <div class="xunjiandianbiao Container100 Responsive100">
                                 <p:outputPanel id="pnlOutputXunJianDian" styleClass="pnlOutputXunJianDian">
                                     <p:dataTable value="#{XunJianXiangMuController.vm.selectedEquipBasic.checkPointList}" var="equip"
                                                  widgetVar="wvYongMeiList"
@@ -125,7 +125,7 @@
                     <!--巡检点对应的项目信息列表-->
 
                     <p:outputPanel  styleClass="Container100 Responsive100">
-                        <div class="xiangmubiao">
+                        <div class="xiangmubiao Container100 Responsive100">
                             <p:outputPanel id="pnlOutputArea" styleClass="Container100 Responsive100 pnlOutputArea">
                                 <p:dataTable value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="equip"
                                              widgetVar="wvYongMeiList"
@@ -299,7 +299,7 @@
     </p:dataTable>
     <p:commandButton value="保存" process="selectError"
                      oncomplete="PF('deviceSelectDialog').hide();"
-                     update="pnlInputArea,pnlOutputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation,
+                     update="pnlInputArea, frmMain:ovPnlValidation, frmMain:msgValidation,
                      frmMain:growlMessage, frmMain:btnValidationPanel, frmMain:equipmentSelectList"
                      actionListener="#{XunJianXiangMuController.setSelectError}"/>
 </p:dialog>
