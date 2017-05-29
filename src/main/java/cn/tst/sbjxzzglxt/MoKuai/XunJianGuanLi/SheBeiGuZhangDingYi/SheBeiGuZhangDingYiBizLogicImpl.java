@@ -30,8 +30,6 @@ import cn.tst.sbjxzzglxt.common.EquipmentTree;
  */
 @Stateless
 public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements BizLogic {
-
-    private static final Logger LOG = Logger.getLogger(SheBeiGuZhangDingYiBizLogicImpl.class.getName());
     @EJB
     private LTEquipErrorFacade equipErrorFacade;
     @EJB
@@ -72,9 +70,7 @@ public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements Biz
                     equipErrorFacade.edit(target);
                     break;
                 case DELETE:
-                    LOG.info("删除开始");
                     equipErrorFacade.remove(target);
-                    LOG.info("删除结束");
                     break;
             }
             vm.setEquipErrorList(equipErrorFacade.findAll());
@@ -133,7 +129,6 @@ public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements Biz
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         LTEquipErrorMessage target = vm.getErrorMessage();
-        LOG.info(target.getGuZhangMingCheng());
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {

@@ -715,7 +715,7 @@ public final class SepC {
          */
         public static final String XUN_JIAN_XIN_XI_JI_LU_CONTROLLER_NAME = "XunJianXinXiJiLuController";
         public static final String XUN_JIAN_DIAN_SHE_ZHI_CONTROLLER_NAME = "XunJianDianSheZhiController";
-        public static final String XUN_JIAN_XIANG_MU_CONTROLLER_NAME = "XunJianXiangMuController";
+        public static final String XUN_JIAN_XIANG_MU_GUAN_LI_CONTROLLER_NAME = "XunJianXiangMuGuanLiController";
         public static final String XUN_JIAN_XIANG_MU_WEN_TI_CONTROLLER_NAME = "XunJianXiangMuWenTiController";
         public static final String LU_RU_XUN_JIAN_JIE_GUO_CONTROLLER_NAME = "LuRuXunJianJieGuoController";
         public static final String XUN_JIAN_JUE_SE_GUAN_LI_CONTROLLER_NAME = "XunJianJueSeGuanLiController";

@@ -17,17 +17,22 @@ import javax.persistence.Query;
  */
 @Stateless
 public class XunJianXiangMuFacade extends AbstractFacade<SysRoutingInspectionItems> {
-
     public XunJianXiangMuFacade() {
         super(SysRoutingInspectionItems.class);
     }
 
     //这个其实是DAO层，用于处理查询数据记录，返回给EQP0006BizLogicImpl(这个其实就是Service层，用于处理业务逻辑的)
     public List<SysRoutingInspectionItems> findById(Long id) {
-        Query query = getEntityManager().createNamedQuery("SysRoutingInspectionItems.findBySuoShuSheBeiId");
+        Query query = getEntityManager().createNamedQuery("SysRoutingInspectionItems.findById");
         query.setParameter("delFlg", SepE.Flag.NO.getValue());
-        query.setParameter("id", id);
+        query.setParameter("ID", id);
         return query.getResultList();
     }
 
+    public List<SysRoutingInspectionItems> findByCheckPointId(Integer id) {
+        Query query = getEntityManager().createNamedQuery("SysRoutingInspectionItems.findBySuoShuXunJianDianId");
+        query.setParameter("delFlg", SepE.Flag.NO.getValue());
+        query.setParameter("suoShuXunJianDianId", id);
+        return query.getResultList();
+    }
 }

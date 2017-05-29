@@ -71,7 +71,9 @@
                                  disabled="#{XunJianJueSeGuanLiController.statusEditing}"/>
             </f:facet>
         </p:toolbar>
-        <p:outputPanel id="XunJianRoleCreating" styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianJueSeGuanLiController.vm.roleInEdit}">
+        <p:outputPanel id="XunJianRoleCreating" 
+                       styleClass="Container100 Responsive100 ui-fluid" 
+                       rendered="#{not empty XunJianJueSeGuanLiController.vm.roleInEdit}">
             <f:facet name="header">
                 <p:outputPanel>新建角色</p:outputPanel>
             </f:facet>

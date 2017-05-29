@@ -5,7 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
-import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMu.XiangMuBizLogicImplementation;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.XiangMuBizLogicImplementation;
 import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.util.Date;
@@ -42,19 +42,19 @@ import org.apache.log4j.Logger;
 @Table(name = "sys_routing_inspection_items")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SysRoutingInspectionItems.findAll", query = "SELECT s FROM SysRoutingInspectionItems s")
+    @NamedQuery(name = "SysRoutingInspectionItems.findAll", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.delFlg=:delFlg")
     , @NamedQuery(name = "SysRoutingInspectionItems.findBySuoShuSheBeiId", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.suoShuSheBeiId = :suoShuSheBeiId AND s.delFlg = :delFlg")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findBySuoShuXunJianDianId", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.suoShuXunJianDianId = :suoShuXunJianDianId")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByXiangMuMingCheng", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xiangMuMingCheng = :xiangMuMingCheng")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByXunJianFangShi", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xunJianFangShi = :xunJianFangShi")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByXunJianShunXu", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xunJianShunXu = :xunJianShunXu")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByXiangMuShuoMing", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xiangMuShuoMing = :xiangMuShuoMing")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByInsRep", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.insRep = :insRep")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByInsDate", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.insDate = :insDate")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByUpdRep", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.updRep = :updRep")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByUpdDate", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.updDate = :updDate")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findBySuoShuXunJianDianId", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.suoShuXunJianDianId = :suoShuXunJianDianId AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByXiangMuMingCheng", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xiangMuMingCheng = :xiangMuMingCheng AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByXunJianFangShi", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xunJianFangShi = :xunJianFangShi AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByXunJianShunXu", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xunJianShunXu = :xunJianShunXu AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByXiangMuShuoMing", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.xiangMuShuoMing = :xiangMuShuoMing AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByInsRep", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.insRep = :insRep AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByInsDate", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.insDate = :insDate AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByUpdRep", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.updRep = :updRep AND s.delFlg=:delFlg")
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByUpdDate", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.updDate = :updDate AND s.delFlg=:delFlg")
     , @NamedQuery(name = "SysRoutingInspectionItems.findByDelFlg", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.delFlg = :delFlg")
-    , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version")})
+    , @NamedQuery(name = "SysRoutingInspectionItems.findByVersion", query = "SELECT s FROM SysRoutingInspectionItems s WHERE s.version = :version AND s.delFlg=:delFlg")})
 public class SysRoutingInspectionItems extends BaseEntity implements Serializable {
 
     @Column(name = "suo_shu_xun_jian_dian_id")
@@ -140,12 +140,12 @@ public class SysRoutingInspectionItems extends BaseEntity implements Serializabl
         this.xiangMuMingCheng = xiangMuMingCheng;
     }
 
-    public SepE.WeiXiuBaoYang getXunJianFangShi() {
-        return SepE.WeiXiuBaoYang.parse(xunJianFangShi);
+    public Integer getXunJianFangShi() {
+        return xunJianFangShi;
     }
 
-    public void setXunJianFangShi(SepE.WeiXiuBaoYang xunJianFangShi) {
-        this.xunJianFangShi = xunJianFangShi.getValue();
+    public void setXunJianFangShi(Integer xunJianFangShi) {
+        this.xunJianFangShi = xunJianFangShi;
     }
 
     public Integer getXunJianShunXu() {
