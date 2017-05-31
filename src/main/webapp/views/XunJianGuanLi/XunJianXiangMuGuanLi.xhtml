@@ -93,19 +93,23 @@
                 </p:column>
                 <!--修改按钮-->
                 <p:column styleClass="tct">
-                    <p:commandLink actionListener="#{XunJianXiangMuController.onEditEquip(equip)}"
-                                   process="@this" update="@(.pnlInputArea), @(.toolbar)">
+                    <p:commandLink actionListener="#{XunJianXiangMuGuanLiController.onEditEquip(equip)}"
+                                   process="@this" 
+                                   update="@(.pnlInputArea), @(.toolbar)">
                         <i class="fa fa-pencil Fs18 Blue"></i>
                     </p:commandLink>
                 </p:column>
                 <!--删除按钮-->
                 <p:column styleClass="tct">
-                    <p:commandLink actionListener="#{XunJianXiangMuController.onDeleteEquip(equip)}"
-                                   process="@this" styleClass="RedButton"
+                    <p:commandLink actionListener="#{XunJianXiangMuGuanLiController.onDeleteEquip(equip)}"
+                                   process="@this" 
+                                   styleClass="RedButton"
                                    update="@(.pnlInputArea), @(.toolbar), @(.pngDetails), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                    oncomplete="showErrorMsg();">
                         <i class="fa fa-trash Fs18 Red"></i>
-                        <p:confirm header="确认" message="确定要删除吗?" icon="ui-icon-alert" />
+                        <p:confirm header="确认" 
+                                   message="确定要删除吗?" 
+                                   icon="ui-icon-alert" />
                     </p:commandLink>
                 </p:column>
             </p:dataTable>

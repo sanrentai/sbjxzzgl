@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <script src="http://api.map.baidu.com/api?v=1.4"/>
+    <script>
+        $(document).ready(function () {
+            console.log("ready");
+            var map = new BMap.Map("allmap");
+            map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+            map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+            map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+            map.enableScrollWheelZoom(true);
+        });
+    </script>
+    <h:outputScript name="http://api.map.baidu.com/api?v=1.4" library="olympos-layout" value="http://api.map.baidu.com/api?v=1.4"/>
+    <p:outputPanel styleClass="Container100 NoIndent"
+                   id="rootContainer" 
+                   style="width: 100%;height: 100%;overflow: hidden;margin:0;font-family:'微软雅黑';">
+        <div id="allmap" style="width: 100%;height: 100%;overflow: hidden;margin:0;font-family:'微软雅黑';"></div>
+    </p:outputPanel>
+</ui:composition>
