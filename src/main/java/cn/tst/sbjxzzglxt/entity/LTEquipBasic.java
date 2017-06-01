@@ -640,5 +640,17 @@ public class LTEquipBasic extends BaseEntity implements Serializable {
     public void setHasBeenAddedToTreeNode(boolean hasBeenAddedToTreeNode) {
         this.hasBeenAddedToTreeNode = hasBeenAddedToTreeNode;
     }
+    
+     //维修保养表
+    @OneToMany(mappedBy = "equipBasic", fetch = FetchType.LAZY)
+    private List<LTEquipNotes> notesList;
 
+    public List<LTEquipNotes> getNotesList() {
+        return notesList;
+    }
+
+    public void setNotesList(List<LTEquipNotes> notesList) {
+        this.notesList = notesList;
+    }
+    
 }

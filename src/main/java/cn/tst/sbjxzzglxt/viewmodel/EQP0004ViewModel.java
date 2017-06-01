@@ -19,11 +19,49 @@ public class EQP0004ViewModel extends BaseViewModel {
     private LTEquipBasic equipBasic;
     private List<LTEquipBasic> equipBasicList;
     private List<LTEquipBasic> equipmentList = new ArrayList();
-
     private LTEquipNotes equipNotesInEditing;
-
     private List<LTEquipNotes> equipNoteList;
+    private String fuZeRen;
+    private Integer tType;
+    private Long eNum;
+    private Date chaXunShiJian;
 
+    public String getFuZeRen() {
+        return fuZeRen;
+    }
+
+    public void setFuZeRen(String fuZeRen) {
+        this.fuZeRen = fuZeRen;
+    }
+
+    public Integer gettType() {
+        return tType;
+    }
+
+    public void settType(Integer tType) {
+        this.tType = tType;
+    }
+
+    public Long geteNum() {
+        return eNum;
+    }
+
+    public void seteNum(Long eNum) {
+        this.eNum = eNum;
+    }
+
+
+    public Date getChaXunShiJian() {
+        return chaXunShiJian;
+    }
+
+    public void setChaXunShiJian(Date chaXunShiJian) {
+        this.chaXunShiJian = chaXunShiJian;
+    }
+    
+    
+    
+        
     public LTEquipBasic getSelectedEquipBasic() {
         return selectedEquipBasic;
     }

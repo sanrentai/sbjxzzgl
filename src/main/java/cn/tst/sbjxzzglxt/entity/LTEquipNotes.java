@@ -10,7 +10,11 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -30,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "LTEquipNotes.findAll", query = "SELECT l FROM LTEquipNotes l")
     , @NamedQuery(name = "LTEquipNotes.findById", query = "SELECT l FROM LTEquipNotes l WHERE l.id = :id")
-    , @NamedQuery(name = "LTEquipNotes.findByENum", query = "SELECT l FROM LTEquipNotes l WHERE l.eNum = :eNum")
+    , @NamedQuery(name = "LTEquipNotes.findByENum", query = "SELECT l FROM LTEquipNotes l WHERE l.eNum = :eNum AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipNotes.findByDelYN", query = "SELECT l FROM LTEquipNotes l WHERE l.delYN = :delYN")
     , @NamedQuery(name = "LTEquipNotes.findByDelDate", query = "SELECT l FROM LTEquipNotes l WHERE l.delDate = :delDate")
     , @NamedQuery(name = "LTEquipNotes.findByDelUser", query = "SELECT l FROM LTEquipNotes l WHERE l.delUser = :delUser")
@@ -50,10 +54,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipNotes.findByDangQianBaoYangRiQi", query = "SELECT l FROM LTEquipNotes l WHERE l.dangQianBaoYangRiQi = :dangQianBaoYangRiQi")
     , @NamedQuery(name = "LTEquipNotes.findByXiaCiBaoYangRiQi", query = "SELECT l FROM LTEquipNotes l WHERE l.xiaCiBaoYangRiQi = :xiaCiBaoYangRiQi")
     , @NamedQuery(name = "LTEquipNotes.findByYiLiuWenTi", query = "SELECT l FROM LTEquipNotes l WHERE l.yiLiuWenTi = :yiLiuWenTi")
-    , @NamedQuery(name = "LTEquipNotes.findByTType", query = "SELECT l FROM LTEquipNotes l WHERE l.tType = :tType")
+    , @NamedQuery(name = "LTEquipNotes.findByTType", query = "SELECT l FROM LTEquipNotes l WHERE l.tType = :tType AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipNotes.findByGongZuoNeiRong", query = "SELECT l FROM LTEquipNotes l WHERE l.gongZuoNeiRong = :gongZuoNeiRong")
-    , @NamedQuery(name = "LTEquipNotes.findByFuZeRen", query = "SELECT l FROM LTEquipNotes l WHERE l.fuZeRen = :fuZeRen")
-    , @NamedQuery(name = "LTEquipNotes.findByChaXunShiJian", query = "SELECT l FROM LTEquipNotes l WHERE l.chaXunShiJian = :chaXunShiJian")})
+    , @NamedQuery(name = "LTEquipNotes.findByFuZeRen", query = "SELECT l FROM LTEquipNotes l WHERE l.fuZeRen = :fuZeRen AND l.delFlg = :delFlg")
+    , @NamedQuery(name = "LTEquipNotes.findByChaXunShiJian", query = "SELECT l FROM LTEquipNotes l WHERE l.chaXunShiJian = :chaXunShiJian AND l.delFlg = :delFlg")})
 public class LTEquipNotes extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -297,4 +301,21 @@ public class LTEquipNotes extends BaseEntity implements Serializable {
         return "cn.tst.sbjxzzglxt.entity.LTEquipNotes[ id=" + id + " ]";
     }
     
+    // 设备表
+     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+     private LTEquipBasic equipBasic;
+
+    public LTEquipBasic getEquipBasic() {
+        return equipBasic;
+    }
+
+    public void setEquipBasic(LTEquipBasic equipBasic) {
+        this.equipBasic = equipBasic;
+    }
+     
 }

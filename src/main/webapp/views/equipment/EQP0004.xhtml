@@ -5,7 +5,7 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <p:outputPanel styleClass="Card" id="rootContainer">
+    <p:outputPanel styleClass="Card" id="rootContainer">   
         <h1 class="CardBigTopic Purple">
             <h:outputText value="#{ctrlMaster.createPageTitle('EQP', 'EQP0004')}"/>
         </h1>
@@ -20,11 +20,10 @@
                                      type="button" 
                                      onclick="PF('deviceSelectDialog').show();"
                                      update="rootContainer">
-                    </p:commandButton>    
+                    </p:commandButton>   
                    
                     <!--记录类型-->
-                    
-                        <p:selectOneMenu id="addJiLuLeiXing" value="#{ctrlEQP0004.vm.equipNotesInEditing.TType}">
+                    <p:selectOneMenu id="addJiLuLeiXing" value="#{ctrlEQP0004.vm.equipNotesInEditing.TType}">
                             <f:selectItem itemLabel="记录类型" itemValue=""/>
                             <f:selectItem itemLabel="维修" itemValue="0"/>
                             <f:selectItem itemLabel="保养" itemValue="1"/>
@@ -32,24 +31,32 @@
                   
                     <!--负责人-->
                     
-                        <p:selectOneMenu id="addFuZeRen" value="#{ctrlEQP0004.vm.equipNotesInEditing.fuZeRen}" >
+                    <p:selectOneMenu id="addFuZeRen" value="#{ctrlEQP0004.vm.equipNotesInEditing.fuZeRen}" >
                             <f:selectItem itemLabel="负责人" itemValue=""/>
                             <!--<f:selectItems value="#{ctrlEQP0004.vm.equipNoteList}" var="type" itemLabel="#{type.fuZeRen}" itemValue="#{type.fuZeRen}" />-->
+                            <f:selectItem itemLabel="张三" itemValue="张三"/>
+                            <f:selectItem itemLabel="李四" itemValue="李四"/>
+                            <f:selectItem itemLabel="王五" itemValue="王五"/>
+                            <f:selectItem itemLabel="赵六" itemValue="赵六"/>
+                            <f:selectItem itemLabel="孙七" itemValue="孙七"/>
+                            <f:selectItem itemLabel="濑八" itemValue="濑八"/>
+                            <f:selectItem itemLabel="宫九" itemValue="宫九"/>
+                            <f:selectItem itemLabel="钱十" itemValue="钱十"/>
                         </p:selectOneMenu>        
                     
                     <!--记录时段-->
                     <p:outputLabel for="addDateTime" value="查询时间:"/>
-                    <p:calendar id="addDateTime" value="#{ctrlEQP0004.vm.equipNotesInEditing.chaXunShiJian}" pattern="yyyy-MM-dd" mask="true" />
+                    <p:calendar id="addDateTime" value="#{ctrlEQP0004.vm.chaXunShiJian}" pattern="yyyy-MM-dd" mask="true" />
                   
                     <!--查询-->
-                    <p:commandButton value="查询" process="@this" actionListener="#{ctrlCAR0001.onRefreshData}" 
+                    <p:commandButton value="查询" process="toolbar" actionListener="#{ctrlEQP0004.chaXunGongNeng()}" 
                                      resetValues="true" oncomplete="PF('wvCheLiangList').clearFilters();"
-                                     update="pngDetails"/>
+                                        update="pngDetails"/>
                     </h:panelGrid>
 
         </p:outputPanel>
             <div class="EmptyBox10"></div>
-            <p:dataTable value="#{ctrlCAR0001.vm.cheLiangList}" var="cheLiang" cellSeparator="5"
+            <p:dataTable value="#{ctrlEQP0004.vm.equipNoteList}" var="equipNoteList" cellSeparator="5"
                          widgetVar="wvCheLiangList"
                          rows="10"
                          filterDelay="500"
@@ -65,7 +72,7 @@
                     <p:row>
                         <p:column headerText="设备" styleClass="wd-p-5"/>
                         <p:column headerText="类型" styleClass="wd-p-5"/>
-                        <p:column headerText="工作内容" filterBy="#{cheLiang.cheLiangMingCheng}" filterMaxLength="20" filterMatchMode="contains" styleClass="wd-p-10"/>
+                        <p:column headerText="工作内容" filterBy="#{equipNoteList.gongZuoNeiRong}" filterMaxLength="20" filterMatchMode="contains" styleClass="wd-p-10"/>
                         <p:column headerText="遗留" styleClass="tct wd-p-5"/>
                         <p:column headerText="工作时间" styleClass="tct wd-p-5"/>
                         <p:column headerText="负责人" styleClass="tct wd-p-5"/>
@@ -76,33 +83,33 @@
               
                 <!--设备-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.beiZhu}"/>
+                    <h:outputText value="#{equipNoteList.ENum}"/>
                 </p:column>
                 <!--类型-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.pinPai}"/>
+                    <h:outputText value="#{equipNoteList.TType}"/>
                 </p:column>
                 <!--工作内容-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.xingHao}"/>
+                    <h:outputText value="#{equipNoteList.gongZuoNeiRong}"/>
                 </p:column>
                 <!--遗留-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.price}"/>
+                    <h:outputText value="#{equipNoteList.yiLiuWenTi}"/>
                 </p:column>
                 <!--工作时间-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.purchaseDate}">
+                    <h:outputText value="#{equipNoteList.dangQianBaoYangRiQi}">
                         <f:convertDateTime pattern="#{bizConfig.dateFormat}"/>
                     </h:outputText>
                 </p:column>
                 <!--负责人-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.engineNumber}"/>
+                    <h:outputText value="#{equipNoteList.fuZeRen}"/>
                 </p:column>
                 <!--下次时间-->
                 <p:column>
-                    <h:outputText value="#{cheLiang.color}"/>
+                    <h:outputText value="#{equipNoteList.xiaCiBaoYangRiQi}"/>
                 </p:column>
             </p:dataTable>
         </div>
@@ -148,7 +155,7 @@
                 <p:column styleClass="tct wd-p-10">
                     <p:commandLink value="选择" 
                                    actionListener="#{XunJianDianSheZhiController.setCurrentEquipmentId(equipment.id)}" 
-                                   process="@this" 
+                                   process="equipmentSelectList" 
                                    update="frmMain:rootContainer"
                                    oncomplete="PF('deviceSelectDialog').hide()"></p:commandLink>
                 </p:column>
