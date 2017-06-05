@@ -11,19 +11,80 @@ import cn.tst.sbjxzzglxt.entity.LTEquipNotes;
 
 /**
  * 维修保养视图模型
+ *
  * @author Aaron-PC-i3-4130
  */
 public class EQP0004ViewModel extends BaseViewModel {
-
+    private Integer tType;
+    private Long eNum;
     private LTEquipBasic selectedEquipBasic;
     private LTEquipBasic equipBasic;
     private List<LTEquipBasic> equipBasicList;
     private List<LTEquipBasic> equipmentList = new ArrayList();
-
     private LTEquipNotes equipNotesInEditing;
-
     private List<LTEquipNotes> equipNoteList;
+    private String fuZeRen; 
+    private Date dangQianBaoYangRiQi;
+    private Date xiaCiBaoYangRiQi;
+    private LTEquipBasic currentEquipment;
 
+
+   
+
+    public void setTType(Integer tType) {
+        this.tType = tType;
+    }
+
+    
+
+    public void setENum(Long eNum) {
+        this.eNum = eNum;
+    }
+
+    public Integer getTType() {
+        return tType;
+    }
+
+    public Long getENum() {
+        return eNum;
+    }
+
+
+   
+    
+    /**
+     * 日期范围
+     */
+    private String riQiFanWei;
+
+    public String getRiQiFanWei() {
+        return riQiFanWei;
+    }
+
+    public void setRiQiFanWei(String riQiFanWei) {
+        this.riQiFanWei = riQiFanWei;
+    }
+
+    public Date getDangQianBaoYangRiQi() {
+        return dangQianBaoYangRiQi;
+    }
+
+    public void setDangQianBaoYangRiQi(Date dangQianBaoYangRiQi) {
+        this.dangQianBaoYangRiQi = dangQianBaoYangRiQi;
+    }
+
+    public Date getXiaCiBaoYangRiQi() {
+        return xiaCiBaoYangRiQi;
+    }
+
+    public void setXiaCiBaoYangRiQi(Date xiaCiBaoYangRiQi) {
+        this.xiaCiBaoYangRiQi = xiaCiBaoYangRiQi;
+    }
+
+    
+  
+
+  
     public LTEquipBasic getSelectedEquipBasic() {
         return selectedEquipBasic;
     }
@@ -32,8 +93,6 @@ public class EQP0004ViewModel extends BaseViewModel {
         this.selectedEquipBasic = selectedEquipBasic;
     }
 
-    
-    
     public List<LTEquipBasic> getEquipBasicList() {
         return equipBasicList;
     }
@@ -73,4 +132,21 @@ public class EQP0004ViewModel extends BaseViewModel {
     public void setEquipmentList(List<LTEquipBasic> equipmentList) {
         this.equipmentList = equipmentList;
     }
+
+    public LTEquipBasic getCurrentEquipment() {
+        return currentEquipment;
+    }
+
+    public void setCurrentEquipment(LTEquipBasic currentEquipment) {
+        this.currentEquipment = currentEquipment;
+    }
+
+    public String getFuZeRen() {
+        return fuZeRen;
+    }
+
+    public void setFuZeRen(String fuZeRen) {
+        this.fuZeRen = fuZeRen;
+    }
+
 }

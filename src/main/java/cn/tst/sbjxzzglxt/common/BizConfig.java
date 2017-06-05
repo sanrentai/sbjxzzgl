@@ -394,4 +394,5 @@ public class BizConfig implements Serializable {
     public SepE.WeiXiuBaoYang[] getWeiXiuBaoYang() {
         return SepE.WeiXiuBaoYang.values();
     }
+
 }
