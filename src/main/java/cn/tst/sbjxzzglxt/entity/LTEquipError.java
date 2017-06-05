@@ -129,36 +129,24 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public LTEquipError(Long id) {
         this.id = id;
     }
-    //使用多对一的方式连表并且使用懒加载
+    /**
+     * 
+     */
     @ManyToOne(fetch = FetchType.LAZY)
-    //连表 插入列的名字 与引用列的名字
     @JoinColumns({
-        @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false)
-        ,
+        @JoinColumn(name = "E_Num", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
     })
     //通过分装需要连表的实体类，完成页面的调用
-
-    private LTEquipBasic equip;
-
-    public LTEquipBasic getEquip() {
-        return equip;
+    private LTEquipBasic equipment;
+    
+    public LTEquipBasic getEquipment() {
+        return equipment;
     }
 
-    public void setEquip(LTEquipBasic equip) {
-        this.equip = equip;
+    public void setEquipment(LTEquipBasic equipment) {
+        this.equipment = equipment;
     }
-//    @ManyToOne
-//    @PrimaryKeyJoinColumn(name = "E_Num", referencedColumnName = "E_Num")
-//    private LTEquipBasic equipBasic;
-//
-//    public LTEquipBasic getEquipBasic() {
-//        return equipBasic;
-//    }
-//
-//    public void setEquipBasic(LTEquipBasic equipBasic) {
-//        this.equipBasic = equipBasic;
-//    }
 
     public Long getId() {
         return id;
@@ -368,9 +356,6 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public void setErrorMessageList(List<LTEquipErrorMessage> errorMessageList) {
         this.errorMessageList = errorMessageList;
     }
-    
-  
-    
         //故障实例
      @OneToMany(mappedBy = "equipError", fetch = FetchType.LAZY)
      private List<GuZhangShiLi> guZhangShiLiList;

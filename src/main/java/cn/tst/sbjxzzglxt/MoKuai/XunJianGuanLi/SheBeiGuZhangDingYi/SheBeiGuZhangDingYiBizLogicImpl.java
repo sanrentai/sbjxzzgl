@@ -21,6 +21,7 @@ import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi.BizLogic;
+import cn.tst.sbjxzzglxt.common.EquipmentTree;
 
 /**
  * 仓库信息业务逻辑实现类
@@ -29,31 +30,36 @@ import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi.BizLogic;
  */
 @Stateless
 public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements BizLogic {
-
-    private static final Logger LOG = Logger.getLogger(SheBeiGuZhangDingYiBizLogicImpl.class.getName());
     @EJB
     private LTEquipErrorFacade equipErrorFacade;
     @EJB
     private LTEquipBasicFacade eqpService;
     @EJB
     private LTEquipErrorMessageFacade errorMessageFacade;
+    @EJB
+    private LTEquipBasicFacade equipmentFacade;
 
     //这里是初始化视图，根据ID把记录信息查询出来，保存到集合内用于页面调用，否则会空
     @Override
-    public void loadEQP0006ViewModel(ViewModel vm) {
-//        vm.setEquipErrorList(equipErrorFacade.findById(Long.MIN_VALUE));
-        List<LTEquipError> equip = equipErrorFacade.findAll();
-        vm.setEquipErrorList(equip);
-        List<LTEquipBasic> findAll = eqpService.findAll();
-        vm.setEquipBasicList(findAll);
-        List<LTEquipErrorMessage> errorMessage = errorMessageFacade.findAll();
-        vm.setErrorMessageList(errorMessage);
+    public void loadViewModel(ViewModel vm) {
+        vm.setEquipmentTreeRootNode(EquipmentTree.createEqpTree(equipmentFacade.findAll()));
+    }
+    
+    @Override
+    public void onEquipmentSelect(ViewModel vm, LTEquipBasic equipment) {
+        vm.setSelectedEquipment(equipment);
+    }
+    
+    @Override
+    public void onAddNewError(ViewModel vm) {
+        LTEquipError error = new LTEquipError();
+        error.setENum(vm.getSelectedEquipment().getId());
+        vm.setErrorInEdit(error);
     }
 
     public ExecuteResult onSaveEquipment(SepE.ExecuteMode mode, ViewModel vm) {
-
         ExecuteResult result = new ExecuteResult(mode);
-        LTEquipError target = vm.getEquipError();
+        LTEquipError target = vm.getErrorInEdit();
         try {
             switch (mode) {
                 case INSERT:
@@ -64,9 +70,7 @@ public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements Biz
                     equipErrorFacade.edit(target);
                     break;
                 case DELETE:
-                    LOG.info("删除开始");
                     equipErrorFacade.remove(target);
-                    LOG.info("删除结束");
                     break;
             }
             vm.setEquipErrorList(equipErrorFacade.findAll());
@@ -85,7 +89,7 @@ public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements Biz
         //先创建一个执行结果的对象，并把mode的放进去
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
-        LTEquipError target = vm.getEquipError();
+        LTEquipError target = vm.getErrorInEdit();
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {
@@ -125,7 +129,6 @@ public class SheBeiGuZhangDingYiBizLogicImpl extends BaseBizLogic implements Biz
         ExecuteResult result = new ExecuteResult(mode);
         //从视图中取出EquipWarn
         LTEquipErrorMessage target = vm.getErrorMessage();
-        LOG.info(target.getGuZhangMingCheng());
         try {
             //判断执行模式，如果是INSERT就把数据添加，UPDATE就进行修改，DELETE进行修改。
             switch (mode) {

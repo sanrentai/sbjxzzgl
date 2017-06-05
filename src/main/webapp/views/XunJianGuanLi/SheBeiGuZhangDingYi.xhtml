@@ -13,7 +13,8 @@
             </h1>
             <!--无敌分割线-->
             <div class="SeparatorFull"></div>
-            <p:outputPanel id="pnlSelectArea" styleClass="Container30 Responsive100">
+            <!--设备树-->
+            <p:outputPanel id="EquipmentTreeOutputPanel" styleClass="Container30 Responsive100">
                 <p:panelGrid styleClass="wd-p-100">
                     <f:facet name="header">
                         <p:row>
@@ -29,24 +30,29 @@
                     </f:facet>
                     <p:row>
                         <p:column style="padding: 0px;">
-                            <p:tree id="treeCK" value="#{SheBeiGuZhangDingYiController.vm.equipTreeRoot}" var="v" 
-                                    selectionMode="single" selection="#{SheBeiGuZhangDingYiController.selectedNode}"
+                            <p:tree id="EquipmentTree" 
+                                    value="#{SheBeiGuZhangDingYiController.vm.equipmentTreeRootNode}" 
+                                    var="node" 
+                                    selectionMode="single" 
                                     styleClass="wd-p-100" animate="true">
-                                <p:ajax event="select" process="treeCK" 
-                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{SheBeiGuZhangDingYiController.onNodeSelect}"  />
+                                <p:ajax event="select" process="EquipmentTree" 
+                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" 
+                                        listener="#{SheBeiGuZhangDingYiController.onEquipmentSelect(node.equipment)}"  />
 
                                 <!--根节点-->
                                 <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
                                 <p:treeNode>
-                                    <h:outputText value="#{v}"/>
+                                    <h:outputText value="#{node.name}"/>
                                 </p:treeNode>
                             </p:tree>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
             </p:outputPanel>
-            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
-                <p:dataTable value="#{SheBeiGuZhangDingYiController.vm.selectedEquipBasic.equipErrorList}" var="equip"
+            <!--故障列表-->
+            <p:outputPanel id="ErrorListView" styleClass="Container70 Responsive100 pnlOutputArea">
+                <p:dataTable value="#{SheBeiGuZhangDingYiController.vm.selectedEquipment.errorList}" 
+                             var="error"
                              widgetVar="wvYongMeiList"
                              rows="10"
                              filterDelay="500"
@@ -71,27 +77,27 @@
                     </p:columnGroup>
                     <!--故障标题-->
                     <p:column styleClass="tlt">
-                        <h:outputText value="#{equip.errTitle}"/>
+                        <h:outputText value="#{error.errTitle}"/>
                     </p:column>
                     <!--编号-->
                     <p:column styleClass="tlt">
-                        <h:outputText value="#{equip.errNum}"/>
+                        <h:outputText value="#{error.errNum}"/>
                     </p:column>
                     <!--处理说明-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equip.chuLiShuoMing}"/>
+                        <h:outputText value="#{error.chuLiShuoMing}"/>
                     </p:column>
                     <!--方式-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equip.errWay}"/>
+                        <h:outputText value="#{error.errWay}"/>
                     </p:column>
                     <!--类型-->
                     <p:column styleClass="tct">
-                        <h:outputText value="#{equip.errType}"/>
+                        <h:outputText value="#{error.errType}"/>
                     </p:column>
                     <!-- 修改按钮 -->
                     <p:column styleClass="tct">
-                        <p:commandLink actionListener="#{SheBeiGuZhangDingYiController.onEditEquip(equip)}"
+                        <p:commandLink actionListener="#{SheBeiGuZhangDingYiController.onEditEquip(error)}"
                                        process="@this" update="@(.pnlInputArea),@(.pnlOutputArea),@(.toolbar)">
                             <i class="fa fa-pencil Fs18 Blue"></i>
                         </p:commandLink>
@@ -107,10 +113,19 @@
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
-
             </p:outputPanel>
+            <p:toolbar styleClass="Container100">
+                <f:facet name="left">
+                    <p:commandButton value="新建" 
+                                     process="@this" 
+                                     update="frmMain:rootContainer" 
+                                     actionListener="#{SheBeiGuZhangDingYiController.onAddNewError}" 
+                                     styleClass="NavyButton" 
+                                     disabled="#{SheBeiGuZhangDingYiController.statusEditing}"/>
+                </f:facet>
+            </p:toolbar>
             <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
-                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty SheBeiGuZhangDingYiController.vm.equipError}">
+                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty SheBeiGuZhangDingYiController.vm.errorInEdit}">
                     <!--所属设备-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="ENum" value="所属设备"/>
@@ -119,17 +134,17 @@
                     <!--故障标题-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="GuZhangBiaoTi" value="故障标题"/>
-                        <p:inputText id="GuZhangBiaoTi" value="#{SheBeiGuZhangDingYiController.vm.equipError.errTitle}"/>
+                        <p:inputText id="GuZhangBiaoTi" value="#{SheBeiGuZhangDingYiController.vm.errorInEdit.errTitle}"/>
                     </p:panelGrid>
                     <!--故障编号-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="GuZhangBianHAO" value="故障编号"/>
-                        <p:inputText id="GuZhangBianHAO" value="#{SheBeiGuZhangDingYiController.vm.equipError.errNum}"/>
+                        <p:inputText id="GuZhangBianHAO" value="#{SheBeiGuZhangDingYiController.vm.errorInEdit.errNum}"/>
                     </p:panelGrid>
                     <!--故障类型-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="GuZhangLeiXing" value="故障类型"/>
-                        <p:selectOneMenu id="GuZhangLeiXing" value="#{SheBeiGuZhangDingYiController.vm.equipError.errType}">
+                        <p:selectOneMenu id="GuZhangLeiXing" value="#{SheBeiGuZhangDingYiController.vm.errorInEdit.errType}">
                             <f:selectItems value="#{SheBeiGuZhangDingYiController.vm.errorMessageList}" var="type" itemLabel="#{type.guZhangMingCheng}" itemValue="#{type.equipError.errType}" />
                         </p:selectOneMenu>
                     </p:panelGrid>
@@ -141,7 +156,7 @@
                     <!--解决方式 -->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="JieJueFangShi" value="解决方式"/>
-                        <p:selectOneMenu id="JieJueFangShi" value="#{SheBeiGuZhangDingYiController.vm.equipError.errWay}">
+                        <p:selectOneMenu id="JieJueFangShi" value="#{SheBeiGuZhangDingYiController.vm.errorInEdit.errWay}">
                             <f:selectItem itemLabel="请选择解决方式" itemValue="处理"/>
                             <f:selectItem itemLabel="处理" itemValue="处理"/>
                             <f:selectItem itemLabel="上报" itemValue="上报"/>
@@ -150,7 +165,7 @@
                     <!--处理说明-->
                     <p:panelGrid columns="1" layout="grid" >
                         <p:outputLabel for="ChuLiShuoMing" value="处理说明"/>
-                        <p:inputTextarea id="ChuLiShuoMing" value="#{SheBeiGuZhangDingYiController.vm.equipError.chuLiShuoMing}"/>
+                        <p:inputTextarea id="ChuLiShuoMing" value="#{SheBeiGuZhangDingYiController.vm.errorInEdit.chuLiShuoMing}"/>
                     </p:panelGrid>
 
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
@@ -166,15 +181,20 @@
             </p:outputPanel>
         </p:outputPanel>
     </p:outputPanel>
-
-    <p:dialog widgetVar="deviceSelectDialog" modal="true">
-        <p:outputPanel id="GuZhangMingLieBiao" styleClass="Container70 Responsive100 GuZhangMingLieBiao">
-            <p:dataTable value="#{SheBeiGuZhangDingYiController.vm.errorMessageList}" style="width:512px;"
+    <!---->
+    <p:dialog widgetVar="deviceSelectDialog" 
+              modal="true">
+        <p:outputPanel id="GuZhangMingLieBiao" 
+                       styleClass="Container70 Responsive100 GuZhangMingLieBiao">
+            <p:dataTable value="#{SheBeiGuZhangDingYiController.vm.errorMessageList}" 
+                         style="width:512px;"
                          var="errorMessage" 
                          paginatorAlwaysVisible="false"
-                         paginator="true" rows="5"
+                         paginator="true" 
+                         rows="5"
                          paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                         id="equipmentSelectList" widgetVar="equipmentSelectList"
+                         id="equipmentSelectList" 
+                         widgetVar="equipmentSelectList"
                          styleClass="bg-c-row-odd wd-f-700"
                          scrollable="true"
                          emptyMessage="无数据">
@@ -224,7 +244,6 @@
                 </f:facet>
             </p:toolbar>
             <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty SheBeiGuZhangDingYiController.vm.errorMessage}">
-
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                     <p:outputLabel for="addGuZhangMing" value="故障名"/>
                     <p:inputText id="addGuZhangMing" value="#{SheBeiGuZhangDingYiController.vm.errorMessage.guZhangMingCheng}" />
@@ -232,8 +251,8 @@
 
                 <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                     <p:commandButton value="保存" process="ZengJiaGuZhangMing"
-                                    oncomplete="PF('deviceSelectDialog').hide()"
-                                     update="GuZhangMingLieBiao,pnlInputArea"
+                                     oncomplete="PF('deviceSelectDialog').hide()"
+                                     update="GuZhangMingLieBiao"
                                      actionListener="#{SheBeiGuZhangDingYiController.onSaveErrorMessage()}" />
                     <p:commandButton value="取消" process="ZengJiaGuZhangMing" 
                                      update="GuZhangMingLieBiao,pnlInputArea" actionListener="#{SheBeiGuZhangDingYiController.onCancelEdit}"
@@ -241,8 +260,5 @@
                 </p:panelGrid>
             </p:outputPanel>
         </p:outputPanel>
-
-
-
     </p:dialog>
 </ui:composition>

@@ -48,14 +48,10 @@ public class EquipmentTree {
     }
     
     private static void createNode(TreeNode parentNode, LTEquipBasic data, Integer roleId) {
-//        if(data.isHasBeenAddedToTreeNode()) {
-//            return;
-//        }
         TreeNode result = new DefaultTreeNode(new EquipmentNodeData(data.getENmae(), roleId, SepC.INVALID_ID), parentNode);
         for(LTEquipCheckPoint checkPoint: data.getCheckPointList()) {
             createCheckPointNode(result, checkPoint, roleId);
         }
-        data.setHasBeenAddedToTreeNode(true);
         if(data.getChildren() != null) {
             for(LTEquipBasic equipment: data.getChildren()) {
                 createNode(result, equipment, roleId);

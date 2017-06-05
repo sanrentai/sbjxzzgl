@@ -21,5 +21,8 @@ public interface EQP0004BizLogic {
     void onSaveData(EQP0004ViewModel vm);
     
     void onCancelEdit(EQP0004ViewModel vm);
+    //选择设备
+    public void setCurrentEquipment(EQP0004ViewModel vm, Integer currentEquipmentId);
+
     
 }

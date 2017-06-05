@@ -12,7 +12,7 @@
                 <h:outputText value="#{ctrlMaster.createPageTitle('XunJianGuanLi', 'XunJianXinXiJiLu')}"/>
             </h1>
             <!--无敌分割线-->
-                       <div class="SeparatorFull"></div>
+            <div class="SeparatorFull"></div>
 
             <p:outputPanel id="pnlOutputArea" styleClass="Container100 Responsive100 pnlOutputArea">
                 <p:dataTable value="#{XunJianXinXiJiLuController.vm.routingInspectionMessageList}" var="message"
@@ -64,15 +64,15 @@
                     <p:column styleClass="tlt">
                         <h:outputText value="#{message.xunJianShiJian}"/>
                     </p:column>
-                     <!-- 巡检状态-->
+                    <!-- 巡检状态-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{message.xunJianZhuangTai}"/>
                     </p:column>
-                      <!-- 巡检问题-->
+                    <!-- 巡检问题-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{message.xunJianWenTi}"/>
                     </p:column>
-                       <!-- 参数值-->
+                    <!-- 参数值-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{message.canShuZhi}"/>
                     </p:column>
@@ -104,21 +104,26 @@
                 </p:dataTable>
 
             </p:outputPanel>
-                         <p:outputPanel id="pnlInputArea" styleClass="Container100 Responsive100 NoIndent pnlInputArea">
+            <p:outputPanel id="pnlInputArea" 
+                           styleClass="Container100 Responsive100 NoIndent pnlInputArea">
                 <p:toolbar styleClass="Container100">
                     <f:facet name="left">
-                        <p:commandButton value="新建" process="@this" update="pnlInputArea" actionListener="#{XunJianXinXiJiLuController.onAddTargetData()}" 
-                                         styleClass="NavyButton" disabled="#{XunJianXinXiJiLuController.statusEditing}"/>
+                        <p:commandButton value="新建" 
+                                         process="@this" 
+                                         update="pnlInputArea" 
+                                         actionListener="#{XunJianXinXiJiLuController.onAddTargetData()}" 
+                                         styleClass="NavyButton" 
+                                         disabled="#{XunJianXinXiJiLuController.statusEditing}"/>
 
                     </f:facet>
                 </p:toolbar>
-                             <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" rendered="#{not empty XunJianXinXiJiLuController.vm.routingInspectionMessage}">
-                 
+                <p:outputPanel styleClass="Container100 Responsive100 ui-fluid" 
+                               rendered="#{not empty XunJianXinXiJiLuController.vm.routingInspectionMessage}">
                     <!--所属设备-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addEquipName" value="设备名称"/>
                         <p:selectOneMenu id="addEquipName" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.suoshushebeiID}" 
-                                                                     filter="true" filterMatchMode="contains">
+                                         filter="true" filterMatchMode="contains">
                             <f:selectItem itemLabel="选择设备" itemValue=""/>
                             <f:selectItems value="#{XunJianXinXiJiLuController.vm.equipBasicList}" var="name" itemLabel="#{name.ENmae}" itemValue="#{name.ENum}" />
                         </p:selectOneMenu>
@@ -132,7 +137,7 @@
                         </p:selectOneMenu>-->
                         <p:inputText id="addXunJianDian" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.xunJianDianId}" />
                     </p:panelGrid>
-                   <!--所属项目-->
+                    <!--所属项目-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addXiangMuMing" value="所属项目"/>
                         <p:selectOneMenu id="addXiangMuMing" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.xunJianDianXiangMuId}"  filter="true" filterMatchMode="contains" >
@@ -148,16 +153,16 @@
                             <f:selectItems value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.xiangMuMingCheng}" itemValue="#{name.routingInspectionProblem.suoShuXiangMuId}" />
                         </p:selectOneMenu>
                     </p:panelGrid>
-                    
-                     <!--巡检时间-->
+
+                    <!--巡检时间-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
-             
+
                         <p:outputLabel for="addDateTime" value="巡检时间:" />
                         <p:calendar id="addDateTime" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.xunJianShiJian}" pattern="yyyy-MM-dd" mask="true" />
-                     
+
                     </p:panelGrid>
-                     
-                      <!--巡检状态-->
+
+                    <!--巡检状态-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addXunJianZhuangTai" value="巡检状态"/>
                         <p:selectOneMenu id="addXunJianZhuangTai" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.xunJianZhuangTai}"  >
@@ -165,7 +170,7 @@
                             <f:selectItem itemLabel="异常" itemValue="2"/>
                         </p:selectOneMenu>
                     </p:panelGrid>
-                   <!--巡检问题-->
+                    <!--巡检问题-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addXunJianWenTi" value="巡检问题:" />
                         <p:inputText id="addXunJianWenTi" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.xunJianWenTi}"/>
@@ -175,7 +180,7 @@
                         <p:outputLabel for="addCanShuZhi" value="参数值:" />
                         <p:inputText id="addCanShuZhi" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.canShuZhi}"/>
                     </p:panelGrid>
-                      <!--录入人-->
+                    <!--录入人-->
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-30 NoPadding,wd-p-70 NoPadding">
                         <p:outputLabel for="addLuRuRen" value="录入人"/>
                         <p:selectOneMenu id="addLuRuRen" value="#{XunJianXinXiJiLuController.vm.routingInspectionMessage.luRuRen}"  filter="true" filterMatchMode="contains" >
@@ -183,7 +188,7 @@
                             <!--<f:selectItems value="#{XunJianXiangMuController.vm.routingInspectionItemsList}" var="name" itemLabel="#{name.xiangMuMingCheng}" itemValue="#{name.xiangMuMingCheng}" />-->
                         </p:selectOneMenu>
                     </p:panelGrid>
-                       
+
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"

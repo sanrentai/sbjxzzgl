@@ -5,6 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.entity;
 
+import cn.tst.sbjxzzglxt.common.SepE;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -244,12 +245,12 @@ public class LTEquipNotes extends BaseEntity implements Serializable {
         this.yiLiuWenTi = yiLiuWenTi;
     }
 
-    public Integer getTType() {
-        return tType;
+    public SepE.WeiXiuBaoYang getTType() {
+        return SepE.WeiXiuBaoYang.parse(tType);
     }
 
-    public void setTType(Integer tType) {
-        this.tType = tType;
+    public void setTType(SepE.WeiXiuBaoYang tType) {
+        this.tType = tType.getValue();
     }
 
     public String getGongZuoNeiRong() {
