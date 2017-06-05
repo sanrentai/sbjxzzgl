@@ -18,6 +18,11 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
+    public static final double DEFAULT_LONGTITUDE = 116.404;
+    
+    public static final double DEFAULT_LATITUDE = 39.915;
+    
+    public static final int DEFAULT_ZOOM = 15;
     @EJB
     private MapSettingFacade mapSettingFacade;
 
@@ -33,9 +38,17 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
         List<MapSetting> mapSettingInEditList = mapSettingFacade.findAll();
         if(mapSettingInEditList.isEmpty()) {
             MapSetting mapSetting = new MapSetting();
-            mapSetting.setInitialLongtitude(116.404);
-            mapSetting.setInitialLatitude(39.915);
-            viewModel.setMapSettingInEdit(new MapSetting());
+            mapSetting.setInitialLongtitude(DEFAULT_LONGTITUDE);
+            mapSetting.setInitialLatitude(DEFAULT_LATITUDE);
+            mapSetting.setZoom(DEFAULT_ZOOM);
+            viewModel.setMapSettingInEdit(mapSetting);
+            mapSettingFacade.create(mapSetting);
+        } else {
+            viewModel.setMapSettingInEdit(mapSettingInEditList.get(0));
         }
+    }
+    @Override
+    public void onOKButtonClickInMapCenterSettingDialog(ViewModel viewModel) {
+        mapSettingFacade.edit(viewModel.getMapSettingInEdit());
     }
 }

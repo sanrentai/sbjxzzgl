@@ -5,6 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
 
+import cn.tst.sbjxzzglxt.entity.Blocks;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
 
 /**
@@ -13,6 +14,16 @@ import cn.tst.sbjxzzglxt.entity.MapSetting;
  */
 public class ViewModel {
     private MapSetting mapSettingInEdit;
+    
+    private Blocks blockInEdit;
+
+    public Blocks getBlockInEdit() {
+        return blockInEdit;
+    }
+
+    public void setBlockInEdit(Blocks blockInEdit) {
+        this.blockInEdit = blockInEdit;
+    }
 
     public MapSetting getMapSettingInEdit() {
         return mapSettingInEdit;

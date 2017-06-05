@@ -8,6 +8,7 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import javax.annotation.ManagedBean;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -24,6 +25,12 @@ public class Controller extends BusinessBaseController {
     private BizLogic bizLogic;
     
     private ViewModel viewModel;
+    
+    @PostConstruct
+    public void init() {
+        viewModel = new ViewModel();
+        bizLogic.loadViewModel(viewModel);
+    }
 
     public BizLogic getBizLogic() {
         return bizLogic;
@@ -39,5 +46,9 @@ public class Controller extends BusinessBaseController {
 
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
+    }
+    
+    public void onOKButtonClickInMapCenterSettingDialog() {
+        bizLogic.onOKButtonClickInMapCenterSettingDialog(viewModel);
     }
 }
