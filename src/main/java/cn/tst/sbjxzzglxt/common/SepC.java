@@ -710,6 +710,8 @@ public final class SepC {
 
         public static final String WEN_DANG_JI_TU_PIAN_GUAN_LI_CONTROLLER_NAME = "WenDangJiTuPianGuanLiController";
 
+        public static final String DI_TU_SHE_ZHI_CONTROLLER_NAME = "DiTuSheZhiController";
+
         /**
          * 巡检管理
          */

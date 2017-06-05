@@ -13,6 +13,26 @@ public class ViewModel {
     private List<SysRoutingInspectionItems> itemList;
     
     private SysRoutingInspectionItems itemInEdit;
+    
+    private boolean ifShowBoDong = true;
+    
+    private boolean ifShowError;
+
+    public boolean isIfShowBoDong() {
+        return ifShowBoDong;
+    }
+
+    public void setIfShowBoDong(boolean ifShowBoDong) {
+        this.ifShowBoDong = ifShowBoDong;
+    }
+
+    public boolean isIfShowError() {
+        return ifShowError;
+    }
+
+    public void setIfShowError(boolean ifShowError) {
+        this.ifShowError = ifShowError;
+    }
 
     public SysRoutingInspectionItems getItemInEdit() {
         return itemInEdit;

@@ -51,4 +51,15 @@ public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLo
         item.setSuoShuXunJianDianId(vm.getSelectedCheckPoint().getId());
         vm.setItemInEdit(item);
     }
+    
+    @Override
+    public void onXunJianFangShiChange(ViewModel vm) {
+        if(vm.getItemInEdit().getXunJianFangShi() == 1) {
+            vm.setIfShowBoDong(true);
+            vm.setIfShowError(false);
+        } else {
+            vm.setIfShowBoDong(false);
+            vm.setIfShowError(true);
+        }
+    }
 }

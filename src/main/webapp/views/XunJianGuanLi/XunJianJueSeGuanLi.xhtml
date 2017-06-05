@@ -176,7 +176,8 @@
                      layout="grid">
             <p:panelGrid columns="2" 
                          layout="grid" 
-                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
+                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                         columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
                 <p:outputLabel value="角色名称"></p:outputLabel>
                 <p:inputText value="#{XunJianJueSeGuanLiController.vm.roleInEdit.roleName}" 
                              required="true" 
@@ -184,13 +185,15 @@
             </p:panelGrid>
             <p:panelGrid columns="2" 
                          layout="grid" 
-                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
+                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                         columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
                 <p:outputLabel value="角色描述"></p:outputLabel>
                 <p:inputTextarea value="#{XunJianJueSeGuanLiController.vm.roleInEdit.roleDescription}"></p:inputTextarea>
             </p:panelGrid>
             <p:panelGrid columns="2" 
                          layout="grid" 
-                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
+                         styleClass="ui-panelgrid-blank ui-g-12 ui-md-6 ui-lg-4 ht-f-50" 
+                         columnClasses="wd-p-50 NoPadding,wd-p-50 NoPadding">
                 <p:outputPanel></p:outputPanel>
                 <p:commandButton value="提交" 
                                  process="@this EditRoleDialog"

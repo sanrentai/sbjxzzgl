@@ -16,4 +16,6 @@ public interface BizLogic {
     void onNodeSelect(ViewModel vm, NodeSelectEvent event);
     
     void onAddNewItem(ViewModel vm);
+    
+    void onXunJianFangShiChange(ViewModel vm);
 }

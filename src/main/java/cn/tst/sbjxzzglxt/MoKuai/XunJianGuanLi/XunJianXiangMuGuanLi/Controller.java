@@ -40,4 +40,8 @@ public class Controller extends BusinessBaseController {
     public void onAddNewItem() {
         bizLogic.onAddNewItem(vm);
     }
+    
+    public void onXunJianFangShiChange() {
+        bizLogic.onXunJianFangShiChange(vm);
+    }
 }
