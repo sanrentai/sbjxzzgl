@@ -7,6 +7,7 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
+import cn.tst.sbjxzzglxt.entity.Uptown;
 import cn.tst.sbjxzzglxt.facade.MapSettingFacade;
 import java.util.List;
 import javax.ejb.EJB;
@@ -46,9 +47,14 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
         } else {
             viewModel.setMapSettingInEdit(mapSettingInEditList.get(0));
         }
+        viewModel.setUptownInEdit(new Uptown());
     }
     @Override
     public void onOKButtonClickInMapCenterSettingDialog(ViewModel viewModel) {
         mapSettingFacade.edit(viewModel.getMapSettingInEdit());
+    }
+    @Override
+    public void onOKButtonClickInBlockAddingEditDialog(ViewModel viewModel) {
+        
     }
 }

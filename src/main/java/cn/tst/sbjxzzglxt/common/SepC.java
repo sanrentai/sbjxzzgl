@@ -712,6 +712,8 @@ public final class SepC {
 
         public static final String DI_TU_SHE_ZHI_CONTROLLER_NAME = "DiTuSheZhiController";
 
+        public static final String DI_TU_CONTROLLER_NAME = "DiTuController";
+
         /**
          * 巡检管理
          */

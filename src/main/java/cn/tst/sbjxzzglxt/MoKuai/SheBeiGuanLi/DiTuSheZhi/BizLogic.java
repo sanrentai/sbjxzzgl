@@ -13,4 +13,6 @@ public interface BizLogic {
     void loadViewModel(ViewModel viewModel);
     
     void onOKButtonClickInMapCenterSettingDialog(ViewModel viewModel);
+    
+    void onOKButtonClickInBlockAddingEditDialog(ViewModel viewModel);
 }

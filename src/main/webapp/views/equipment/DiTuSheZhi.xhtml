@@ -52,6 +52,8 @@
         }
         function addBlock(event) {
             var point = new BMap.Point(event.point.lng, event.point.lat);
+            $('.LongtitudeInBlockAddingEditDialog').val(event.point.lng);
+            $('.LatitudeInBlockAddingEditDialog').val(event.point.lat);
             var marker = new BMap.Marker(point);
             blockAddingMap.addOverlay(marker);
             PF('BlockAddingEditDialog').show();
@@ -88,7 +90,7 @@
                          readonly="false"
                          value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.zoom}"></p:inputText>
             
-            <p:commandButton value="确定" 
+            <p:commandButton value="确定" process="MapCenterSettingDialog"
                              actionListener="#{DiTuSheZhiController.onOKButtonClickInMapCenterSettingDialog}"
                              oncomplete="PF('MapCenterSettingDialog').hide();"
                              update="frmMain:MapCenterSettingDialog"></p:commandButton>
@@ -112,13 +114,21 @@
               modal="true" 
               header="编辑小区属性">
         <p:panelGrid columns="2" layout="grid">
+            <p:outputLabel value="小区名称："></p:outputLabel>
+            <p:inputText value="#{DiTuSheZhiController.viewModel.uptownInEdit.name}"></p:inputText>
+            
+            <p:outputLabel value="小区地址："></p:outputLabel>
+            <p:inputText value="#{DiTuSheZhiController.viewModel.uptownInEdit.address}"></p:inputText>
+            
             <p:outputLabel value="经度："></p:outputLabel>
             <p:inputText class="LongtitudeInBlockAddingEditDialog" 
-                         value="#{DiTuSheZhiController.viewModel.blockInEdit.longtitude}"></p:inputText>
+                         value="#{DiTuSheZhiController.viewModel.uptownInEdit.longtitude}"></p:inputText>
             
             <p:outputLabel value="纬度："></p:outputLabel>
             <p:inputText class="LatitudeInBlockAddingEditDialog" 
-                         value="#{DiTuSheZhiController.viewModel.blockInEdit.latitude}"></p:inputText>
+                         value="#{DiTuSheZhiController.viewModel.uptownInEdit.latitude}"></p:inputText>
+            
+            <p:commandButton value="确定" actionListener="#{DiTuSheZhiController.onOKButtonClickInBlockAddingEditDialog}"></p:commandButton>
         </p:panelGrid>
     </p:dialog>
 </ui:composition>

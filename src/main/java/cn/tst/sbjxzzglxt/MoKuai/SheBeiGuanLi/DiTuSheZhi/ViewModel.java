@@ -5,8 +5,8 @@
  */
 package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
 
-import cn.tst.sbjxzzglxt.entity.Blocks;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
+import cn.tst.sbjxzzglxt.entity.Uptown;
 
 /**
  *
@@ -15,14 +15,14 @@ import cn.tst.sbjxzzglxt.entity.MapSetting;
 public class ViewModel {
     private MapSetting mapSettingInEdit;
     
-    private Blocks blockInEdit;
+    private Uptown uptownInEdit;
 
-    public Blocks getBlockInEdit() {
-        return blockInEdit;
+    public Uptown getUptownInEdit() {
+        return uptownInEdit;
     }
 
-    public void setBlockInEdit(Blocks blockInEdit) {
-        this.blockInEdit = blockInEdit;
+    public void setUptownInEdit(Uptown uptownInEdit) {
+        this.uptownInEdit = uptownInEdit;
     }
 
     public MapSetting getMapSettingInEdit() {

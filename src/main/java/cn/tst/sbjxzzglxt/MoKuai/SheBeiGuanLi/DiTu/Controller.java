@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
@@ -18,7 +18,7 @@ import javax.inject.Named;
  * @author Aaron-PC-i3-4130
  */
 @ViewScoped
-@Named(SepC.ControllerID.DI_TU_SHE_ZHI_CONTROLLER_NAME)
+@Named(SepC.ControllerID.DI_TU_CONTROLLER_NAME)
 @ManagedBean
 public class Controller extends BusinessBaseController {
     @EJB
@@ -46,13 +46,5 @@ public class Controller extends BusinessBaseController {
 
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
-    }
-    
-    public void onOKButtonClickInMapCenterSettingDialog() {
-        bizLogic.onOKButtonClickInMapCenterSettingDialog(viewModel);
-    }
-    
-    public void onOKButtonClickInBlockAddingEditDialog() {
-        bizLogic.onOKButtonClickInBlockAddingEditDialog(viewModel);
     }
 }
