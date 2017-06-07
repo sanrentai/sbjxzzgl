@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
+import cn.tst.sbjxzzglxt.facade.EmployeeFacade;
 import cn.tst.sbjxzzglxt.facade.MapSettingFacade;
 import cn.tst.sbjxzzglxt.facade.UptownFacade;
 import javax.ejb.EJB;
@@ -23,9 +24,13 @@ public class DiTuBizLogic extends BaseBizLogic implements BizLogic {
     @EJB
     private MapSettingFacade mapSettingFacade;
     
+    @EJB
+    private EmployeeFacade employeeFacade;
+    
     @Override
     public void loadViewModel(ViewModel viewModel) {
         viewModel.setUptownList(uptownFacade.findAll());
         viewModel.setMapSettingList(mapSettingFacade.findAll());
+        viewModel.setEmployeeList(employeeFacade.findAll());
     }
 }

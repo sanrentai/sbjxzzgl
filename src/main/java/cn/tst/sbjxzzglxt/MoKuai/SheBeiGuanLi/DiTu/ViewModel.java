@@ -5,6 +5,7 @@
  */
 package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
+import cn.tst.sbjxzzglxt.entity.Employee;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
 import cn.tst.sbjxzzglxt.entity.Uptown;
 import java.util.List;
@@ -17,6 +18,16 @@ public class ViewModel {
     private List<Uptown> uptownList;
     
     private List<MapSetting> mapSettingList;
+    
+    private List<Employee> employeeList;
+
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
+    }
 
     public List<MapSetting> getMapSettingList() {
         return mapSettingList;

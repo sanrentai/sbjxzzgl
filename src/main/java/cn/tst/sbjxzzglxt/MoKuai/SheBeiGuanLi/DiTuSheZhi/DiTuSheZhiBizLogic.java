@@ -8,7 +8,9 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
 import cn.tst.sbjxzzglxt.entity.Uptown;
+import cn.tst.sbjxzzglxt.facade.EmployeeFacade;
 import cn.tst.sbjxzzglxt.facade.MapSettingFacade;
+import cn.tst.sbjxzzglxt.facade.UptownFacade;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -26,6 +28,17 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
     public static final int DEFAULT_ZOOM = 15;
     @EJB
     private MapSettingFacade mapSettingFacade;
+    
+    @EJB
+    private UptownFacade uptownFacade;
+
+    public UptownFacade getUptownFacade() {
+        return uptownFacade;
+    }
+
+    public void setUptownFacade(UptownFacade uptownFacade) {
+        this.uptownFacade = uptownFacade;
+    }
 
     public MapSettingFacade getMapSettingFacade() {
         return mapSettingFacade;
@@ -47,7 +60,11 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
         } else {
             viewModel.setMapSettingInEdit(mapSettingInEditList.get(0));
         }
-        viewModel.setUptownInEdit(new Uptown());
+        Uptown uptown = new Uptown();
+        uptown.setUptownId("");
+        uptown.setAppendix("");
+        uptown.setTranssign('c');
+        viewModel.setUptownInEdit(uptown);
     }
     @Override
     public void onOKButtonClickInMapCenterSettingDialog(ViewModel viewModel) {
@@ -55,6 +72,6 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
     }
     @Override
     public void onOKButtonClickInBlockAddingEditDialog(ViewModel viewModel) {
-        
+        uptownFacade.create(viewModel.getUptownInEdit());
     }
 }

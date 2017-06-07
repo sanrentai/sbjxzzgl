@@ -11,23 +11,41 @@
             // 百度地图API功能
             var map = new BMap.Map("allmap");    // 创建Map实例
             var mapSetting = $('.mapSetting').first();
-            map.centerAndZoom(new BMap.Point(mapSetting.attr('data-initialLongtitude'), mapSetting.attr('data-initialLatitude')), 
-                mapSetting.attr('data-zoom'));  // 初始化地图,设置中心点坐标和地图级别
+            map.centerAndZoom(new BMap.Point(mapSetting.attr('data-initialLongtitude'), mapSetting.attr('data-initialLatitude')),
+                    mapSetting.attr('data-zoom'));  // 初始化地图,设置中心点坐标和地图级别
             map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
             map.setCurrentCity("沈阳");          // 设置地图显示的城市 此项是必须设置的
             map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
-            
+
             var geo = new BMap.Geocoder();
-            $('.uptown').each(function() {
-                if($(this).attr('data-address') !== null) {
-                    geo.getPoint($(this).attr('data-address'), function(point) {
-                        if(point) {
+            $('.uptown').each(function () {
+                if ($(this).attr('data-address') !== null) {
+                    geo.getPoint($(this).attr('data-address'), function (point) {
+                        if (point) {
                             map.addOverlay(new BMap.Marker(point));
                         } else {
                             alert("您选择地址没有解析到结果!");
                         }
                     }, "本溪市");
                 }
+            });
+            $('.employee').each(function () {
+                var pt = new BMap.Point($(this).attr('data-longtitude'), $(this).attr('data-latitude'));
+                var myIcon = new BMap.Icon("/sbjx/resources/images/员工标签.png", new BMap.Size(64, 32));
+                var marker2 = new BMap.Marker(pt, {icon: myIcon});
+                map.addOverlay(marker2);
+
+                var label = new BMap.Label($(this).attr('data-name'), {position: pt,offset:new BMap.Size(-10, -15)});
+                label.setStyle({
+                    color: "white",
+                    fontSize: "12px",
+                    height: "20px",
+                    lineHeight: "20px",
+                    fontFamily: "微软雅黑",
+                    background:"none",
+                    border:"none"
+                });
+                map.addOverlay(label);
             });
         });
     </script>
@@ -44,5 +62,11 @@
              data-address="#{uptown.address}"
              data-longtitude="#{uptown.longtitude}"
              data-latitude="#{uptown.latitude}"/>
+    </ui:repeat>
+    <ui:repeat value="#{DiTuController.viewModel.employeeList}" var="employee">
+        <div class="employee" 
+             data-longtitude="#{employee.longtitude}"
+             data-latitude="#{employee.latitude}"
+             data-name="#{employee.name}"/>
     </ui:repeat>
 </ui:composition>

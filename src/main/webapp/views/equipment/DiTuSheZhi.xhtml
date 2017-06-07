@@ -10,11 +10,11 @@
         $(document).ready(function () {
 
         });
-        function showMap() {
+        function showMapToSetCenterOfMap() {
             var map = new BMap.Map("Map");
-            map.centerAndZoom(new BMap.Point(parseFloat($('.XCoord').val()), 
-                parseFloat($('.YCoord').val())), 
-                parseInt($('.Zoom').val()));
+            map.centerAndZoom(new BMap.Point(parseFloat($('.XCoord').val()),
+                    parseFloat($('.YCoord').val())),
+                    parseInt($('.Zoom').val()));
 
             map.addControl(new BMap.MapTypeControl());
             //map.setCurrentCity("北京");
@@ -37,15 +37,32 @@
             });
         }
         var blockAddingMap;
-        function showBlockAddingMap() {
+        function showMapToAddBlock() {
             blockAddingMap = new BMap.Map("BlockAddingMap");
-            blockAddingMap.centerAndZoom(new BMap.Point(parseFloat($('.XCoord').val()), 
-                parseFloat($('.YCoord').val())), 
-                parseInt($('.Zoom').val()));
+            blockAddingMap.centerAndZoom(new BMap.Point(parseFloat($('.XCoord').val()),
+                    parseFloat($('.YCoord').val())),
+                    parseInt($('.Zoom').val()));
 
             blockAddingMap.addControl(new BMap.MapTypeControl());
             //map.setCurrentCity("北京");
             blockAddingMap.enableScrollWheelZoom(true);
+            var geo = new BMap.Geocoder();
+            $('.uptown').each(function() {
+                var longtitude = $(this).attr('data-longtitude');
+                var latitude = $(this).attr('data-latitude');
+                if(longtitude !== null) {
+                    var point = new BMap.Point(longtitude, latitude);
+                    blockAddingMap.addOverlay(new BMap.Marker(point));
+                } else if($(this).attr('data-address') !== null) {
+                    geo.getPoint($(this).attr('data-address'), function(point) {
+                        if(point) {
+                            blockAddingMap.addOverlay(new BMap.Marker(point));
+                        } else {
+                            alert("您选择地址没有解析到结果!");
+                        }
+                    }, "本溪市");
+                }
+            });
         }
         function onAddingBlockButtonClick() {
             blockAddingMap.addEventListener("click", addBlock);
@@ -66,48 +83,67 @@
         <p:menuitem value="设置地图中心位置" onclick="PF('MapCenterSettingDialog').show();"></p:menuitem>
         <p:menuitem value="添加小区" onclick="PF('BlockAddingDialog').show();"></p:menuitem>
     </p:megaMenu>
+
+    <!--地图中心点设置对话框-->
     <p:dialog widgetVar="MapCenterSettingDialog" 
               id="MapCenterSettingDialog"
               modal="true" 
               width="512px" 
               height="512px" 
               header="设置地图中心位置" 
-              onShow="showMap();">
+              onShow="showMapToSetCenterOfMap();">
         <div id="Map" style="width:100%;height:70%;margin:0;"></div>
         <p:panelGrid columns="2" layout="grid">
             <p:outputLabel value="经度："></p:outputLabel>
             <p:inputText class="XCoord" 
                          readonly="false" 
                          value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.initialLongtitude}"></p:inputText>
-            
+
             <p:outputLabel value="纬度："></p:outputLabel>
             <p:inputText class="YCoord" 
                          readonly="false"
                          value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.initialLatitude}"></p:inputText>
-            
+
             <p:outputLabel value="缩放："></p:outputLabel>
             <p:inputText class="Zoom" 
                          readonly="false"
                          value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.zoom}"></p:inputText>
-            
+
             <p:commandButton value="确定" process="MapCenterSettingDialog"
                              actionListener="#{DiTuSheZhiController.onOKButtonClickInMapCenterSettingDialog}"
                              oncomplete="PF('MapCenterSettingDialog').hide();"
                              update="frmMain:MapCenterSettingDialog"></p:commandButton>
         </p:panelGrid>
     </p:dialog>
+
+    <!--小区添加对话框-->
     <p:dialog widgetVar="BlockAddingDialog" 
               id="BlockAddingDialog"
               modal="true" 
               width="1024px" 
               height="512px" 
               header="添加小区中心点" 
-              onShow="showBlockAddingMap();">
+              onShow="showMapToAddBlock();">
         <div id="BlockAddingMap" style="width:100%;height:90%;"></div>
         <p:commandButton onclick="onAddingBlockButtonClick();" value="添加小区中心点"></p:commandButton>
         <p:commandButton onclick="onMovingBlockButtonClick();" value="移动小区中心点"></p:commandButton>
         <p:commandButton onclick="onRemovingBlockButtonClick();" value="删除小区中心点"></p:commandButton>
+        <ui:repeat value="#{DiTuSheZhiController.viewModel.mapSettingList}" var="mapSetting">
+            <div class="mapSetting" 
+                 data-initialLongtitude="#{mapSetting.initialLongtitude}"
+                 data-initialLatitude="#{mapSetting.initialLatitude}"
+                 data-zoom="#{mapSetting.zoom}"></div>
+        </ui:repeat>
+        <ui:repeat value="#{DiTuSheZhiController.viewModel.uptownList}" var="uptown">
+            <div class="uptown" 
+                 data-name="#{uptown.name}" 
+                 data-address="#{uptown.address}"
+                 data-longtitude="#{uptown.longtitude}"
+                 data-latitude="#{uptown.latitude}"/>
+        </ui:repeat>
     </p:dialog>
+
+    <!--小区添加编辑对话框-->
     <p:dialog widgetVar="BlockAddingEditDialog"
               width="512px" 
               height="512px"
@@ -116,18 +152,18 @@
         <p:panelGrid columns="2" layout="grid">
             <p:outputLabel value="小区名称："></p:outputLabel>
             <p:inputText value="#{DiTuSheZhiController.viewModel.uptownInEdit.name}"></p:inputText>
-            
+
             <p:outputLabel value="小区地址："></p:outputLabel>
             <p:inputText value="#{DiTuSheZhiController.viewModel.uptownInEdit.address}"></p:inputText>
-            
+
             <p:outputLabel value="经度："></p:outputLabel>
             <p:inputText class="LongtitudeInBlockAddingEditDialog" 
                          value="#{DiTuSheZhiController.viewModel.uptownInEdit.longtitude}"></p:inputText>
-            
+
             <p:outputLabel value="纬度："></p:outputLabel>
             <p:inputText class="LatitudeInBlockAddingEditDialog" 
                          value="#{DiTuSheZhiController.viewModel.uptownInEdit.latitude}"></p:inputText>
-            
+
             <p:commandButton value="确定" actionListener="#{DiTuSheZhiController.onOKButtonClickInBlockAddingEditDialog}"></p:commandButton>
         </p:panelGrid>
     </p:dialog>
