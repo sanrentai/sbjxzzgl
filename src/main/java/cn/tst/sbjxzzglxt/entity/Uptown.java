@@ -50,6 +50,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Uptown.findByLongtitude", query = "SELECT u FROM Uptown u WHERE u.longtitude = :longtitude AND u.delFlg = :delFlg")
     , @NamedQuery(name = "Uptown.findByLatitude", query = "SELECT u FROM Uptown u WHERE u.latitude = :latitude AND u.delFlg = :delFlg")})
 public class Uptown extends BaseEntity implements Serializable {
+    @Column(name = "countOfListToAdd")
+    private Integer countOfListToAdd;
+    @Column(name = "countOfListToReply")
+    private Integer countOfListToReply;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -240,5 +244,21 @@ public class Uptown extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.Uptown[ uptownId=" + uptownId + " ]";
+    }
+
+    public Integer getCountOfListToAdd() {
+        return countOfListToAdd;
+    }
+
+    public void setCountOfListToAdd(Integer countOfListToAdd) {
+        this.countOfListToAdd = countOfListToAdd;
+    }
+
+    public Integer getCountOfListToReply() {
+        return countOfListToReply;
+    }
+
+    public void setCountOfListToReply(Integer countOfListToReply) {
+        this.countOfListToReply = countOfListToReply;
     }
 }

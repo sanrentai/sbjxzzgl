@@ -42,6 +42,15 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Employee.findByDelFlg", query = "SELECT e FROM Employee e WHERE e.delFlg = :delFlg")
     , @NamedQuery(name = "Employee.findByVersion", query = "SELECT e FROM Employee e WHERE e.version = :version AND e.delFlg = :delFlg")})
 public class Employee extends BaseEntity implements Serializable {
+    @Column(name = "countOfWorkList")
+    private Integer countOfWorkList;
+    @Size(max = 16)
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 32)
+    @Column(name = "email")
+    private String email;
     @Size(max = 32)
     @Column(name = "name")
     private String name;
@@ -129,5 +138,29 @@ public class Employee extends BaseEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getCountOfWorkList() {
+        return countOfWorkList;
+    }
+
+    public void setCountOfWorkList(Integer countOfWorkList) {
+        this.countOfWorkList = countOfWorkList;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

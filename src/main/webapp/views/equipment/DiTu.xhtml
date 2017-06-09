@@ -9,47 +9,122 @@
     <script>
         $(document).ready(function () {
             // 百度地图API功能
-            var map = new BMap.Map("allmap");    // 创建Map实例
+            var map = new BMap.Map("Map");    // 创建Map实例
             var mapSetting = $('.mapSetting').first();
             map.centerAndZoom(new BMap.Point(mapSetting.attr('data-initialLongtitude'), mapSetting.attr('data-initialLatitude')),
-                    mapSetting.attr('data-zoom'));  // 初始化地图,设置中心点坐标和地图级别
-            map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-            map.setCurrentCity("沈阳");          // 设置地图显示的城市 此项是必须设置的
-            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                    mapSetting.attr('data-zoom'));
+            map.addControl(new BMap.MapTypeControl());
+            map.enableScrollWheelZoom(false);
+
+            var billboard;
 
             var geo = new BMap.Geocoder();
             $('.uptown').each(function () {
                 if ($(this).attr('data-address') !== null) {
+                    var countOfListToReply = $(this).attr('data-countOfListToReply');
                     geo.getPoint($(this).attr('data-address'), function (point) {
                         if (point) {
-                            map.addOverlay(new BMap.Marker(point));
+                            var marker = new BMap.Marker(point);
+                            map.addOverlay(marker);
+                            var label = new BMap.Label(countOfListToReply, {position: point, offset: new BMap.Size(-5, -25)});
+                            label.setStyle({
+                                color: "white",
+                                fontSize: "12px",
+                                height: "20px",
+                                lineHeight: "20px",
+                                fontFamily: "微软雅黑",
+                                background: "none",
+                                border: "none"
+                            });
+                            map.addOverlay(label);
+                            marker.addEventListener('click', function (event) {
+                                if (billboard !== null) {
+                                    map.removeOverlay(billboard);
+                                    billboard = null;
+                                }
+                                var icon = new BMap.Icon("/sbjx/resources/images/广告版.png", new BMap.Size(175, 137));
+                                billboard = new BMap.Marker(event.point, {icon: icon, offset: new BMap.Size(0, -60)});
+                                map.addOverlay(billboard);
+                                console.log(event);
+                                return true;
+                            });
                         } else {
                             alert("您选择地址没有解析到结果!");
                         }
-                    }, "本溪市");
+                    });
                 }
             });
             $('.employee').each(function () {
                 var pt = new BMap.Point($(this).attr('data-longtitude'), $(this).attr('data-latitude'));
                 var myIcon = new BMap.Icon("/sbjx/resources/images/员工标签.png", new BMap.Size(64, 32));
-                var marker2 = new BMap.Marker(pt, {icon: myIcon});
-                map.addOverlay(marker2);
+                var marker = new BMap.Marker(pt, {icon: myIcon});
+                map.addOverlay(marker);
 
-                var label = new BMap.Label($(this).attr('data-name'), {position: pt,offset:new BMap.Size(-10, -15)});
+                var label = new BMap.Label($(this).attr('data-name'), {position: pt, offset: new BMap.Size(-10, -15)});
                 label.setStyle({
                     color: "white",
                     fontSize: "12px",
                     height: "20px",
                     lineHeight: "20px",
                     fontFamily: "微软雅黑",
-                    background:"none",
-                    border:"none"
+                    background: "none",
+                    border: "none"
                 });
                 map.addOverlay(label);
             });
         });
     </script>
-    <div id="allmap" style="width: 100%;height: 100%;overflow: hidden;margin:0;font-family:'微软雅黑';"></div>
+    <p:layout style="min-width:400px;min-height:100%;height:100%;">
+        <p:layoutUnit position="west" resizable="false" size="256">
+            <p:scrollPanel style="width:87%;height:30%;">
+                <p:commandLink>
+                    <h:outputText value="新开里8楼2单元823室"/>
+                </p:commandLink><br/>
+                <p:commandLink>
+                    <h:outputText value="新开里9楼2单元923室"/>
+                </p:commandLink><br/>
+                <p:commandLink>
+                    <h:outputText value="新开里10楼2单元1023室"/>
+                </p:commandLink><br/>
+            </p:scrollPanel>
+            <p:scrollPanel style="width:87%;height:30%;">
+                <p:dataTable value="#{DiTuController.viewModel.uptownList}" var="uptown">
+                    <p:column headerText="小区名">
+                        <h:outputText value="#{uptown.name}"/>
+                    </p:column>
+                    <p:column headerText="新增">
+                        <h:outputText value="#{uptown.countOfListToAdd}"/>
+                    </p:column>
+                    <p:column headerText="待回复">
+                        <h:outputText value="#{uptown.countOfListToReply}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:scrollPanel>
+            <p:scrollPanel style="width:87%;height:30%;">
+                <p:dataTable value="#{DiTuController.viewModel.employeeList}" var="employee">
+                    <p:column headerText="小区名">
+                        <h:outputText value="#{employee.name}"/>
+                    </p:column>
+                    <p:column headerText="工单">
+                        <h:outputText value="#{employee.countOfWorkList}"/>
+                    </p:column>
+                    <p:column headerText="电话">
+                        <p:commandLink process="@this">
+                            <i class="fa fa-phone Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="电子邮件">
+                        <p:commandLink process="@this">
+                            <i class="fa fa-envelope Fs18 Blue"></i>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </p:scrollPanel>
+        </p:layoutUnit>
+        <p:layoutUnit position="center">
+            <div id="Map" style="width: 100%;height: 100%;overflow: hidden;margin:0;font-family:'微软雅黑';"></div>
+        </p:layoutUnit>
+    </p:layout>
     <ui:repeat value="#{DiTuController.viewModel.mapSettingList}" var="mapSetting">
         <div class="mapSetting" 
              data-initialLongtitude="#{mapSetting.initialLongtitude}"
@@ -58,6 +133,7 @@
     </ui:repeat>
     <ui:repeat value="#{DiTuController.viewModel.uptownList}" var="uptown">
         <div class="uptown" 
+             data-countOfListToReply="#{uptown.countOfListToReply}"
              data-name="#{uptown.name}" 
              data-address="#{uptown.address}"
              data-longtitude="#{uptown.longtitude}"

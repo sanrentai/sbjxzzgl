@@ -8,6 +8,7 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 import cn.tst.sbjxzzglxt.entity.Employee;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
 import cn.tst.sbjxzzglxt.entity.Uptown;
+import cn.tst.sbjxzzglxt.entity.SomeClass1;
 import java.util.List;
 
 /**
@@ -20,6 +21,16 @@ public class ViewModel {
     private List<MapSetting> mapSettingList;
     
     private List<Employee> employeeList;
+    
+    private List<SomeClass1> someClass1List;
+
+    public List<SomeClass1> getSomeClass1List() {
+        return someClass1List;
+    }
+
+    public void setSomeClass1List(List<SomeClass1> someClass1List) {
+        this.someClass1List = someClass1List;
+    }
 
     public List<Employee> getEmployeeList() {
         return employeeList;

@@ -6,9 +6,12 @@
 package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
+import cn.tst.sbjxzzglxt.entity.SomeClass1;
 import cn.tst.sbjxzzglxt.facade.EmployeeFacade;
 import cn.tst.sbjxzzglxt.facade.MapSettingFacade;
 import cn.tst.sbjxzzglxt.facade.UptownFacade;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -32,5 +35,12 @@ public class DiTuBizLogic extends BaseBizLogic implements BizLogic {
         viewModel.setUptownList(uptownFacade.findAll());
         viewModel.setMapSettingList(mapSettingFacade.findAll());
         viewModel.setEmployeeList(employeeFacade.findAll());
+        
+        List<SomeClass1> someClass1List = new ArrayList<>();
+        someClass1List.add(new SomeClass1("演示小区1", 1, 1));
+        someClass1List.add(new SomeClass1("演示小区2", 1, 1));
+        someClass1List.add(new SomeClass1("演示小区3", 1, 1));
+        someClass1List.add(new SomeClass1("演示小区4", 1, 1));
+        viewModel.setSomeClass1List(someClass1List);
     }
 }
