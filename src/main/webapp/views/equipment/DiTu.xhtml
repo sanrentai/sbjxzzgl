@@ -16,15 +16,16 @@
             map.addControl(new BMap.MapTypeControl());
             map.enableScrollWheelZoom(false);
 
-            var billboard;
-
             var geo = new BMap.Geocoder();
             $('.uptown').each(function () {
                 if ($(this).attr('data-address') !== null) {
                     var countOfListToReply = $(this).attr('data-countOfListToReply');
+                    var countOfListToAdd = $(this).attr('data-countOfListToAdd')
+                    var blockName = $(this).attr('data-name');
                     geo.getPoint($(this).attr('data-address'), function (point) {
                         if (point) {
                             var marker = new BMap.Marker(point);
+                            marker.blockName = blockName;
                             map.addOverlay(marker);
                             var label = new BMap.Label(countOfListToReply, {position: point, offset: new BMap.Size(-5, -25)});
                             label.setStyle({
@@ -38,13 +39,14 @@
                             });
                             map.addOverlay(label);
                             marker.addEventListener('click', function (event) {
-                                if (billboard !== null) {
-                                    map.removeOverlay(billboard);
-                                    billboard = null;
-                                }
-                                var icon = new BMap.Icon("/sbjx/resources/images/广告版.png", new BMap.Size(175, 137));
-                                billboard = new BMap.Marker(event.point, {icon: icon, offset: new BMap.Size(0, -60)});
-                                map.addOverlay(billboard);
+                                var content = "<div>" + this.blockName + "</div>" + 
+                                        "<div>待回复：" + countOfListToReply + "（" + countOfListToAdd + "新）超时：0</div>" + 
+                                        "<div>收费类：2</div>" + 
+                                        "<div>外网类：3</div>" +
+                                        "<div>监察类：1</div>" +
+                                        "<div>其它类：0</div>";
+                                var infoWindow = new BMap.InfoWindow(content);
+                                this.openInfoWindow(infoWindow);
                                 console.log(event);
                                 return true;
                             });
@@ -100,9 +102,9 @@
                     </p:column>
                 </p:dataTable>
             </p:scrollPanel>
-            <p:scrollPanel style="width:87%;height:30%;">
+            <p:scrollPanel style="width:87%;height:35%;">
                 <p:dataTable value="#{DiTuController.viewModel.employeeList}" var="employee">
-                    <p:column headerText="小区名">
+                    <p:column headerText="维修工">
                         <h:outputText value="#{employee.name}"/>
                     </p:column>
                     <p:column headerText="工单">
@@ -111,11 +113,6 @@
                     <p:column headerText="电话">
                         <p:commandLink process="@this">
                             <i class="fa fa-phone Fs18 Blue"></i>
-                        </p:commandLink>
-                    </p:column>
-                    <p:column headerText="电子邮件">
-                        <p:commandLink process="@this">
-                            <i class="fa fa-envelope Fs18 Blue"></i>
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
@@ -134,6 +131,7 @@
     <ui:repeat value="#{DiTuController.viewModel.uptownList}" var="uptown">
         <div class="uptown" 
              data-countOfListToReply="#{uptown.countOfListToReply}"
+             data-countOfListToAdd="#{uptown.countOfListToAdd}"
              data-name="#{uptown.name}" 
              data-address="#{uptown.address}"
              data-longtitude="#{uptown.longtitude}"
