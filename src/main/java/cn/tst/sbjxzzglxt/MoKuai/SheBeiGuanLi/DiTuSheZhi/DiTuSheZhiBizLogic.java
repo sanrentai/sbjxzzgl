@@ -60,6 +60,7 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
         } else {
             viewModel.setMapSettingInEdit(mapSettingInEditList.get(0));
         }
+        viewModel.setUptownList(uptownFacade.findAll());
         Uptown uptown = new Uptown();
         uptown.setUptownId("");
         uptown.setAppendix("");

@@ -6,10 +6,66 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
     <script src="/sbjx/resources/js/BaiDuMap.js"></script>
-    <script>
+    <scrpit src="/sbjx/views/equipment/DiTu/MapCenterSetting.js"></scrpit>
+    <p:menubar>
+        <p:submenu label="地图设置" icon="fa fa-paw">
+            <p:menuitem value="设置地图中心位置" onclick="PF('MapCenterSettingDialog').show();"></p:menuitem>
+        </p:submenu>
+        <p:submenu label="小区设置" icon="fa fa-map-marker">
+            <p:menuitem value="添加小区坐标位置" onclick=""></p:menuitem>
+        </p:submenu>
+    </p:menubar>
+    <!--地图中心点设置对话框-->
+    <p:dialog widgetVar="MapCenterSettingDialog" 
+              id="MapCenterSettingDialog"
+              modal="true" 
+              width="512px" 
+              height="512px" 
+              header="设置地图中心位置" 
+              onShow="showMapToSetCenterOfMap();">
+        <div id="Map" style="width:100%;height:70%;margin:0;"></div>
+        <p:panelGrid columns="2" layout="grid">
+            <p:outputLabel value="经度："></p:outputLabel>
+            <p:inputText class="XCoord" 
+                         readonly="false" 
+                         value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.initialLongtitude}"></p:inputText>
+
+            <p:outputLabel value="纬度："></p:outputLabel>
+            <p:inputText class="YCoord" 
+                         readonly="false"
+                         value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.initialLatitude}"></p:inputText>
+
+            <p:outputLabel value="缩放："></p:outputLabel>
+            <p:inputText class="Zoom" 
+                         readonly="false"
+                         value="#{DiTuSheZhiController.viewModel.mapSettingInEdit.zoom}"></p:inputText>
+
+            <p:commandButton value="确定" process="MapCenterSettingDialog"
+                             actionListener="#{DiTuSheZhiController.onOKButtonClickInMapCenterSettingDialog}"
+                             oncomplete="PF('MapCenterSettingDialog').hide();"
+                             update="frmMain:MapCenterSettingDialog"></p:commandButton>
+        </p:panelGrid>
+    </p:dialog>
+    <!--script charset="utf-8" src="/sbjx/resources/js/QQMap.js"></script-->
+    <!--script charset="utf-8" src="/sbjx/resources/js/GaoDeMap.js"></script-->
+    <!--script>
+        /*
+         window.onload = function () {
+         //初始化地图函数  自定义函数名init
+         function init() {
+         //定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
+         var map = new qq.maps.Map(document.getElementById("Map"), {
+         center: new qq.maps.LatLng(39.916527, 116.397128), // 地图的中心地理坐标。
+         zoom: 8                                                 // 地图的中心地理坐标。
+         });
+         }
+         //调用初始化函数地图
+         init();
+         }*/
+
         $(document).ready(function () {
             // 百度地图API功能
-            var map = new BMap.Map("Map");    // 创建Map实例
+            var map = new BMap.Map("Map");
             var mapSetting = $('.mapSetting').first();
             map.centerAndZoom(new BMap.Point(mapSetting.attr('data-initialLongtitude'), mapSetting.attr('data-initialLatitude')),
                     mapSetting.attr('data-zoom'));
@@ -39,9 +95,9 @@
                             });
                             map.addOverlay(label);
                             marker.addEventListener('click', function (event) {
-                                var content = "<div>" + this.blockName + "</div>" + 
-                                        "<div>待回复：" + countOfListToReply + "（" + countOfListToAdd + "新）超时：0</div>" + 
-                                        "<div>收费类：2</div>" + 
+                                var content = "<div>" + this.blockName + "</div>" +
+                                        "<div>待回复：" + countOfListToReply + "（" + countOfListToAdd + "新）超时：0</div>" +
+                                        "<div>收费类：2</div>" +
                                         "<div>外网类：3</div>" +
                                         "<div>监察类：1</div>" +
                                         "<div>其它类：0</div>";
@@ -58,7 +114,7 @@
             });
             $('.employee').each(function () {
                 var pt = new BMap.Point($(this).attr('data-longtitude'), $(this).attr('data-latitude'));
-                var myIcon = new BMap.Icon("/sbjx/resources/images/员工标签.png", new BMap.Size(64, 32));
+                var myIcon = new BMap.Icon("/sbjx/resources/images/员工标签.png", new BMap.Size(64, 36));
                 var marker = new BMap.Marker(pt, {icon: myIcon});
                 map.addOverlay(marker);
 
@@ -75,8 +131,8 @@
                 map.addOverlay(label);
             });
         });
-    </script>
-    <p:layout style="min-width:400px;min-height:100%;height:100%;">
+    </script-->
+    <!--p:layout style="min-width:400px;min-height:100%;height:100%;">
         <p:layoutUnit position="west" resizable="false" size="256">
             <p:scrollPanel style="width:87%;height:30%;">
                 <p:commandLink>
@@ -142,5 +198,5 @@
              data-longtitude="#{employee.longtitude}"
              data-latitude="#{employee.latitude}"
              data-name="#{employee.name}"/>
-    </ui:repeat>
+    </ui:repeat-->
 </ui:composition>

@@ -10,32 +10,7 @@
         $(document).ready(function () {
 
         });
-        function showMapToSetCenterOfMap() {
-            var map = new BMap.Map("Map");
-            map.centerAndZoom(new BMap.Point(parseFloat($('.XCoord').val()),
-                    parseFloat($('.YCoord').val())),
-                    parseInt($('.Zoom').val()));
-
-            map.addControl(new BMap.MapTypeControl());
-            //map.setCurrentCity("北京");
-            map.enableScrollWheelZoom(true);
-
-            var marker = new BMap.Marker(map.getBounds().getCenter());
-            map.addOverlay(marker);
-
-            map.addEventListener("moving", function () {
-                marker.setPosition(map.getCenter());
-                $('.XCoord').val(map.getCenter().lng);
-                $('.YCoord').val(map.getCenter().lat);
-                $('.Zoom').val(map.getZoom());
-            });
-            map.addEventListener("zoomend", function () {
-                marker.setPosition(map.getCenter());
-                $('.XCoord').val(map.getCenter().lng);
-                $('.YCoord').val(map.getCenter().lat);
-                $('.Zoom').val(map.getZoom());
-            });
-        }
+        
         var blockAddingMap;
         function showMapToAddBlock() {
             blockAddingMap = new BMap.Map("BlockAddingMap");
@@ -47,15 +22,15 @@
             //map.setCurrentCity("北京");
             blockAddingMap.enableScrollWheelZoom(true);
             var geo = new BMap.Geocoder();
-            $('.uptown').each(function() {
+            $('.uptown').each(function () {
                 var longtitude = $(this).attr('data-longtitude');
                 var latitude = $(this).attr('data-latitude');
-                if(longtitude !== null) {
+                if (longtitude !== undefined) {
                     var point = new BMap.Point(longtitude, latitude);
                     blockAddingMap.addOverlay(new BMap.Marker(point));
-                } else if($(this).attr('data-address') !== null) {
-                    geo.getPoint($(this).attr('data-address'), function(point) {
-                        if(point) {
+                } else if ($(this).attr('data-address') !== undefined) {
+                    geo.getPoint($(this).attr('data-address'), function (point) {
+                        if (point) {
                             blockAddingMap.addOverlay(new BMap.Marker(point));
                         } else {
                             alert("您选择地址没有解析到结果!");
@@ -81,7 +56,7 @@
     </script>
     <p:megaMenu orientation="vertical">
         <p:menuitem value="设置地图中心位置" onclick="PF('MapCenterSettingDialog').show();"></p:menuitem>
-        <p:menuitem value="添加小区" onclick="PF('BlockAddingDialog').show();"></p:menuitem>
+        <p:menuitem value="添加小区坐标位置" onclick="PF('BlockAddingDialog').show();"></p:menuitem>
     </p:megaMenu>
 
     <!--地图中心点设置对话框-->
