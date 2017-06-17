@@ -6,6 +6,7 @@
 package cn.tst.sbjxzzglxt.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -50,6 +51,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Uptown.findByLongtitude", query = "SELECT u FROM Uptown u WHERE u.longtitude = :longtitude AND u.delFlg = :delFlg")
     , @NamedQuery(name = "Uptown.findByLatitude", query = "SELECT u FROM Uptown u WHERE u.latitude = :latitude AND u.delFlg = :delFlg")})
 public class Uptown extends BaseEntity implements Serializable {
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "longtitude")
+    private Double longtitude;
+    @Column(name = "latitude")
+    private Double latitude;
     @Column(name = "countOfListToAdd")
     private Integer countOfListToAdd;
     @Column(name = "countOfListToReply")
@@ -96,11 +102,6 @@ public class Uptown extends BaseEntity implements Serializable {
     private Character ifXz;
     @Column(name = "if_cqlw")
     private Character ifCqlw;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "longtitude")
-    private Double longtitude;
-    @Column(name = "latitude")
-    private Double latitude;
 
     public Uptown() {
     }
@@ -205,22 +206,6 @@ public class Uptown extends BaseEntity implements Serializable {
         this.ifCqlw = ifCqlw;
     }
 
-    public Double getLongtitude() {
-        return longtitude;
-    }
-
-    public void setLongtitude(Double longtitude) {
-        this.longtitude = longtitude;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -260,5 +245,21 @@ public class Uptown extends BaseEntity implements Serializable {
 
     public void setCountOfListToReply(Integer countOfListToReply) {
         this.countOfListToReply = countOfListToReply;
+    }
+
+    public Double getLongtitude() {
+        return longtitude;
+    }
+
+    public void setLongtitude(Double longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 }

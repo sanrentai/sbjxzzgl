@@ -7,6 +7,7 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.Uptown;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -46,5 +47,17 @@ public class Controller extends BusinessBaseController {
 
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
+    }
+    
+    public void onOKButtonClickInMapCenterSettingDialog() {
+        bizLogic.onOKButtonClickInMapCenterSettingDialog(viewModel);
+    }
+    
+    public void onBlockButtonClickInBlockListDialog(Uptown uptown) {
+        bizLogic.onBlockButtonClickInBlockListDialog(viewModel, uptown);
+    }
+    
+    public void onOKButtonClickInBlockCoordAddingEditDialog() {
+        bizLogic.onOKButtonClickInBlockCoordAddingEditDialog(viewModel);
     }
 }

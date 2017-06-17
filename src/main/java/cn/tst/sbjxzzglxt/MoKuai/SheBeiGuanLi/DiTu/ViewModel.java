@@ -22,14 +22,24 @@ public class ViewModel {
     
     private List<Employee> employeeList;
     
-    private List<SomeClass1> someClass1List;
+    private MapSetting mapSettingInEdit;
+    
+    private Uptown uptownInEdit;
 
-    public List<SomeClass1> getSomeClass1List() {
-        return someClass1List;
+    public Uptown getUptownInEdit() {
+        return uptownInEdit;
     }
 
-    public void setSomeClass1List(List<SomeClass1> someClass1List) {
-        this.someClass1List = someClass1List;
+    public void setUptownInEdit(Uptown uptownInEdit) {
+        this.uptownInEdit = uptownInEdit;
+    }
+
+    public MapSetting getMapSettingInEdit() {
+        return mapSettingInEdit;
+    }
+
+    public void setMapSettingInEdit(MapSetting mapSettingInEdit) {
+        this.mapSettingInEdit = mapSettingInEdit;
     }
 
     public List<Employee> getEmployeeList() {
