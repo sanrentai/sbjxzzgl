@@ -8,7 +8,6 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 import cn.tst.sbjxzzglxt.entity.Employee;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
 import cn.tst.sbjxzzglxt.entity.Uptown;
-import cn.tst.sbjxzzglxt.entity.SomeClass1;
 import java.util.List;
 
 /**
@@ -26,6 +25,14 @@ public class ViewModel {
     
     private Uptown uptownInEdit;
 
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
+    }
+
     public Uptown getUptownInEdit() {
         return uptownInEdit;
     }
@@ -40,14 +47,6 @@ public class ViewModel {
 
     public void setMapSettingInEdit(MapSetting mapSettingInEdit) {
         this.mapSettingInEdit = mapSettingInEdit;
-    }
-
-    public List<Employee> getEmployeeList() {
-        return employeeList;
-    }
-
-    public void setEmployeeList(List<Employee> employeeList) {
-        this.employeeList = employeeList;
     }
 
     public List<MapSetting> getMapSettingList() {

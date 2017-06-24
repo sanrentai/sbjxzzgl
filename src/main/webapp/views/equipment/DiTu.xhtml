@@ -8,16 +8,16 @@
     <script src="/sbjx/resources/js/BaiDuMap.js"></script>
     <script src="/sbjx/resources/js/equipment/DiTu/MapCenterSetting.js"></script>
     <script src="/sbjx/resources/js/equipment/DiTu/BlockCoordAdding.js"></script>
-    <p:menubar>
+    <!--p:menubar>
         <p:submenu label="地图设置" icon="fa fa-paw">
             <p:menuitem value="设置地图中心位置" onclick="PF('MapCenterSettingDialog').show();"></p:menuitem>
         </p:submenu>
         <p:submenu label="小区设置" icon="fa fa-map-marker">
             <p:menuitem value="添加小区坐标位置" onclick="PF('BlockListDialog').show();"></p:menuitem>
         </p:submenu>
-    </p:menubar>
+    </p:menubar-->
     <!--地图中心点设置对话框-->
-    <p:dialog widgetVar="MapCenterSettingDialog" 
+    <!--p:dialog widgetVar="MapCenterSettingDialog" 
               id="MapCenterSettingDialog"
               modal="true" 
               width="512px" 
@@ -46,9 +46,9 @@
                              oncomplete="PF('MapCenterSettingDialog').hide();"
                              update="frmMain:MapCenterSettingDialog"></p:commandButton>
         </p:panelGrid>
-    </p:dialog>
+    </p:dialog-->
     <!--小区列表对话框-->
-    <p:dialog widgetVar="BlockListDialog"
+    <!--p:dialog widgetVar="BlockListDialog"
               id="BlockListDialog"
               modal="true"
               width="1024px"
@@ -66,9 +66,9 @@
                 <h:outputText value="#{empty uptown.longtitude or empty uptown.latitude ? '否' : '是'}"></h:outputText>
             </p:column>
         </p:dataTable>
-    </p:dialog>
+    </p:dialog-->
     <!--坐标添加对话框-->
-    <p:dialog widgetVar="BlockCoordAddingDialog"
+    <!--p:dialog widgetVar="BlockCoordAddingDialog"
               id="BlockCoordAddingDialog"
               modal="true"
               width="1024px"
@@ -77,9 +77,9 @@
         <div id="MapToAddCoord" style="width:100%;height:90%;margin:0;"></div>
         <p:commandButton value="确定"/>
         <p:commandButton value="取消"/>
-    </p:dialog>
+    </p:dialog-->
     <!--小区添加编辑对话框-->
-    <p:dialog widgetVar="BlockCoordAddingEditDialog" id="BlockCoordAddingEditDialog"
+    <!--p:dialog widgetVar="BlockCoordAddingEditDialog" id="BlockCoordAddingEditDialog"
               width="512px" 
               height="512px"
               modal="true" 
@@ -98,8 +98,8 @@
 
             <p:commandButton value="确定" actionListener="#{DiTuController.onOKButtonClickInBlockCoordAddingEditDialog}"></p:commandButton>
         </p:panelGrid>
-    </p:dialog>
-    <ui:repeat value="#{DiTuController.viewModel.mapSettingList}" var="mapSetting">
+    </p:dialog-->
+    <!--ui:repeat value="#{DiTuController.viewModel.mapSettingList}" var="mapSetting">
         <div class="mapSetting" 
              data-initialLongtitude="#{mapSetting.initialLongtitude}"
              data-initialLatitude="#{mapSetting.initialLatitude}"
@@ -111,10 +111,10 @@
              data-address="#{uptown.address}"
              data-longtitude="#{uptown.longtitude}"
              data-latitude="#{uptown.latitude}"/>
-    </ui:repeat>
+    </ui:repeat-->
     <!--script charset="utf-8" src="/sbjx/resources/js/QQMap.js"></script-->
     <!--script charset="utf-8" src="/sbjx/resources/js/GaoDeMap.js"></script-->
-    <!--script>
+    <script>
         /*
          window.onload = function () {
          //初始化地图函数  自定义函数名init
@@ -197,10 +197,11 @@
                 map.addOverlay(label);
             });
         });
-    </script-->
+    </script>
     <!--p:layout style="min-width:400px;min-height:100%;height:100%;">
-        <p:layoutUnit position="west" resizable="false" size="256">
-            <p:scrollPanel style="width:87%;height:30%;">
+        <p:layoutUnit position="west" resizable="false" size="256"-->
+    <div style="width:256px;border-right:solid gray thin;height:100%;float:left;">
+        <p:scrollPanel style="width:87%;height:30%;">
                 <p:commandLink>
                     <h:outputText value="新开里8楼2单元823室"/>
                 </p:commandLink><br/>
@@ -239,11 +240,15 @@
                     </p:column>
                 </p:dataTable>
             </p:scrollPanel>
-        </p:layoutUnit>
-        <p:layoutUnit position="center">
-            <div id="Map" style="width: 100%;height: 100%;overflow: hidden;margin:0;font-family:'微软雅黑';"></div>
-        </p:layoutUnit>
-    </p:layout>
+    </div>
+    <div style="float:left;width:512px;height:100%;">
+        <div id="Map" style="width:100%;height:100%;overflow:hidden;margin:0;font-family:'微软雅黑';"></div>
+    </div>
+        <!--/p:layoutUnit>
+        <p:layoutUnit position="center"-->
+            
+        <!--/p:layoutUnit>
+    </p:layout-->
     <ui:repeat value="#{DiTuController.viewModel.mapSettingList}" var="mapSetting">
         <div class="mapSetting" 
              data-initialLongtitude="#{mapSetting.initialLongtitude}"
@@ -264,5 +269,5 @@
              data-longtitude="#{employee.longtitude}"
              data-latitude="#{employee.latitude}"
              data-name="#{employee.name}"/>
-    </ui:repeat-->
+    </ui:repeat>
 </ui:composition>

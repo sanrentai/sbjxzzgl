@@ -10,8 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,37 +29,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e WHERE e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByEmployeeId", query = "SELECT e FROM Employee e WHERE e.employeeId = :employeeId AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByLongtitude", query = "SELECT e FROM Employee e WHERE e.longtitude = :longtitude AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByLatitude", query = "SELECT e FROM Employee e WHERE e.latitude = :latitude AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByInsRep", query = "SELECT e FROM Employee e WHERE e.insRep = :insRep AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByInsDate", query = "SELECT e FROM Employee e WHERE e.insDate = :insDate AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByUpdRep", query = "SELECT e FROM Employee e WHERE e.updRep = :updRep AND e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByUpdDate", query = "SELECT e FROM Employee e WHERE e.updDate = :updDate AND e.delFlg = :delFlg")
+    , @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id")
+    , @NamedQuery(name = "Employee.findByCountOfWorkList", query = "SELECT e FROM Employee e WHERE e.countOfWorkList = :countOfWorkList")
+    , @NamedQuery(name = "Employee.findByPhoneNumber", query = "SELECT e FROM Employee e WHERE e.phoneNumber = :phoneNumber")
+    , @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name")
+    , @NamedQuery(name = "Employee.findByLongtitude", query = "SELECT e FROM Employee e WHERE e.longtitude = :longtitude")
+    , @NamedQuery(name = "Employee.findByLatitude", query = "SELECT e FROM Employee e WHERE e.latitude = :latitude")
+    , @NamedQuery(name = "Employee.findByInsRep", query = "SELECT e FROM Employee e WHERE e.insRep = :insRep")
+    , @NamedQuery(name = "Employee.findByInsDate", query = "SELECT e FROM Employee e WHERE e.insDate = :insDate")
+    , @NamedQuery(name = "Employee.findByUpdRep", query = "SELECT e FROM Employee e WHERE e.updRep = :updRep")
+    , @NamedQuery(name = "Employee.findByUpdDate", query = "SELECT e FROM Employee e WHERE e.updDate = :updDate")
     , @NamedQuery(name = "Employee.findByDelFlg", query = "SELECT e FROM Employee e WHERE e.delFlg = :delFlg")
-    , @NamedQuery(name = "Employee.findByVersion", query = "SELECT e FROM Employee e WHERE e.version = :version AND e.delFlg = :delFlg")})
+    , @NamedQuery(name = "Employee.findByVersion", query = "SELECT e FROM Employee e WHERE e.version = :version")})
 public class Employee extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id")
+    private Integer id;
     @Column(name = "countOfWorkList")
     private Integer countOfWorkList;
     @Size(max = 16)
     @Column(name = "phoneNumber")
     private String phoneNumber;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(max = 32)
-    @Column(name = "email")
-    private String email;
-    @Size(max = 32)
+    @Size(max = 16)
     @Column(name = "name")
     private String name;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
-    @Size(max = 6)
-    @Column(name = "employeeId")
-    private String employeeId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "longtitude")
     private Double longtitude;
@@ -75,6 +70,15 @@ public class Employee extends BaseEntity implements Serializable {
         this.id = id;
     }
 
+    public Employee(Integer id, String insRep, Date insDate, String updRep, Date updDate, Character delFlg, int version) {
+        this.id = id;
+        this.insRep = insRep;
+        this.insDate = insDate;
+        this.updRep = updRep;
+        this.updDate = updDate;
+        this.version = version;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -83,12 +87,28 @@ public class Employee extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public Integer getCountOfWorkList() {
+        return countOfWorkList;
     }
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
+    public void setCountOfWorkList(Integer countOfWorkList) {
+        this.countOfWorkList = countOfWorkList;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getLongtitude() {
@@ -131,36 +151,5 @@ public class Employee extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.Employee[ id=" + id + " ]";
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCountOfWorkList() {
-        return countOfWorkList;
-    }
-
-    public void setCountOfWorkList(Integer countOfWorkList) {
-        this.countOfWorkList = countOfWorkList;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    
 }
