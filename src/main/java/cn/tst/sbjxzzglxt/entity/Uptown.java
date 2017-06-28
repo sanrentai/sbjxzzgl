@@ -56,6 +56,7 @@ public class Uptown extends BaseEntity implements Serializable {
     private Double longtitude;
     @Column(name = "latitude")
     private Double latitude;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "countOfListToAdd")
     private Integer countOfListToAdd;
     @Column(name = "countOfListToReply")

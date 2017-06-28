@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <script>
+        $(document).ready(function () {
+            var map = new BMap.Map("Map");
+            map.centerAndZoom(new BMap.Point(parseFloat($('.XCoord').val()),
+                    parseFloat($('.YCoord').val())),
+                    parseInt($('.Zoom').val()));
+
+            map.addControl(new BMap.MapTypeControl());
+            //map.setCurrentCity("北京");
+            map.enableScrollWheelZoom(true);
+
+            var marker = new BMap.Marker(map.getBounds().getCenter());
+            map.addOverlay(marker);
+
+            map.addEventListener("moving", function () {
+                marker.setPosition(map.getCenter());
+                $('.XCoord').val(map.getCenter().lng);
+                $('.YCoord').val(map.getCenter().lat);
+                $('.Zoom').val(map.getZoom());
+            });
+            map.addEventListener("zoomend", function () {
+                marker.setPosition(map.getCenter());
+                $('.XCoord').val(map.getCenter().lng);
+                $('.YCoord').val(map.getCenter().lat);
+                $('.Zoom').val(map.getZoom());
+            });
+        });
+    </script>
+    <p:outputPanel id="rootContainer" style="height:100%;">
+        <div id="Map" style="width:100%;height:80%;margin:0;"></div>
+        <p:outputLabel value="经度："></p:outputLabel>
+        <p:inputText class="XCoord" 
+                     readonly="false" 
+                     value="#{MapCenterSettingController.viewModel.mapSettingInEdit.initialLongtitude}"></p:inputText>
+
+        <p:outputLabel value="纬度："></p:outputLabel>
+        <p:inputText class="YCoord" 
+                     readonly="false"
+                     value="#{MapCenterSettingController.viewModel.mapSettingInEdit.initialLatitude}"></p:inputText>
+
+        <p:outputLabel value="缩放："></p:outputLabel>
+        <p:inputText class="Zoom" 
+                     readonly="false"
+                     value="#{MapCenterSettingController.viewModel.mapSettingInEdit.zoom}"></p:inputText>
+
+        <p:commandButton value="确定" 
+                         process="rootContainer"
+                         actionListener="#{MapCenterSettingController.onOKButtonClick}">
+        </p:commandButton>
+    </p:outputPanel>
+</ui:composition>
