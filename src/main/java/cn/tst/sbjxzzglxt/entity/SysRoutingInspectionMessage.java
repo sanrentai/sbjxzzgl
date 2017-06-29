@@ -53,14 +53,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "SysRoutingInspectionMessage.findByVersion", query = "SELECT s FROM SysRoutingInspectionMessage s WHERE s.version = :version")})
 public class SysRoutingInspectionMessage extends BaseEntity implements Serializable {
 
+    @Column(name = "suo_shu_she_bei_ID")
+    private Long suoshushebeiID;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Size(max = 255)
-    @Column(name = "suo_shu_she_bei_ID")
-    private String suoshushebeiID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "xun_jian_dian_id")
@@ -104,14 +104,6 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSuoshushebeiID() {
-        return suoshushebeiID;
-    }
-
-    public void setSuoshushebeiID(String suoshushebeiID) {
-        this.suoshushebeiID = suoshushebeiID;
     }
 
     public Long getXunJianDianId() {
@@ -219,6 +211,17 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     @Override
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage[ id=" + id + " ]";
+    }
+
+    public SysRoutingInspectionMessage() {
+    }
+
+    public Long getSuoshushebeiID() {
+        return suoshushebeiID;
+    }
+
+    public void setSuoshushebeiID(Long suoshushebeiID) {
+        this.suoshushebeiID = suoshushebeiID;
     }
     
 }
