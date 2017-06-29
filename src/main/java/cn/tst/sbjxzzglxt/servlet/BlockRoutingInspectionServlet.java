@@ -6,12 +6,15 @@
 package cn.tst.sbjxzzglxt.servlet;
 
 import cn.tst.sbjxzzglxt.entity.Employee;
+import cn.tst.sbjxzzglxt.entity.GongDan;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
 import cn.tst.sbjxzzglxt.entity.Uptown;
 import cn.tst.sbjxzzglxt.facade.EmployeeFacade;
+import cn.tst.sbjxzzglxt.facade.GongDanFacade;
 import cn.tst.sbjxzzglxt.facade.MapSettingFacade;
 import cn.tst.sbjxzzglxt.facade.UptownFacade;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -34,6 +37,10 @@ public class BlockRoutingInspectionServlet extends HttpServlet {
     
     @EJB
     private UptownFacade uptownFacade;
+    
+    @EJB
+    private GongDanFacade gongDanFacade;
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/json;charset=UTF-8");
@@ -77,6 +84,23 @@ public class BlockRoutingInspectionServlet extends HttpServlet {
             jsonString = jsonString.concat("\"phoneNumber\":\"" + employeeLocation.getPhoneNumber() + "\"");
             jsonString = jsonString.concat("}");
             if(i != employeeLocationList.size() - 1) {
+                jsonString = jsonString.concat(",");
+            }
+        }
+        jsonString = jsonString.concat("],");
+        
+        List<GongDan> workList = gongDanFacade.findAll();
+        jsonString = jsonString.concat("\"workList\":[");
+        for(int i = 0; i < workList.size(); ++i) {
+            GongDan gongDan = workList.get(0);
+            jsonString = jsonString.concat("{");
+            jsonString = jsonString.concat("\"description\":\"" + gongDan.getKeHuMiaoShu() + "\",");
+            jsonString = jsonString.concat("\"address\":\"" + gongDan.getKeHuDiZhi()) + "\",";
+            SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
+            String timeString = format.format(gongDan.getDengJiShiJian());
+            jsonString = jsonString.concat("\"time\":\"" + timeString + "\"");
+            jsonString = jsonString.concat("}");
+            if(i != workList.size() - 1) {
                 jsonString = jsonString.concat(",");
             }
         }

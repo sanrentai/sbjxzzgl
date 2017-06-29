@@ -27,16 +27,7 @@ public class AddingBlockCoordBizLogic extends BaseBizLogic implements BizLogic {
     private MapSettingFacade mapSettingFacade;
     @Override
     public void init() {
-        MapSetting mapSetting = mapSettingFacade.findAll().get(0);
-        List<Uptown> uptownList = uptownFacade.findAll();
-        for(Uptown uptown: uptownList) {
-            if(uptown.getLongtitude() == null) {
-                uptown.setLongtitude(mapSetting.getInitialLongtitude());
-            }
-            if(uptown.getLatitude()== null) {
-                uptown.setLatitude(mapSetting.getInitialLatitude());
-            }
-        }
+        
     }
     @Override
     public void loadViewModel(ViewModel viewModel) {
@@ -55,5 +46,6 @@ public class AddingBlockCoordBizLogic extends BaseBizLogic implements BizLogic {
     @Override
     public void onOKButtonClick(ViewModel viewModel) {
         uptownFacade.edit(viewModel.getUptownInEdit());
+        viewModel.setUptownList(uptownFacade.findAll());
     }
 }

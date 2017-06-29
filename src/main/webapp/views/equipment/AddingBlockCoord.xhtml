@@ -17,7 +17,12 @@
             var mapSetting = $('.MapSetting').first();
             var zoom = mapSetting.attr('data-zoom');
             var map = new BMap.Map('Map');
+            if (coord.lontitude === 0 || coord.lantitude === 0) {
+                coord.lontitude = mapSetting.attr('data-initialLontitude');
+                coord.lantitude = mapSetting.attr('data-initialLatitude');
+            }
             map.centerAndZoom(new BMap.Point(coord.lontitude, coord.lantitude), zoom);
+
             map.addControl(new BMap.MapTypeControl());
 
             var marker = new BMap.Marker(map.getBounds().getCenter());
@@ -35,22 +40,27 @@
             });
         }
     </script>
-    <p:dataTable var="uptown" value="#{AddingBlockCoordController.viewModel.uptownList}">
-        <p:column headerText="小区名">
-            <h:outputText value="#{uptown.name}"></h:outputText>
-        </p:column>
-        <p:column headerText="添加/更改小区坐标">
-            <p:commandButton value="添加/修改" 
-                             onclick="makeCoord(#{AddingBlockCoordController.viewModel.uptownInEdit.longtitude}, #{AddingBlockCoordController.viewModel.uptownInEdit.latitude});" 
-                             oncomplete="PF('BlockCoordAddingDialog').show();"
-                             actionListener="#{AddingBlockCoordController.onAddingOrEditingBlockCoordButtonClick(uptown)}"></p:commandButton>
-        </p:column>
-        <p:column headerText="是否已有坐标">
-            <p:outputLabel value="#{empty uptown.longtitude or empty uptown.latitude ? '否' : '是'}"></p:outputLabel>
-        </p:column>
-    </p:dataTable>
+    <p:outputPanel id="rootContainer" style="height:100%;width:100%;">
+        <p:dataTable var="uptown" value="#{AddingBlockCoordController.viewModel.uptownList}">
+            <p:column headerText="小区名">
+                <h:outputText value="#{uptown.name}"></h:outputText>
+            </p:column>
+            <p:column headerText="添加/更改小区坐标">
+                <p:commandButton value="添加/修改" 
+                                 onclick="makeCoord(#{empty uptown.longtitude ? 0 : uptown.longtitude}, #{empty uptown.latitude ? 0 : uptown.latitude});" 
+                                 oncomplete="PF('BlockCoordAddingDialog').show();" 
+                                 actionListener="#{AddingBlockCoordController.onAddingOrEditingBlockCoordButtonClick(uptown)}"></p:commandButton>
+            </p:column>
+            <p:column headerText="是否已有坐标">
+                <p:outputLabel value="#{empty uptown.longtitude or empty uptown.latitude ? '否' : '是'}"></p:outputLabel>
+            </p:column>
+        </p:dataTable>
+    </p:outputPanel>
     <ui:repeat value="#{AddingBlockCoordController.viewModel.mapSettingList}" var="mapSetting">
-        <div class="MapSetting" data-zoom="#{mapSetting.zoom}"></div>
+        <div class="MapSetting" 
+             data-zoom="#{mapSetting.zoom}"
+             data-initialLontitude="#{mapSetting.initialLongtitude}"
+             data-initialLatitude="#{mapSetting.initialLatitude}"></div>
     </ui:repeat>
     <!--小区坐标添加对话框-->
     <p:dialog widgetVar="BlockCoordAddingDialog"
@@ -59,7 +69,7 @@
               modal="true"
               width="1024px"
               height="512px">
-        <p:outputPanel id="rootContainer" style="height:100%;">
+        <p:outputPanel id="dialogContainer" style="height:100%;">
             <div id="Map" style="width:100%;height:90%;margin:0;"></div>
             <p:outputLabel value="经度："></p:outputLabel>
             <p:inputText class="XCoord" 
@@ -72,8 +82,10 @@
                          value="#{AddingBlockCoordController.viewModel.uptownInEdit.latitude}"></p:inputText>
 
             <p:commandButton value="确定" 
-                             process="rootContainer"
-                             actionListener="#{AddingBlockCoordController.onOKButtonClick}">
+                             process="dialogContainer"
+                             actionListener="#{AddingBlockCoordController.onOKButtonClick}"
+                             oncomplete="PF('BlockCoordAddingDialog').hide();"
+                             update="rootContainer">
             </p:commandButton>
         </p:outputPanel>
     </p:dialog>

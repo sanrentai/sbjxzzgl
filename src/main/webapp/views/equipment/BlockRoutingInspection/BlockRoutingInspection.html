@@ -17,7 +17,7 @@ and open the template in the editor.
             }
             #LeftBar {
                 float: left;
-                width: 256px;
+                width: 512px;
                 height:100%;
                 border-right: solid gray thin;
                 float:left;
@@ -37,6 +37,7 @@ and open the template in the editor.
                 width:100%;
                 height:33%;
                 border-bottom:solid gray thin;
+                overflow-y:scroll;
             }
             #BlockList {
                 width:100%;
@@ -48,7 +49,12 @@ and open the template in the editor.
                 width:100%;
                 height:34%;
                 overflow-y:scroll;
-            }/*
+            }
+            th {
+                background-color: #00aaff;
+                font-family: "宋体";
+            }
+            /*
             table, td, th {
                 border:thin solid gray;
             }
@@ -65,8 +71,40 @@ and open the template in the editor.
         <script src="../../../resources/3rd/bootstrap/js/bootstrap.min.js"></script>
         <script src="http://api.map.baidu.com/api?v=1.4"></script>
         <script>
-            $(document).ready(function () {
-                var map = new BMap.Map("Map");
+            function makeBlockMarker(map, point, countOfListToReply, countOfListToAdd) {
+                if (point !== null) {
+                    var marker = new BMap.Marker(point);
+                    map.addOverlay(marker);
+                    var label = new BMap.Label(countOfListToReply, {position: point, offset: new BMap.Size(-5, -25)});
+                    label.setStyle({
+                        color: "white",
+                        fontSize: "12px",
+                        height: "20px",
+                        lineHeight: "20px",
+                        fontFamily: "微软雅黑",
+                        background: "none",
+                        border: "none"
+                    });
+                    map.addOverlay(label);
+                    marker.addEventListener('click', function (event) {
+                        var content = "<div>" + name + "</div>" +
+                                "<div>待回复：" + countOfListToReply + "（" + countOfListToAdd + "新）超时：0</div>" +
+                                "<div>收费类：2</div>" +
+                                "<div>外网类：3</div>" +
+                                "<div>监察类：1</div>" +
+                                "<div>其它类：0</div>";
+                        var infoWindow = new BMap.InfoWindow(content);
+                        this.openInfoWindow(infoWindow);
+                        return true;
+                    });
+                }
+            }
+            var map;
+            function request() {
+                map.clearOverlays();
+                $('#BlockTable').empty();
+                $('#EmployeeTable').empty();
+                $('#WorkOrderListTable').empty();
                 $.get("/sbjx/Map/BlockRoutingInspection", function (data) {
                     console.log(data);
                     var mapSetting = data.mapSetting;
@@ -90,59 +128,44 @@ and open the template in the editor.
                         var countOfListToAdd = uptown.countOfListToAdd;
                         var countOfListToReply = uptown.countOfListToReply;
                         $('#BlockTable').append('<tr>' +
-                                                '<td>' + name + '</td>' +
-                                                '<td>' + countOfListToAdd + '</td>' +
-                                                '<td>' + countOfListToReply + '</td>' +
-                                                '</tr>');
-                        geo.getPoint(uptown.address, function (point) {
-                            if (point) {
-                                var marker = new BMap.Marker(point);
-                                map.addOverlay(marker);
-                                var label = new BMap.Label(countOfListToReply, {position: point, offset: new BMap.Size(-5, -25)});
-                                label.setStyle({
-                                    color: "white",
-                                    fontSize: "12px",
-                                    height: "20px",
-                                    lineHeight: "20px",
-                                    fontFamily: "微软雅黑",
-                                    background: "none",
-                                    border: "none"
-                                });
-                                map.addOverlay(label);
-                                marker.addEventListener('click', function (event) {
-                                    var content = "<div>" + name + "</div>" +
-                                            "<div>待回复：" + countOfListToReply + "（" + countOfListToAdd + "新）超时：0</div>" +
-                                            "<div>收费类：2</div>" +
-                                            "<div>外网类：3</div>" +
-                                            "<div>监察类：1</div>" +
-                                            "<div>其它类：0</div>";
-                                    var infoWindow = new BMap.InfoWindow(content);
-                                    this.openInfoWindow(infoWindow);
-                                    return true;
-                                });
-                            } else {
-                                alert("您选择地址没有解析到结果!");
-                            }
-                        });
+                                '<td>' + name + '</td>' +
+                                '<td>' + countOfListToAdd + '</td>' +
+                                '<td>' + countOfListToReply + '</td>' +
+                                '</tr>');
+                        var point = null;
+                        if (uptown.longtitude !== null && uptown.latitude !== null) {
+                            point = new BMap.Point(uptown.longtitude, uptown.latitude);
+                            makeBlockMarker(map, point, countOfListToReply, countOfListToAdd);
+                        } else if (uptown.address !== null) {
+                            // 此方法为异步的
+                            geo.getPoint(uptown.address, function (pt) {
+                                if (pt) {
+                                    point = new BMap.Point(pt.lng, pt.lat);
+                                    makeBlockMarker(map, point, countOfListToReply, countOfListToAdd);
+                                } else {
+                                    alert("您选择地址没有解析到结果!");
+                                }
+                            });
+                        }
                     });
                     $('#BlockTable').append('</tbody>');
                     //$('#BlockList').append('</table>');
-                    
+
                     $('#EmployeeTable').append('<thead>' +
-                                                '<tr>' +
-                                                '<th>维修工</th>' +
-                                                '<th>工单</th>' +
-                                                '<th>电话</th>' +
-                                                '</tr>' +
-                                                '</thead>');
+                            '<tr>' +
+                            '<th>维修工</th>' +
+                            '<th>工单</th>' +
+                            '<th>报修电话</th>' +
+                            '</tr>' +
+                            '</thead>');
                     $('#EmployeeTable').append('<tbody>');
                     var employeeList = data.employeeList;
                     $.each(employeeList, function (index, employee) {
-                        $('#EmployeeTable').append('<tr>');
-                        $('#EmployeeTable').append('<td>' + employee.name + '</td>');
-                        $('#EmployeeTable').append('<td>' + employee.countOfWorkList + '</td>');
-                        $('#EmployeeTable').append('<td>' + employee.phoneNumber + '</td>');
-                        $('#EmployeeTable').append('</tr>');
+                        $('#EmployeeTable').append('<tr>' +
+                        '<td>' + (employee.name === null ? ' ' : employee.name) + '</td>' +
+                        '<td>' + (employee.countOfWorkList === null ? 0 : employee.countOfWorkList) + '</td>' +
+                        '<td>' + (employee.phoneNumber === 'null' ? '-' : employee.phoneNumber) + '</td>' +
+                        '</tr>');
                         var pt = new BMap.Point(employee.longtitude, employee.latitude);
                         var myIcon = new BMap.Icon("/sbjx/resources/images/员工标签.png", new BMap.Size(64, 36));
                         var marker = new BMap.Marker(pt, {icon: myIcon});
@@ -161,21 +184,47 @@ and open the template in the editor.
                         map.addOverlay(label);
                     });
                     $('#EmployeeTable').append('</tbody>');
+
+                    var workList = data.workList;
+                    $('#WorkOrderListTable').append('<thead>' +
+                            '<tr>' +
+                            '<th>客户描述</th>' +
+                            '<th>登记时间</th>' +
+                            '<th>客户地址</th>' +
+                            '</tr>' +
+                            '</thead>');
+                    $('#WorkOrderListTable').append('<tbody>');
+                    $.each(workList, function (index, work) {
+                        $('#WorkOrderListTable').append('<tr>' +
+                            '<td>' + work.description + '</td>' +
+                            '<td>' + work.time + '</td>' +
+                            '<td>' + work.address + '</td>' +
+                            '</tr>');
+                    });
+                    $('#WorkOrderListTable').append('</tbody>');
                 });
+                setTimeout(request, 1000 * 60);
+            }
+            $(document).ready(function () {
+                map = new BMap.Map("Map");
+                request();
             });
         </script>
     </head>
     <body>
         <div id="LeftBar">
-            <div id="LatestWorkOrderList"></div>
+            <div id="LatestWorkOrderList">
+                <table id="WorkOrderListTable" class="table table-striped">
+
+                </table></div>
             <div id="BlockList">
                 <table id="BlockTable" class="table table-striped">
-                    
+
                 </table>
             </div>
             <div id="EmployeeList">
                 <table id="EmployeeTable" class="table table-striped">
-                    
+
                 </table>
             </div>
         </div>

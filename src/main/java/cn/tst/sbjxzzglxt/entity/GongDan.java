@@ -29,8 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "GongDan")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "GongDan.findAll", query = "SELECT g FROM GongDan g")
-    , @NamedQuery(name = "GongDan.findByGongDanId", query = "SELECT g FROM GongDan g WHERE g.gongDanId = :gongDanId")
+    @NamedQuery(name = "GongDan.findAll", query = "SELECT g FROM GongDan g WHERE g.delFlg = :delFlg")
+    , @NamedQuery(name = "GongDan.findByGongDanId", query = "SELECT g FROM GongDan g WHERE g.gongDanId = :gongDanId AND g.delFlg = :delFlg")
     , @NamedQuery(name = "GongDan.findByShuQiuLaiYuan", query = "SELECT g FROM GongDan g WHERE g.shuQiuLaiYuan = :shuQiuLaiYuan")
     , @NamedQuery(name = "GongDan.findByDengJi", query = "SELECT g FROM GongDan g WHERE g.dengJi = :dengJi")
     , @NamedQuery(name = "GongDan.findByChuLiZhuangTai", query = "SELECT g FROM GongDan g WHERE g.chuLiZhuangTai = :chuLiZhuangTai")
