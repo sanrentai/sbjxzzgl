@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
@@ -11,6 +11,7 @@ import cn.tst.sbjxzzglxt.entity.Uptown;
 import cn.tst.sbjxzzglxt.facade.EmployeeFacade;
 import cn.tst.sbjxzzglxt.facade.MapSettingFacade;
 import cn.tst.sbjxzzglxt.facade.UptownFacade;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,34 +21,26 @@ import javax.ejb.Stateless;
  * @author Aaron-PC-i3-4130
  */
 @Stateless
-public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
+public class DiTuBizLogic extends BaseBizLogic implements BizLogic {
     public static final double DEFAULT_LONGTITUDE = 116.404;
     
     public static final double DEFAULT_LATITUDE = 39.915;
     
     public static final int DEFAULT_ZOOM = 15;
     @EJB
+    private UptownFacade uptownFacade;
+    
+    @EJB
     private MapSettingFacade mapSettingFacade;
     
     @EJB
-    private UptownFacade uptownFacade;
-
-    public UptownFacade getUptownFacade() {
-        return uptownFacade;
-    }
-
-    public void setUptownFacade(UptownFacade uptownFacade) {
-        this.uptownFacade = uptownFacade;
-    }
-
-    public MapSettingFacade getMapSettingFacade() {
-        return mapSettingFacade;
-    }
-
-    public void setMapSettingFacade(MapSettingFacade mapSettingFacade) {
-        this.mapSettingFacade = mapSettingFacade;
-    }
+    private EmployeeFacade employeeFacade;
+    
     @Override
+    /**
+     * @目的意图：创建默认的viewModel属性
+     * @步骤：1. 创建mapSettingInEdit属性
+    */
     public void loadViewModel(ViewModel viewModel) {
         List<MapSetting> mapSettingInEditList = mapSettingFacade.findAll();
         if(mapSettingInEditList.isEmpty()) {
@@ -61,10 +54,13 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
             viewModel.setMapSettingInEdit(mapSettingInEditList.get(0));
         }
         viewModel.setUptownList(uptownFacade.findAll());
+        viewModel.setMapSettingList(mapSettingFacade.findAll());
+        viewModel.setEmployeeList(employeeFacade.findAll());
+        
         Uptown uptown = new Uptown();
-        uptown.setUptownId("");
-        uptown.setAppendix("");
-        uptown.setTranssign('c');
+        uptown.setName("");
+        uptown.setLongtitude(DEFAULT_LONGTITUDE);
+        uptown.setLatitude(DEFAULT_LATITUDE);
         viewModel.setUptownInEdit(uptown);
     }
     @Override
@@ -72,7 +68,11 @@ public class DiTuSheZhiBizLogic extends BaseBizLogic implements BizLogic {
         mapSettingFacade.edit(viewModel.getMapSettingInEdit());
     }
     @Override
-    public void onOKButtonClickInBlockAddingEditDialog(ViewModel viewModel) {
-        uptownFacade.create(viewModel.getUptownInEdit());
+    public void onBlockButtonClickInBlockListDialog(ViewModel viewModel, Uptown uptown) {
+        viewModel.setUptownInEdit(uptown);
+    }
+    @Override
+    public void onOKButtonClickInBlockCoordAddingEditDialog(ViewModel viewModel) {
+        uptownFacade.edit(viewModel.getUptownInEdit());
     }
 }

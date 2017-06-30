@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.entity.Employee;
 import cn.tst.sbjxzzglxt.entity.MapSetting;
@@ -15,28 +15,22 @@ import java.util.List;
  * @author Aaron-PC-i3-4130
  */
 public class ViewModel {
-    private MapSetting mapSettingInEdit;
-    
-    private Uptown uptownInEdit;
-    
     private List<Uptown> uptownList;
     
     private List<MapSetting> mapSettingList;
+    
+    private List<Employee> employeeList;
+    
+    private MapSetting mapSettingInEdit;
+    
+    private Uptown uptownInEdit;
 
-    public List<Uptown> getUptownList() {
-        return uptownList;
+    public List<Employee> getEmployeeList() {
+        return employeeList;
     }
 
-    public void setUptownList(List<Uptown> uptownList) {
-        this.uptownList = uptownList;
-    }
-
-    public List<MapSetting> getMapSettingList() {
-        return mapSettingList;
-    }
-
-    public void setMapSettingList(List<MapSetting> mapSettingList) {
-        this.mapSettingList = mapSettingList;
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
     }
 
     public Uptown getUptownInEdit() {
@@ -53,5 +47,21 @@ public class ViewModel {
 
     public void setMapSettingInEdit(MapSetting mapSettingInEdit) {
         this.mapSettingInEdit = mapSettingInEdit;
+    }
+
+    public List<MapSetting> getMapSettingList() {
+        return mapSettingList;
+    }
+
+    public void setMapSettingList(List<MapSetting> mapSettingList) {
+        this.mapSettingList = mapSettingList;
+    }
+
+    public List<Uptown> getUptownList() {
+        return uptownList;
+    }
+
+    public void setUptownList(List<Uptown> uptownList) {
+        this.uptownList = uptownList;
     }
 }

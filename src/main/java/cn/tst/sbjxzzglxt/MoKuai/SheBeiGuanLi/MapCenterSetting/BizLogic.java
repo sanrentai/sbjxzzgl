@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.MapCenterSetting;
 
 /**
  *
@@ -12,7 +12,5 @@ package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
 public interface BizLogic {
     void loadViewModel(ViewModel viewModel);
     
-    void onOKButtonClickInMapCenterSettingDialog(ViewModel viewModel);
-    
-    void onOKButtonClickInBlockAddingEditDialog(ViewModel viewModel);
+    void onOKButtonClick(ViewModel viewModel);
 }

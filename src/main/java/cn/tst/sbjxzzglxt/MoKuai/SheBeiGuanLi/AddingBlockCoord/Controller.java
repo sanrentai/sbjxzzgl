@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.AddingBlockCoord;
 
-import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
-import javax.annotation.ManagedBean;
+import cn.tst.sbjxzzglxt.entity.Uptown;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -18,19 +17,12 @@ import javax.inject.Named;
  * @author Aaron-PC-i3-4130
  */
 @ViewScoped
-@Named(SepC.ControllerID.DI_TU_SHE_ZHI_CONTROLLER_NAME)
-@ManagedBean
+@Named("AddingBlockCoordController")
 public class Controller extends BusinessBaseController {
     @EJB
     private BizLogic bizLogic;
     
     private ViewModel viewModel;
-    
-    @PostConstruct
-    public void init() {
-        viewModel = new ViewModel();
-        bizLogic.loadViewModel(viewModel);
-    }
 
     public BizLogic getBizLogic() {
         return bizLogic;
@@ -48,11 +40,18 @@ public class Controller extends BusinessBaseController {
         this.viewModel = viewModel;
     }
     
-    public void onOKButtonClickInMapCenterSettingDialog() {
-        bizLogic.onOKButtonClickInMapCenterSettingDialog(viewModel);
+    @PostConstruct
+    public void init() {
+        bizLogic.init();
+        viewModel = new ViewModel();
+        bizLogic.loadViewModel(viewModel);
     }
     
-    public void onOKButtonClickInBlockAddingEditDialog() {
-        bizLogic.onOKButtonClickInBlockAddingEditDialog(viewModel);
+    public void onAddingOrEditingBlockCoordButtonClick(Uptown uptown) {
+        bizLogic.onAddingOrEditingBlockCoordButtonClick(viewModel, uptown);
+    }
+    
+    public void onOKButtonClick() {
+        bizLogic.onOKButtonClick(viewModel);
     }
 }

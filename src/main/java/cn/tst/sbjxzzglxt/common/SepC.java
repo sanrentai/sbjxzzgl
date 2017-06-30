@@ -712,6 +712,10 @@ public final class SepC {
 
         public static final String DI_TU_SHE_ZHI_CONTROLLER_NAME = "DiTuSheZhiController";
 
+        public static final String DI_TU_CONTROLLER_NAME = "DiTuController";
+        
+        public static final String MAP_CENTER_SETTING_CONTROLLER_NAME = "MapCenterSettingController";
+
         /**
          * 巡检管理
          */

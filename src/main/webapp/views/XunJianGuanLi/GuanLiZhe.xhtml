@@ -2,6 +2,37 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <p:dataTable value="#{GuanLiZheController.viewModel.routingInspectionMessageList}"
+                 var="result">
+        <p:column headerText="巡检设备">
+            <h:outputText value="#{result.equip.ENmae}"></h:outputText>
+        </p:column>
+        <p:column headerText="巡检点">
+            <h:outputText value="#{result.checkPoint.name}"></h:outputText>
+        </p:column>
+        <p:column headerText="巡检项目">
+            <h:outputText value="#{result.item.xiangMuMingCheng}"></h:outputText>
+        </p:column>
+        <p:column headerText="结果">
+            <h:outputText value="#{result.item.xunJianFangShi == 0 ? result.canShuZhi : result.xunJianWenTi}"></h:outputText>
+        </p:column>
+        <p:column headerText="巡检人">
+            <h:outputText value="#{result.xunJianRenId}"></h:outputText>
+        </p:column>
+        <p:column headerText="巡检时间">
+            <h:outputText value="#{result.xunJianShiJian}"></h:outputText>
+        </p:column>
+        <p:column headerText="录入人">
+            <h:outputText value="#{result.luRuRen}"></h:outputText>
+        </p:column>
+        <p:column headerText="录入时间">
+            <h:outputText value="#{result.insDate}"></h:outputText>
+        </p:column>
+    </p:dataTable>
+</ui:composition>
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <!--    <p:outputPanel styleClass="Container100 NoIndent">

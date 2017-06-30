@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
+
+import cn.tst.sbjxzzglxt.entity.Uptown;
 
 /**
  *
@@ -14,5 +16,7 @@ public interface BizLogic {
     
     void onOKButtonClickInMapCenterSettingDialog(ViewModel viewModel);
     
-    void onOKButtonClickInBlockAddingEditDialog(ViewModel viewModel);
+    void onBlockButtonClickInBlockListDialog(ViewModel viewModel, Uptown uptown);
+    
+    void onOKButtonClickInBlockCoordAddingEditDialog(ViewModel viewModel);
 }

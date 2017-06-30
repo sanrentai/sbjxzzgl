@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTuSheZhi;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.DiTu;
 
 import cn.tst.sbjxzzglxt.common.SepC;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
+import cn.tst.sbjxzzglxt.entity.Uptown;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -18,7 +19,7 @@ import javax.inject.Named;
  * @author Aaron-PC-i3-4130
  */
 @ViewScoped
-@Named(SepC.ControllerID.DI_TU_SHE_ZHI_CONTROLLER_NAME)
+@Named(SepC.ControllerID.DI_TU_CONTROLLER_NAME)
 @ManagedBean
 public class Controller extends BusinessBaseController {
     @EJB
@@ -52,7 +53,11 @@ public class Controller extends BusinessBaseController {
         bizLogic.onOKButtonClickInMapCenterSettingDialog(viewModel);
     }
     
-    public void onOKButtonClickInBlockAddingEditDialog() {
-        bizLogic.onOKButtonClickInBlockAddingEditDialog(viewModel);
+    public void onBlockButtonClickInBlockListDialog(Uptown uptown) {
+        bizLogic.onBlockButtonClickInBlockListDialog(viewModel, uptown);
+    }
+    
+    public void onOKButtonClickInBlockCoordAddingEditDialog() {
+        bizLogic.onOKButtonClickInBlockCoordAddingEditDialog(viewModel);
     }
 }
