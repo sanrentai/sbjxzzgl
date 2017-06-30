@@ -63,19 +63,14 @@ public class EQP0004BizLogicImpl extends BaseBizLogic implements EQP0004BizLogic
     //查询条件判断
     @Override
     public List<LTEquipNotes> chaXunGongNeng(EQP0004ViewModel vm) {
-        System.out.println(2);
-        //设备ID,维修保养,负责人，时间的值
+     
+        //从VM中取出设备ID,维修保养,负责人，时间的值
         Long eNum = vm.getENum();
         Integer tType = vm.getTType();
         String fuZeRen = vm.getFuZeRen();
         Date dangQianBaoYangRiQi = vm.getDangQianBaoYangRiQi();
         Date xiaCiBaoYangRiQi = vm.getXiaCiBaoYangRiQi();
-        LOG.info(eNum);
-        LOG.info(tType);
-        LOG.info(fuZeRen);
-        LOG.info(dangQianBaoYangRiQi);
-        LOG.info(xiaCiBaoYangRiQi);
-
+       
         System.out.println(3);
         //一、如果设备ID不为空，取出设备ID
         if (eNum != null && tType == null && fuZeRen == null && dangQianBaoYangRiQi == null && xiaCiBaoYangRiQi == null) {

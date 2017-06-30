@@ -1,11 +1,10 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.GuanLiZhe;
 
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen.*;
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
-import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
@@ -26,19 +25,19 @@ public interface BizLogic {
     /**
      * 当前选中设备
      *
-     * @param eNum
+     * @param id 设备id
      * @return
      */
-    LTEquipBasic findSelectedEqp(Long eNum);
+    LTEquipBasic findSelectedEqp(Long id);
 
     /**
-     * 查询故障信息
+     * 查询巡检点记录
      *
      * @param vm
-     * @param eNum
+     * @param equipmentId
      * @return
      */
-    List<LTEquipError> chaGuZhangXinXi(ViewModel vm, Long eNum);
+    List<LTEquipCheckPoint> chaXunJianDian(ViewModel vm, Long equipmentId);
 
     /**
      * 用于巡检项目的增删改
@@ -79,27 +78,21 @@ public interface BizLogic {
     public void baoCunGuZhang(ViewModel vm);
 
     /**
-     * 用于保存故障记录
+     * 用于保存项目
      *
      * @param vm
      * @param mode
-     * @return 
      *
      */
-    public ExecuteResult onEquipError(SepE.ExecuteMode mode,ViewModel vm);
+    public void baoCunXiangMu(ViewModel vm);
+
     /**
-     * 用于保存故障信息
+     * 用于查询故障名称
      *
-     * @param vm
-     * @param mode
+     * @param list
      * @return 
      *
      */
-    public ExecuteResult onErrorMessage(SepE.ExecuteMode mode, ViewModel vm);
-
-    //用于显示故障列表中的故障类型
-    public List<LTEquipErrorMessage> chaGuZhangLeiXing(Long id);
-
-   
+//    public List chaGuZhangMing(ArrayList list);
 
 }

@@ -29,23 +29,25 @@
                     </f:facet>
                     <p:row>
                         <p:column style="padding: 0px;">
-                            <p:tree id="treeCK" value="#{ctrlEQP0005.vm.equipTreeRoot}" var="v" 
-                                    selectionMode="single" selection="#{ctrlEQP0005.selectedNode}"
-                                    styleClass="wd-p-100" animate="true">
-                                <p:ajax event="select" process="treeCK" 
-                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0005.onNodeSelect}"  />
+                            <p:scrollPanel mode="native" style="width:260px;height:200px">
+                                <p:tree id="treeCK" value="#{ctrlEQP0005.vm.equipTreeRoot}" var="v" 
+                                        selectionMode="single" selection="#{ctrlEQP0005.selectedNode}"
+                                        styleClass="wd-p-100" animate="true">
+                                    <p:ajax event="select" process="treeCK" 
+                                            update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0005.onNodeSelect}"  />
 
-                                <!--根节点-->
-                                <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
-                                <p:treeNode>
-                                    <h:outputText value="#{v}"/>
-                                </p:treeNode>
-                            </p:tree>
+                                    <!--根节点-->
+                                    <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
+                                    <p:treeNode>
+                                        <h:outputText value="#{v}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </p:scrollPanel>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
             </p:outputPanel>
-            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 pnlOutputArea">
+            <p:outputPanel id="pnlOutputArea" styleClass="Container70 Responsive100 height:200px pnlOutputArea">
                 <p:dataTable value="#{ctrlEQP0005.vm.selectedEquipBasic.equipWarnList}" var="equipWarnList"
                              widgetVar="wvYongMeiList"
                              rows="10"
@@ -144,7 +146,11 @@
                         <p:outputLabel for="addWarnType" value="提醒类型"/>
                         <p:selectOneMenu id="addWarnType" value="#{ctrlEQP0005.vm.equipWarn.TTyoe}"
                                          required="true" requiredMessage="#{ctrlEQP0005.isRequiredMessage('提醒类型')}">
-                            <!--<f:selectItem itemLabel="选择项目" itemValue="#{null}" noSelectionOption="true" />-->
+                            <!--<f:selectItem itemLabel="提醒类型" itemValue="" noSelectionOption="true" />-->
+                            <!--                            <f:selectItem itemLabel="年" itemValue="0" noSelectionOption="true" />
+                                                         <f:selectItem itemLabel="月" itemValue="1" noSelectionOption="true" />
+                                                          <f:selectItem itemLabel="日" itemValue="2" noSelectionOption="true" />-->
+
                             <f:selectItems value="#{bizConfig.reminderTime}" var="type" itemLabel="#{type.message}" itemValue="#{type}" noSelectionValue="true"/>
                         </p:selectOneMenu>
                     </p:panelGrid>

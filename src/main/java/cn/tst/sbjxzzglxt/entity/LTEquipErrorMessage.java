@@ -10,9 +10,13 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -34,7 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "LTEquipErrorMessage.findAll", query = "SELECT l FROM LTEquipErrorMessage l")
     , @NamedQuery(name = "LTEquipErrorMessage.findById", query = "SELECT l FROM LTEquipErrorMessage l WHERE l.id = :id AND l.delFlg = :delFlg")
-    , @NamedQuery(name = "LTEquipErrorMessage.findByGuZhangMingCheng", query = "SELECT l FROM LTEquipErrorMessage l WHERE l.guZhangMingCheng = :guZhangMingCheng")
+    , @NamedQuery(name = "LTEquipErrorMessage.findByGuZhangMingCheng", query = "SELECT l FROM LTEquipErrorMessage l WHERE l.guZhangMingCheng = :guZhangMingCheng AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipErrorMessage.findByInsRep", query = "SELECT l FROM LTEquipErrorMessage l WHERE l.insRep = :insRep")
     , @NamedQuery(name = "LTEquipErrorMessage.findByInsDate", query = "SELECT l FROM LTEquipErrorMessage l WHERE l.insDate = :insDate")
     , @NamedQuery(name = "LTEquipErrorMessage.findByUpdRep", query = "SELECT l FROM LTEquipErrorMessage l WHERE l.updRep = :updRep")
@@ -52,7 +56,6 @@ public class LTEquipErrorMessage extends BaseEntity implements Serializable {
     @Size(max = 255)
     @Column(name = "gu_zhang_ming_cheng")
     private String guZhangMingCheng;
-    
 
     public LTEquipErrorMessage() {
     }
@@ -101,7 +104,7 @@ public class LTEquipErrorMessage extends BaseEntity implements Serializable {
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage[ id=" + id + " ]";
     }
-    
+
     //用于取故障表的故障名称
     @OneToOne
     @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "Err_Type")
@@ -113,6 +116,22 @@ public class LTEquipErrorMessage extends BaseEntity implements Serializable {
 
     public void setEquipError(LTEquipError equipError) {
         this.equipError = equipError;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "ID", referencedColumnName = "dui_ying_gu_zhang", insertable = false, updatable = false)
+        ,
+        @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)
+    })
+    private SysRoutingInspectionItems selectItems;
+
+    public SysRoutingInspectionItems getSelectItems() {
+        return selectItems;
+    }
+
+    public void setSelectItems(SysRoutingInspectionItems selectItems) {
+        this.selectItems = selectItems;
     }
 
 }

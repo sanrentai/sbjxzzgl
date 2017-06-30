@@ -34,4 +34,11 @@ public class LTEquipCheckPointFacade extends AbstractFacade<LTEquipCheckPoint> {
         query.setParameter("id", id);
         return query.getResultList();
     }
+
+     public List<LTEquipCheckPoint> chaXunJianDianLieBiao(Long equipmentId) {
+        Query query = getEntityManager().createQuery("SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId AND l.delFlg = :delFlg");
+        query.setParameter("delFlg", SepE.Flag.NO.getValue());
+        query.setParameter("equipmentId", equipmentId);
+        return query.getResultList();
+    }
 }

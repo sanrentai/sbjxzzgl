@@ -35,4 +35,5 @@
     <jdbc-resource enabled="true" jndi-name="java:app/SQLServerLocalhostConnection" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool_1"/>
     <jdbc-resource enabled="true" jndi-name="java:app/qqq" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool_1"/>
     <jdbc-resource enabled="true" jndi-name="java:app/SQLServerLocalhost" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool_1"/>
+    <jdbc-resource enabled="true" jndi-name="java:app/jdbc/kp" object-type="user" pool-name="microsoft_sql_K_Kangp_saPool"/>
 </resources>

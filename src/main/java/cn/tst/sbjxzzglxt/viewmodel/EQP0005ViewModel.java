@@ -24,6 +24,62 @@ public class EQP0005ViewModel extends BaseViewModel {
     private LTEquipWarn equipWarn;//设备提醒的实体类对象
     private TreeNode equipTreeRoot;//tree节点
     private LTEquipBasic selectedEquipBasic;
+    private Long eId; //设备ID
+    private String tTitle; //提醒标题
+    private int tTyoe; //提醒类型
+    private int xhYn; //是否循环
+    private Date tDate; //提醒日期
+
+   
+    public TreeNode getEquipTreeRoot() {
+        return equipTreeRoot;
+    }
+
+    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
+        this.equipTreeRoot = equipTreeRoot;
+    }
+
+    public Long geteId() {
+        return eId;
+    }
+
+    public void seteId(Long eId) {
+        this.eId = eId;
+    }
+
+    public String gettTitle() {
+        return tTitle;
+    }
+
+    public void settTitle(String tTitle) {
+        this.tTitle = tTitle;
+    }
+
+    public int gettTyoe() {
+        return tTyoe;
+    }
+
+    public void settTyoe(int tTyoe) {
+        this.tTyoe = tTyoe;
+    }
+
+    public int getXhYn() {
+        return xhYn;
+    }
+
+    public void setXhYn(int xhYn) {
+        this.xhYn = xhYn;
+    }
+
+    public Date gettDate() {
+        return tDate;
+    }
+
+    public void settDate(Date tDate) {
+        this.tDate = tDate;
+    }
+    
+    
 
     public LTEquipBasic getSelectedEquipBasic() {
         return selectedEquipBasic;

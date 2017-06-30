@@ -1,5 +1,7 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.GuanLiZhe;
 
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen.*;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
 import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import cn.tst.sbjxzzglxt.common.EquipmentTree;
@@ -30,10 +32,10 @@ import org.primefaces.model.TreeNode;
  * @author Administrator
  */
 @Stateless
-public class XiangMuBizLogicImplementation extends BaseBizLogic implements BizLogic {
+public class GuanLiZheBizLogicImplementation extends BaseBizLogic implements BizLogic {
 
     SysRoutingInspectionItems item = new SysRoutingInspectionItems();
-    private static final Logger LOG = Logger.getLogger(XiangMuBizLogicImplementation.class.getName());
+    private static final Logger LOG = Logger.getLogger(GuanLiZheBizLogicImplementation.class.getName());
     @EJB
     private LTEquipBasicFacade eqpService;
     @EJB

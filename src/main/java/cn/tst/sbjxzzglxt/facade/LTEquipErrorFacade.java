@@ -29,4 +29,11 @@ public class LTEquipErrorFacade extends AbstractFacade<LTEquipError> {
         return query.getResultList();
     }
 
+    public List<LTEquipError> chaGuZhangLieBiao(Long eNum) {
+       Query query = getEntityManager().createQuery("SELECT l FROM LTEquipError l  WHERE l.eNum = :eNum AND l.delFlg = :delFlg");
+        query.setParameter("delFlg", SepE.Flag.NO.getValue());
+        query.setParameter("eNum", eNum);
+        return query.getResultList();
+    }
+
 }

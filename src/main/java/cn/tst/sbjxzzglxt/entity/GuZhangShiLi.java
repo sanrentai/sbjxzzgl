@@ -19,6 +19,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,7 +47,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "GuZhangShiLi.findByVersion", query = "SELECT g FROM GuZhangShiLi g WHERE g.version = :version")})
 public class GuZhangShiLi extends BaseEntity implements Serializable {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
@@ -57,7 +58,7 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "guZhangId")
-    private int guZhangId;
+    private String guZhangId;
    
 
     public GuZhangShiLi() {
@@ -72,11 +73,11 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
         this.xiangMuId = xiangMuId;
     }
 
-    public int getGuZhangId() {
+    public String getGuZhangId() {
         return guZhangId;
     }
 
-    public void setGuZhangId(int guZhangId) {
+    public void setGuZhangId(String guZhangId) {
         this.guZhangId = guZhangId;
     }
 
@@ -135,7 +136,7 @@ public class GuZhangShiLi extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumns({
         @JoinColumn(name = "xiangMuId", referencedColumnName = "ID", insertable = false, updatable = false),
         @JoinColumn(name = "del_flg", referencedColumnName = "del_flg", insertable = false, updatable = false)

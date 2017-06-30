@@ -1,16 +1,23 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen;
 
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.entity.GuZhangShiLi;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.primefaces.model.TreeNode;
 
 public class ViewModel {
-
+    
+    private SysRoutingInspectionMessage patrolRecord;
+    
+    private List<SysRoutingInspectionMessage> patrolRecordList;
+    
     private List<LTEquipBasic> equipBasicList;
 
     private LTEquipBasic selectedEquipBasic;
@@ -33,7 +40,9 @@ public class ViewModel {
     
     private GuZhangShiLi guZhangShiLi;
     
-    private ArrayList guZhangJiHe;
+    private List<GuZhangShiLi> guZhangShiLiList;
+    
+    private List<String> guZhangJiHe;
     
     private boolean ifShowBoDong = true;
 
@@ -60,6 +69,55 @@ public class ViewModel {
     private int xuanZeFangShi;
     
     private String guZhangMingChen;
+    
+    private Date xunJianShiJian;
+    
+    private int luRuRen;
+
+    public int getLuRuRen() {
+        return luRuRen;
+    }
+
+    public void setLuRuRen(int luRuRen) {
+        this.luRuRen = luRuRen;
+    }
+    
+    
+
+    public List<GuZhangShiLi> getGuZhangShiLiList() {
+        return guZhangShiLiList;
+    }
+
+    public void setGuZhangShiLiList(List<GuZhangShiLi> guZhangShiLiList) {
+        this.guZhangShiLiList = guZhangShiLiList;
+    }
+    
+    
+
+    public Date getXunJianShiJian() {
+        return xunJianShiJian;
+    }
+
+    public void setXunJianShiJian(Date xunJianShiJian) {
+        this.xunJianShiJian = xunJianShiJian;
+    }
+
+    public SysRoutingInspectionMessage getPatrolRecord() {
+        return patrolRecord;
+    }
+
+    public void setPatrolRecord(SysRoutingInspectionMessage patrolRecord) {
+        this.patrolRecord = patrolRecord;
+    }
+
+    public List<SysRoutingInspectionMessage> getPatrolRecordList() {
+        return patrolRecordList;
+    }
+
+    public void setPatrolRecordList(List<SysRoutingInspectionMessage> patrolRecordList) {
+        this.patrolRecordList = patrolRecordList;
+    }
+
 
     public String getGuZhangMingChen() {
         return guZhangMingChen;
@@ -69,6 +127,8 @@ public class ViewModel {
         this.guZhangMingChen = guZhangMingChen;
     }
 
+    
+
     public int getXuanZeFangShi() {
         return xuanZeFangShi;
     }
@@ -76,6 +136,8 @@ public class ViewModel {
     public void setXuanZeFangShi(int xuanZeFangShi) {
         this.xuanZeFangShi = xuanZeFangShi;
     }
+    
+    
 
     public int getXunJianShunXu() {
         return xunJianShunXu;
@@ -84,6 +146,8 @@ public class ViewModel {
     public void setXunJianShunXu(int xunJianShunXu) {
         this.xunJianShunXu = xunJianShunXu;
     }
+    
+    
 
     public int getBoDongShangXian() {
         return boDongShangXian;
@@ -129,13 +193,15 @@ public class ViewModel {
         this.guZhangId = guZhangId;
     }
 
-    public ArrayList getGuZhangJiHe() {
+    public List<String> getGuZhangJiHe() {
         return guZhangJiHe;
     }
 
-    public void setGuZhangJiHe(ArrayList guZhangJiHe) {
+    public void setGuZhangJiHe(List<String> guZhangJiHe) {
         this.guZhangJiHe = guZhangJiHe;
     }
+
+  
 
 
     

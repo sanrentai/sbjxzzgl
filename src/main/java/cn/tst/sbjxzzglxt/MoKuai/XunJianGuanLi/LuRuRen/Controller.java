@@ -1,5 +1,6 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen;
 
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
@@ -7,9 +8,11 @@ import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.controller.BusinessBaseController;
 import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage;
 import cn.tst.sbjxzzglxt.viewmodel.ExecuteResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Spliterator;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -20,7 +23,7 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 @ViewScoped
-@Named(SepC.ControllerID.XUN_JIAN_XIANG_MU_GUAN_LI_CONTROLLER_NAME)
+@Named(SepC.ControllerID.LU_RU_REN_CONTROLLER_NAME)
 public class Controller extends BusinessBaseController {
 
     private static final Logger LOG = Logger.getLogger(Controller.class.getName());
@@ -36,6 +39,7 @@ public class Controller extends BusinessBaseController {
         this.bizLogic.loadViewModel(vm);
         //初始化树结构并把设备的值挂在树节点上
         vm.setEquipTreeRoot(EquipmentTree.createEqpTree(vm.getEquipBasicList()));
+
     }
 
     /**
@@ -76,7 +80,6 @@ public class Controller extends BusinessBaseController {
         ///删除模式
         SepE.ExecuteMode mode = SepE.ExecuteMode.DELETE;
         vm.setItemInEdit(item);
-      
 
         ///执行更新
         ExecuteResult result = this.bizLogic.onXiangMu(mode, vm);
@@ -90,53 +93,77 @@ public class Controller extends BusinessBaseController {
         }
     }
 
-    //巡检方式监听事件
-    public void onXunJianFangShi() {
+    //监听是否正常
+    public void onXunJianFangShi(SysRoutingInspectionItems itemList) {
         //从选择方式按钮取到值
         int xuanze = vm.getXuanZe();
         LOG.info(xuanze);
         if (xuanze == 0) {
             vm.setXuanZeFangShi(0);
+
         } else if (xuanze == 1) {
             vm.setXuanZeFangShi(1);
+            chaGuZhangShiLi(itemList);
+
         }
         bizLogic.xuanZeGuZhang(vm);
 
     }
 
-    //保存巡检项目
-    public void onSaveData() {
-        vm.getItemInEdit().setId(vm.getItemInEdit().getId());
-        vm.getItemInEdit().setSuoShuSheBeiId(vm.getSelectedEquipBasic().getId());
-        vm.getItemInEdit().setSuoShuXunJianDianId(vm.getXunJianDianId());
-        vm.getItemInEdit().setBoDongShangXian(vm.getBoDongShangXian());
-        vm.getItemInEdit().setBoDongXiaXian(vm.getBoDongXiaXian());
-        vm.getItemInEdit().setXiangMuShuoMing(vm.getXiangMuShuoMing());
-        vm.getItemInEdit().setDuiYingGuZhang(vm.getGuZhangId());
-//        vm.setXuanZe();
-        vm.getItemInEdit().setXunJianFangShi(SepE.XunJianFangShi.parse(vm.getXuanZe()));
-        LOG.info(vm.getItemInEdit().getXunJianShunXu());
-        bizLogic.baoCunXiangMu(vm);
-        vm.setItemList(bizLogic.chaXiangMu(vm.getXunJianDianId()));
-        vm.setItemInEdit(null);
-        vm.setGuZhangId(null);
-
+    public void chaGuZhangShiLi(SysRoutingInspectionItems itemList) {
+        Long xiangMuId = itemList.getId();
+        bizLogic.chaGuZhangShiLi(vm, xiangMuId);
     }
+
+    //保存故障记录
+    public void onSavePatrolRecord() {
+        baoCunGuZhang();
+        LOG.info(vm.getSelectedEquipBasic().getId());
+        LOG.info(vm.getXunJianDianId());
+        LOG.info(vm.getXuanZe());
+        LOG.info(vm.getName());
+        LOG.info(vm.getPatrolRecord().getCanShuZhi());
+        LOG.info(vm.getPatrolRecord().getLuRuRen());
+        LOG.info(vm.getXuanZe());
+        LOG.info(vm.getPatrolRecord().getXunJianZhuangTai());
+        vm.getPatrolRecord().setSuoshushebeiID((long)vm.getSelectedEquipBasic().getId());
+        vm.getPatrolRecord().setXunJianDianId((long) vm.getXunJianDianId());
+        vm.getPatrolRecord().setXunJianZhuangTai((int)vm.getXuanZe());
+        if(vm.getPatrolRecord().getCanShuZhi() == null){
+         vm.getPatrolRecord().setCanShuZhi(0);
+        }
+               vm.getPatrolRecord().setLuRuRen((int)vm.getPatrolRecord().getLuRuRen());
+        //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
+        SepE.ExecuteMode mode = this.vm.getPatrolRecord().getId() == null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
+        //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
+        ExecuteResult result = this.bizLogic.onXiangMu(mode, vm);
+
+        this.addMessage(result.createMessage());
+        if (result.isSuccess()) {
+            vm.setPatrolRecordList(vm.getPatrolRecordList());
+            vm.setPatrolRecord(null);
+        }
+    }
+
+ 
 
     //取消巡检项目
     public void onCancelEdit() {
-        vm.setItemList(null);
+        vm.setPatrolRecord(null);
     }
 
     //设置项目
     public void onSettings(LTEquipCheckPoint checkPoint) {
         String name = checkPoint.getName();
-        Integer id = checkPoint.getId();
+        Integer suoShuXunJianDianId = checkPoint.getId();
         LOG.info(name);
         vm.setName(name);
-        vm.setXunJianDianId(id);
+        vm.setXunJianDianId(suoShuXunJianDianId);
         vm.setSelectedCheckPointList(null);
-        vm.setItemList(bizLogic.chaXiangMu(id));
+        vm.setItemList(bizLogic.chaXiangMu(suoShuXunJianDianId));
+        SysRoutingInspectionMessage message = new SysRoutingInspectionMessage();
+        vm.setPatrolRecord(message);
 
     }
 
@@ -145,12 +172,13 @@ public class Controller extends BusinessBaseController {
         //通过字符串拼接，形成想要的ID字符串
         StringBuilder sb = new StringBuilder();
         //取出页面存储故障ID的集合
-        ArrayList list = vm.getGuZhangJiHe();
+        List<String> list = vm.getGuZhangJiHe();
         LOG.info(list);
         //每次循环的时候，把字符串遍历出来的字符串进行拼接
         for (int k = 0; k <= list.size() - 1; k++) {
             //通过字符串截取，截取到“=”后面的数字，然后在进行拼接
-            sb.append(StringUtils.substringBetween(list.get(k).toString(), "=", "]"));
+
+            sb.append(list.get(k).toString());
             if (k < list.size() - 1) {
                 sb.append(",");
             }
@@ -158,8 +186,8 @@ public class Controller extends BusinessBaseController {
 
         LOG.info(sb.toString());
         //把拼接好的字符串存入到VM当中，页面选择故障会调用
-        vm.setGuZhangId(sb.toString());
-     
+        vm.getPatrolRecord().setXunJianWenTi(sb.toString());
+
     }
 
 //    public void guZhang(){
@@ -180,7 +208,6 @@ public class Controller extends BusinessBaseController {
 //         LOG.info(sb.toString());
 //         vm.setGuZhangMingChen(sb.toString());
 //    }
-    
     //取消故障
     public void quXiaoGuZhang() {
         StringBuilder sb = new StringBuilder();

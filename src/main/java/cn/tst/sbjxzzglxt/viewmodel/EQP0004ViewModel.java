@@ -15,27 +15,23 @@ import cn.tst.sbjxzzglxt.entity.LTEquipNotes;
  * @author Aaron-PC-i3-4130
  */
 public class EQP0004ViewModel extends BaseViewModel {
-    private Integer tType;
-    private Long eNum;
+
     private LTEquipBasic selectedEquipBasic;
     private LTEquipBasic equipBasic;
     private List<LTEquipBasic> equipBasicList;
     private List<LTEquipBasic> equipmentList = new ArrayList();
     private LTEquipNotes equipNotesInEditing;
     private List<LTEquipNotes> equipNoteList;
-    private String fuZeRen; 
+    private String fuZeRen;
     private Date dangQianBaoYangRiQi;
     private Date xiaCiBaoYangRiQi;
+    private Integer tType;
+    private Long eNum;
     private LTEquipBasic currentEquipment;
-
-
-   
 
     public void setTType(Integer tType) {
         this.tType = tType;
     }
-
-    
 
     public void setENum(Long eNum) {
         this.eNum = eNum;
@@ -49,9 +45,6 @@ public class EQP0004ViewModel extends BaseViewModel {
         return eNum;
     }
 
-
-   
-    
     /**
      * 日期范围
      */
@@ -81,10 +74,6 @@ public class EQP0004ViewModel extends BaseViewModel {
         this.xiaCiBaoYangRiQi = xiaCiBaoYangRiQi;
     }
 
-    
-  
-
-  
     public LTEquipBasic getSelectedEquipBasic() {
         return selectedEquipBasic;
     }
