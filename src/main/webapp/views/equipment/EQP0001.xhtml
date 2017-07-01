@@ -29,20 +29,22 @@
                     </f:facet>
                     <p:row>
                         <p:column style="padding: 0px;">
-                            <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
-                                    selectionMode="single" selection="#{ctrlEQP0001.selectedNode}"
-                                    styleClass="wd-p-100" animate="true">
-<!--                            <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
-                                    styleClass="wd-p-100">-->
-                                <p:ajax event="select" process="treeCK" 
-                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0001.onNodeSelect}"  />
+                           <p:scrollPanel mode="native" style="width:260px;height:200px">
+                                <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
+                                        selectionMode="single" selection="#{ctrlEQP0001.selectedNode}"
+                                        styleClass="wd-p-100" animate="true">
+    <!--                            <p:tree id="treeCK" value="#{ctrlEQP0001.vm.equipTreeRoot}" var="v" 
+                                        styleClass="wd-p-100">-->
+                                    <p:ajax event="select" process="treeCK" 
+                                            update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0001.onNodeSelect}"  />
 
-                                <!--根节点-->
-                                <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
-                                <p:treeNode>
-                                    <h:outputText value="#{v}"/>
-                                </p:treeNode>
-                            </p:tree>
+                                    <!--根节点-->
+                                    <!--<p:treeNode type="T_ROOT" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">-->
+                                    <p:treeNode>
+                                        <h:outputText value="#{v}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </p:scrollPanel>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
@@ -62,8 +64,8 @@
                     </f:facet>
                     <p:columnGroup type="header">
                         <p:row>
-                            <p:column headerText="设备名称" styleClass="tct wd-p-8"/>
-                            <p:column headerText="上级设备" styleClass="tct wd-p-10" sortBy="#{equip.riQi}"/>
+                            <p:column headerText="设备名称" styleClass="tct wd-p-30"/>
+                            <p:column headerText="上级设备" styleClass="tct wd-p-30" sortBy="#{equip.riQi}"/>
                             <p:column headerText="设备编号" styleClass="tct wd-p-5"/>
                             <p:column headerText="制造国别" styleClass="tct wd-p-5"/>
                             <p:column headerText="型号" styleClass="tct wd-p-5"/>
@@ -93,7 +95,7 @@
                     <!--设备名称-->
                     <p:column styleClass="tlt">
                         <h:outputText value="#{equip.ENmae}"/>
-                        <h:outputText value="#{equip.insUserInfo.name}"/>
+<!--                        <h:outputText value="#{equip.insUserInfo.name}"/>-->
                     </p:column>
                     <!--上级设备-->
                     <p:column styleClass="tlt">
@@ -205,7 +207,7 @@
                     <p:column styleClass="tct">
                         <h:outputText value="#{equip.yingYongFuZheRenId}"/>
                     </p:column>
-                    
+
                     <p:column styleClass="tct">
                         <p:commandLink actionListener="#{ctrlEQP0001.onEditEquip(equip)}"
                                        process="@this" update="@(.pnlInputArea), @(.toolbar)">
@@ -546,7 +548,7 @@
                     <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank">
                         <p:commandButton value="保存" process="pnlInputArea"
                                          oncomplete="showErrorMsg();"
-                                         update="pnlInputArea, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                         update="pnlInputArea,treeCK, pnlSelectArea, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
                                          actionListener="#{ctrlEQP0001.onSaveProperty}"/>
                         <p:commandButton value="取消" process="@this" 
                                          update="pnlInputArea, frmMain:pnlSelectArea" actionListener="#{ctrlEQP0001.onCancelEdit}"

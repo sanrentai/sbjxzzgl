@@ -32,12 +32,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LTEquipCheckPoint.findAll", query = "SELECT l FROM LTEquipCheckPoint l")
-    , @NamedQuery(name = "LTEquipCheckPoint.findById", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.id = :id AND l.delFlg = :delFlg")
+    , @NamedQuery(name = "LTEquipCheckPoint.findById", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.id = :id AND l.delFlg = :delFlg ")
     , @NamedQuery(name = "LTEquipCheckPoint.findByEquipmentId", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.equipmentId = :equipmentId AND l.delFlg = :delFlg")
     , @NamedQuery(name = "LTEquipCheckPoint.findByX", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.x = :x")
     , @NamedQuery(name = "LTEquipCheckPoint.findByY", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.y = :y")
     , @NamedQuery(name = "LTEquipCheckPoint.findByName", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.name = :name")
-    , @NamedQuery(name = "LTEquipCheckPoint.findByCheckOrder", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.checkOrder = :checkOrder")
+    , @NamedQuery(name = "LTEquipCheckPoint.findByCheckOrder", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.checkOrder = :checkOrder ORDER BY l.checkOrder ASC")
     , @NamedQuery(name = "LTEquipCheckPoint.findBySpecification", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.specification = :specification")
     , @NamedQuery(name = "LTEquipCheckPoint.findByInsRep", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.insRep = :insRep")
     , @NamedQuery(name = "LTEquipCheckPoint.findByInsDate", query = "SELECT l FROM LTEquipCheckPoint l WHERE l.insDate = :insDate")

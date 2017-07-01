@@ -1,11 +1,9 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen;
 
-import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen.*;
 import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.common.SepE;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
-import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
 import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
 import cn.tst.sbjxzzglxt.viewmodel.EQP0005ViewModel;
@@ -26,19 +24,19 @@ public interface BizLogic {
     /**
      * 当前选中设备
      *
-     * @param eNum
+     * @param id 设备id
      * @return
      */
-    LTEquipBasic findSelectedEqp(Long eNum);
+    LTEquipBasic findSelectedEqp(Long id);
 
     /**
-     * 查询故障信息
+     * 查询巡检点记录
      *
      * @param vm
-     * @param eNum
+     * @param equipmentId
      * @return
      */
-    List<LTEquipError> chaGuZhangXinXi(ViewModel vm, Long eNum);
+    List<LTEquipCheckPoint> chaXunJianDian(ViewModel vm, Long equipmentId);
 
     /**
      * 用于巡检项目的增删改
@@ -55,7 +53,7 @@ public interface BizLogic {
      * @param id
      * @return
      */
-    public List<SysRoutingInspectionItems> chaXiangMu(Integer id);
+    public List<SysRoutingInspectionItems> chaXiangMu(Integer suoShuXunJianDianId);
 
     /**
      * 用于判断新建状态
@@ -71,35 +69,19 @@ public interface BizLogic {
      */
     public void xuanZeGuZhang(ViewModel vm);
 
-    /**
-     * 用于把故障弹窗的信息保存到故障实例
-     *
-     * @param vm
-     */
-    public void baoCunGuZhang(ViewModel vm);
-
-    /**
-     * 用于保存故障记录
-     *
-     * @param vm
-     * @param mode
-     * @return 
-     *
-     */
-    public ExecuteResult onEquipError(SepE.ExecuteMode mode,ViewModel vm);
-    /**
-     * 用于保存故障信息
-     *
-     * @param vm
-     * @param mode
-     * @return 
-     *
-     */
-    public ExecuteResult onErrorMessage(SepE.ExecuteMode mode, ViewModel vm);
-
-    //用于显示故障列表中的故障类型
-    public List<LTEquipErrorMessage> chaGuZhangLeiXing(Long id);
-
    
+      /**
+     * 根据项目ID查询项目中设置的故障信息
+     *
+     * @param vm
+     * @param xiangMuId
+     *
+     */
+
+    public void chaGuZhangShiLi(ViewModel vm,Long xiangMuId);
+    
+    public void baoCunXiangMu(ViewModel vm);
+
+ 
 
 }

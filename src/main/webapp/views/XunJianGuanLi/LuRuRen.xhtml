@@ -1,0 +1,258 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <script type="text/javascript">
+        function onck() {
+
+            $("#xiangmuliebiao").show();
+            $("#down").show();
+        }
+        function onTree() {
+            $("#xiangmuliebiao").hide();
+            $("#down").hide();
+            $("#xunjiandianliebiao").show();
+            $(".qingchu").remove();
+
+        }
+
+
+    </script>
+    <p:outputPanel styleClass="Card" id="rootContainer">
+        <!--标题-->
+        <h1 class="CardBigTopic Purple">
+            <h:outputText value="#{ctrlMaster.createPageTitle('XunJianGuanLi', 'LuRuRen')}"/>
+        </h1>
+        <!--无敌分割线-->
+        <div class="SeparatorFull"></div>
+        <div id="zuiwaiceng">
+            <div id="zuoce">
+                <p:outputPanel id="EquipmentTreeView" styleClass="Container30 Responsive100">
+                    <p:panelGrid styleClass="wd-p-100">
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column>
+                                    <h:outputText value="设备一览"/>
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+
+                        <p:row>
+
+                            <p:column style="padding: 0px;">
+                                <p:scrollPanel mode="native" style="width:260px;height:200px">
+                                    <p:tree class="tree" id="treeCK" value="#{LuRuRenController.vm.equipTreeRoot}" var="v" 
+                                            selectionMode="single" selection="#{LuRuRenController.selectedNode}"
+                                            styleClass="wd-p-100" animate="true" onNodeClick="onTree()">
+                                        <p:ajax event="select" process="treeCK" 
+                                                update="@(.XunJianDian),@(.ItemCreateForm)" listener="#{LuRuRenController.onNodeSelect}"  />
+                                        <p:treeNode>
+                                            <h:outputText value="#{v}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </p:scrollPanel>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </div>
+
+            <div id="youce">
+                <!--巡检点信息列表-->
+                <div id="xunjiandianliebiao" styleClass="Container70 Responsive100 height:200px">
+                    <p:outputPanel id="XunJianDian" styleClass="Container70 Responsive100 XunJianDian">
+                        <p:dataTable value="#{LuRuRenController.vm.selectedCheckPointList}" 
+                                     var="checkPoint"
+                                     rows="5"
+                                     filterDelay="500"
+                                     style="word-break: keep-all!important"
+                                     paginator="true"
+                                     paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="没有数据">
+                            <f:facet name="top">
+                                <h:outputText value="设备巡检点的巡检项目信息列表展示"/>
+                            </f:facet>
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="巡检点名称" styleClass="tct wd-p-40"/>
+                                    <p:column headerText="定位坐标" styleClass="tct wd-p-10"/>
+                                    <p:column headerText="说明" styleClass="tct wd-p-30"/>
+                                    <p:column headerText="顺序" styleClass="tct wd-p-5"/>    
+                                    <p:column headerText="添加巡检记录" styleClass="wd-p-15"/>
+                                </p:row>
+                            </p:columnGroup>
+                            <!--巡检点名称-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{checkPoint.name}"/>
+                            </p:column>
+                            <!--定位坐标-->
+                            <p:column styleClass="tlt">
+                                <h:outputText value="#{checkPoint.x},#{checkPoint.y}"/>
+                            </p:column>
+                            <!--说明-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{checkPoint.specification}"/>
+                            </p:column>
+                            <!--顺序-->
+                            <p:column styleClass="tct">
+                                <h:outputText value="#{checkPoint.checkOrder}"/>
+                            </p:column>
+                            <!--设置项目-->
+                            <p:column styleClass="tct">
+                                <p:commandLink actionListener="#{LuRuRenController.onSettings(checkPoint)}"
+                                               onclick="onck();"  class="sheZhiXiangMu"   process="@this" 
+                                               update="@(.XunJianXiangMu),@(.ItemCreateForm), @(.toolbar)" value="添加">
+                                    <!--                                    <i class="fa fa-pencil Fs18 Blue"></i>-->
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </div>
+            </div>
+
+
+            <div id="down">
+                <p:outputPanel id="ItemCreateForm" styleClass="Container100 Responsive100 ItemCreateForm">
+                    <p:outputPanel styleClass="Container100 Responsive100">
+                        <!--所属设备 所属巡检点-->
+                        <p:panelGrid columns="6" styleClass="wd-p-100">
+                            <p:outputLabel value="设备名称"/>
+                            <p:inputText value="#{LuRuRenController.vm.selectedEquipBasic.ENum}"/>
+                            <p:outputLabel  value="巡检点"/>
+                            <p:inputText class="qingchu" value="#{LuRuRenController.vm.name}"/>
+                            <p:outputLabel value="巡检时间"/>
+                            <p:calendar id="startDate" value="#{LuRuRenController.vm.patrolRecord.xunJianShiJian}" pattern="yyyy-MM-dd" mask="true"  placeholder="巡检时间" />
+                        </p:panelGrid>
+                        <!--巡检项目-->
+                        <p:outputPanel styleClass="Container100 Responsive100 XiangMu">
+                            <p:dataTable value="#{LuRuRenController.vm.itemList}" 
+                                         var="itemList"
+                                         rows="3"
+                                         filterDelay="500"
+                                         style="word-break: keep-all!important"
+                                         paginator="true"
+                                         paginatorAlwaysVisible="false"
+                                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                         emptyMessage="没有数据">
+                                <p:columnGroup type="header">
+                                    <p:row>
+                                        <p:column headerText="" styleClass="wd-p-3"/>
+                                        <p:column headerText="" styleClass="wd-p-10"/>
+                                        <p:column headerText="" styleClass="wd-p-80"/>
+                                         <p:column headerText="" styleClass="wd-p-1"/>
+                                    </p:row>
+                                </p:columnGroup>
+                                <!--巡检顺序-->
+                                <p:column>
+                                    <p:outputLabel value="#{itemList.xunJianShunXu}："></p:outputLabel>
+                                </p:column>
+                                <!--项目名称-->
+                                <p:column>
+                                    <p:outputLabel value="#{itemList.xiangMuMingCheng}："></p:outputLabel>
+                                </p:column>
+                                <!--巡检结果-->
+                                <p:column>
+                                    <!--数据录入-->
+                                    <p:outputPanel rendered="#{itemList.xunJianFangShi.value eq 0}">
+                                        <p:inputText class="qingchu" value="#{LuRuRenController.vm.patrolRecord.canShuZhi}"/>
+                                    </p:outputPanel>
+                                    <!--故障选择-->
+                                    <p:outputPanel rendered="#{itemList.xunJianFangShi.value eq 1}">
+                                        <p:selectOneButton id="fangshi" value="#{LuRuRenController.vm.xuanZe}">
+                                            <f:selectItem itemLabel="正常" itemValue="0"></f:selectItem>
+                                            <f:selectItem itemLabel="异常" itemValue="1"></f:selectItem>
+                                            <p:ajax  process="@this,fangshi" update="@(.zhengChang),@(.yiChang)"
+                                                     listener="#{LuRuRenController.onXunJianFangShi(itemList)}"  />
+                                        </p:selectOneButton>
+                                        <p:panelGrid columns="1" rendered="false">
+                                            <p:outputLabel value="正常："/>
+                                           <p:inputText class="qingchu" value="#{LuRuRenController.vm.patrolRecord.xunJianZhuangTai}"/>
+                                        </p:panelGrid>
+                                        <div>
+                                            <p:outputPanel styleClass="yiChang">
+                                                <div>
+                                                    <p:scrollPanel mode="native">
+                                                        <p:panelGrid columns="1" rendered="#{LuRuRenController.vm.xuanZeFangShi eq 1}">
+                                                            <p:selectManyCheckbox id="grid3" value="#{LuRuRenController.vm.guZhangJiHe}">
+                                                                <f:selectItems value="#{LuRuRenController.vm.errorMessageList}" var="city" 
+                                                                               itemLabel="#{city.guZhangMingCheng}" itemValue="#{city.guZhangMingCheng}" />
+                                                            </p:selectManyCheckbox>
+                                                        </p:panelGrid>
+                                                    </p:scrollPanel>
+                                                </div>
+                                            </p:outputPanel>
+                                        </div>
+
+                                    </p:outputPanel>
+
+                                </p:column>
+                                 <p:column>
+                                     <p:outputLabel rendered="false" value="#{itemList.id}"></p:outputLabel>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                        <p:panelGrid columns="3" styleClass="ui-panelgrid-blank">
+                            <!--巡检人-->
+                            <p:selectOneMenu id="addFuZeRen" value="#{LuRuRenController.vm.patrolRecord.luRuRen}" >
+                            <f:selectItem itemLabel="负责人" itemValue=""/>
+                            <f:selectItem itemLabel="张三" itemValue="3"/>
+                            <f:selectItem itemLabel="李四" itemValue="4"/>
+                            <f:selectItem itemLabel="王五" itemValue="5"/>
+                            <f:selectItem itemLabel="赵六" itemValue="6"/>
+                            <f:selectItem itemLabel="孙七" itemValue="7"/>
+                            <f:selectItem itemLabel="濑八" itemValue="8"/>
+                            <f:selectItem itemLabel="宫九" itemValue="9"/>
+                            <f:selectItem itemLabel="钱十" itemValue="10"/>
+                        </p:selectOneMenu>       
+                            <p:commandButton value="提交巡检结果" process="ItemCreateForm"
+                                             oncomplete="showErrorMsg();" 
+                                             update="@(.xiangmuliebiao),@(.XunJianXiangMu),@(.ItemCreateForm), @(.XunJianXiangMu), frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"
+                                             actionListener="#{LuRuRenController.onSavePatrolRecord()}" />
+                            <p:commandButton value="取消巡检" process="@this" 
+                                             update="@(.Card),@(.ItemCreateForm), @(.xiangmuliebiao)" actionListener="#{LuRuRenController.onCancelEdit}"
+                                             styleClass="RedButton"/>
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+
+
+
+    <p:dialog styleClass="xuanze" widgetVar="deviceSelectDialog" modal="true">
+        <p:outputPanel id="gztc" styleClass="duihuakuang">
+            <p:scrollPanel mode="native" style="width:200px;height:500px">
+                <p:selectManyCheckbox id="grid3" value="#{XunJianXiangMuGuanLiController.vm.guZhangJiHe}" 
+                                      layout="pageDirection" columns="1">
+                    <f:selectItems value="#{XunJianXiangMuGuanLiController.vm.itemInEdit.faultMessageList}" var="city" 
+                                   itemLabel="#{city.guZhangMingCheng}" itemValue="#{Long.toString(city.id)}" />
+                </p:selectManyCheckbox>
+            </p:scrollPanel>
+            <p:commandButton class="baoCunGuZhang" value="保存" process="@(.xuanze)"
+                             oncomplete="PF('deviceSelectDialog').hide()"
+                             update=""
+                             actionListener="#{XunJianXiangMuGuanLiController.on}" />
+            <p:commandButton class="quXiaoGuZhang" value="取消" process="@(.xuanze)"
+                             oncomplete="PF('deviceSelectDialog').hide()"
+                             update="@(.ItemCreateForm), @(.xiangmuliebiao)"
+                             actionListener="#{XunJianXiangMuGuanLiController.onCancelEdit}"
+                             styleClass="RedButton"/>
+        </p:outputPanel>
+    </p:dialog>
+
+    <!--    <p:dialog header="Selected Cities" modal="true" showEffect="fade" hideEffect="fade" widgetVar="cityDialog" width="250">
+            <p:outputPanel id="displayCities">
+                <p:dataList value="#{checkboxView.selectedCities}" var="city" emptyMessage="No cities selected" style="margin-bottom: 10px;">
+                    <f:facet name="header">
+                        Basic
+                    </f:facet>
+    #{city}
+</p:dataList>
+</p:dialog>-->
+</ui:composition>

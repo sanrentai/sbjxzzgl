@@ -1,5 +1,7 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.GuanLiZhe;
 
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen.*;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.common.EquipmentNodeData;
 import cn.tst.sbjxzzglxt.common.EquipmentTree;
 import cn.tst.sbjxzzglxt.common.SepC;
@@ -20,7 +22,7 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 @ViewScoped
-@Named(SepC.ControllerID.XUN_JIAN_XIANG_MU_GUAN_LI_CONTROLLER_NAME)
+@Named(SepC.ControllerID.GUAN_LI_ZHE_CONTROLLER_NAME)
 public class Controller extends BusinessBaseController {
 
     private static final Logger LOG = Logger.getLogger(Controller.class.getName());

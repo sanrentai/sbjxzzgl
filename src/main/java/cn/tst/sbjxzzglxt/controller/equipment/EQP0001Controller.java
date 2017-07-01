@@ -73,6 +73,7 @@ public class EQP0001Controller extends BusinessBaseController {
     //*****************************************************************
     /**
      * 选中节点时
+     * @param event
      */
     public void onNodeSelect(NodeSelectEvent event) {
 
@@ -92,7 +93,6 @@ public class EQP0001Controller extends BusinessBaseController {
     /**
      * 菜单右击选中
      *
-     * @param type
      */
     public void onStartNodeEditing() {
 
@@ -143,6 +143,7 @@ public class EQP0001Controller extends BusinessBaseController {
 //            vm.getEditingEquipBasic().setcId(l.getId());
             vm.getEditingEquipBasic().setcId(vm.getSelectedEquipBasic().getId());
         }
+      
     }
 
     public void onAddPorperty() {

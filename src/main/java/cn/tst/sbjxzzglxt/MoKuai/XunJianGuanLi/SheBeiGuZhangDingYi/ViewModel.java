@@ -1,53 +1,131 @@
 package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.SheBeiGuZhangDingYi;
 
-import java.util.List;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen.*;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
+import cn.tst.sbjxzzglxt.entity.GuZhangShiLi;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
+import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
 import cn.tst.sbjxzzglxt.entity.LTEquipError;
 import cn.tst.sbjxzzglxt.entity.LTEquipErrorMessage;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionItems;
+import cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.primefaces.model.TreeNode;
 
-/**
- * 仓库管理
- *
- * @author ps_xy@pscp.co.jp
- */
 public class ViewModel {
-    private List<LTEquipErrorMessage> errorMessageList;//故障名称表实体集合
     
-    private LTEquipErrorMessage errorMessage;//故障名称表对象
-    
-    private List<LTEquipBasic> equipmentList;
-    
-    private List<LTEquipError> equipErrorList;//故障实体类集合
-    
-    private LTEquipError errorInEdit;//故障实体类
-    
-    private LTEquipBasic selectedEquipment;
-    
-    private TreeNode equipmentTreeRootNode;
+    private List<LTEquipBasic> equipBasicList;
 
-    public LTEquipBasic getSelectedEquipment() {
-        return selectedEquipment;
+    private LTEquipBasic selectedEquipBasic;
+    
+    private LTEquipBasic equipBasic;
+
+    private TreeNode equipTreeRoot;//tree节点
+
+    private LTEquipCheckPoint selectedCheckPoint;
+
+    private List<LTEquipCheckPoint> selectedCheckPointList;
+
+    private List<SysRoutingInspectionItems> itemList;
+
+    private SysRoutingInspectionItems itemInEdit;
+    
+    private SysRoutingInspectionItems examine;
+    
+    private LTEquipError equipError;
+    
+    private List<LTEquipError> equipErrorList;
+    
+    private LTEquipErrorMessage errorMessage;
+    
+    private List<LTEquipErrorMessage> errorMessageList;
+
+    private String guZhangMingCheng;
+
+    public String getGuZhangMingCheng() {
+        return guZhangMingCheng;
     }
 
-    public void setSelectedEquipment(LTEquipBasic selectedEquipment) {
-        this.selectedEquipment = selectedEquipment;
+    public void setGuZhangMingCheng(String guZhangMingCheng) {
+        this.guZhangMingCheng = guZhangMingCheng;
     }
 
-    public TreeNode getEquipmentTreeRootNode() {
-        return equipmentTreeRootNode;
+   
+    
+    
+    
+    public List<LTEquipBasic> getEquipBasicList() {
+        return equipBasicList;
     }
 
-    public void setEquipmentTreeRootNode(TreeNode equipmentTreeRootNode) {
-        this.equipmentTreeRootNode = equipmentTreeRootNode;
+    public void setEquipBasicList(List<LTEquipBasic> equipBasicList) {
+        this.equipBasicList = equipBasicList;
     }
 
-    public LTEquipErrorMessage getErrorMessage() {
-        return errorMessage;
+    public LTEquipBasic getSelectedEquipBasic() {
+        return selectedEquipBasic;
     }
 
-    public void setErrorMessage(LTEquipErrorMessage errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
+        this.selectedEquipBasic = selectedEquipBasic;
+    }
+
+    public LTEquipBasic getEquipBasic() {
+        return equipBasic;
+    }
+
+    public void setEquipBasic(LTEquipBasic equipBasic) {
+        this.equipBasic = equipBasic;
+    }
+
+    public TreeNode getEquipTreeRoot() {
+        return equipTreeRoot;
+    }
+
+    public void setEquipTreeRoot(TreeNode equipTreeRoot) {
+        this.equipTreeRoot = equipTreeRoot;
+    }
+
+    public LTEquipCheckPoint getSelectedCheckPoint() {
+        return selectedCheckPoint;
+    }
+
+    public void setSelectedCheckPoint(LTEquipCheckPoint selectedCheckPoint) {
+        this.selectedCheckPoint = selectedCheckPoint;
+    }
+
+    public List<LTEquipCheckPoint> getSelectedCheckPointList() {
+        return selectedCheckPointList;
+    }
+
+    public void setSelectedCheckPointList(List<LTEquipCheckPoint> selectedCheckPointList) {
+        this.selectedCheckPointList = selectedCheckPointList;
+    }
+
+    public List<SysRoutingInspectionItems> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<SysRoutingInspectionItems> itemList) {
+        this.itemList = itemList;
+    }
+
+    public SysRoutingInspectionItems getItemInEdit() {
+        return itemInEdit;
+    }
+
+    public void setItemInEdit(SysRoutingInspectionItems itemInEdit) {
+        this.itemInEdit = itemInEdit;
+    }
+
+    public SysRoutingInspectionItems getExamine() {
+        return examine;
+    }
+
+    public void setExamine(SysRoutingInspectionItems examine) {
+        this.examine = examine;
     }
 
     public List<LTEquipErrorMessage> getErrorMessageList() {
@@ -57,16 +135,15 @@ public class ViewModel {
     public void setErrorMessageList(List<LTEquipErrorMessage> errorMessageList) {
         this.errorMessageList = errorMessageList;
     }
-    
-    public LTEquipBasic getSelectedEquipBasic() {
-        return selectedEquipment;
+
+    public LTEquipError getEquipError() {
+        return equipError;
     }
 
-    public void setSelectedEquipBasic(LTEquipBasic selectedEquipBasic) {
-        this.selectedEquipment = selectedEquipBasic;
+    public void setEquipError(LTEquipError equipError) {
+        this.equipError = equipError;
     }
 
-    
     public List<LTEquipError> getEquipErrorList() {
         return equipErrorList;
     }
@@ -75,19 +152,13 @@ public class ViewModel {
         this.equipErrorList = equipErrorList;
     }
 
-    public LTEquipError getErrorInEdit() {
-        return errorInEdit;
+    public LTEquipErrorMessage getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setErrorInEdit(LTEquipError errorInEdit) {
-        this.errorInEdit = errorInEdit;
+    public void setErrorMessage(LTEquipErrorMessage errorMessage) {
+        this.errorMessage = errorMessage;
     }
+    
 
-    public List<LTEquipBasic> getEquipmentList() {
-        return equipmentList;
-    }
-
-    public void setEquipmentList(List<LTEquipBasic> equipmentList) {
-        this.equipmentList = equipmentList;
-    }
 }

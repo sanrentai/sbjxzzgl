@@ -67,6 +67,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "LTEquipError.findByVersion", query = "SELECT l FROM LTEquipError l WHERE l.version = :version")})
 public class LTEquipError extends BaseEntity implements Serializable {
 
+  
     @Size(max = 255)
     @Column(name = "chu_li_shuo_ming")
     private String chuLiShuoMing;
@@ -84,7 +85,6 @@ public class LTEquipError extends BaseEntity implements Serializable {
     @Size(max = 50)
     @Column(name = "Err_Title")
     private String errTitle;
-    @Size(max = 200)
     @Column(name = "Err_Way")
     private String errWay;
     @Column(name = "Err_Type")
@@ -187,6 +187,8 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public void setErrWay(String errWay) {
         this.errWay = errWay;
     }
+
+  
 
     public Long getErrType() {
         return errType;
@@ -382,6 +384,6 @@ public class LTEquipError extends BaseEntity implements Serializable {
     public void setSelectItems(SysRoutingInspectionItems selectItems) {
         this.selectItems = selectItems;
     }
-     
+
     
 }

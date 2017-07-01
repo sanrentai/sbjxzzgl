@@ -53,25 +53,21 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "SysRoutingInspectionMessage.findByVersion", query = "SELECT s FROM SysRoutingInspectionMessage s WHERE s.version = :version")})
 public class SysRoutingInspectionMessage extends BaseEntity implements Serializable {
 
-    @Column(name = "suo_shu_she_bei_ID")
-    private Long suoshushebeiID;
-
+    @Column(name = "xun_jian_ren_id")
+    private Integer xunJianRenId;
+    @Column(name = "lu_ru_ren")
+    private Integer luRuRen;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
+    @Column(name = "suo_shu_she_bei_ID")
+    private Long suoshushebeiID;
     @Column(name = "xun_jian_dian_id")
     private Long xunJianDianId;
-     @Size(max = 255)
     @Column(name = "xun_jian_dian_xiang_mu_id")
-    private String xunJianDianXiangMuId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "xun_jian_ren_id")
-    private int xunJianRenId;
+    private Long xunJianDianXiangMuId;
     @Column(name = "xun_jian_shi_jian")
     @Temporal(TemporalType.DATE)
     private Date xunJianShiJian;
@@ -82,21 +78,33 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     private String xunJianWenTi;
     @Column(name = "can_shu_zhi")
     private Integer canShuZhi;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "lu_ru_ren")
-    private int luRuRen;
-    
-      //使用多对一的方式连表并且使用懒加载
+
+    //使用多对一的方式连表并且使用懒加载
     @ManyToOne(fetch = FetchType.LAZY)
-   //连表 插入列的名字 与引用列的名字
+    //连表 插入列的名字 与引用列的名字
     @JoinColumn(name = "suo_shu_she_bei_id", referencedColumnName = "E_Num", insertable = false, updatable = false)
-   //通过分装需要连表的实体类，完成页面的调用
+    //通过分装需要连表的实体类，完成页面的调用
     private LTEquipBasic equip;
-    
-     //这个连表主要用于取项目名称
+
+    //这个连表主要用于取项目名称
     @OneToOne(mappedBy = "message")
     private SysRoutingInspectionItems routingInspectionItems;
+
+    public Integer getXunJianRenId() {
+        return xunJianRenId;
+    }
+
+    public void setXunJianRenId(Integer xunJianRenId) {
+        this.xunJianRenId = xunJianRenId;
+    }
+
+    public Integer getLuRuRen() {
+        return luRuRen;
+    }
+
+    public void setLuRuRen(Integer luRuRen) {
+        this.luRuRen = luRuRen;
+    }
 
     public Long getId() {
         return id;
@@ -104,6 +112,14 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getSuoshushebeiID() {
+        return suoshushebeiID;
+    }
+
+    public void setSuoshushebeiID(Long suoshushebeiID) {
+        this.suoshushebeiID = suoshushebeiID;
     }
 
     public Long getXunJianDianId() {
@@ -114,20 +130,12 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
         this.xunJianDianId = xunJianDianId;
     }
 
-    public String getXunJianDianXiangMuId() {
+    public Long getXunJianDianXiangMuId() {
         return xunJianDianXiangMuId;
     }
 
-    public void setXunJianDianXiangMuId(String xunJianDianXiangMuId) {
+    public void setXunJianDianXiangMuId(Long xunJianDianXiangMuId) {
         this.xunJianDianXiangMuId = xunJianDianXiangMuId;
-    }
-
-    public int getXunJianRenId() {
-        return xunJianRenId;
-    }
-
-    public void setXunJianRenId(int xunJianRenId) {
-        this.xunJianRenId = xunJianRenId;
     }
 
     public Date getXunJianShiJian() {
@@ -162,14 +170,6 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
         this.canShuZhi = canShuZhi;
     }
 
-    public int getLuRuRen() {
-        return luRuRen;
-    }
-
-    public void setLuRuRen(int luRuRen) {
-        this.luRuRen = luRuRen;
-    }
-
     public LTEquipBasic getEquip() {
         return equip;
     }
@@ -186,7 +186,7 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
         this.routingInspectionItems = routingInspectionItems;
     }
 
- 
+  
 
     @Override
     public int hashCode() {
@@ -213,36 +213,6 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage[ id=" + id + " ]";
     }
 
-    public SysRoutingInspectionMessage() {
-    }
+  
 
-    public Long getSuoshushebeiID() {
-        return suoshushebeiID;
-    }
-
-    public void setSuoshushebeiID(Long suoshushebeiID) {
-        this.suoshushebeiID = suoshushebeiID;
-    }
-    @JoinColumn(name = "xun_jian_dian_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private LTEquipCheckPoint checkPoint;
-
-    public LTEquipCheckPoint getCheckPoint() {
-        return checkPoint;
-    }
-
-    public void setCheckPoint(LTEquipCheckPoint checkPoint) {
-        this.checkPoint = checkPoint;
-    }
-    @OneToOne
-    @JoinColumn(name = "xun_jian_dian_xiang_mu_id", referencedColumnName = "ID", insertable = false, updatable = false)
-    private SysRoutingInspectionItems item;
-
-    public SysRoutingInspectionItems getItem() {
-        return item;
-    }
-
-    public void setItem(SysRoutingInspectionItems item) {
-        this.item = item;
-    }
 }

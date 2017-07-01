@@ -726,6 +726,8 @@ public final class SepC {
         public static final String LU_RU_XUN_JIAN_JIE_GUO_CONTROLLER_NAME = "LuRuXunJianJieGuoController";
         public static final String XUN_JIAN_JUE_SE_GUAN_LI_CONTROLLER_NAME = "XunJianJueSeGuanLiController";
         public static final String SHE_BEI_GU_ZHANG_DING_YI_CONTROLLER_NAME = "SheBeiGuZhangDingYiController";
+        public static final String LU_RU_REN_CONTROLLER_NAME = "LuRuRenController";
+        public static final String GUAN_LI_ZHE_CONTROLLER_NAME = "GuanLiZheController";
     }
 
     /**

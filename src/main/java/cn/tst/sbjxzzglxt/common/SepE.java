@@ -3214,22 +3214,22 @@ public class SepE {
      */
     public static enum ErrorDispose {
         /**
-         *是
+         *处理
          */
-        DISPOSE("0"),
+        DISPOSE(0),
         /**
-         * 否
+         * 上报
          */
-         REPORT("1");
+         REPORT(1);
        
 
-        private final String value;
+        private final int value;
 
-        ErrorDispose(String value) {
+        ErrorDispose(int value) {
             this.value = value;
         }
 
-        public final String getValue() {
+        public final int getValue() {
             return value;
         }
 
@@ -3303,6 +3303,56 @@ public class SepE {
                     return "维护";
                 case BAOYANG:
                     return "保养";
+              
+                default:
+                    return null;
+            }
+        }
+    }
+    
+          /**
+     *巡检方式
+     */
+    public static enum XunJianFangShi {
+        /**
+         *数据录入
+         */
+        SHUJULURU(0),
+        /**
+         * 故障选择
+         */
+         GUZHANGXUANZE(1);
+       
+
+        private final int value;
+
+        XunJianFangShi(int value) {
+            this.value = value;
+        }
+
+        public final int getValue() {
+            return value;
+        }
+
+        public static XunJianFangShi parse(int v) {
+
+            switch (v) {
+                case 0:
+                    return SHUJULURU;
+                case 1:
+                    return  GUZHANGXUANZE;
+               
+                default:
+                    return null;
+            }
+        }
+
+        public String getMessage() {
+            switch (this) {
+                case SHUJULURU:
+                    return "数据录入";
+                case GUZHANGXUANZE:
+                    return "故障选择";
               
                 default:
                     return null;

@@ -1,5 +1,7 @@
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi;
+package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.GuanLiZhe;
 
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.LuRuRen.*;
+import cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.XunJianXiangMuGuanLi.*;
 import cn.tst.sbjxzzglxt.entity.GuZhangShiLi;
 import cn.tst.sbjxzzglxt.entity.LTEquipBasic;
 import cn.tst.sbjxzzglxt.entity.LTEquipCheckPoint;
@@ -69,6 +71,8 @@ public class ViewModel {
         this.guZhangMingChen = guZhangMingChen;
     }
 
+    
+
     public int getXuanZeFangShi() {
         return xuanZeFangShi;
     }
@@ -76,6 +80,8 @@ public class ViewModel {
     public void setXuanZeFangShi(int xuanZeFangShi) {
         this.xuanZeFangShi = xuanZeFangShi;
     }
+    
+    
 
     public int getXunJianShunXu() {
         return xunJianShunXu;
@@ -84,6 +90,8 @@ public class ViewModel {
     public void setXunJianShunXu(int xunJianShunXu) {
         this.xunJianShunXu = xunJianShunXu;
     }
+    
+    
 
     public int getBoDongShangXian() {
         return boDongShangXian;

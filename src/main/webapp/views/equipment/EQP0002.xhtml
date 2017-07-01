@@ -29,16 +29,18 @@
                     </f:facet>
                     <p:row>
                         <p:column style="padding: 0px;">
-                            <p:tree id="treeCK" value="#{ctrlEQP0002.vm.equipTreeRoot}" var="v" 
-                                    selectionMode="single" selection="#{ctrlEQP0002.selectedNode}"
-                                    styleClass="wd-p-100" animate="true">
+                           <p:scrollPanel mode="native" style="width:260px;height:200px">
+                                <p:tree id="treeCK" value="#{ctrlEQP0002.vm.equipTreeRoot}" var="v" 
+                                        selectionMode="single" selection="#{ctrlEQP0002.selectedNode}"
+                                        styleClass="wd-p-100" animate="true">
 
-                                <p:ajax event="select" process="treeCK" 
-                                        update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0002.onNodeSelect}"  />
-                                <p:treeNode>
-                                    <h:outputText value="#{v}"/>
-                                </p:treeNode>
-                            </p:tree>
+                                    <p:ajax event="select" process="treeCK" 
+                                            update="frmMain:pnlInputArea, frmMain:pnlOutputArea" listener="#{ctrlEQP0002.onNodeSelect}"  />
+                                    <p:treeNode>
+                                        <h:outputText value="#{v}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </p:scrollPanel>
                         </p:column>
                     </p:row>
                 </p:panelGrid>

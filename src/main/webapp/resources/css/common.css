@@ -623,31 +623,31 @@ ul{
     float:right;
 }
 
-div.shangmian{
-width: 100%;
 
+#xiangmuliebiao{
+    display: none;
 }
-div.zuoce{
-float:left;
-width: 30%;
-
+#down{
+    display: none;
 }
-div.youce{
-float: right;   
-width: 70%;
 
 
+#td2{
+   
 }
-div.xunjiandianbiao{
-width: 100%;  
+#td3{
+    width:30px;
+}
+#td4{
+    
+}
+#td5{
+    width:30px;
+}
+#td6{
+    
+}
+#td1{
+    width:30px;
+}
 
-}
-div.xiangmubiao{
-width: 100%;
-display:none;
-height: 40%;
-  
-}
-div.xiamian{
-width: 100%;    
-}

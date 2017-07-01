@@ -172,7 +172,7 @@
                                   filterMatchMode="contains"/>
                         <p:column styleClass="tct wd-p-10" headerText="选择"></p:column>
                         <p:column styleClass="tct wd-p-30" headerText="上级设备"></p:column>
-                        <p:column styleClass="tct wd-p-30" headerText="规格/型号"></p:column>
+                       
                     </p:row>
                 </p:columnGroup>
                 <p:column styleClass="tct wd-p-30">
@@ -288,7 +288,7 @@
                     <p:commandButton value="确定" 
                                      process="@this, checkPointEditConfirmDialog" 
                                      actionListener="#{XunJianDianSheZhiController.onCheckPointEditConfirmDialogAccepted}"
-                                     update="frmMain:rootContainer" 
+                                     update="@(.rootContainer),frmMain:rootContainer" 
                                      oncomplete="PF('checkPointEditConfirmDialog').hide()"></p:commandButton>
                     <p:commandButton value="取消" 
                                      process="@this" 

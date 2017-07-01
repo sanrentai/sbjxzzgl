@@ -395,4 +395,12 @@ public class BizConfig implements Serializable {
         return SepE.WeiXiuBaoYang.values();
     }
 
+     /**
+     * 巡检方式
+     *
+     * @return 巡检方式
+     */
+    public SepE.XunJianFangShi[] getXunJianFangShi() {
+        return SepE.XunJianFangShi.values();
+    }
 }

@@ -20,11 +20,11 @@ public interface EQP0005BizLogic {
      * @param vm 视图模型
      */
     void loadEQP0005ViewModel(EQP0005ViewModel vm);
-/**
+    /**
      * 当前选中设备
      *
      * @param id 设备id
-     * @return 
+     * @return
      */
     LTEquipBasic findSelectedEqp(Long id);
     /**
