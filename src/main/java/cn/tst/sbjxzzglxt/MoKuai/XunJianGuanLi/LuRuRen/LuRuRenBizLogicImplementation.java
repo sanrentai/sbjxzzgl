@@ -179,11 +179,7 @@ public class LuRuRenBizLogicImplementation extends BaseBizLogic implements BizLo
 
     @Override
     public void baoCunXiangMu(ViewModel vm) {
-     for(SysRoutingInspectionItems s :itemList){
-         SysRoutingInspectionMessage message = new SysRoutingInspectionMessage();
-         
-         
-     }
+    
         
     }
 
