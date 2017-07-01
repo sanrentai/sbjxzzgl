@@ -79,8 +79,10 @@ public interface BizLogic {
      */
 
     public void chaGuZhangShiLi(ViewModel vm,Long xiangMuId);
-    
+
     public void baoCunXiangMu(ViewModel vm);
+    
+ 
 
  
 

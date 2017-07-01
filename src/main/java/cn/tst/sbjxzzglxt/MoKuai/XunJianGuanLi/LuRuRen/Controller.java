@@ -117,15 +117,11 @@ public class Controller extends BusinessBaseController {
 
     //保存故障记录
     public void onSavePatrolRecord() {
+        List<SysRoutingInspectionItems> itemList = vm.getItemList();
+        
+        for(SysRoutingInspectionItems s : itemList){
         baoCunGuZhang();
-        LOG.info(vm.getSelectedEquipBasic().getId());
-        LOG.info(vm.getXunJianDianId());
-        LOG.info(vm.getXuanZe());
-        LOG.info(vm.getName());
-        LOG.info(vm.getPatrolRecord().getCanShuZhi());
-        LOG.info(vm.getPatrolRecord().getLuRuRen());
-        LOG.info(vm.getXuanZe());
-        LOG.info(vm.getPatrolRecord().getXunJianZhuangTai());
+        vm.getPatrolRecord().setXunJianDianXiangMuId(s.getId());
         vm.getPatrolRecord().setSuoshushebeiID((long)vm.getSelectedEquipBasic().getId());
         vm.getPatrolRecord().setXunJianDianId((long) vm.getXunJianDianId());
         vm.getPatrolRecord().setXunJianZhuangTai((int)vm.getXuanZe());
@@ -134,18 +130,36 @@ public class Controller extends BusinessBaseController {
         }
                vm.getPatrolRecord().setLuRuRen((int)vm.getPatrolRecord().getLuRuRen());
         //采用执行模式，如果我的ID是空的，那么要么创建，要么修改
-        SepE.ExecuteMode mode = this.vm.getPatrolRecord().getId() == null
-                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.UPDATE;
+        SepE.ExecuteMode mode = this.vm.getPatrolRecord().getId() != null
+                ? SepE.ExecuteMode.INSERT : SepE.ExecuteMode.INSERT;
         //调用接口中的装备故障方法，把模型和视图（里面实体类）传进去
         ExecuteResult result = this.bizLogic.onXiangMu(mode, vm);
-
+           vm.setPatrolRecord(new SysRoutingInspectionMessage());
         this.addMessage(result.createMessage());
         if (result.isSuccess()) {
-            vm.setPatrolRecordList(vm.getPatrolRecordList());
-            vm.setPatrolRecord(null);
+          
         }
+        }
+          vm.setPatrolRecordList(vm.getPatrolRecordList());
+            vm.setPatrolRecord(null);
     }
 
+    public void baoCunXiangMu(){
+     List<SysRoutingInspectionItems> itemList = vm.getItemList();
+        for(SysRoutingInspectionItems s : itemList){
+        baoCunGuZhang();
+        vm.getPatrolRecord().setXunJianDianXiangMuId(s.getId());
+        vm.getPatrolRecord().setSuoshushebeiID((long)vm.getSelectedEquipBasic().getId());
+        vm.getPatrolRecord().setXunJianDianId((long) vm.getXunJianDianId());
+        vm.getPatrolRecord().setXunJianZhuangTai((int)vm.getXuanZe());
+       
+        if(vm.getPatrolRecord().getCanShuZhi() == null){
+         vm.getPatrolRecord().setCanShuZhi(0);
+        }
+        bizLogic.baoCunXiangMu(vm);
+        
+        }
+    }
  
 
     //取消巡检项目
