@@ -6,30 +6,41 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
     <p:dataTable value="#{GuanLiZheController.viewModel.routingInspectionMessageList}"
-                 var="result">
-        <p:column headerText="巡检设备">
+                 var="result" 
+                 paginator="true"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+        <p:column headerText="巡检设备" filterBy="#{result.equip.ENmae}">
             <h:outputText value="#{result.equip.ENmae}"></h:outputText>
         </p:column>
-        <p:column headerText="巡检点">
+        <p:column headerText="巡检点" filterBy="#{result.checkPoint.name}">
             <h:outputText value="#{result.checkPoint.name}"></h:outputText>
         </p:column>
-        <p:column headerText="巡检项目">
+        <p:column headerText="巡检项目" filterBy="#{result.item.xiangMuMingCheng}">
             <h:outputText value="#{result.item.xiangMuMingCheng}"></h:outputText>
         </p:column>
-        <p:column headerText="结果">
+        <p:column headerText="结果" filterBy="#{result.item.xunJianFangShi == 0 ? result.canShuZhi : result.xunJianWenTi}">
             <h:outputText value="#{result.item.xunJianFangShi == 0 ? result.canShuZhi : result.xunJianWenTi}"></h:outputText>
         </p:column>
-        <p:column headerText="巡检人">
+        <p:column headerText="巡检人" filterBy="#{result.xunJianRenId}">
             <h:outputText value="#{result.xunJianRenId}"></h:outputText>
         </p:column>
-        <p:column headerText="巡检时间">
+        <p:column headerText="巡检时间" filterBy="#{result.xunJianShiJian}">
             <h:outputText value="#{result.xunJianShiJian}"></h:outputText>
         </p:column>
-        <p:column headerText="录入人">
+        <p:column headerText="录入人" filterBy="#{result.luRuRen}">
             <h:outputText value="#{result.luRuRen}"></h:outputText>
         </p:column>
-        <p:column headerText="录入时间">
+        <p:column headerText="录入时间" filterBy="#{result.insDate}">
             <h:outputText value="#{result.insDate}"></h:outputText>
         </p:column>
     </p:dataTable>
+    <p:dialog widgetVar="StatisticsDialog"
+              width="512px"
+              height="512px"
+              modal="true">
+        <p:panelGrid columns="3">
+            <p:outputLabel value="巡检设备"></p:outputLabel>
+            <p:selectOneMenu></p:selectOneMenu>
+        </p:panelGrid>
+    </p:dialog>
 </ui:composition>
