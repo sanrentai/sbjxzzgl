@@ -212,7 +212,26 @@ public class SysRoutingInspectionMessage extends BaseEntity implements Serializa
     public String toString() {
         return "cn.tst.sbjxzzglxt.entity.SysRoutingInspectionMessage[ id=" + id + " ]";
     }
+@JoinColumn(name = "xun_jian_dian_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private LTEquipCheckPoint checkPoint;
 
-  
+    public LTEquipCheckPoint getCheckPoint() {
+        return checkPoint;
+    }
 
+    public void setCheckPoint(LTEquipCheckPoint checkPoint) {
+        this.checkPoint = checkPoint;
+    }
+    @OneToOne
+    @JoinColumn(name = "xun_jian_dian_xiang_mu_id", referencedColumnName = "ID", insertable = false, updatable = false)
+    private SysRoutingInspectionItems item;
+
+    public SysRoutingInspectionItems getItem() {
+        return item;
+    }
+
+    public void setItem(SysRoutingInspectionItems item) {
+        this.item = item;
+    }
 }

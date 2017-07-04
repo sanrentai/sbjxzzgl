@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.GuanLiZhe;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.GuanLiZhe;
 
 /**
  *

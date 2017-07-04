@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cn.tst.sbjxzzglxt.MoKuai.XunJianGuanLi.GuanLiZhe;
+package cn.tst.sbjxzzglxt.MoKuai.SheBeiGuanLi.GuanLiZhe;
 
 import cn.tst.sbjxzzglxt.bizlogic.impl.BaseBizLogic;
+import cn.tst.sbjxzzglxt.facade.LTEquipBasicFacade;
 import cn.tst.sbjxzzglxt.facade.SysRoutingInspectionMessageFacade;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,8 +19,12 @@ import javax.ejb.Stateless;
 public class GuanLiZheBizLogic extends BaseBizLogic implements BizLogic {
     @EJB
     private SysRoutingInspectionMessageFacade sysRoutingInspectionMessageFacade;
+    
+    @EJB
+    private LTEquipBasicFacade equipmentFacade;
     @Override
     public void loadViewModel(ViewModel viewModel) {
         viewModel.setRoutingInspectionMessageList(sysRoutingInspectionMessageFacade.findAll());
+        viewModel.setEquipmentList(equipmentFacade.findAll());
     }
 }
