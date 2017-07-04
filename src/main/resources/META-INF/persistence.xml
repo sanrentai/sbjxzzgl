@@ -7,7 +7,7 @@
     <!--内部集合测试1: jdbc/material_ct_1-->
     <!--内部集合测试2: jdbc/material_ct_2-->
     <!--商用: jdbc/material_R-->
-    <jta-data-source>java:app/jdbc/kp</jta-data-source>
+    <jta-data-source>jdbc/sbjx_n</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <!--SQL日志级别 开发时设置FINE, 运用时设置为 OFF-->

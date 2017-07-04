@@ -18,8 +18,8 @@
         <p:column headerText="巡检项目" filterBy="#{result.item.xiangMuMingCheng}">
             <h:outputText value="#{result.item.xiangMuMingCheng}"></h:outputText>
         </p:column>
-        <p:column headerText="结果" filterBy="#{result.item.xunJianFangShi == 0 ? result.canShuZhi : result.xunJianWenTi}">
-            <h:outputText value="#{result.item.xunJianFangShi == 0 ? result.canShuZhi : result.xunJianWenTi}"></h:outputText>
+        <p:column headerText="结果" filterBy="#{result.item.xunJianFangShi.value == 0 ? result.canShuZhi : result.xunJianWenTi}">
+            <h:outputText value="#{result.item.xunJianFangShi.value == 0 ? result.canShuZhi : result.xunJianWenTi}"></h:outputText>
         </p:column>
         <p:column headerText="巡检人" filterBy="#{result.xunJianRenId}">
             <h:outputText value="#{result.xunJianRenId}"></h:outputText>
@@ -40,7 +40,16 @@
               modal="true">
         <p:panelGrid columns="3">
             <p:outputLabel value="巡检设备"></p:outputLabel>
-            <p:selectOneMenu></p:selectOneMenu>
+            <p:selectOneMenu value="#{GuanLiZheController.viewModel.equipmentList}" var="equipment">
+                <f:selectItems value="#{equipment.ENmae}"></f:selectItems>
+            </p:selectOneMenu>
+            <p:outputPanel></p:outputPanel>
+            
+            <p:outputLabel value="巡检点"></p:outputLabel>
+            <p:selectOneMenu value="#{GuanLiZheController.viewModel.equipmentList}" var="equipment">
+                <f:selectItems value="#{equipment.ENmae}"></f:selectItems>
+            </p:selectOneMenu>
+            <p:outputPanel></p:outputPanel>
         </p:panelGrid>
     </p:dialog>
 </ui:composition>
